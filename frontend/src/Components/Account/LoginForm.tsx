@@ -20,7 +20,6 @@ class LoginForm extends React.Component {
                         <input className='btn btn-outline-primary' type='submit'/>
                         <Link to="/dashboard">Dashboard</Link> |{" "}
                         <Link to="/expenses">Expenses</Link>
-                        <Outlet/>
                     </div>
                 </div>
             </div>
