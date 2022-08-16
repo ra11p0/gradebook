@@ -11,19 +11,19 @@ const mapDispatchToProps = (dispatch: any) => ({
     onLogIn: () => dispatch(logIn)
 });
 
-interface DashboardIndexProps{
+interface TimetableProps{
     onLogIn?: ()=>{},
     isLoggedIn: boolean
 }
 
-class DashboardIndex extends React.Component<DashboardIndexProps> {
+class Timetable extends React.Component<TimetableProps> {
     render(): React.ReactNode {
         return (
             <div>
-                d-board index
+                d-board Timetable
             </div>
           );
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DashboardIndex);
+export default connect(mapStateToProps, mapDispatchToProps)(Timetable);

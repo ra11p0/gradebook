@@ -21,11 +21,10 @@ class DashboardNavigation extends React.Component<DashboardNavigationProps> {
     render(): React.ReactNode {
         return (
                 <Nav className='d-flex gap-2 justify-content-end'>
-                    <a className='btn btn-outline-primary'> oceny</a>
-                    <a className='btn btn-outline-primary'> nieobecnosci</a>
-                    <a className='btn btn-outline-primary'> przedmioty</a>
-                    <a className='btn btn-outline-primary'> plan lekcji</a>
-                    <a className='btn btn-outline-primary'> cos tam</a>
+                    <Link to='grades' className='btn btn-outline-primary'> oceny</Link>
+                    <Link to='absence' className='btn btn-outline-primary'> nieobecnosci</Link>
+                    <Link to='subject' className='btn btn-outline-primary'> przedmioty</Link>
+                    <Link to='timetable' className='btn btn-outline-primary'> plan lekcji</Link>
                 </Nav>
           );
     }

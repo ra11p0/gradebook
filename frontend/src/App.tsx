@@ -32,7 +32,7 @@ class App extends React.Component<AppProps>{
           <Header/>
           <Routes>
             <Route path='*' element={<Index/>}/>
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard/*" element={<Dashboard />} />
             <Route path="/account/*" element={<Account />} />
           </Routes>
         </BrowserRouter>

@@ -11,19 +11,19 @@ const mapDispatchToProps = (dispatch: any) => ({
     onLogIn: () => dispatch(logIn)
 });
 
-interface DashboardIndexProps{
+interface GradesProps{
     onLogIn?: ()=>{},
     isLoggedIn: boolean
 }
 
-class DashboardIndex extends React.Component<DashboardIndexProps> {
+class Grades extends React.Component<GradesProps> {
     render(): React.ReactNode {
         return (
             <div>
-                d-board index
+                d-board Grades
             </div>
           );
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DashboardIndex);
+export default connect(mapStateToProps, mapDispatchToProps)(Grades);

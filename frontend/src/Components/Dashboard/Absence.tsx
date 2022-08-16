@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link, Navigate } from "react-router-dom";
 import { connect } from 'react-redux';
 import { logIn } from '../../Actions/Common/common';
 
@@ -11,19 +10,19 @@ const mapDispatchToProps = (dispatch: any) => ({
     onLogIn: () => dispatch(logIn)
 });
 
-interface DashboardIndexProps{
+interface AbsenceProps{
     onLogIn?: ()=>{},
     isLoggedIn: boolean
 }
 
-class DashboardIndex extends React.Component<DashboardIndexProps> {
+class Absence extends React.Component<AbsenceProps> {
     render(): React.ReactNode {
         return (
             <div>
-                d-board index
+                d-board Absence
             </div>
           );
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DashboardIndex);
+export default connect(mapStateToProps, mapDispatchToProps)(Absence);

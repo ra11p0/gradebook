@@ -11,19 +11,19 @@ const mapDispatchToProps = (dispatch: any) => ({
     onLogIn: () => dispatch(logIn)
 });
 
-interface DashboardIndexProps{
+interface SubjectProps{
     onLogIn?: ()=>{},
     isLoggedIn: boolean
 }
 
-class DashboardIndex extends React.Component<DashboardIndexProps> {
+class Subject extends React.Component<SubjectProps> {
     render(): React.ReactNode {
         return (
             <div>
-                d-board index
+                d-board Subject
             </div>
           );
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DashboardIndex);
+export default connect(mapStateToProps, mapDispatchToProps)(Subject);
