@@ -11,21 +11,21 @@ const mapDispatchToProps = (dispatch: any) => ({
     onLogIn: () => dispatch(logIn)
 });
 
-interface LogInProps{
+interface RegisterFormProps{
     onLogIn?: ()=>{},
     isLoggedIn: boolean
 }
 
-class LoginForm extends React.Component<LogInProps> {
+class RegisterForm extends React.Component<RegisterFormProps> {
     render(): React.ReactNode {
         return (
             <div className='card'>
                 <div className='card-body'>
                     <div className='m-1 p-1 display-6'>
-                        <label>Logowanie</label>
+                        <label>Rejestracja</label>
                     </div>
                     <div className='m-1 p-1'>
-                        <label>Login</label>
+                        <label>Email</label>
                         <input className='form-control'>
                         </input>
                     </div>
@@ -34,15 +34,18 @@ class LoginForm extends React.Component<LogInProps> {
                         <input className='form-control' type='password'>
                         </input>
                     </div>
+                    <div className='m-1 p-1'>
+                        <label>Potwierdź hasło</label>
+                        <input className='form-control' type='password'>
+                        </input>
+                    </div>
                     <div className='m-1 p-1 d-flex justify-content-between'>
                         <div className="my-auto d-flex gap-2">
-                            <Link to={'account/register'}>Załóz konto</Link>
-                            <Link to={''}>Zmień hasło</Link>
-                            <Link to={''}>Przywróć dostęp</Link>
+                            <Link to={'/'}>Wróć do logowania</Link>
                         </div>
                         <input className='btn btn-outline-primary' 
                             onClick={()=>this.props.onLogIn!()} 
-                            type='submit' value="Zaloguj"/>
+                            type='submit' value="Zarejestruj"/>
                             {
                                 this.props.isLoggedIn &&
                                 <Navigate to="/dashboard"/>
@@ -54,4 +57,4 @@ class LoginForm extends React.Component<LogInProps> {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterForm);

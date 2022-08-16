@@ -7,14 +7,14 @@ class Index extends React.Component{
       <div>
         <div className="App row m-2 gap-2 border rounded-3">
           <div className='col'>
-            placeholder
           </div>
-          <div className='bg-primary bg-gradient col p-3'>
+          <div className=' bg-light bg-gradient col-6 p-3'>
             <LoginForm/>
+          </div>
+          <div className='col'>
           </div>
         </div>
       </div>
-      
     );
   }
 }
