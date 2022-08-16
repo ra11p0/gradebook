@@ -1,26 +1,44 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Header from './Components/Shared/Header';
+import Index from './Routes/Index';
+import Dashboard from './Routes/Dashboard';
+import {appLoad} from './Actions/Common/common';
+import { connect } from 'react-redux';
+import Account from './Routes/Account';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const mapStateToProps = (state: any) => {
+  return {
+    appLoaded: state.common.appLoaded
+  }};
+
+const mapDispatchToProps = (dispatch: any) => ({
+  onLoad: () =>
+    dispatch(appLoad),
+});
+interface AppProps{
+  onLoad: ()=>{};
+  appLoaded: boolean;
 }
 
-export default App;
+class App extends React.Component<AppProps>{
+  componentDidMount() {
+    this.props.onLoad();
+  }
+  render(): React.ReactNode {
+    return (
+      <div>
+        <BrowserRouter>
+          <Header/>
+          <Routes>
+            <Route path='*' element={<Index/>}/>
+            <Route path="/dashboard/*" element={<Dashboard />} />
+            <Route path="/account/*" element={<Account />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
+    );
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);;
