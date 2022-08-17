@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link, Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { logOut } from '../../Actions/Common/common';
+import AccountRepository from '../../ApiClient/Account/Queries/Repositories/AccountRepository';
 
 const mapStateToProps = (state: any) => {
     return {
@@ -21,20 +22,29 @@ interface ProfileProps{
 }
 
 interface ProfileState{
-    isLoggedIn?: boolean
+    isLoggedIn?: boolean,
+    weather?: any
 }
 
 class Profile extends React.Component<ProfileProps, ProfileState>{
     constructor(props: ProfileProps) {
         super(props);
         this.state = {
-            isLoggedIn: props.isLoggedIn
+            isLoggedIn: props.isLoggedIn,
         };
+    }
+    async componentDidMount(){
+        this.setState({
+            ...this.state,
+            weather: JSON.stringify(await AccountRepository.getWeather())
+        });
     }
     render(): React.ReactNode {
         return (
             <div>
                 profile
+                and weather: 
+                {this.state.weather}
                 {
                     !this.props.isLoggedIn &&
                     <Navigate to='/'/>

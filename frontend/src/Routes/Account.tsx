@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import React from 'react';
-import { Outlet, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import RegisterForm from '../Components/Account/RegisterForm';
 import Profile from '../Components/Account/Profile';
 
