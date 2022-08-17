@@ -1,4 +1,4 @@
-import { APP_LOAD, LOG_IN } from '../../Constraints/actionTypes'
+import { APP_LOAD, LOG_IN, LOG_OUT } from '../../Constraints/actionTypes'
 
 export const appLoad = {
     type: APP_LOAD,
@@ -9,6 +9,5 @@ export const logIn = {
     isLoggedIn: true
 }
 export const logOut = {
-    type: LOG_IN,
-    isLoggedIn: false
+    type: LOG_OUT,
 }

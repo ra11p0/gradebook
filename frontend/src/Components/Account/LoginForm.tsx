@@ -8,25 +8,52 @@ const mapStateToProps = (state: any) => ({
 });
   
 const mapDispatchToProps = (dispatch: any) => ({
-    onLogIn: () => dispatch(logIn)
+    onLogIn: (username: string, token: string) => dispatch({
+        ...logIn, 
+        username: username,
+        token: token
+    })
 });
 
 interface LogInProps{
-    onLogIn?: ()=>{},
-    isLoggedIn: boolean
+    onLogIn?: (username: string, token: string)=>{},
+    isLoggedIn: boolean,
+    username?: string
 }
 
-class LoginForm extends React.Component<LogInProps> {
+interface LogInState{
+    username?: string
+}
+
+class LoginForm extends React.Component<LogInProps, LogInState> {
+    constructor(props: LogInProps) {
+        super(props);
+        this.state = {
+            username: ''
+        }
+    }
+    onLogIn(){
+        this.props.onLogIn!(this.state.username!, 'super-duper-token');
+    }
     render(): React.ReactNode {
         return (
             <div className='card'>
+                {
+                    this.props.isLoggedIn &&
+                    <Navigate to="/dashboard"/>
+                }
                 <div className='card-body'>
                     <div className='m-1 p-1 display-6'>
                         <label>Logowanie</label>
                     </div>
                     <div className='m-1 p-1'>
                         <label>Login</label>
-                        <input className='form-control'>
+                        <input className='form-control' 
+                            value={this.state.username} 
+                            onChange={(e) => this.setState({
+                                ...this.state,
+                                username: e.target.value
+                            })}>
                         </input>
                     </div>
                     <div className='m-1 p-1'>
@@ -41,12 +68,8 @@ class LoginForm extends React.Component<LogInProps> {
                             <Link to={''}>Przywróć dostęp</Link>
                         </div>
                         <input className='btn btn-outline-primary' 
-                            onClick={()=>this.props.onLogIn!()} 
+                            onClick={()=>this.onLogIn!()} 
                             type='submit' value="Zaloguj"/>
-                            {
-                                this.props.isLoggedIn &&
-                                <Navigate to="/dashboard"/>
-                            }
                     </div>
                 </div>
             </div>

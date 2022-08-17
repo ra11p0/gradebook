@@ -5,7 +5,8 @@ import { logOut } from '../../Actions/Common/common';
 
 const mapStateToProps = (state: any) => {
     return {
-      isLoggedIn: state.common.isLoggedIn
+      isLoggedIn: state.common.isLoggedIn,
+      username: state.common.session?.username
     }
 };
 
@@ -16,6 +17,7 @@ const mapDispatchToProps = (dispatch: any) => ({
 interface HeaderProps{
     isLoggedIn?: boolean;
     logOutHandler?: ()=>void;
+    username: string
 }
 
 interface HeaderState{
@@ -43,6 +45,7 @@ class Header extends React.Component<HeaderProps, HeaderState>{
                     {
                         this.props.isLoggedIn &&
                         <div className='d-flex gap-2'>
+                            <Link to='/account/profile' className='btn btn-link' >{this.props.username}</Link>
                             <Link to='/dashboard' className='btn btn-outline-primary' >Dashboard</Link>
                             <a className='btn btn-outline-primary' onClick={() => this.logOut()}> Log out</a>
                         </div>

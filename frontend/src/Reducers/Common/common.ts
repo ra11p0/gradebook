@@ -15,12 +15,17 @@ export default (state = defaultState, action: any)=>{
         case LOG_IN:
             return {
                 ...state,
-                isLoggedIn: action.isLoggedIn,
+                isLoggedIn: true,
+                session: {
+                    username: action.username,
+                    token: action.token
+                }
             };
         case LOG_OUT:
             return {
                 ...state,
-                isLoggedIn: action.isLoggedIn,
+                isLoggedIn: false,
+                session: null
             };
         default:
             return state;
