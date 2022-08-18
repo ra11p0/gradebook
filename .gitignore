@@ -1,5 +1,5 @@
 .vscode
-backend/src/Api/bin
-backend/src/Api/obj
+bin
+obj
 frontend/node_modules
 frontend/package-lock.json

@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "src\Api\Api.csproj",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{0F7D0750-1A63-11ED-97BF-BBD44EE559C1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gradebook.Foundation.Identity", "src\Gradebook.Foundation.Identity\Gradebook.Foundation.Identity.csproj", "{83C8A2BF-142B-4D48-AAFD-581473861EB0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Foundation", "Foundation", "{2FB8A7D0-1F32-11ED-AE32-25693050F9A6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,8 +24,13 @@ Global
 		{3AEC9D8E-3D59-4F9B-935C-0A17D98834CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AEC9D8E-3D59-4F9B-935C-0A17D98834CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AEC9D8E-3D59-4F9B-935C-0A17D98834CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83C8A2BF-142B-4D48-AAFD-581473861EB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83C8A2BF-142B-4D48-AAFD-581473861EB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83C8A2BF-142B-4D48-AAFD-581473861EB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83C8A2BF-142B-4D48-AAFD-581473861EB0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3AEC9D8E-3D59-4F9B-935C-0A17D98834CA} = {0F7D0750-1A63-11ED-97BF-BBD44EE559C1}
+		{83C8A2BF-142B-4D48-AAFD-581473861EB0} = {2FB8A7D0-1F32-11ED-AE32-25693050F9A6}
 	EndGlobalSection
 EndGlobal
