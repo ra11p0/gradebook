@@ -24,7 +24,8 @@ interface LogInProps{
 
 interface LogInState{
     username?: string,
-    password?: string
+    password?: string,
+    loginFailed?: boolean
 }
 
 class LoginForm extends React.Component<LogInProps, LogInState> {
@@ -32,7 +33,8 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
         super(props);
         this.state = {
             username: '',
-            password: ''
+            password: '',
+            loginFailed: false
         }
     }
     onLogIn(){
@@ -42,7 +44,10 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
         }).then((r: any)=>{
             this.props.onLogIn!( r.data.token, r.data.refreshToken );
         }).catch((r:any)=>{
-            alert("error");
+            this.setState({
+                ...this.state,
+                loginFailed: true
+            });
         });
     }
     render(): React.ReactNode {
@@ -56,6 +61,12 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
                     <div className='m-1 p-1 display-6'>
                         <label>Logowanie</label>
                     </div>
+                    {
+                        this.state.loginFailed &&
+                        <div className='m-1 p-1 alert alert-danger'>
+                            Logowanie nieudane
+                        </div>
+                    }
                     <div className='m-1 p-1'>
                         <label>Login</label>
                         <input className='form-control' 
