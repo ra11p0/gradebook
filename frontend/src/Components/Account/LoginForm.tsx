@@ -3,6 +3,7 @@ import { Link, Navigate } from "react-router-dom";
 import { connect } from 'react-redux';
 import { logIn } from '../../Actions/Account/accountActions';
 import AccountRepository from '../../ApiClient/Account/Queries/Repositories/AccountRepository';
+import { withTranslation } from 'react-i18next';
 
 const mapStateToProps = (state: any) => ({
       isLoggedIn: state.common.isLoggedIn
@@ -28,6 +29,7 @@ interface LogInProps{
         username: string,
         userId: string)=>{},
     isLoggedIn: boolean,
+    t: any
 }
 
 interface LogInState{
@@ -59,6 +61,7 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
         });
     }
     render(): React.ReactNode {
+        const { t } = this.props;
         return (
             <div className='card'>
                 {
@@ -67,7 +70,7 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
                 }
                 <div className='card-body'>
                     <div className='m-1 p-1 display-6'>
-                        <label>Logowanie</label>
+                        <label>{t('loging')}</label>
                     </div>
                     {
                         this.state.loginFailed &&
@@ -113,4 +116,4 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);
+export default withTranslation()(connect(mapStateToProps, mapDispatchToProps)(LoginForm));
