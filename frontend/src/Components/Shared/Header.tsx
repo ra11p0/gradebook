@@ -1,4 +1,8 @@
+import { faLanguage } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
+import { Dropdown } from 'react-bootstrap';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { logOut } from '../../Actions/Account/accountActions';
@@ -17,7 +21,8 @@ const mapDispatchToProps = (dispatch: any) => ({
 interface HeaderProps{
     isLoggedIn?: boolean;
     logOutHandler?: ()=>void;
-    username: string
+    username: string,
+    i18n: any;
 }
 
 interface HeaderState{
@@ -35,6 +40,7 @@ class Header extends React.Component<HeaderProps, HeaderState>{
         this.props.logOutHandler!();
     }
     render(): React.ReactNode {
+        const { i18n } = this.props;
         return (
             <header className='p-4 bg-light bg-gradient'>
                 <div className='d-flex justify-content-between'>
@@ -50,6 +56,16 @@ class Header extends React.Component<HeaderProps, HeaderState>{
                             <a className='btn btn-outline-primary' onClick={() => this.logOut()}> Log out</a>
                         </div>
                     }
+                    <Dropdown>
+                        <Dropdown.Toggle>
+                            <FontAwesomeIcon icon={faLanguage}/>
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            <Dropdown.Item onClick={()=>i18n.changeLanguage('pl')}>Polish</Dropdown.Item>
+                            <Dropdown.Item onClick={()=>i18n.changeLanguage('en')}>English</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                    
                     </div>
                 </div>
             </header>
@@ -57,4 +73,4 @@ class Header extends React.Component<HeaderProps, HeaderState>{
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default withTranslation()(connect(mapStateToProps, mapDispatchToProps)(Header));
