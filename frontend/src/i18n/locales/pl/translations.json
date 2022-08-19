@@ -1,3 +1,9 @@
 {
-    "loging" : "Logowanie"
+    "loging" : "Logowanie",
+    "grades" : "Oceny",
+    "absence" : "Nieobecności",
+    "subjects" : "Przedmioty",
+    "timetable" : "Plan lekcji",
+    "dashboard": "Dashboard",
+    "logout": "Wyloguj"
 }
