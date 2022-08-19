@@ -16,10 +16,6 @@ namespace Api.Controllers;
 [ApiController]
 public class AccountController : ControllerBase
 {
-    private static readonly string[] Summaries = new[]
-    {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IConfiguration _configuration;
@@ -166,7 +162,16 @@ public class AccountController : ControllerBase
             refreshToken = newRefreshToken
         });
     }
-
+    [Authorize]
+    [HttpGet]
+    [Route("me")]
+    public async Task<IActionResult> Me(){
+        var user = await _userManager.FindByNameAsync(User.Identity!.Name);
+        return Ok(new{
+            user.Id,
+            user.UserName
+        });
+    }
     [Authorize]
     [HttpPost]
     [Route("revoke/{username}")]
