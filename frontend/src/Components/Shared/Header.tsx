@@ -22,7 +22,8 @@ interface HeaderProps{
     isLoggedIn?: boolean;
     logOutHandler?: ()=>void;
     username: string,
-    i18n: any;
+    i18n: any,
+    t: any
 }
 
 interface HeaderState{
@@ -40,31 +41,34 @@ class Header extends React.Component<HeaderProps, HeaderState>{
         this.props.logOutHandler!();
     }
     render(): React.ReactNode {
-        const { i18n } = this.props;
+        const { i18n, t } = this.props;
         return (
             <header className='p-4 bg-light bg-gradient'>
                 <div className='d-flex justify-content-between'>
                     <Link to="/" className='text-dark display-6 text-decoration-none'>
                         Gradebook
                     </Link>
-                    <div className='my-auto'>
+                    <div className='my-auto d-flex gap-2'>
                     {
                         this.props.isLoggedIn &&
                         <div className='d-flex gap-2'>
                             <Link to='/account/profile' className='btn btn-link' >{this.props.username}</Link>
-                            <Link to='/dashboard' className='btn btn-outline-primary' >Dashboard</Link>
-                            <a className='btn btn-outline-primary' onClick={() => this.logOut()}> Log out</a>
+                            <Link to='/dashboard' className='btn btn-outline-primary' >{t('dashboard')}</Link>
+                            <a className='btn btn-outline-primary' onClick={() => this.logOut()}> {t('logout')}</a>
                         </div>
                     }
-                    <Dropdown>
-                        <Dropdown.Toggle>
-                            <FontAwesomeIcon icon={faLanguage}/>
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                            <Dropdown.Item onClick={()=>i18n.changeLanguage('pl')}>Polish</Dropdown.Item>
-                            <Dropdown.Item onClick={()=>i18n.changeLanguage('en')}>English</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
+                    <div className='d-flex gap-2'>
+                        <Dropdown>
+                            <Dropdown.Toggle>
+                                <FontAwesomeIcon icon={faLanguage}/>
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu>
+                                <Dropdown.Item onClick={()=>i18n.changeLanguage('pl')}>Polish</Dropdown.Item>
+                                <Dropdown.Item onClick={()=>i18n.changeLanguage('en')}>English</Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </div>
+
                     
                     </div>
                 </div>

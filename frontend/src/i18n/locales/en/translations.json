@@ -1,3 +1,9 @@
 {
-    "loging" : "Log in"
+    "loging" : "Log in",
+    "grades" : "Grades",
+    "absence" : "Absence",
+    "subjects" : "Subjects",
+    "timetable" : "Time table",
+    "dashboard": "Dashboard",
+    "logout": "Log out"
 }
