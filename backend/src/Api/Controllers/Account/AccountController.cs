@@ -65,7 +65,9 @@ public class AccountController : ControllerBase
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
                 RefreshToken = refreshToken,
-                Expiration = token.ValidTo
+                Expiration = token.ValidTo,
+                Username = user.UserName,
+                UserId = user.Id
             });
         }
         return Unauthorized();

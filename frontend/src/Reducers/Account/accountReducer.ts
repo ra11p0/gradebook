@@ -18,7 +18,9 @@ export default (state: any = defaultState, action: any)=>{
                 isLoggedIn: true,
                 session: {
                     token: action.token,
-                    refreshToken: action.refreshToken
+                    refreshToken: action.refreshToken,
+                    username: action.username,
+                    userId: action.userId
                 }
             };
         case LOG_OUT:
