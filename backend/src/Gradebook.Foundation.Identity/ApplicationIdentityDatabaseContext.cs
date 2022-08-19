@@ -16,7 +16,7 @@ public class ApplicationIdentityDatabaseContext: IdentityDbContext<ApplicationUs
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder) { 
         modelBuilder.Entity<IdentityUserLogin<string>>().HasNoKey();
-        modelBuilder.Entity<IdentityUserRole<string>>().HasNoKey();
+        modelBuilder.Entity<IdentityUserRole<string>>().HasKey(k=>new{k.UserId, k.RoleId});
         modelBuilder.Entity<IdentityUserToken<string>>().HasNoKey();
     }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -30,7 +30,7 @@ public class ApplicationIdentityDatabaseContext: IdentityDbContext<ApplicationUs
 
             var cfg = builder.Build();
             var cn = cfg.GetConnectionString("DefaultAppDatabase");
-            optionsBuilder.UseMySql(cn, new MySqlServerVersion(new Version(8, 0, 0)));
+            optionsBuilder.UseMySql(cn, new MySqlServerVersion(new Version(8, 30, 0)));
         }
     }
 }
