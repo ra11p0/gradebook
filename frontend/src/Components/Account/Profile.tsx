@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-import { logOut } from '../../Actions/Common/common';
+import { logOut } from '../../Actions/Account/accountActions';
 import AccountRepository from '../../ApiClient/Account/Queries/Repositories/AccountRepository';
 
 const mapStateToProps = (state: any) => {
@@ -34,10 +34,13 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
         };
     }
     async componentDidMount(){
-        this.setState({
-            ...this.state,
-            weather: JSON.stringify(await AccountRepository.getWeather())
-        });
+        AccountRepository.getWeather()
+            .then((e: any)=>{
+                this.setState({
+                    ...this.state,
+                    weather: JSON.stringify(e.data)
+                });
+            });
     }
     render(): React.ReactNode {
         return (

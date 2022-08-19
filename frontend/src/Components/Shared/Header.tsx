@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { logOut } from '../../Actions/Common/common';
+import { logOut } from '../../Actions/Account/accountActions';
 
 const mapStateToProps = (state: any) => {
     return {

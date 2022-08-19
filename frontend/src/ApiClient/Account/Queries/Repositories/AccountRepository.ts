@@ -1,21 +1,26 @@
 import axios from "axios";
+import { axiosApiAuthorized } from "../../../AxiosInterceptor";
+import LoginRequestDto from "../Definitions/LoginRequestDto";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-function getHelloWorld():string{
-    return 'hello world!';
+function logIn(request: LoginRequestDto):any{
+    return axios.post(API_URL + '/Account/login', request);
 }
 
-function getApiUrl():string|undefined{
-    return API_URL;
+function refreshAccessToken(accessToken: string, refreshToken: string):any{
+    return axios.post(API_URL + '/Account/refresh-token', {
+        accessToken: accessToken,
+        refreshToken: refreshToken
+    });
 }
 
 function getWeather():Promise<any>{
-    return axios.get(API_URL + '/Weather');
+    return axiosApiAuthorized.get(API_URL + '/Weather');
 }
 
 export default {
-    getHelloWorld,
-    getApiUrl,
+    logIn,
+    refreshAccessToken,
     getWeather
 }

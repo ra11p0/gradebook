@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Header from './Components/Shared/Header';
 import Index from './Routes/Index';
 import Dashboard from './Routes/Dashboard';
-import {appLoad} from './Actions/Common/common';
+import {appLoad} from './Actions/Account/accountActions';
 import { connect } from 'react-redux';
 import Account from './Routes/Account';
 

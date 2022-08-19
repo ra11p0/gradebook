@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { logIn } from '../../Actions/Common/common';
+import { logIn } from '../../Actions/Account/accountActions';
 
 const mapStateToProps = (state: any) => ({
       isLoggedIn: state.common.isLoggedIn
