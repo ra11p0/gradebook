@@ -8,7 +8,7 @@ using Gradebook.Foundation.Identity.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApplicationIdentityDatabaseContext>
-    (options => options.UseMySql(builder.Configuration.GetConnectionString("DefaultAppDatabase"), new MySqlServerVersion(new Version(8, 0, 0))));
+    (options => options.UseMySql(builder.Configuration.GetConnectionString("DefaultAppDatabase"), new MySqlServerVersion(new Version(8, 30, 0))));
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationIdentityDatabaseContext>()
