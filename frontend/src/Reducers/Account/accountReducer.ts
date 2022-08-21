@@ -20,7 +20,8 @@ export default (state: any = defaultState, action: any)=>{
                     token: action.token,
                     refreshToken: action.refreshToken,
                     username: action.username,
-                    userId: action.userId
+                    userId: action.userId,
+                    roles: action.roles
                 }
             };
         case LOG_OUT:

@@ -93,6 +93,8 @@ public class AccountController : ControllerBase
         return Ok(new LoginRegisterResponse { Status = "Success", Message = "User created successfully!" });
     }
     [HttpPost]
+    [Route("")]
+    [HttpPost]
     [Route("register-admin")]
     public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)
     {
@@ -202,7 +204,7 @@ public class AccountController : ControllerBase
 
         return NoContent();
     }
-
+    #region private
     private JwtSecurityToken CreateToken(List<Claim> authClaims)
     {
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
@@ -246,5 +248,5 @@ public class AccountController : ControllerBase
         return principal;
 
     }
-
+    #endregion
 }

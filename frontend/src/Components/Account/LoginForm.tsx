@@ -13,13 +13,15 @@ const mapDispatchToProps = (dispatch: any) => ({
     onLogIn: (token: string,
         refreshToken: string,
         username: string,
-        userId: string) => dispatch({
+        userId: string,
+        roles: string[]) => dispatch({
         ...logIn, 
         isLoggedIn: true,
         token: token,
         refreshToken: refreshToken,
         username: username,
-        userId: userId
+        userId: userId,
+        roles: roles
     })
 });
 
@@ -27,7 +29,8 @@ interface LogInProps{
     onLogIn?: (token: string,
         refreshToken: string,
         username: string,
-        userId: string)=>{},
+        userId: string,
+        roles: string[])=>{},
     isLoggedIn: boolean,
     t: any
 }
@@ -52,7 +55,7 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
             username: this.state.username!,
             password: this.state.password!
         }).then((r: any)=>{
-            this.props.onLogIn!( r.data.token, r.data.refreshToken, r.data.username, r.data.userId );
+            this.props.onLogIn!( r.data.token, r.data.refreshToken, r.data.username, r.data.userId, r.data.roles );
         }).catch((r:any)=>{
             this.setState({
                 ...this.state,

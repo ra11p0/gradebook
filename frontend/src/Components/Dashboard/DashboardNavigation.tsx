@@ -6,7 +6,8 @@ import { Nav } from 'react-bootstrap';
 import { withTranslation } from 'react-i18next';
 
 const mapStateToProps = (state: any) => ({
-      isLoggedIn: state.common.isLoggedIn
+      isLoggedIn: state.common.isLoggedIn,
+      isAdmin: state.common.session?.roles.includes('Admin')
 });
   
 const mapDispatchToProps = (dispatch: any) => ({
@@ -16,19 +17,36 @@ const mapDispatchToProps = (dispatch: any) => ({
 interface DashboardNavigationProps{
     onLogIn?: ()=>{},
     isLoggedIn: boolean,
-    t: any
+    t: any,
+    isAdmin: boolean
 }
 
 class DashboardNavigation extends React.Component<DashboardNavigationProps> {
     render(): React.ReactNode {
         const { t } = this.props;
         return (
-                <Nav className='d-flex gap-2 justify-content-end'>
-                    <Link to='grades' className='btn btn-outline-primary'> {t('grades')}</Link>
-                    <Link to='absence' className='btn btn-outline-primary'> {t('absence')}</Link>
-                    <Link to='subject' className='btn btn-outline-primary'> {t('subjects')}</Link>
-                    <Link to='timetable' className='btn btn-outline-primary'> {t('timetable')}</Link>
-                </Nav>
+            <div>
+                {
+                    this.props.isAdmin &&
+                    <Nav className='d-flex gap-2 justify-content-end'>
+                        ADMIN
+                        <Link to='grades' className='btn btn-outline-primary'> {t('grades')}</Link>
+                        <Link to='absence' className='btn btn-outline-primary'> {t('absence')}</Link>
+                        <Link to='subject' className='btn btn-outline-primary'> {t('subjects')}</Link>
+                        <Link to='timetable' className='btn btn-outline-primary'> {t('timetable')}</Link>
+                    </Nav>
+                }
+                {
+                    !this.props.isAdmin &&
+                    <Nav className='d-flex gap-2 justify-content-end'>
+                        NON ADMIN
+                        <Link to='grades' className='btn btn-outline-primary'> {t('grades')}</Link>
+                        <Link to='absence' className='btn btn-outline-primary'> {t('absence')}</Link>
+                        <Link to='subject' className='btn btn-outline-primary'> {t('subjects')}</Link>
+                        <Link to='timetable' className='btn btn-outline-primary'> {t('timetable')}</Link>
+                    </Nav>
+                }
+            </div>
           );
     }
 }
