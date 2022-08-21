@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Gradebook.Foundation.Identity.Models;
+using Gradebook.Foundation.Common.Extensions;
 
 namespace Api.Controllers;
 
@@ -22,14 +23,16 @@ public class AccountController : ControllerBase
     private readonly ILogger<AccountController> _logger;
 
     public AccountController(ILogger<AccountController> logger,
+        IServiceProvider serviceProvider,
         UserManager<ApplicationUser> userManager,
         RoleManager<IdentityRole> roleManager,
         IConfiguration configuration)
     {
         _logger = logger;
-        _userManager = userManager;
-        _roleManager = roleManager;
-        _configuration = configuration;
+        //_userManager = userManager;
+        _userManager = serviceProvider.Resolve<UserManager<ApplicationUser>>();
+        _roleManager = serviceProvider.Resolve<RoleManager<IdentityRole>>();
+        _configuration = serviceProvider.Resolve<IConfiguration>();;
     }
     [HttpPost]
     [Route("login")]

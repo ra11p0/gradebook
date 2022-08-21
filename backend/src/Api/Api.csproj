@@ -16,6 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gradebook.Foundation.Identity\Gradebook.Foundation.Identity.csproj" />
+    <ProjectReference Include="..\Gradebook.Foundation.DependencyResolver\Gradebook.Foundation.DependencyResolver.csproj" />
   </ItemGroup>
 
 </Project>
