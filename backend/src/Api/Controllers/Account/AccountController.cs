@@ -63,6 +63,8 @@ public class AccountController : ControllerBase
             user.RefreshTokenExpiryTime = DateTime.Now.AddDays(refreshTokenValidityInDays);
 
             await _userManager.UpdateAsync(user);
+            
+            var roles = await _userManager.GetRolesAsync(user);
 
             return Ok(new
             {
@@ -70,7 +72,8 @@ public class AccountController : ControllerBase
                 RefreshToken = refreshToken,
                 Expiration = token.ValidTo,
                 Username = user.UserName,
-                UserId = user.Id
+                UserId = user.Id,
+                Roles = roles
             });
         }
         return Unauthorized();
@@ -124,7 +127,7 @@ public class AccountController : ControllerBase
         {
             await _userManager.AddToRoleAsync(user, UserRoles.Admin);
         }
-        if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
+        if (await _roleManager.RoleExistsAsync(UserRoles.User))
         {
             await _userManager.AddToRoleAsync(user, UserRoles.User);
         }
