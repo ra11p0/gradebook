@@ -55,7 +55,7 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
             username: this.state.username!,
             password: this.state.password!
         }).then((r: any)=>{
-            this.props.onLogIn!( r.data.token, r.data.refreshToken, r.data.username, r.data.userId, r.data.roles );
+            this.props.onLogIn!( r.data.access_token, r.data.refreshToken, r.data.username, r.data.userId, r.data.roles );
         }).catch((r:any)=>{
             this.setState({
                 ...this.state,
