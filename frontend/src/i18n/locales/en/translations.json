@@ -5,5 +5,10 @@
     "subjects" : "Subjects",
     "timetable" : "Time table",
     "dashboard": "Dashboard",
-    "logout": "Log out"
+    "logout": "Log out",
+    "Supervisor": "Supervisor",
+    "Student": "Student",
+    "Teacher": "Teacher",
+    "SchoolAdmin": "School Admin",
+    "activateToUseGradebook": "Activate your account to use gradebook."
 }

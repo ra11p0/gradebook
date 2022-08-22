@@ -5,5 +5,10 @@
     "subjects" : "Przedmioty",
     "timetable" : "Plan lekcji",
     "dashboard": "Dashboard",
-    "logout": "Wyloguj"
+    "logout": "Wyloguj",
+    "Supervisor": "Nadzorca",
+    "Student": "Uczeń",
+    "Teacher": "Nauczyciel",
+    "SchoolAdmin": "Administrator szkoły",
+    "activateToUseGradebook": "Aktywuj swoje konto by korzystać z gradebooka."
 }

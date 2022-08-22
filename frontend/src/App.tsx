@@ -1,15 +1,19 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Header from './Components/Shared/Header';
 import Index from './Routes/Index';
 import Dashboard from './Routes/Dashboard';
 import {appLoad} from './Actions/Account/accountActions';
 import { connect } from 'react-redux';
 import Account from './Routes/Account';
+import ActivateAccount from './Components/Account/ActivateAccount';
+import RegisterForm from './Components/Account/RegisterForm';
 
 const mapStateToProps = (state: any) => {
   return {
-    appLoaded: state.common.appLoaded
+    appLoaded: state.common.appLoaded,
+    isLoggedIn: state.common.isLoggedIn,
+    isUserActivated: state.common.session?.roles.length != 0
   }};
 
 const mapDispatchToProps = (dispatch: any) => ({
@@ -19,6 +23,8 @@ const mapDispatchToProps = (dispatch: any) => ({
 interface AppProps{
   onLoad: ()=>{};
   appLoaded: boolean;
+  isLoggedIn: boolean,
+  isUserActivated: boolean
 }
 
 class App extends React.Component<AppProps>{
@@ -31,9 +37,20 @@ class App extends React.Component<AppProps>{
         <BrowserRouter>
           <Header/>
           <Routes>
+            {
+              this.props.isLoggedIn && this.props.isUserActivated &&
+              <>
+              <Route path="/dashboard/*" element={<Dashboard />} />
+              <Route path="/account/*" element={<Account />} />
+              </>
+            }
+            {
+              this.props.isLoggedIn && !this.props.isUserActivated &&
+              <Route path='*' element={<ActivateAccount/>}/>
+            }
+
+            <Route path="/account/register" element={<RegisterForm />} />
             <Route path='*' element={<Index/>}/>
-            <Route path="/dashboard/*" element={<Dashboard />} />
-            <Route path="/account/*" element={<Account />} />
           </Routes>
         </BrowserRouter>
       </div>
