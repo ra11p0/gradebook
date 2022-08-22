@@ -1,5 +1,5 @@
 using System.Text;
-using Gradebook.Foundation.Common.Identity.Logic.Queries.Interfaces;
+using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 using Gradebook.Foundation.Identity.Logic;
 using Gradebook.Foundation.Identity.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -16,7 +16,7 @@ public class IdentityService
     public static void Inject(IServiceCollection services, IConfigurationRoot configuration)
     {
         services.AddDbContext<ApplicationIdentityDatabaseContext>
-            (options => options.UseMySql(configuration.GetConnectionString("DefaultAppDatabase"), new MySqlServerVersion(new Version(8, 0, 0))));
+            (options => options.UseMySql(configuration.GetConnectionString("DefaultAppDatabase"), new MySqlServerVersion(new Version(8, 30, 0))));
 
         services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<ApplicationIdentityDatabaseContext>()
@@ -46,6 +46,6 @@ public class IdentityService
             };
         });
 
-        services.AddScoped<IIdentityQueriesLogic, IdentityQueriesLogic>();
+        services.AddScoped<IIdentityLogic, IdentityLogic>();
     }
 }
