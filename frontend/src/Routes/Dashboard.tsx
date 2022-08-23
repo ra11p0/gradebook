@@ -24,6 +24,10 @@ class Dashboard extends React.Component<DashboardProps>{
     render(){
         return (
         <div className='m-3 card'>
+            {
+                !this.props.isLoggedIn &&
+                <Navigate to='/'/>
+            }
             <div className='card-header'>
                 <DashboardNavigation/>
             </div>
@@ -36,10 +40,6 @@ class Dashboard extends React.Component<DashboardProps>{
                     <Route path="timetable" element={<Timetable/>}></Route>
                  </Routes>
             </div>
-            {
-                !this.props.isLoggedIn &&
-                <Navigate to='/'/>
-            }
         </div>
         );
     }

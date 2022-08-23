@@ -1,11 +1,14 @@
 import React from 'react';
 import { Link, Navigate } from "react-router-dom";
 import { connect } from 'react-redux';
-import { logIn } from '../../Actions/Common/common';
-import { Button, Nav, NavLink } from 'react-bootstrap';
+import { logIn } from '../../Actions/Account/accountActions';
+import { Nav } from 'react-bootstrap';
+import { withTranslation } from 'react-i18next';
 
 const mapStateToProps = (state: any) => ({
-      isLoggedIn: state.common.isLoggedIn
+      isLoggedIn: state.common.isLoggedIn,
+      isTeacher: state.common.session?.roles.includes('Techer'),
+      isStudent: state.common.session?.roles.includes('Student')
 });
   
 const mapDispatchToProps = (dispatch: any) => ({
@@ -13,21 +16,41 @@ const mapDispatchToProps = (dispatch: any) => ({
 });
 
 interface DashboardNavigationProps{
-    onLogIn?: ()=>{},
-    isLoggedIn: boolean
+    onLogIn?: ()=>{};
+    isLoggedIn: boolean;
+    t: any;
+    isTeacher: boolean;
+    isStudent: boolean;
 }
 
 class DashboardNavigation extends React.Component<DashboardNavigationProps> {
     render(): React.ReactNode {
+        const { t } = this.props;
         return (
-                <Nav className='d-flex gap-2 justify-content-end'>
-                    <Link to='grades' className='btn btn-outline-primary'> oceny</Link>
-                    <Link to='absence' className='btn btn-outline-primary'> nieobecnosci</Link>
-                    <Link to='subject' className='btn btn-outline-primary'> przedmioty</Link>
-                    <Link to='timetable' className='btn btn-outline-primary'> plan lekcji</Link>
-                </Nav>
+            <div>
+                {
+                    this.props.isTeacher &&
+                    <Nav className='d-flex gap-2 justify-content-end'>
+                        Teacher
+                        <Link to='grades' className='btn btn-outline-primary'> {t('grades')}</Link>
+                        <Link to='absence' className='btn btn-outline-primary'> {t('absence')}</Link>
+                        <Link to='subject' className='btn btn-outline-primary'> {t('subjects')}</Link>
+                        <Link to='timetable' className='btn btn-outline-primary'> {t('timetable')}</Link>
+                    </Nav>
+                }
+                {
+                    !this.props.isStudent &&
+                    <Nav className='d-flex gap-2 justify-content-end'>
+                        Student
+                        <Link to='grades' className='btn btn-outline-primary'> {t('grades')}</Link>
+                        <Link to='absence' className='btn btn-outline-primary'> {t('absence')}</Link>
+                        <Link to='subject' className='btn btn-outline-primary'> {t('subjects')}</Link>
+                        <Link to='timetable' className='btn btn-outline-primary'> {t('timetable')}</Link>
+                    </Nav>
+                }
+            </div>
           );
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DashboardNavigation);
+export default withTranslation()(connect(mapStateToProps, mapDispatchToProps)(DashboardNavigation));

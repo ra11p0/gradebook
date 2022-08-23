@@ -1,52 +1,117 @@
 import React from 'react';
 import { Link, Navigate } from "react-router-dom";
 import { connect } from 'react-redux';
-import { logIn } from '../../Actions/Common/common';
+import { logIn } from '../../Actions/Account/accountActions';
+import AccountRepository from '../../ApiClient/Account/AccountProxy';
+import { withTranslation } from 'react-i18next';
 
 const mapStateToProps = (state: any) => ({
       isLoggedIn: state.common.isLoggedIn
 });
   
 const mapDispatchToProps = (dispatch: any) => ({
-    onLogIn: () => dispatch(logIn)
+    onLogIn: (token: string,
+        refreshToken: string,
+        username: string,
+        userId: string,
+        roles: string[]) => dispatch({
+        ...logIn, 
+        isLoggedIn: true,
+        token: token,
+        refreshToken: refreshToken,
+        username: username,
+        userId: userId,
+        roles: roles
+    })
 });
 
 interface LogInProps{
-    onLogIn?: ()=>{},
-    isLoggedIn: boolean
+    onLogIn?: (token: string,
+        refreshToken: string,
+        username: string,
+        userId: string,
+        roles: string[])=>{},
+    isLoggedIn: boolean,
+    t: any
 }
 
-class LoginForm extends React.Component<LogInProps> {
+interface LogInState{
+    username?: string,
+    password?: string,
+    loginFailed?: boolean
+}
+
+class LoginForm extends React.Component<LogInProps, LogInState> {
+    constructor(props: LogInProps) {
+        super(props);
+        this.state = {
+            username: '',
+            password: '',
+            loginFailed: false
+        }
+    }
+    onLogIn(){
+        AccountRepository.logIn({
+            username: this.state.username!,
+            password: this.state.password!
+        }).then((r: any)=>{
+            this.props.onLogIn!( r.data.access_token, r.data.refreshToken, r.data.username, r.data.userId, r.data.roles );
+        }).catch((r:any)=>{
+            this.setState({
+                ...this.state,
+                loginFailed: true
+            });
+        });
+    }
     render(): React.ReactNode {
+        const { t } = this.props;
         return (
-            <div className='card'>
+            <div className='card m-3 p-3'>
+                {
+                    this.props.isLoggedIn &&
+                    <Navigate to="/dashboard"/>
+                }
                 <div className='card-body'>
                     <div className='m-1 p-1 display-6'>
-                        <label>Logowanie</label>
+                        <label>{t('loging')}</label>
                     </div>
+                    {
+                        this.state.loginFailed &&
+                        <div className='m-1 p-1 alert alert-danger'>
+                            Logowanie nieudane
+                        </div>
+                    }
                     <div className='m-1 p-1'>
-                        <label>Login</label>
-                        <input className='form-control'>
+                        <label>{t('email')}</label>
+                        <input className='form-control' 
+                            value={this.state.username} 
+                            onChange={(e) => this.setState({
+                                ...this.state,
+                                username: e.target.value
+                            })}>
                         </input>
                     </div>
                     <div className='m-1 p-1'>
-                        <label>Hasło</label>
-                        <input className='form-control' type='password'>
+                        <label>{t('password')}</label>
+                        <input className='form-control' 
+                            type='password'
+                            value={this.state.password} 
+                            onChange={(e) => this.setState({
+                                ...this.state,
+                                password: e.target.value
+                            })}
+                            >
                         </input>
                     </div>
                     <div className='m-1 p-1 d-flex justify-content-between'>
                         <div className="my-auto d-flex gap-2">
-                            <Link to={'account/register'}>Załóz konto</Link>
+                            <Link to={'register'}>{t('register')}</Link>
                             <Link to={''}>Zmień hasło</Link>
                             <Link to={''}>Przywróć dostęp</Link>
                         </div>
                         <input className='btn btn-outline-primary' 
-                            onClick={()=>this.props.onLogIn!()} 
+                            onClick={()=> this.onLogIn!()} 
                             type='submit' value="Zaloguj"/>
-                            {
-                                this.props.isLoggedIn &&
-                                <Navigate to="/dashboard"/>
-                            }
                     </div>
                 </div>
             </div>
@@ -54,4 +119,4 @@ class LoginForm extends React.Component<LogInProps> {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);
+export default withTranslation()(connect(mapStateToProps, mapDispatchToProps)(LoginForm));
