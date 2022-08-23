@@ -16,5 +16,10 @@
     "email": "Email",
     "register": "Rejestracja",
     "registerButtonLabel": "Zarejestruj",
-    "goBackToLoginPage": "Wróć do strony logowania"
+    "goBackToLoginPage": "Wróć do strony logowania",
+    "emailInvalid": "Niepoprawny adres email!",
+    "passwordTooShort": "Hasło zbyt krótkie!",
+    "passwordsNotTheSame": "Hasła nie są takie same!",
+    "userRegisteredAlertTitle": "Zarejestrowano!",
+    "userRegisteredAlertText": "Teraz mozesz się zalogować i aktywować swoje konto."
 }

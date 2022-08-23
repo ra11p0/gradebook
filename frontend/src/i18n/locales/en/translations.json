@@ -16,5 +16,10 @@
     "email": "Email",
     "register": "Register",
     "registerButtonLabel": "Register",
-    "goBackToLoginPage": "Go back to login page"
+    "goBackToLoginPage": "Go back to login page",
+    "emailInvalid": "Email address invalid!",
+    "passwordTooShort": "Password too short!",
+    "passwordsNotTheSame": "Passwords do not match!",
+    "userRegisteredAlertTitle": "User registered!",
+    "userRegisteredAlertText": "Now you can log in and activate your account."
 }

@@ -34,13 +34,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
         };
     }
     async componentDidMount(){
-        AccountRepository.getWeather()
-            .then((e: any)=>{
-                this.setState({
-                    ...this.state,
-                    weather: JSON.stringify(e.data)
-                });
-            });
+        
     }
     render(): React.ReactNode {
         return (

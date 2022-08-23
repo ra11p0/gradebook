@@ -6,6 +6,7 @@ import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'react-bootstrap';
 import AccountProxy from '../../ApiClient/Account/AccountProxy';
+import Swal from 'sweetalert2';
 
 const mapStateToProps = (state: any) => ({
       isLoggedIn: state.common.isLoggedIn
@@ -27,18 +28,20 @@ interface RegisterFormValues{
 }
 
 const RegisterForm = (props: RegisterFormProps): ReactElement => {
+    const {t} = useTranslation();
+
     const validate = (values: RegisterFormValues)=>{
         const errors: any = {};
         if(values.email.length < 5){
-            errors.email = "Email too short!"
+            errors.email = t('emailInvalid')
         }
 
         if(values.password.length < 5){
-            errors.password = "Password too short!"
+            errors.password = t('passwordTooShort')
         }
 
         if(values.password !== values.password2){
-            errors.password = "Passwords are not the same!"
+            errors.password = t('passwordsNotTheSame')
         }
         return errors;
     };
@@ -53,12 +56,13 @@ const RegisterForm = (props: RegisterFormProps): ReactElement => {
         onSubmit: (values: RegisterFormValues)=>{
             AccountProxy.register(values)
                 .then(()=>{
-                    
+                    Swal.fire({
+                        title: t('userRegisteredAlertTitle'),
+                        text: t('userRegisteredAlertText')
+                    });
                 });
         }
     });
-
-    const {t} = useTranslation();
 
     return (
         <div className='card m-3 p-3'>
