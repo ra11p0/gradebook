@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, Navigate } from "react-router-dom";
 import { connect } from 'react-redux';
 import { logIn } from '../../Actions/Account/accountActions';
-import AccountRepository from '../../ApiClient/Account/Queries/Repositories/AccountRepository';
+import AccountRepository from '../../ApiClient/Account/AccountProxy';
 import { withTranslation } from 'react-i18next';
 
 const mapStateToProps = (state: any) => ({
@@ -66,7 +66,7 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
     render(): React.ReactNode {
         const { t } = this.props;
         return (
-            <div className='card'>
+            <div className='card m-3 p-3'>
                 {
                     this.props.isLoggedIn &&
                     <Navigate to="/dashboard"/>
@@ -82,7 +82,7 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
                         </div>
                     }
                     <div className='m-1 p-1'>
-                        <label>Login</label>
+                        <label>{t('email')}</label>
                         <input className='form-control' 
                             value={this.state.username} 
                             onChange={(e) => this.setState({
@@ -92,7 +92,7 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
                         </input>
                     </div>
                     <div className='m-1 p-1'>
-                        <label>Hasło</label>
+                        <label>{t('password')}</label>
                         <input className='form-control' 
                             type='password'
                             value={this.state.password} 
@@ -105,7 +105,7 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
                     </div>
                     <div className='m-1 p-1 d-flex justify-content-between'>
                         <div className="my-auto d-flex gap-2">
-                            <Link to={'account/register'}>Załóz konto</Link>
+                            <Link to={'register'}>{t('register')}</Link>
                             <Link to={''}>Zmień hasło</Link>
                             <Link to={''}>Przywróć dostęp</Link>
                         </div>

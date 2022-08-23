@@ -74,7 +74,7 @@ public class AccountController : ControllerBase
     [Route("register")]
     public async Task<IActionResult> Register([FromBody] RegisterModel model)
     {
-        var userExists = await _userManager.Service.FindByNameAsync(model.Username);
+        var userExists = await _userManager.Service.FindByNameAsync(model.Email);
         if (userExists != null)
             return StatusCode(StatusCodes.Status500InternalServerError, new LoginRegisterResponse { Status = "Error", Message = "User already exists!" });
 
@@ -82,7 +82,7 @@ public class AccountController : ControllerBase
         {
             Email = model.Email,
             SecurityStamp = Guid.NewGuid().ToString(),
-            UserName = model.Username
+            UserName = model.Email
         };
         var result = await _userManager.Service.CreateAsync(user, model.Password);
         if (!result.Succeeded)

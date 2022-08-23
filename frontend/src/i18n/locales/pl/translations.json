@@ -10,5 +10,11 @@
     "Student": "Uczeń",
     "Teacher": "Nauczyciel",
     "SchoolAdmin": "Administrator szkoły",
-    "activateToUseGradebook": "Aktywuj swoje konto by korzystać z gradebooka."
+    "activateToUseGradebook": "Aktywuj swoje konto by korzystać z gradebooka.",
+    "password": "Hasło",
+    "confirmPassword": "Potwierdź hasło",
+    "email": "Email",
+    "register": "Rejestracja",
+    "registerButtonLabel": "Zarejestruj",
+    "goBackToLoginPage": "Wróć do strony logowania"
 }

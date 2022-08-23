@@ -25,7 +25,6 @@ class Account extends React.Component<AccountProps>{
                 </div>
                 <div className='card-body'>
                 <Routes>
-                    <Route path="register" element={<RegisterForm />} />
                     <Route path="profile" element={<Profile />} />
                 </Routes>
                 </div>

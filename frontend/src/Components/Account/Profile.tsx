@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import { logOut } from '../../Actions/Account/accountActions';
-import AccountRepository from '../../ApiClient/Account/Queries/Repositories/AccountRepository';
+import AccountRepository from '../../ApiClient/Account/AccountProxy';
 
 const mapStateToProps = (state: any) => {
     return {

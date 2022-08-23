@@ -10,5 +10,11 @@
     "Student": "Student",
     "Teacher": "Teacher",
     "SchoolAdmin": "School Admin",
-    "activateToUseGradebook": "Activate your account to use gradebook."
+    "activateToUseGradebook": "Activate your account to use gradebook.",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "email": "Email",
+    "register": "Register",
+    "registerButtonLabel": "Register",
+    "goBackToLoginPage": "Go back to login page"
 }
