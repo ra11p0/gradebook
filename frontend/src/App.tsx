@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import Account from './Routes/Account';
 import ActivateAccount from './Components/Account/ActivateAccount';
 import RegisterForm from './Components/Account/RegisterForm';
+import { ReactNotifications } from 'react-notifications-component';
 
 const mapStateToProps = (state: any) => {
   return {
@@ -35,6 +36,7 @@ class App extends React.Component<AppProps>{
     return (
       <div>
         <BrowserRouter>
+        <ReactNotifications/>
           <Header/>
           <Routes>
             {

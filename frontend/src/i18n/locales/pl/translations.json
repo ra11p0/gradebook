@@ -21,5 +21,7 @@
     "passwordTooShort": "Hasło zbyt krótkie!",
     "passwordsNotTheSame": "Hasła nie są takie same!",
     "userRegisteredAlertTitle": "Zarejestrowano!",
-    "userRegisteredAlertText": "Teraz mozesz się zalogować i aktywować swoje konto."
+    "userRegisteredAlertText": "Teraz mozesz się zalogować i aktywować swoje konto.",
+    "error": "Błąd!",
+    "commonErrorMessage": "Błąd z połączeniem!"
 }

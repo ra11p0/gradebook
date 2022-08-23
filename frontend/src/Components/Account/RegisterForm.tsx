@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from 'react-bootstrap';
 import AccountProxy from '../../ApiClient/Account/AccountProxy';
 import Swal from 'sweetalert2';
+import CommonNotifications  from '../../Notifications/CommonNotifications'
 
 const mapStateToProps = (state: any) => ({
       isLoggedIn: state.common.isLoggedIn
@@ -60,6 +61,9 @@ const RegisterForm = (props: RegisterFormProps): ReactElement => {
                         title: t('userRegisteredAlertTitle'),
                         text: t('userRegisteredAlertText')
                     });
+                })
+                .catch(()=>{
+                    CommonNotifications.showCommonError();
                 });
         }
     });
