@@ -66,7 +66,7 @@ class Header extends React.Component<HeaderProps, HeaderState>{
                     }
                     <div className='d-flex gap-2'>
                         <Dropdown>
-                            <Dropdown.Toggle>
+                            <Dropdown.Toggle variant='outline-secondary'>
                                 <FontAwesomeIcon icon={faLanguage}/>
                             </Dropdown.Toggle>
                             <Dropdown.Menu>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
-import { Card, FormSelect } from 'react-bootstrap';
+import { Button, ButtonGroup, Card, Col, FormSelect, Row } from 'react-bootstrap';
 import { allUserRoles, UserRolesEnum }  from '../../Common/Enums/UserRolesEnum';
 
 const mapStateToProps = (state: any) => ({
@@ -33,17 +33,18 @@ class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAcco
                         <div className='display-6'>
                             {t('activateToUseGradebook')}
                         </div>
-                        <FormSelect>
-                            {
-                                allUserRoles.map((e: UserRolesEnum)=>{
-                                    return(
-                                        <option key={e}>
-                                            {t(e)}
-                                        </option>
-                                    )
-                                })
-                            }
-                        </FormSelect>
+                        <Row className='m-3 p-3'>
+                            <Col/>
+                            <Col className='text-center'>
+                                <Button className='fs-3 m-3 p-3' variant='outline-secondary'>
+                                    Student
+                                </Button>
+                                <Button className='fs-3 m-3 p-3' variant='outline-secondary'>
+                                    Teacher
+                                </Button>
+                            </Col>
+                            <Col/>
+                        </Row>
                     </div>
                 </Card.Body>
             </Card>

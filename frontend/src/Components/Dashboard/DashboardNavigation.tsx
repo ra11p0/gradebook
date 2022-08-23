@@ -7,7 +7,8 @@ import { withTranslation } from 'react-i18next';
 
 const mapStateToProps = (state: any) => ({
       isLoggedIn: state.common.isLoggedIn,
-      isAdmin: state.common.session?.roles.includes('Admin')
+      isTeacher: state.common.session?.roles.includes('Techer'),
+      isStudent: state.common.session?.roles.includes('Student')
 });
   
 const mapDispatchToProps = (dispatch: any) => ({
@@ -15,10 +16,11 @@ const mapDispatchToProps = (dispatch: any) => ({
 });
 
 interface DashboardNavigationProps{
-    onLogIn?: ()=>{},
-    isLoggedIn: boolean,
-    t: any,
-    isAdmin: boolean
+    onLogIn?: ()=>{};
+    isLoggedIn: boolean;
+    t: any;
+    isTeacher: boolean;
+    isStudent: boolean;
 }
 
 class DashboardNavigation extends React.Component<DashboardNavigationProps> {
@@ -27,9 +29,9 @@ class DashboardNavigation extends React.Component<DashboardNavigationProps> {
         return (
             <div>
                 {
-                    this.props.isAdmin &&
+                    this.props.isTeacher &&
                     <Nav className='d-flex gap-2 justify-content-end'>
-                        ADMIN
+                        Teacher
                         <Link to='grades' className='btn btn-outline-primary'> {t('grades')}</Link>
                         <Link to='absence' className='btn btn-outline-primary'> {t('absence')}</Link>
                         <Link to='subject' className='btn btn-outline-primary'> {t('subjects')}</Link>
@@ -37,9 +39,9 @@ class DashboardNavigation extends React.Component<DashboardNavigationProps> {
                     </Nav>
                 }
                 {
-                    !this.props.isAdmin &&
+                    !this.props.isStudent &&
                     <Nav className='d-flex gap-2 justify-content-end'>
-                        NON ADMIN
+                        Student
                         <Link to='grades' className='btn btn-outline-primary'> {t('grades')}</Link>
                         <Link to='absence' className='btn btn-outline-primary'> {t('absence')}</Link>
                         <Link to='subject' className='btn btn-outline-primary'> {t('subjects')}</Link>
