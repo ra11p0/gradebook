@@ -88,7 +88,7 @@ const RegisterForm = (props: RegisterFormProps): ReactElement => {
                             onChange={formik.handleChange}
                             value={formik.values.email}
                         />
-                        {formik.errors.email ? <div className='invalid-feedback d-block'>{formik.errors.email}</div> : null}
+                        {formik.errors.email && formik.touched.email ? <div className='invalid-feedback d-block'>{formik.errors.email}</div> : null}
                     </div>
                     <div className='m-1 p-1'>
                         <label htmlFor='password'>{t('password')}</label>
@@ -99,7 +99,7 @@ const RegisterForm = (props: RegisterFormProps): ReactElement => {
                             onChange={formik.handleChange}
                             value={formik.values.password}
                         />
-                        {formik.errors.password ? <div className='invalid-feedback d-block'>{formik.errors.password}</div> : null}
+                        {formik.errors.password && formik.touched.password ? <div className='invalid-feedback d-block'>{formik.errors.password}</div> : null}
                     </div>
                     <div className='m-1 p-1'>
                         <label htmlFor='password2'>{t('confirmPassword')}</label>
@@ -110,7 +110,7 @@ const RegisterForm = (props: RegisterFormProps): ReactElement => {
                             onChange={formik.handleChange}
                             value={formik.values.password2}
                         />
-                        {formik.errors.password2 ? <div className='invalid-feedback d-block'>{formik.errors.password2}</div> : null}
+                        {formik.errors.password2 && formik.touched.password2 ? <div className='invalid-feedback d-block'>{formik.errors.password2}</div> : null}
                     </div>
                     <div className='m-1 p-1 d-flex justify-content-between'>
                         <div className="my-auto d-flex gap-2">
