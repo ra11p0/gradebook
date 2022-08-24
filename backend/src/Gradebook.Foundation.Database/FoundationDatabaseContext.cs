@@ -18,6 +18,7 @@ public class FoundationDatabaseContext : DbContext
     public DbSet<Subject> Subjects { get; set; }
     public DbSet<Teacher> Teachers { get; set; }
     public DbSet<TeachersAbsence> TeachersAbsences { get; set; }
+    public DbSet<SystemInvitation> SystemInvitations { get; set; }
 
     public FoundationDatabaseContext()
     {
