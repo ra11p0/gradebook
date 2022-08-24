@@ -26,5 +26,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Gradebook.Foundation.Domain\Gradebook.Foundation.Domain.csproj" />
+  </ItemGroup>
 
 </Project>

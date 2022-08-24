@@ -10,7 +10,7 @@ public class Group : BaseDomainModel
     [ForeignKey("Students")]
     public virtual List<Student> Students { get; set; }
     
-    [ForeignKey("Classs")]
+    [ForeignKey("Classes")]
     public Guid ClassGuid { get; set; }
     public virtual Class Class { get; set; }
 }

@@ -1,3 +1,4 @@
+using Gradebook.Foundation.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -5,6 +6,19 @@ namespace Gradebook.Foundation.Database;
 
 public class FoundationDatabaseContext : DbContext
 {
+
+    public DbSet<Class> Classes { get; set; }
+    public DbSet<Grade> Grades { get; set; }
+    public DbSet<Group> Groups { get; set; }
+    public DbSet<Lesson> Lessons { get; set; }
+    public DbSet<Position> Positions { get; set; }
+    public DbSet<School> Schools { get; set; }
+    public DbSet<Student> Students { get; set; }
+    public DbSet<StudentsAbsence> StudentsAbsences { get; set; }
+    public DbSet<Subject> Subjects { get; set; }
+    public DbSet<Teacher> Teachers { get; set; }
+    public DbSet<TeachersAbsence> TeachersAbsences { get; set; }
+
     public FoundationDatabaseContext()
     {
         
