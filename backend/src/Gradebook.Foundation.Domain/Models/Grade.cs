@@ -10,19 +10,19 @@ public class Grade : BaseDomainModel
     public string Description { get; set; }
 
 
-    [ForeignKey("Teachers")]
     public Guid TeacherGuid { get; set; }
+    [ForeignKey("TeacherGuid")]
     public virtual Teacher Teacher { get; set; }
 
-    [ForeignKey("Students")]
     public Guid StudentGuid { get; set; }
+    [ForeignKey("StudentGuid")]
     public virtual Student Student { get; set; }
 
-    [ForeignKey("Lessons")]
     public Guid LessonGuid { get; set; }
+    [ForeignKey("LessonGuid")]
     public Lesson Lesson { get; set; }
 
-    [ForeignKey("Grades")]
     public Guid RelatedGradeGuid { get; set; }
+    [ForeignKey("RelatedGradeGuid")]
     public virtual Grade RelatedGrade { get; set; }
 }

@@ -5,6 +5,5 @@ namespace Gradebook.Foundation.Domain.Models;
 
 public class Class : BaseDomainModel
 {
-    [ForeignKey("Students")]
-    public virtual List<Student> Students { get; set; }
+    public virtual ICollection<Student> Students { get; set; }
 }

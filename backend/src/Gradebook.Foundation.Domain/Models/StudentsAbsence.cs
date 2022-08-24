@@ -8,7 +8,7 @@ public class StudentsAbsence : BaseDomainModel
     public DateTime SinceDate { get; set; }
     public DateTime UntilDate { get; set; }
 
-    [ForeignKey("Students")]
     public Guid StudentGuid { get; set; }
+    [ForeignKey("StudentGuid")]
     public virtual Student Student { get; set; }
 }
