@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Gradebook.Foundation.Common;
+using Gradebook.Foundation.Domain.Enums;
 
 namespace Gradebook.Foundation.Domain.Models;
 
@@ -16,5 +17,5 @@ public class SystemInvitation : BaseDomainModel
     public Guid InvitedPersonGuid { get; set; }
     [ForeignKey("InvitedPersonGuid")]
     public Person InvitedPerson { get; set; }
-    public string Role { get; set; }
+    public SchoolRoleEnum SchoolRole { get; set; }
 }
