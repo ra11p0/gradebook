@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using Api.Controllers.Account.Responses;
 using Api.Models.Account;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
