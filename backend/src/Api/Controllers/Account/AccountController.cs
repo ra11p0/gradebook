@@ -129,7 +129,7 @@ public class AccountController : ControllerBase
             refreshToken = newRefreshToken
         });
     }
-    [Authorize]
+    [Authorize(Roles = "SuperAdmin")]
     [HttpPost]
     [Route("{userGuid}/roles")]
     public async Task<IActionResult> PostRoles([FromRoute] string userGuid, [FromBody] string[] roles){
