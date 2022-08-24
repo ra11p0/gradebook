@@ -1,5 +1,5 @@
 namespace Gradebook.Permissions.Logic.Queries;
 
-public class PermissionsQueriesRepositoryCached
+public class PermissionsQueriesRepositoryCached : IPermissionsQueriesRepository
 {
 }

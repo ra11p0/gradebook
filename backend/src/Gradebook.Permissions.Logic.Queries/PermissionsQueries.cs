@@ -3,9 +3,9 @@ using Gradebook.Foundation.Common.Permissions.Queries;
 
 namespace Gradebook.Permissions.Logic.Queries;
 
-public class PermissionQueries : BaseLogic<IPermissionsQueriesRepository>, IPermissionsQueries
+public class PermissionsQueries : BaseLogic<IPermissionsQueriesRepository>, IPermissionsQueries
 {
-    public PermissionQueries(IPermissionsQueriesRepository repository) : base(repository)
+    public PermissionsQueries(IPermissionsQueriesRepository repository) : base(repository)
     {
     }
 }

@@ -9,6 +9,8 @@ public class DependencyInjector
     {
         services.AddHttpContextAccessor();
         IdentityService.Inject(services, configuration);
+        FoundationService.Inject(services, configuration);
+        PermissionsService.Inject(services, configuration);
     }
 }
 
