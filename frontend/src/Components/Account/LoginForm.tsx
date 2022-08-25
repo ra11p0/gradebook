@@ -67,10 +67,7 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
         const { t } = this.props;
         return (
             <div className='card m-3 p-3'>
-                {
-                    this.props.isLoggedIn &&
-                    <Navigate to="/dashboard"/>
-                }
+        
                 <div className='card-body'>
                     <div className='m-1 p-1 display-6'>
                         <label>{t('loging')}</label>

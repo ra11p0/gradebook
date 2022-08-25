@@ -70,10 +70,7 @@ const RegisterForm = (props: RegisterFormProps): ReactElement => {
 
     return (
         <div className='card m-3 p-3'>
-            {
-                props.isLoggedIn &&
-                <Navigate to="/dashboard"/>
-            }
+ 
             <div className='card-body'>
                 <form onSubmit={formik.handleSubmit}>
                     <div className='m-1 p-1 display-6'>

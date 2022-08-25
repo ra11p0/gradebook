@@ -23,5 +23,6 @@
     "userRegisteredAlertTitle": "Zarejestrowano!",
     "userRegisteredAlertText": "Teraz mozesz się zalogować i aktywować swoje konto.",
     "error": "Błąd!",
-    "commonErrorMessage": "Błąd z połączeniem!"
+    "commonErrorMessage": "Błąd z połączeniem!",
+    "iAmA...": "Chcę się zarejestrować jako: "
 }

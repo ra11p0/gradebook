@@ -42,10 +42,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                 profile
                 and weather: 
                 {this.state.weather}
-                {
-                    !this.props.isLoggedIn &&
-                    <Navigate to='/'/>
-                }
+
             </div>
         );
     }
