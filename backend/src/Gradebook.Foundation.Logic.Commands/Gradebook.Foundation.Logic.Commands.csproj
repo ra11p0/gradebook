@@ -3,8 +3,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Gradebook.Foundation.Common\Gradebook.Foundation.Common.csproj" />
     <ProjectReference Include="..\Gradebook.Foundation.Database\Gradebook.Foundation.Database.csproj" />
+    <ProjectReference Include="..\Gradebook.Foundation.Domain\Gradebook.Foundation.Domain.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.*" />
   </ItemGroup>
 

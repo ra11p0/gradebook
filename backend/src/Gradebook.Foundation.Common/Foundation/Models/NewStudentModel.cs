@@ -1,4 +1,4 @@
-namespace Api.Models.Students;
+namespace Gradebook.Foundation.Common.Foundation.Models;
 
 public class NewStudentModel
 {

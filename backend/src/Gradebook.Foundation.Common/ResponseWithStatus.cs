@@ -10,3 +10,10 @@ public class ResponseWithStatus<R, S>
         Response = response;
     }
 }
+
+public class ResponseWithStatus<S> : ResponseWithStatus<object, S>
+{
+    public ResponseWithStatus(S status) : base(null, status)
+    {
+    }
+}
