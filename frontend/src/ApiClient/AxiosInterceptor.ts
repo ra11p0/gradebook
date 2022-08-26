@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { store } from '../store'
 import AccountRepository from './Account/AccountProxy';
-import { refreshToken as refreshTokenAction } from '../Actions/Account/accountActions';
+import { logOut, refreshToken as refreshTokenAction } from '../Actions/Account/accountActions';
 
 const axiosApiAuthorized = axios.create();
 
