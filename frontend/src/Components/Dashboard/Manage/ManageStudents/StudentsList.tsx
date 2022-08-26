@@ -12,7 +12,7 @@ const StudentsList = (props: StudentsListProps): ReactElement => {
     return (
         <div>
             <Button onClick={()=>setShowAddStudentModal(true)}>
-                AddNewStudent
+                {t('addStudent')}
             </Button>
             <AddNewStudentModal show={showAddStudentModal} onHide={()=>setShowAddStudentModal(false)}/>
             StudentsList

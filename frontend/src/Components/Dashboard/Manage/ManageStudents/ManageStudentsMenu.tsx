@@ -10,8 +10,8 @@ const ManageStudentsMenu = (props: ManageStudentsMenuProps): ReactElement => {
     const {t} = useTranslation();
     return (
         <div className='d-flex flex-wrap gap-3'>
-            <Link to='studentsList' className='btn btn-outline-primary w-100'>studentsList</Link>
-            <Link to='invitations' className='btn btn-outline-primary w-100'>invitations</Link>
+            <Link to='studentsList' className='btn btn-outline-primary w-100'>{t("studentsList")}</Link>
+            <Link to='invitations' className='btn btn-outline-primary w-100'>{t("invitations")}</Link>
             <Link to='invitations' className='btn btn-outline-primary w-100'>C</Link>
         </div>
     );

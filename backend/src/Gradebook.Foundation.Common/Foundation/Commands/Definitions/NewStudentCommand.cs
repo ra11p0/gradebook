@@ -1,6 +1,6 @@
-namespace Api.Models.Students;
+namespace Gradebook.Foundation.Common.Foundation.Commands.Definitions;
 
-public class NewStudentModel
+public class NewStudentCommand
 {
     public string Name { get; set; }
     public string Surname { get; set; }

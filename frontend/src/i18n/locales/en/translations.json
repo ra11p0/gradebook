@@ -27,5 +27,13 @@
     "iAmA...": "I am a:",
     "addStudent":"Add student",
     "birthday": "Birthday",
-    "studentsList": "Students list"
+    "studentsList": "Students list",
+    "name": "Name",
+    "surname": "Surname",
+    "invitations": "Invitations",
+    "manageStudents": "Manage students",
+    "manageTeachers": "Manage teachers",
+    "manageSchool": "Manage school",
+    "nameInvalid": "Invalid name!",
+    "surnameInvalid": "Invalid surname!"
 }
