@@ -24,9 +24,14 @@ function refreshAccessToken(accessToken: string, refreshToken: string):Promise<A
     });
 }
 
+function getMe():Promise<AxiosResponse<any>>{
+    return axiosApiAuthorized.get(API_URL + '/Account/Me');
+}
+
 
 export default {
     logIn,
     refreshAccessToken,
-    register
+    register,
+    getMe
 }

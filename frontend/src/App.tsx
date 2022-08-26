@@ -39,20 +39,26 @@ class App extends React.Component<AppProps>{
         <ReactNotifications/>
           <Header/>
           <Routes>
-            {
+            {// only for logged in and activated
               this.props.isLoggedIn && this.props.isUserActivated &&
               <>
-              <Route path="/dashboard/*" element={<Dashboard />} />
-              <Route path="/account/*" element={<Account />} />
+                <Route path="*" element={<Dashboard />} />
+                <Route path="/*" element={<Dashboard />} />
+                <Route path="/account/*" element={<Account />} />
+                <Route path="/dashboard/*" element={<Dashboard />} />
               </>
             }
-            {
+            {//Only for logged in and inactive
               this.props.isLoggedIn && !this.props.isUserActivated &&
               <Route path='*' element={<ActivateAccount/>}/>
             }
-
-            <Route path="/account/register" element={<RegisterForm />} />
-            <Route path='*' element={<Index/>}/>
+            {//Public
+              !this.props.isLoggedIn &&
+              <>
+                <Route path="/account/register" element={<RegisterForm />} />
+                <Route path='*' element={<Index/>}/>
+              </>
+            }
           </Routes>
         </BrowserRouter>
       </div>

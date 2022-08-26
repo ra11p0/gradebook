@@ -30,7 +30,11 @@ public class ApplicationIdentityDatabaseContext: IdentityDbContext<ApplicationUs
 
             var cfg = builder.Build();
             var cn = cfg.GetConnectionString("DefaultAppDatabase");
-            optionsBuilder.UseMySql(cn, new MySqlServerVersion(new Version(8, 30, 0)));
+            optionsBuilder.UseMySql(
+                cn,
+                new MySqlServerVersion(new Version(8, 30, 0)),
+                e=>e.MigrationsHistoryTable("__IdentityMigrationsHistory")
+            );
         }
     }
 }

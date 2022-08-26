@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { logIn } from '../../Actions/Account/accountActions';
 import AccountRepository from '../../ApiClient/Account/AccountProxy';
 import { withTranslation } from 'react-i18next';
+import { Button } from 'react-bootstrap';
+import { refreshToken as refreshTokenAction } from '../../Actions/Account/accountActions';
 
 const mapStateToProps = (state: any) => ({
       isLoggedIn: state.common.isLoggedIn
@@ -22,7 +24,12 @@ const mapDispatchToProps = (dispatch: any) => ({
         username: username,
         userId: userId,
         roles: roles
-    })
+    }),
+    refreshToken: (token: string, refresh: string)=>dispatch({
+        ...refreshTokenAction,
+        token: token,
+        refreshToken: refresh
+      })
 });
 
 interface LogInProps{
@@ -31,6 +38,7 @@ interface LogInProps{
         username: string,
         userId: string,
         roles: string[])=>{},
+    refreshToken: (token: string, refresh: string)=>void,
     isLoggedIn: boolean,
     t: any
 }
@@ -50,12 +58,32 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
             loginFailed: false
         }
     }
+
+    componentDidMount(){
+        var accessToken = localStorage.getItem('access_token');
+        var refresh = localStorage.getItem('refresh');
+        if(accessToken && refresh){
+            AccountRepository.refreshAccessToken(accessToken, refresh).then(response=>{
+                const { accessToken, refreshToken } = response.data;
+                this.props.refreshToken(accessToken, refreshToken);
+                AccountRepository.getMe().then(getMeResponse => {
+                    const { id, userName, roles } = getMeResponse.data;
+                    this.props.onLogIn!(accessToken, refreshToken, userName, id, roles);
+                    localStorage.setItem('access_token', accessToken);
+                    localStorage.setItem('refresh', refreshToken);
+                });
+            });
+        }
+    }
+
     onLogIn(){
         AccountRepository.logIn({
             username: this.state.username!,
             password: this.state.password!
         }).then((r: any)=>{
             this.props.onLogIn!( r.data.access_token, r.data.refreshToken, r.data.username, r.data.userId, r.data.roles );
+            localStorage.setItem('access_token', r.data.access_token);
+            localStorage.setItem('refresh', r.data.refreshToken);
         }).catch((r:any)=>{
             this.setState({
                 ...this.state,
@@ -63,14 +91,11 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
             });
         });
     }
+
     render(): React.ReactNode {
         const { t } = this.props;
         return (
             <div className='card m-3 p-3'>
-                {
-                    this.props.isLoggedIn &&
-                    <Navigate to="/dashboard"/>
-                }
                 <div className='card-body'>
                     <div className='m-1 p-1 display-6'>
                         <label>{t('loging')}</label>
@@ -78,7 +103,7 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
                     {
                         this.state.loginFailed &&
                         <div className='m-1 p-1 alert alert-danger'>
-                            Logowanie nieudane
+                            {t('loginFailed')}
                         </div>
                     }
                     <div className='m-1 p-1'>
@@ -106,12 +131,14 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
                     <div className='m-1 p-1 d-flex justify-content-between'>
                         <div className="my-auto d-flex gap-2">
                             <Link to={'register'}>{t('register')}</Link>
-                            <Link to={''}>Zmień hasło</Link>
-                            <Link to={''}>Przywróć dostęp</Link>
+                            <Link to={''}>{t('changePassword')}</Link>
+                            <Link to={''}>{t('recoverAccess')}</Link>
                         </div>
-                        <input className='btn btn-outline-primary' 
+                        <Button variant='outline-primary' 
                             onClick={()=> this.onLogIn!()} 
-                            type='submit' value="Zaloguj"/>
+                            type='submit'>
+                                {t('logIn')}
+                            </Button>
                     </div>
                 </div>
             </div>

@@ -70,10 +70,7 @@ const RegisterForm = (props: RegisterFormProps): ReactElement => {
 
     return (
         <div className='card m-3 p-3'>
-            {
-                props.isLoggedIn &&
-                <Navigate to="/dashboard"/>
-            }
+ 
             <div className='card-body'>
                 <form onSubmit={formik.handleSubmit}>
                     <div className='m-1 p-1 display-6'>
@@ -116,8 +113,7 @@ const RegisterForm = (props: RegisterFormProps): ReactElement => {
                         <div className="my-auto d-flex gap-2">
                             <Link to={'/'}>{t('goBackToLoginPage')}</Link>
                         </div>
-                        <Button variant='outline-primary' 
-                            onClick={()=>props.onLogIn!()} 
+                        <Button variant='outline-primary'
                             type='submit'>
                             {t('registerButtonLabel')}
                         </Button>
