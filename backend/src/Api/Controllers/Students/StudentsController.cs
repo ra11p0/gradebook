@@ -11,7 +11,7 @@ public class StudentsController : ControllerBase
 {
     [HttpPost]
     [Route("")]
-    [Authorize("Teacher")]
+    [Authorize("SuperAdmin")]
     public async Task<IActionResult> AddNewStudent([FromBody] NewStudentModel model){
         return Ok();
     }

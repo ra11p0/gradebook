@@ -10,4 +10,5 @@ public class Person : BaseDomainModel
     public string Surname { get; set; }
     public string UserGuid { get; set; }
     public SchoolRoleEnum SchoolRole { get; set; }
+    public DateTime? Birthday { get; set; }
 }

@@ -42,8 +42,10 @@ class App extends React.Component<AppProps>{
             {// only for logged in and activated
               this.props.isLoggedIn && this.props.isUserActivated &&
               <>
-                <Route path="/dashboard/*" element={<Dashboard />} />
+                <Route path="*" element={<Dashboard />} />
+                <Route path="/*" element={<Dashboard />} />
                 <Route path="/account/*" element={<Account />} />
+                <Route path="/dashboard/*" element={<Dashboard />} />
               </>
             }
             {//Only for logged in and inactive

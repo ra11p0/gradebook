@@ -5,6 +5,8 @@ import { Button, Card, Col, Row } from 'react-bootstrap';
 import { Navigate } from 'react-router-dom';
 import RegisterStudent from './RegisterStudent';
 import RegisterTeacher from './RegisterTeacher';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 
 const mapStateToProps = (state: any) => ({
     isUserLoggedIn: state.common.isLoggedIn,
@@ -36,7 +38,6 @@ class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAcco
         const { t } = this.props;
         return (
             <>
-     
                 <Card className="m-3">
                     <Card.Body>
                         <div>
@@ -77,26 +78,23 @@ class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAcco
                                         </>
                                     }
                                     {
+                                        this.state.role && 
+                                        <Button  
+                                            variant='outline-secondary'
+                                            onClick={()=>this.setState({
+                                                ...this.state,
+                                                role: undefined
+                                            })}>
+                                                <FontAwesomeIcon icon={faAngleLeft}/>
+                                        </Button>
+                                    }
+                                    {
                                         this.state.role === 'teacher' && 
-                                        <>
-                                            <RegisterTeacher
-                                                goBackHandler={()=>this.setState({
-                                                    ...this.state,
-                                                    role: undefined
-                                                })}
-                                            />
-                                        </>
+                                        <RegisterTeacher/>
                                     }
                                     {
                                         this.state.role === 'student' && 
-                                        <>
-                                            <RegisterStudent
-                                                goBackHandler={()=>this.setState({
-                                                    ...this.state,
-                                                    role: undefined
-                                                })}
-                                            />
-                                        </>
+                                        <RegisterStudent/>
                                     }
                                     
                                 </Col>

@@ -24,5 +24,8 @@
     "userRegisteredAlertText": "Now you can log in and activate your account.",
     "error": "Error!",
     "commonErrorMessage": "Connection error!",
-    "iAmA...": "I am a:"
+    "iAmA...": "I am a:",
+    "addStudent":"Add student",
+    "birthday": "Birthday",
+    "studentsList": "Students list"
 }

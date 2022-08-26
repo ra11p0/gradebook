@@ -14,4 +14,10 @@ public class InvitationsController : ControllerBase
     public async Task<IActionResult> AddNewInvitation([FromBody] NewInvitationModel model){
         return Ok();
     }
+    [HttpGet]
+    [Route("student/{guid}")]
+    public async Task<IActionResult> GetStudentInvitation([FromRoute] Guid guid){
+        
+        return Ok();
+    }
 }

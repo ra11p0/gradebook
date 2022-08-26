@@ -113,8 +113,7 @@ const RegisterForm = (props: RegisterFormProps): ReactElement => {
                         <div className="my-auto d-flex gap-2">
                             <Link to={'/'}>{t('goBackToLoginPage')}</Link>
                         </div>
-                        <Button variant='outline-primary' 
-                            onClick={()=>props.onLogIn!()} 
+                        <Button variant='outline-primary'
                             type='submit'>
                             {t('registerButtonLabel')}
                         </Button>

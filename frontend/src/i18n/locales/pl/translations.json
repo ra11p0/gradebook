@@ -24,5 +24,8 @@
     "userRegisteredAlertText": "Teraz mozesz się zalogować i aktywować swoje konto.",
     "error": "Błąd!",
     "commonErrorMessage": "Błąd z połączeniem!",
-    "iAmA...": "Chcę się zarejestrować jako: "
+    "iAmA...": "Chcę się zarejestrować jako: ",
+    "addStudent": "Dodaj ucznia",
+    "birthday": "Dzień urodzenia",
+    "studentsList": "Lista uczniów"
 }

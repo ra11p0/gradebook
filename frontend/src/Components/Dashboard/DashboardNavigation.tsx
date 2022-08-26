@@ -4,10 +4,11 @@ import { connect } from 'react-redux';
 import { logIn } from '../../Actions/Account/accountActions';
 import { Nav } from 'react-bootstrap';
 import { withTranslation } from 'react-i18next';
+import SuperAdminOnly from '../Shared/SuperAdminOnly';
+import TeacherOnly from '../Shared/TeacherOnly';
 
 const mapStateToProps = (state: any) => ({
       isLoggedIn: state.common.isLoggedIn,
-      isTeacher: state.common.session?.roles.includes('Techer'),
       isStudent: state.common.session?.roles.includes('Student')
 });
   
@@ -19,7 +20,6 @@ interface DashboardNavigationProps{
     onLogIn?: ()=>{};
     isLoggedIn: boolean;
     t: any;
-    isTeacher: boolean;
     isStudent: boolean;
 }
 
@@ -28,26 +28,28 @@ class DashboardNavigation extends React.Component<DashboardNavigationProps> {
         const { t } = this.props;
         return (
             <div>
-                {
-                    this.props.isTeacher &&
-                    <Nav className='d-flex gap-2 justify-content-end'>
-                        Teacher
+                <Nav className='d-flex gap-2 justify-content-end'>
+                    <TeacherOnly>
                         <Link to='grades' className='btn btn-outline-primary'> {t('grades')}</Link>
                         <Link to='absence' className='btn btn-outline-primary'> {t('absence')}</Link>
                         <Link to='subject' className='btn btn-outline-primary'> {t('subjects')}</Link>
                         <Link to='timetable' className='btn btn-outline-primary'> {t('timetable')}</Link>
-                    </Nav>
-                }
-                {
-                    !this.props.isStudent &&
-                    <Nav className='d-flex gap-2 justify-content-end'>
-                        Student
-                        <Link to='grades' className='btn btn-outline-primary'> {t('grades')}</Link>
-                        <Link to='absence' className='btn btn-outline-primary'> {t('absence')}</Link>
-                        <Link to='subject' className='btn btn-outline-primary'> {t('subjects')}</Link>
-                        <Link to='timetable' className='btn btn-outline-primary'> {t('timetable')}</Link>
-                    </Nav>
-                }
+                    </TeacherOnly>
+                    {
+                        this.props.isStudent &&
+                        <>
+                            <Link to='grades' className='btn btn-outline-primary'> {t('grades')}</Link>
+                            <Link to='absence' className='btn btn-outline-primary'> {t('absence')}</Link>
+                            <Link to='subject' className='btn btn-outline-primary'> {t('subjects')}</Link>
+                            <Link to='timetable' className='btn btn-outline-primary'> {t('timetable')}</Link>
+                        </>
+                    }
+                    <SuperAdminOnly>
+                            <Link to='manageStudents' className='btn btn-outline-primary'> {t('manageStudents')}</Link>
+                            <Link to='manageTeachers' className='btn btn-outline-primary'> {t('manageTeachers')}</Link>
+                            <Link to='manageSchool' className='btn btn-outline-primary'> {t('manageSchool')}</Link>
+                    </SuperAdminOnly>
+                </Nav>
             </div>
           );
     }
