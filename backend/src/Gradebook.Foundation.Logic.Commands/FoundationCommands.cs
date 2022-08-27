@@ -10,6 +10,11 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
     {
     }
 
+    public Task<ResponseWithStatus<bool>> ActivateAdministrator(ActivateAdministratorCommand command)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<ResponseWithStatus<bool>> AddNewStudent(NewStudentCommand newStudentDto)
     {
         var resp = await Repository.AddNewStudent(newStudentDto);

@@ -7,6 +7,7 @@ import RegisterStudent from './RegisterStudent';
 import RegisterTeacher from './RegisterTeacher';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
+import RegisterAdministrator from './RegisterAdministrator';
 
 const mapStateToProps = (state: any) => ({
     isUserLoggedIn: state.common.isLoggedIn,
@@ -45,7 +46,7 @@ class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAcco
                                 {t('activateToUseGradebook')}
                             </div>
                             <Row className='m-3 p-3'>
-                                <Col/>
+                                <Col xs={3}/>
                                 <Col className='text-center'>
                                     {
                                         !this.state.role && 
@@ -63,7 +64,7 @@ class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAcco
                                                             ...this.state,
                                                             role: 'student'
                                                         })}>
-                                                        {t("Student")}
+                                                        {t("student")}
                                                     </Button>
                                                     <Button className='fs-3 m-3 p-3' 
                                                         variant='outline-secondary' 
@@ -71,7 +72,15 @@ class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAcco
                                                             ...this.state,
                                                             role: 'teacher'
                                                         })}>
-                                                        {t("Teacher")}
+                                                        {t("teacher")}
+                                                    </Button>
+                                                    <Button className='fs-3 m-3 p-3' 
+                                                        variant='outline-secondary' 
+                                                        onClick={()=>this.setState({
+                                                            ...this.state,
+                                                            role: 'administrator'
+                                                        })}>
+                                                        {t("administrator")}
                                                     </Button>
                                                 </Col>
                                             </Row>
@@ -93,12 +102,15 @@ class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAcco
                                         <RegisterTeacher/>
                                     }
                                     {
+                                        this.state.role === 'administrator' && 
+                                        <RegisterAdministrator/>
+                                    }
+                                    {
                                         this.state.role === 'student' && 
                                         <RegisterStudent/>
                                     }
-                                    
                                 </Col>
-                                <Col/>
+                                <Col xs={3}/>
                             </Row>
                         </div>
                     </Card.Body>

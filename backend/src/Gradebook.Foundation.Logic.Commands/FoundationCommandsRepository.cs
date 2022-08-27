@@ -14,6 +14,12 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
         _mapper = mapper;
     }
 
+    public Task<ResponseWithStatus<bool>> ActivateAdministrator(ActivateAdministratorCommand command)
+    {
+        var school = _mapper.Map<School>(command);
+        
+    }
+
     public async Task<ResponseWithStatus<bool>> AddNewStudent(NewStudentCommand newStudentDto)
     {
         var student = _mapper.Map<Student>(newStudentDto);

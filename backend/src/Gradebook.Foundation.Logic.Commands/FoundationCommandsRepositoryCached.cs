@@ -9,6 +9,9 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
     {
     }
 
+    public Task<ResponseWithStatus<bool>> ActivateAdministrator(ActivateAdministratorCommand command)
+        => Base.ActivateAdministrator(command);
+
     public Task<ResponseWithStatus<bool>> AddNewStudent(NewStudentCommand newStudentDto)
         => Base.AddNewStudent(newStudentDto);
 

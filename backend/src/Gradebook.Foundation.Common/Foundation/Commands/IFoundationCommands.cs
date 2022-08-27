@@ -5,4 +5,5 @@ namespace Gradebook.Foundation.Common.Foundation.Commands;
 public interface IFoundationCommands
 {
     Task<ResponseWithStatus<bool>> AddNewStudent(NewStudentCommand newStudentDto);
+    Task<ResponseWithStatus<bool>> ActivateAdministrator(ActivateAdministratorCommand command);
 }
