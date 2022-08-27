@@ -14,17 +14,19 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
         _mapper = mapper;
     }
 
-    public Task<ResponseWithStatus<bool>> ActivateAdministrator(ActivateAdministratorCommand command)
+    public async Task<ResponseWithStatus<bool>> ActivateAdministrator(ActivateAdministratorCommand command)
     {
-        var school = _mapper.Map<School>(command);
+        var school = _mapper.Map<School>(command.School);
+        var administrator = _mapper.Map<Administrator>(command.Administrator);
         
+        return new ResponseWithStatus<bool>(true);
     }
 
     public async Task<ResponseWithStatus<bool>> AddNewStudent(NewStudentCommand newStudentDto)
     {
         var student = _mapper.Map<Student>(newStudentDto);
 
-        var res = await Context.Students.AddAsync(student);
+        await Context.Students.AddAsync(student);
 
         return new ResponseWithStatus<bool>(true);
     }

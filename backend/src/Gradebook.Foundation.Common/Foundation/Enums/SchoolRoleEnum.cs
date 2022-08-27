@@ -1,5 +1,5 @@
-namespace Gradebook.Foundation.Domain.Enums;
-[Flags]
+namespace Gradebook.Foundation.Common.Foundation.Enums;
+
 public enum SchoolRoleEnum
 {
     Student,
