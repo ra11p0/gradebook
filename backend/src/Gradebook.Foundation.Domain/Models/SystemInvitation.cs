@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Gradebook.Foundation.Common;
-using Gradebook.Foundation.Domain.Enums;
+using Gradebook.Foundation.Common.Foundation.Enums;
 
 namespace Gradebook.Foundation.Domain.Models;
 
