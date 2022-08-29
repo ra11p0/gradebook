@@ -13,5 +13,4 @@ public interface IIdentityLogic
     Task<ResponseWithStatus<string, bool>> CurrentUserId();
     Task<ResponseWithStatus<bool>> AddUserRole(string role, string? userGuid = null);
     Task<ResponseWithStatus<bool>> RemoveUserRole(string role, string? userGuid = null);
-    Task AddUserRole(object superAdmin);
 }
