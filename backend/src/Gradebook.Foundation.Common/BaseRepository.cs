@@ -11,12 +11,12 @@ public abstract class BaseRepository<T> : BaseRepository where T : DbContext
     {
         Context = context;
     }
-    public async Task SaveChangesAsync(){
-        await Context.SaveChangesAsync();
-    }
-    public void SaveChanges(){
-        Context.SaveChanges();
-    }
+    public override Task SaveChangesAsync()
+        => Context.SaveChangesAsync();
+    
+    public override void SaveChanges()
+        => Context.SaveChanges();
+    
 }
 
 public abstract class BaseRepository : IBaseRepository
@@ -39,8 +39,13 @@ public abstract class BaseRepository : IBaseRepository
         connection.Open();
         return connection;
     }
+
+    public abstract void SaveChanges();
+
+    public abstract Task SaveChangesAsync();
 }
 
 public interface IBaseRepository{
-    
+    void SaveChanges();
+    Task SaveChangesAsync();
 }

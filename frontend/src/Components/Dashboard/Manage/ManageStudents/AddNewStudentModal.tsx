@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Button, Modal } from 'react-bootstrap';
 import { useFormik } from 'formik';
+import NewStudentRequest from '../../../../ApiClient/Students/Definitions/NewStudentRequest';
+import StudentsProxy from '../../../../ApiClient/Students/StudentsProxy';
 const mapStateToProps = (state: any) => ({ });
 const mapDispatchToProps = (dispatch: any) => ({ });
 interface formValues{
@@ -33,8 +35,12 @@ const AddNewStudentModal = (props: AddNewStudentModalProps): ReactElement => {
         },
         validate,
         onSubmit: (values: formValues)=>{
-            console.log('submit: ');
-            console.log(values)
+            var student: NewStudentRequest = {
+                Name: values.name,
+                Surname: values.surname,
+                Birthday: new Date(values.birthday)
+            }
+            StudentsProxy.addNewStudent(student);
         }
     });
     return (
