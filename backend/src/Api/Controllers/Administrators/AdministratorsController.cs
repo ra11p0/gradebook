@@ -21,10 +21,19 @@ public class AdministratorsController : ControllerBase
         _mapper = new ServiceResolver<IMapper>(serviceProvider);
     }
     [HttpPost]
-    [Route("{userGuid}")]
-    public async Task<IActionResult> ActivateAdministrator([FromRoute] string userGuid, [FromBody] ActivateAdministratorModel model){
-        var command = _mapper.Service.Map<ActivateAdministratorCommand>(model);
-        var resp = await _foundationCommands.Service.ActivateAdministrator(command);
+    [Route("")]
+    public async Task<IActionResult> NewAdministrator([FromBody] NewAdministratorModel model){
+        var command = _mapper.Service.Map<NewAdministratorCommand>(model);
+        var resp = await _foundationCommands.Service.NewAdministrator(command);
+        return resp.Status ? Ok():BadRequest();
+    }
+
+    [HttpPost]
+    [Route("withSchool")]
+    public async Task<IActionResult> NewAdministratorWithSchool([FromBody] NewAdministratorWithSchoolModel model){
+        var administratorCommand = _mapper.Service.Map<NewAdministratorCommand>(model.Administrator);
+        var schoolCommand = _mapper.Service.Map<NewSchoolCommand>(model.School);
+        var resp = await _foundationCommands.Service.NewAdministratorWithSchool(administratorCommand, schoolCommand);
         return resp.Status ? Ok():BadRequest();
     }
 }

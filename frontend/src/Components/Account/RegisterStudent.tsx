@@ -15,7 +15,7 @@ const mapDispatchToProps = (dispatch: any) => ({
 });
 
 interface RegisterStudentFormProps{
-
+    defaultOnBackHandler: ()=>void;
 }
 
 interface RegisterStudentFormValues{
@@ -58,6 +58,9 @@ const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
 
     return (
         <div className='card m-3 p-3'>
+            <Button onClick={props.defaultOnBackHandler} variant={'link'}>
+                {t('back')}
+            </Button>
             <Row className='text-center'>
                 <div>
                     Register student

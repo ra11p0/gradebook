@@ -3,6 +3,7 @@ using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
 using Gradebook.Foundation.Database;
 using Gradebook.Foundation.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gradebook.Foundation.Logic.Commands;
 
@@ -14,12 +15,35 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
         _mapper = mapper;
     }
 
-    public async Task<ResponseWithStatus<bool>> ActivateAdministrator(ActivateAdministratorCommand command)
+    public async Task<ResponseWithStatus<bool>> AddAdministratorToSchool(Guid administratorGuid, Guid schoolGuid)
     {
-        var school = _mapper.Map<School>(command.School);
-        var administrator = _mapper.Map<Administrator>(command.Administrator);
-        
+        var admin = Context.Administrators.FirstOrDefault(e=>e.Guid == administratorGuid);
+        var school = Context.Schools.Include(e=>e.People).FirstOrDefault(e=>e.Guid == schoolGuid);
+
+        if(admin is null || school is null) return new ResponseWithStatus<bool>(false);
+
+        school.People.Add(admin);
+
         return new ResponseWithStatus<bool>(true);
+    }
+
+    public async Task<ResponseWithStatus<Guid, bool>> AddNewAdministrator(NewAdministratorCommand command)
+    {
+        var administrator = _mapper.Map<Administrator>(command);
+        administrator.SchoolRole = Common.Foundation.Enums.SchoolRoleEnum.Admin;
+
+        await Context.Administrators.AddAsync(administrator);
+
+        return new ResponseWithStatus<Guid, bool>(administrator.Guid, true);
+    }
+
+    public async Task<ResponseWithStatus<Guid, bool>> AddNewSchool(NewSchoolCommand command)
+    {
+        var school = _mapper.Map<School>(command);
+        
+        await Context.Schools.AddAsync(school);
+
+        return new ResponseWithStatus<Guid, bool>(school.Guid, true);
     }
 
     public async Task<ResponseWithStatus<bool>> AddNewStudent(NewStudentCommand newStudentDto)

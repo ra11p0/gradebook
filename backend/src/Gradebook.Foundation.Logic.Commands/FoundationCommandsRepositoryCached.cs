@@ -9,8 +9,14 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
     {
     }
 
-    public Task<ResponseWithStatus<bool>> ActivateAdministrator(ActivateAdministratorCommand command)
-        => Base.ActivateAdministrator(command);
+    public Task<ResponseWithStatus<bool>> AddAdministratorToSchool(Guid administratorGuid, Guid schoolGuid)
+        => Base.AddAdministratorToSchool(administratorGuid, schoolGuid);
+
+    public Task<ResponseWithStatus<Guid, bool>> AddNewAdministrator(NewAdministratorCommand command)
+        => Base.AddNewAdministrator(command);
+
+    public Task<ResponseWithStatus<Guid, bool>> AddNewSchool(NewSchoolCommand command)
+        => Base.AddNewSchool(command);
 
     public Task<ResponseWithStatus<bool>> AddNewStudent(NewStudentCommand newStudentDto)
         => Base.AddNewStudent(newStudentDto);

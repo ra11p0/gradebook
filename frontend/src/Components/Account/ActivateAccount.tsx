@@ -37,6 +37,13 @@ class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAcco
     }
     render(): React.ReactNode {
         const { t } = this.props;
+
+        const defaultOnBackHandler=()=>{
+            this.setState({
+                ...this.state,
+                role: undefined
+        })};
+
         return (
             <>
                 <Card className="m-3">
@@ -87,27 +94,22 @@ class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAcco
                                         </>
                                     }
                                     {
-                                        this.state.role && 
-                                        <Button  
-                                            variant='outline-secondary'
-                                            onClick={()=>this.setState({
-                                                ...this.state,
-                                                role: undefined
-                                            })}>
-                                                <FontAwesomeIcon icon={faAngleLeft}/>
-                                        </Button>
-                                    }
-                                    {
                                         this.state.role === 'teacher' && 
-                                        <RegisterTeacher/>
+                                        <RegisterTeacher
+                                            defaultOnBackHandler={defaultOnBackHandler}
+                                        />
                                     }
                                     {
                                         this.state.role === 'administrator' && 
-                                        <RegisterAdministrator/>
+                                        <RegisterAdministrator
+                                            defaultOnBackHandler={defaultOnBackHandler}
+                                        />
                                     }
                                     {
                                         this.state.role === 'student' && 
-                                        <RegisterStudent/>
+                                        <RegisterStudent
+                                            defaultOnBackHandler={defaultOnBackHandler}
+                                        />
                                     }
                                 </Col>
                                 <Col xs={3}/>
