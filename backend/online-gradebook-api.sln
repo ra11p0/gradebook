@@ -15,6 +15,24 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gradebook.Foundation.Common
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gradebook.Foundation.DependencyResolver", "src\Gradebook.Foundation.DependencyResolver\Gradebook.Foundation.DependencyResolver.csproj", "{F43F9877-E9AA-463C-87D6-D607890D9BDF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gradebook.Foundation.Domain", "src\Gradebook.Foundation.Domain\Gradebook.Foundation.Domain.csproj", "{52C03FD5-0680-450A-85CB-48B750EF947D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gradebook.Foundation.Logic.Queries", "src\Gradebook.Foundation.Logic.Queries\Gradebook.Foundation.Logic.Queries.csproj", "{46168751-55F3-4185-AA9C-28118B9A7F71}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gradebook.Foundation.Logic.Commands", "src\Gradebook.Foundation.Logic.Commands\Gradebook.Foundation.Logic.Commands.csproj", "{EF99E881-3D99-400A-B475-E5A62A61CBEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gradebook.Foundation.Database", "src\Gradebook.Foundation.Database\Gradebook.Foundation.Database.csproj", "{CB495C0A-DD0A-412B-99F3-F19A26EBE4D5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Permissions", "Permissions", "{CEA1C1E0-23DF-11ED-8ACE-9DE6B97B5DBB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gradebook.Permissions.Database", "src\Gradebook.Permissions.Database\Gradebook.Permissions.Database.csproj", "{661EBA6C-B9FD-4A3E-8E74-A3C1FB067186}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gradebook.Permissions.Domain", "src\Gradebook.Permissions.Domain\Gradebook.Permissions.Domain.csproj", "{BA02E909-384B-46B5-B241-50A7163BF267}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gradebook.Permissions.Logic.Commands", "src\Gradebook.Permissions.Logic.Commands\Gradebook.Permissions.Logic.Commands.csproj", "{2400CC65-E6E6-47DE-BE42-BDB7699805F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gradebook.Permissions.Logic.Queries", "src\Gradebook.Permissions.Logic.Queries\Gradebook.Permissions.Logic.Queries.csproj", "{B6362F02-2EA1-421E-941B-5A56FCC6A507}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,11 +58,51 @@ Global
 		{F43F9877-E9AA-463C-87D6-D607890D9BDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F43F9877-E9AA-463C-87D6-D607890D9BDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F43F9877-E9AA-463C-87D6-D607890D9BDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52C03FD5-0680-450A-85CB-48B750EF947D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52C03FD5-0680-450A-85CB-48B750EF947D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52C03FD5-0680-450A-85CB-48B750EF947D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52C03FD5-0680-450A-85CB-48B750EF947D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46168751-55F3-4185-AA9C-28118B9A7F71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46168751-55F3-4185-AA9C-28118B9A7F71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46168751-55F3-4185-AA9C-28118B9A7F71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46168751-55F3-4185-AA9C-28118B9A7F71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF99E881-3D99-400A-B475-E5A62A61CBEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF99E881-3D99-400A-B475-E5A62A61CBEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF99E881-3D99-400A-B475-E5A62A61CBEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF99E881-3D99-400A-B475-E5A62A61CBEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB495C0A-DD0A-412B-99F3-F19A26EBE4D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB495C0A-DD0A-412B-99F3-F19A26EBE4D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB495C0A-DD0A-412B-99F3-F19A26EBE4D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB495C0A-DD0A-412B-99F3-F19A26EBE4D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{661EBA6C-B9FD-4A3E-8E74-A3C1FB067186}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{661EBA6C-B9FD-4A3E-8E74-A3C1FB067186}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{661EBA6C-B9FD-4A3E-8E74-A3C1FB067186}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{661EBA6C-B9FD-4A3E-8E74-A3C1FB067186}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA02E909-384B-46B5-B241-50A7163BF267}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA02E909-384B-46B5-B241-50A7163BF267}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA02E909-384B-46B5-B241-50A7163BF267}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA02E909-384B-46B5-B241-50A7163BF267}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2400CC65-E6E6-47DE-BE42-BDB7699805F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2400CC65-E6E6-47DE-BE42-BDB7699805F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2400CC65-E6E6-47DE-BE42-BDB7699805F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2400CC65-E6E6-47DE-BE42-BDB7699805F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6362F02-2EA1-421E-941B-5A56FCC6A507}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6362F02-2EA1-421E-941B-5A56FCC6A507}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6362F02-2EA1-421E-941B-5A56FCC6A507}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6362F02-2EA1-421E-941B-5A56FCC6A507}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3AEC9D8E-3D59-4F9B-935C-0A17D98834CA} = {0F7D0750-1A63-11ED-97BF-BBD44EE559C1}
 		{83C8A2BF-142B-4D48-AAFD-581473861EB0} = {2FB8A7D0-1F32-11ED-AE32-25693050F9A6}
 		{E135156C-4ED1-48BC-A660-5BCE7C297150} = {2FB8A7D0-1F32-11ED-AE32-25693050F9A6}
 		{F43F9877-E9AA-463C-87D6-D607890D9BDF} = {2FB8A7D0-1F32-11ED-AE32-25693050F9A6}
+		{52C03FD5-0680-450A-85CB-48B750EF947D} = {2FB8A7D0-1F32-11ED-AE32-25693050F9A6}
+		{46168751-55F3-4185-AA9C-28118B9A7F71} = {2FB8A7D0-1F32-11ED-AE32-25693050F9A6}
+		{EF99E881-3D99-400A-B475-E5A62A61CBEF} = {2FB8A7D0-1F32-11ED-AE32-25693050F9A6}
+		{CB495C0A-DD0A-412B-99F3-F19A26EBE4D5} = {2FB8A7D0-1F32-11ED-AE32-25693050F9A6}
+		{661EBA6C-B9FD-4A3E-8E74-A3C1FB067186} = {CEA1C1E0-23DF-11ED-8ACE-9DE6B97B5DBB}
+		{BA02E909-384B-46B5-B241-50A7163BF267} = {CEA1C1E0-23DF-11ED-8ACE-9DE6B97B5DBB}
+		{2400CC65-E6E6-47DE-BE42-BDB7699805F1} = {CEA1C1E0-23DF-11ED-8ACE-9DE6B97B5DBB}
+		{B6362F02-2EA1-421E-941B-5A56FCC6A507} = {CEA1C1E0-23DF-11ED-8ACE-9DE6B97B5DBB}
 	EndGlobalSection
 EndGlobal

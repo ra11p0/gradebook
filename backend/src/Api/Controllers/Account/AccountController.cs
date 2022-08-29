@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using Api.Controllers.Account.Responses;
 using Api.Models.Account;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -129,11 +128,11 @@ public class AccountController : ControllerBase
             refreshToken = newRefreshToken
         });
     }
-    [Authorize]
+    [Authorize(Roles = "SuperAdmin")]
     [HttpPost]
     [Route("{userGuid}/roles")]
     public async Task<IActionResult> PostRoles([FromRoute] string userGuid, [FromBody] string[] roles){
-        await _identityLogic.Service.EditUserRoles(userGuid, roles);
+        await _identityLogic.Service.EditUserRoles(roles, userGuid);
         return Ok();
     }
     [Authorize]

@@ -1,4 +1,4 @@
-namespace Api.Controllers.Account.Responses;
+namespace Api.Models.Account;
 
 public class LoginRegisterResponse
 {

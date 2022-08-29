@@ -6,17 +6,25 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.*" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.*" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.*" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.*" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.*"/>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.*" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.22.*" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.*" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gradebook.Foundation.Common\Gradebook.Foundation.Common.csproj" />
     <ProjectReference Include="..\Gradebook.Foundation.Identity\Gradebook.Foundation.Identity.csproj" />
+    <ProjectReference Include="..\Gradebook.Permissions.Logic.Queries\Gradebook.Permissions.Logic.Queries.csproj" />
+    <ProjectReference Include="..\Gradebook.Permissions.Logic.Commands\Gradebook.Permissions.Logic.Commands.csproj" />
+    <ProjectReference Include="..\Gradebook.Permissions.Database\Gradebook.Permissions.Database.csproj" />
+    <ProjectReference Include="..\Gradebook.Foundation.Logic.Queries\Gradebook.Foundation.Logic.Queries.csproj" />
+    <ProjectReference Include="..\Gradebook.Foundation.Logic.Commands\Gradebook.Foundation.Logic.Commands.csproj" />
+    <ProjectReference Include="..\Gradebook.Foundation.Database\Gradebook.Foundation.Database.csproj" />
   </ItemGroup>
 </Project>

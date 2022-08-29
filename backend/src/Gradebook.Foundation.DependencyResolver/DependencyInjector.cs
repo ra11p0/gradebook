@@ -8,7 +8,10 @@ public class DependencyInjector
     public static void Inject(IServiceCollection services, IConfigurationRoot configuration)
     {
         services.AddHttpContextAccessor();
+        AutoMapperService.Inject(services, configuration);
         IdentityService.Inject(services, configuration);
+        FoundationService.Inject(services, configuration);
+        PermissionsService.Inject(services, configuration);
     }
 }
 

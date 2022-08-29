@@ -25,12 +25,16 @@ export default (state: any = defaultState, action: any)=>{
                 }
             };
         case LOG_OUT:
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh');
             return {
                 ...state,
                 isLoggedIn: false,
                 session: null
             };
         case REFRESH_TOKEN:
+            localStorage.setItem('access_token', action.token);
+            localStorage.setItem('refresh', action.refreshToken);
             return {
                 ...state,
                 isLoggedIn: true,
