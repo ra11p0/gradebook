@@ -14,12 +14,33 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         _identityLogic = serviceProvider.GetResolver<IIdentityLogic>();
     }
 
+    public async Task<ResponseWithStatus<IEnumerable<StudentDto>, bool>> GetAllAccessibleStudents()
+    {
+        var relatedPersonGuid = await GetCurrentPersonGuid();
+        if(!relatedPersonGuid.Status) return new ResponseWithStatus<IEnumerable<StudentDto>, bool>(null, false, "Cannot recognise current person");
+        var students = await Repository.GetAllAccessibleStudents(relatedPersonGuid.Response);
+        return new ResponseWithStatus<IEnumerable<StudentDto>, bool>(students, true);
+    }
+
     public async Task<ResponseWithStatus<Guid, bool>> GetCurrentPersonGuid()
     {
         var userGuid = await _identityLogic.Service.CurrentUserId();
         if(!userGuid.Status) return new ResponseWithStatus<Guid, bool>(Guid.Empty, false, "Can't get current user guid");
         var personGuid = await GetPersonGuidForUser(userGuid.Response!);
         return personGuid;
+    }
+
+    public async Task<ResponseWithStatus<IEnumerable<InvitationDto>, bool>> GetInvitations(Guid personGuid)
+    {
+        var resp = await Repository.GetInvitations(personGuid);
+        return new ResponseWithStatus<IEnumerable<InvitationDto>, bool>(resp, true);
+    }
+
+    public async Task<ResponseWithStatus<IEnumerable<InvitationDto>, bool>> GetInvitations()
+    {
+        var currentPersonGuid = await GetCurrentPersonGuid();
+        if(!currentPersonGuid.Status) return new ResponseWithStatus<IEnumerable<InvitationDto>, bool>(default, false, currentPersonGuid.Message);
+        return await GetInvitations(currentPersonGuid.Response);
     }
 
     public async Task<ResponseWithStatus<IEnumerable<PersonDto>, bool>> GetPeopleInSchool(Guid schoolGuid)

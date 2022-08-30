@@ -11,11 +11,50 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
     {
     }
 
+    public async Task<IEnumerable<StudentDto>> GetAllAccessibleStudents(Guid relatedPersonGuid)
+    {
+        using(var cn = await GetOpenConnectionAsync()){
+            return await cn.QueryAsync<StudentDto>(@"
+                SELECT Name, Surname, SchoolRole, Birthday, ClassGuid, GroupGuid, CreatorGuid, Guid
+                FROM Person
+                LEFT JOIN PersonSchool AS PS
+                    ON Guid = PS.PeopleGuid
+                WHERE Discriminator = 'Student'
+                    AND 
+                    (
+                        CreatorGuid = @relatedPersonGuid
+                        OR PS.SchoolsGuid IN 
+                            (
+                                SELECT SchoolsGuid
+                                FROM PersonSchool
+                                WHERE PeopleGuid = @relatedPersonGuid
+                            )
+                    )
+            ", new {
+                relatedPersonGuid
+            });
+        }
+    }
+
+    public async Task<IEnumerable<InvitationDto>> GetInvitations(Guid personGuid)
+    {
+        using (var cn = await GetOpenConnectionAsync()){
+            return await cn.QueryAsync<InvitationDto>(@"
+                SELECT Guid, CreatedDate, ExprationDate, InvitationCode, IsUsed,
+                    CreatorGuid, UsedDate, InvitedPersonGuid, SchoolRole
+                FROM SystemInvitations
+                WHERE CreatorGuid = @personGuid
+            ", new {
+                personGuid
+            });
+        }
+    }
+
     public async Task<IEnumerable<PersonDto>> GetPeopleInSchool(Guid schoolGuid)
     {
         using (var cn = await GetOpenConnectionAsync()){
             return await cn.QueryAsync<PersonDto>(@"
-                SELECT Name, Surname, SchoolRole, Birthday
+                SELECT Name, Surname, SchoolRole, Birthday, Guid
                 FROM Person
                 JOIN PersonSchool AS PS
                     ON PS.PeopleGuid = Guid

@@ -1,5 +1,6 @@
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
+using Gradebook.Foundation.Common.Foundation.Enums;
 
 namespace Gradebook.Foundation.Logic.Commands;
 
@@ -20,6 +21,9 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
 
     public Task<ResponseWithStatus<bool>> AddNewStudent(NewStudentCommand newStudentDto)
         => Base.AddNewStudent(newStudentDto);
+
+    public Task<string?> GenerateSystemInvitation(Guid invitedPersonGuid, Guid invitingPersonGuid, SchoolRoleEnum role)
+        => Base.GenerateSystemInvitation(invitedPersonGuid, invitingPersonGuid, role);
 
     public void SaveChanges()
     {

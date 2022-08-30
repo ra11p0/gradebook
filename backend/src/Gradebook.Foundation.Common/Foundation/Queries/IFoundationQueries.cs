@@ -9,4 +9,7 @@ public interface IFoundationQueries
     Task<ResponseWithStatus<Guid, bool>> GetPersonGuidForUser(string userId);
     Task<ResponseWithStatus<IEnumerable<PersonDto>, bool>> GetPeopleInSchool(Guid schoolGuid);
     Task<ResponseWithStatus<Guid, bool>> GetCurrentPersonGuid();
+    Task<ResponseWithStatus<IEnumerable<StudentDto>, bool>> GetAllAccessibleStudents();
+    Task<ResponseWithStatus<IEnumerable<InvitationDto>, bool>> GetInvitations(Guid personGuid);
+    Task<ResponseWithStatus<IEnumerable<InvitationDto>, bool>> GetInvitations();
 }

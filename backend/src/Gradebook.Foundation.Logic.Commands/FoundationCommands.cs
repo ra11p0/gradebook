@@ -2,6 +2,7 @@ using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Foundation.Commands;
 using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
+using Gradebook.Foundation.Common.Foundation.Enums;
 using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 using Gradebook.Foundation.Identity.Models;
@@ -25,6 +26,15 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         var resp = await Repository.AddNewStudent(command);
         await Repository.SaveChangesAsync();
         return resp;
+    }
+
+    public async Task<ResponseWithStatus<string, bool>> GenerateSystemInvitation(Guid personGuid, SchoolRoleEnum role)
+    {
+        var currentPersonGuid = await _foundationQueries.Service.GetCurrentPersonGuid();
+        if(!currentPersonGuid.Status) return new ResponseWithStatus<string, bool>(default, false, "Could not find current person");
+        var response = await Repository.GenerateSystemInvitation(personGuid, currentPersonGuid.Response, role);
+        await Repository.SaveChangesAsync();
+        return new ResponseWithStatus<string, bool>(response, !(response is null));
     }
 
     public async Task<ResponseWithStatus<bool>> NewAdministrator(NewAdministratorCommand command)

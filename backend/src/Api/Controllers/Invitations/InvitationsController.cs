@@ -1,4 +1,8 @@
 using Api.Models.Invitations;
+using Gradebook.Foundation.Common;
+using Gradebook.Foundation.Common.Extensions;
+using Gradebook.Foundation.Common.Foundation.Commands;
+using Gradebook.Foundation.Common.Foundation.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,18 +10,26 @@ namespace Api.Controllers.Invitations;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize("Teacher")]
+[Authorize(Roles = "SuperAdmin")]
 public class InvitationsController : ControllerBase
 {
+    private readonly ServiceResolver<IFoundationCommands> _foundationCommands;
+    private readonly ServiceResolver<IFoundationQueries> _foundationQueries;
+    public InvitationsController(IServiceProvider serviceProvider)
+    {
+        _foundationCommands = serviceProvider.GetResolver<IFoundationCommands>();
+        _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
+    }
     [HttpPost]
     [Route("")]
     public async Task<IActionResult> AddNewInvitation([FromBody] NewInvitationModel model){
-        return Ok();
+        var resp = await _foundationCommands.Service.GenerateSystemInvitation(model.InvitedPersonGuid, model.Role);
+        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
     }
     [HttpGet]
-    [Route("student/{guid}")]
-    public async Task<IActionResult> GetStudentInvitation([FromRoute] Guid guid){
-        
-        return Ok();
+    [Route("")]
+    public async Task<IActionResult> GetMyInvitations(){
+        var resp = await _foundationQueries.Service.GetInvitations();
+        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
     }
 }

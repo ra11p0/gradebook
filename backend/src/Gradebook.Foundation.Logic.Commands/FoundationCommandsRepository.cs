@@ -1,6 +1,8 @@
+using System.Linq;
 using AutoMapper;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
+using Gradebook.Foundation.Common.Foundation.Enums;
 using Gradebook.Foundation.Database;
 using Gradebook.Foundation.Domain.Models;
 using Microsoft.EntityFrameworkCore;
@@ -49,9 +51,20 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
     public async Task<ResponseWithStatus<bool>> AddNewStudent(NewStudentCommand newStudentDto)
     {
         var student = _mapper.Map<Student>(newStudentDto);
-
+        student.SchoolRole = Common.Foundation.Enums.SchoolRoleEnum.Student;
         await Context.Students.AddAsync(student);
 
         return new ResponseWithStatus<bool>(true);
+    }
+
+    public async Task<string?> GenerateSystemInvitation(Guid invitedPersonGuid, Guid invitingPersonGuid, SchoolRoleEnum role)
+    {
+        SystemInvitation systemInvitation = new(){
+            SchoolRole = role,
+            CreatorGuid = invitingPersonGuid,
+            InvitedPersonGuid = invitedPersonGuid
+        };
+        Context.SystemInvitations.Add(systemInvitation);
+        return systemInvitation.InvitationCode;
     }
 }

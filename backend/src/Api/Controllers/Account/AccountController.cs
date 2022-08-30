@@ -8,6 +8,7 @@ using Gradebook.Foundation.Identity.Models;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
+using Gradebook.Foundation.Common.Foundation.Queries;
 
 namespace Api.Controllers;
 
@@ -19,12 +20,14 @@ public class AccountController : ControllerBase
     private readonly ServiceResolver<RoleManager<IdentityRole>> _roleManager;
     private readonly ServiceResolver<IConfiguration> _configuration;
     private readonly ServiceResolver<IIdentityLogic> _identityLogic;
+    private readonly ServiceResolver<IFoundationQueries> _foundationQueries;
     public AccountController(IServiceProvider serviceProvider)
     {
         _userManager = serviceProvider.GetResolver<UserManager<ApplicationUser>>();
         _roleManager = serviceProvider.GetResolver<RoleManager<IdentityRole>>();
         _configuration = serviceProvider.GetResolver<IConfiguration>();
         _identityLogic = serviceProvider.GetResolver<IIdentityLogic>();
+        _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
     }
     [HttpPost]
     [Route("login")]
@@ -144,9 +147,11 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> Me(){
         var user = await _userManager.Service.FindByNameAsync(User.Identity!.Name);
         var roles = await _identityLogic.Service.GetUserRoles(user.Id);
+        var personGuid = await _foundationQueries.Service.GetCurrentPersonGuid();
         return Ok(new{
             user.Id,
             user.UserName,
+            personGuid = personGuid.Response,
             roles = roles.Response
         });
     }
