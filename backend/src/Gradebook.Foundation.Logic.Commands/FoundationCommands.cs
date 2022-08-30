@@ -1,6 +1,8 @@
 using Gradebook.Foundation.Common;
+using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Foundation.Commands;
 using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
+using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 using Gradebook.Foundation.Identity.Models;
 
@@ -9,14 +11,17 @@ namespace Gradebook.Foundation.Logic.Commands;
 public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFoundationCommands
 {
     private readonly ServiceResolver<IIdentityLogic> _identityLogic;
+    private readonly ServiceResolver<IFoundationQueries> _foundationQueries;
     public FoundationCommands(IFoundationCommandsRepository repository,
         IServiceProvider serviceProvider) : base(repository)
     {
-        _identityLogic = new ServiceResolver<IIdentityLogic>(serviceProvider);
+        _identityLogic = serviceProvider.GetResolver<IIdentityLogic>();
+        _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
     }
 
     public async Task<ResponseWithStatus<bool>> AddNewStudent(NewStudentCommand command)
     {
+        command.CreatorGuid = (await _foundationQueries.Service.GetCurrentPersonGuid()).Response;
         var resp = await Repository.AddNewStudent(command);
         await Repository.SaveChangesAsync();
         return resp;
@@ -52,9 +57,11 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
 
         var respAdmin = await Repository.AddNewAdministrator(administratorCommand);
         var respSchool = await Repository.AddNewSchool(schoolCommand);
+        if(respAdmin.Status && respSchool.Status)
+            await Repository.SaveChangesAsync();
         var respAddAdminToSchool = await Repository.AddAdministratorToSchool(respAdmin.Response, respSchool.Response);
         
-        if(respAdmin.Status && respSchool.Status && respAddAdminToSchool.Status){
+        if(respAddAdminToSchool.Status){
             await Repository.SaveChangesAsync();
             return new ResponseWithStatus<bool>(true);
         }

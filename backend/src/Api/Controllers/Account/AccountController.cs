@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using Gradebook.Foundation.Identity.Models;
 using Gradebook.Foundation.Common;
+using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 
 namespace Api.Controllers;
@@ -20,10 +21,10 @@ public class AccountController : ControllerBase
     private readonly ServiceResolver<IIdentityLogic> _identityLogic;
     public AccountController(IServiceProvider serviceProvider)
     {
-        _userManager = new ServiceResolver<UserManager<ApplicationUser>>(serviceProvider);
-        _roleManager = new ServiceResolver<RoleManager<IdentityRole>>(serviceProvider);
-        _configuration = new ServiceResolver<IConfiguration>(serviceProvider);
-        _identityLogic = new ServiceResolver<IIdentityLogic>(serviceProvider);
+        _userManager = serviceProvider.GetResolver<UserManager<ApplicationUser>>();
+        _roleManager = serviceProvider.GetResolver<RoleManager<IdentityRole>>();
+        _configuration = serviceProvider.GetResolver<IConfiguration>();
+        _identityLogic = serviceProvider.GetResolver<IIdentityLogic>();
     }
     [HttpPost]
     [Route("login")]
@@ -61,7 +62,9 @@ public class AccountController : ControllerBase
             {
                 access_token = new JwtSecurityTokenHandler().WriteToken(token),
                 RefreshToken = refreshToken,
+                refresh_token = refreshToken,
                 Expiration = token.ValidTo,
+                expires_in = int.Parse(_configuration.Service["JWT:TokenValidityInMinutes"]) * 60,
                 Username = user.UserName,
                 UserId = user.Id,
                 Roles = roles

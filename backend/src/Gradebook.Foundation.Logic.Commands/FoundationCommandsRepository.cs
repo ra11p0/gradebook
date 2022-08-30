@@ -20,7 +20,7 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
         var admin = Context.Administrators.FirstOrDefault(e=>e.Guid == administratorGuid);
         var school = Context.Schools.Include(e=>e.People).FirstOrDefault(e=>e.Guid == schoolGuid);
 
-        if(admin is null || school is null) return new ResponseWithStatus<bool>(false);
+        if(admin is null || school is null) return new ResponseWithStatus<bool>(false, "Admin or school not found!");
 
         school.People.Add(admin);
 

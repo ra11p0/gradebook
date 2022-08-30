@@ -4,6 +4,9 @@ namespace Gradebook.Foundation.Domain.Models;
 
 public class Student : Person
 {
+    public Guid CreatorGuid { get; set; }
+    [ForeignKey("CreatorGuid")]
+    public Administrator Creator { get; set; }
     public Guid? GroupGuid { get; set; }
     [ForeignKey("GroupGuid")]
     public Group Group { get; set; }
