@@ -57,6 +57,16 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
         return new ResponseWithStatus<bool>(true);
     }
 
+    public async Task<ResponseWithStatus<bool>> AddPersonToSchool(Guid schoolGuid, Guid personGuid)
+    {
+        Person? person = await GetPersonByGuid(personGuid);
+        if(person is null) return new ResponseWithStatus<bool>(false, "Person does not exist");
+        School? school = await Context.Schools.Include(e=>e.People).FirstOrDefaultAsync(e=>e.Guid == schoolGuid);
+        if(school is null) return new ResponseWithStatus<bool>(false, "School does not exist");
+        school.People.Add(person);
+        return new ResponseWithStatus<bool>(true);
+    }
+
     public async Task<string?> GenerateSystemInvitation(Guid invitedPersonGuid, Guid invitingPersonGuid, SchoolRoleEnum role)
     {
         SystemInvitation systemInvitation = new(){
@@ -66,5 +76,12 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
         };
         Context.SystemInvitations.Add(systemInvitation);
         return systemInvitation.InvitationCode;
+    }
+
+    private async Task<Person?> GetPersonByGuid(Guid guid){
+        Person? person = (Person?) await Context.Students.FirstOrDefaultAsync(e=>e.Guid == guid) ??
+            (Person?) await Context.Teachers.FirstOrDefaultAsync(e=>e.Guid == guid) ??
+            (Person?) await Context.Administrators.FirstOrDefaultAsync(e=>e.Guid == guid);
+        return person;
     }
 }

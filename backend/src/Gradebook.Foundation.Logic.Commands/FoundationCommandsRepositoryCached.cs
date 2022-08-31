@@ -22,6 +22,9 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
     public Task<ResponseWithStatus<bool>> AddNewStudent(NewStudentCommand newStudentDto)
         => Base.AddNewStudent(newStudentDto);
 
+    public Task<ResponseWithStatus<bool>> AddPersonToSchool(Guid schoolGuid, Guid personGuid)
+        => Base.AddPersonToSchool(schoolGuid, personGuid);
+
     public Task<string?> GenerateSystemInvitation(Guid invitedPersonGuid, Guid invitingPersonGuid, SchoolRoleEnum role)
         => Base.GenerateSystemInvitation(invitedPersonGuid, invitingPersonGuid, role);
 

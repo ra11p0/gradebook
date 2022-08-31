@@ -28,6 +28,18 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         return resp;
     }
 
+    public async Task<ResponseWithStatus<bool>> AddPersonToSchool(Guid schoolGuid, Guid? personGuid = null)
+    {
+        if(personGuid is null){
+            var person = await _foundationQueries.Service.GetCurrentPersonGuid();
+            if(!person.Status) return new ResponseWithStatus<bool>(false, "Person does not exist");
+            personGuid = person.Response;
+        }
+        var resp = await Repository.AddPersonToSchool(schoolGuid, personGuid.Value);
+        if(resp.Status) await Repository.SaveChangesAsync();
+        return new ResponseWithStatus<bool>(resp.Status, resp.Message);
+    }
+
     public async Task<ResponseWithStatus<string, bool>> GenerateSystemInvitation(Guid personGuid, SchoolRoleEnum role)
     {
         var currentPersonGuid = await _foundationQueries.Service.GetCurrentPersonGuid();
