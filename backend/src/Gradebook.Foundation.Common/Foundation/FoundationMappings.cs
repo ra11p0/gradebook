@@ -9,6 +9,7 @@ public class FoundationMappings : Profile
     public FoundationMappings()
     {
         CreateMap<NewStudentModel, NewStudentCommand>();
+        CreateMap<NewTeacherModel, NewTeacherCommand>();
         CreateMap<NewSchoolModel, NewSchoolCommand>();
         CreateMap<NewAdministratorModel, NewAdministratorCommand>();
     }

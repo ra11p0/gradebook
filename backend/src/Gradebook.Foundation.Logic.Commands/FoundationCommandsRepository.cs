@@ -57,6 +57,15 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
         return new ResponseWithStatus<bool>(true);
     }
 
+    public async Task<ResponseWithStatus<bool>> AddNewTeacher(NewTeacherCommand newTeacherDto)
+    {
+        var teacher = _mapper.Map<Teacher>(newTeacherDto);
+        teacher.SchoolRole = Common.Foundation.Enums.SchoolRoleEnum.Teacher;
+        await Context.Teachers.AddAsync(teacher);
+
+        return new ResponseWithStatus<bool>(true);
+    }
+
     public async Task<ResponseWithStatus<bool>> AddPersonToSchool(Guid schoolGuid, Guid personGuid)
     {
         Person? person = await GetPersonByGuid(personGuid);

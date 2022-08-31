@@ -28,6 +28,14 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         return resp;
     }
 
+    public async Task<ResponseWithStatus<bool>> AddNewTeacher(NewTeacherCommand command)
+    {
+        command.CreatorGuid = (await _foundationQueries.Service.GetCurrentPersonGuid()).Response;
+        var resp = await Repository.AddNewTeacher(command);
+        await Repository.SaveChangesAsync();
+        return resp;
+    }
+
     public async Task<ResponseWithStatus<bool>> AddPersonToSchool(Guid schoolGuid, Guid? personGuid = null)
     {
         if(personGuid is null){
