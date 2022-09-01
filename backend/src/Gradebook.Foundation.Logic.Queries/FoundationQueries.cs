@@ -22,6 +22,14 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<IEnumerable<StudentDto>, bool>(students, true);
     }
 
+    public async Task<ResponseWithStatus<IEnumerable<TeacherDto>, bool>> GetAllAccessibleTeachers()
+    {
+        var relatedPersonGuid = await GetCurrentPersonGuid();
+        if(!relatedPersonGuid.Status) return new ResponseWithStatus<IEnumerable<TeacherDto>, bool>(null, false, "Cannot recognise current person");
+        var teachers = await Repository.GetAllAccessibleTeachers(relatedPersonGuid.Response);
+        return new ResponseWithStatus<IEnumerable<TeacherDto>, bool>(teachers, true);
+    }
+
     public async Task<ResponseWithStatus<Guid, bool>> GetCurrentPersonGuid()
     {
         var userGuid = await _identityLogic.Service.CurrentUserId();

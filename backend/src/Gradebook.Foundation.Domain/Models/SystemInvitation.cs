@@ -16,7 +16,7 @@ public class SystemInvitation : BaseDomainModel
 
     public Guid CreatorGuid { get; set; }
     public DateTime? UsedDate { get; set; }
-    public Guid InvitedPersonGuid { get; set; }
+    public Guid? InvitedPersonGuid { get; set; }
     public SchoolRoleEnum SchoolRole { get; set; }
 
     //**********
@@ -24,5 +24,5 @@ public class SystemInvitation : BaseDomainModel
     [ForeignKey("CreatorGuid")]
     public virtual Person Creator { get; set; }
     [ForeignKey("InvitedPersonGuid")]
-    public virtual Person InvitedPerson { get; set; }
+    public virtual Person? InvitedPerson { get; set; }
 }

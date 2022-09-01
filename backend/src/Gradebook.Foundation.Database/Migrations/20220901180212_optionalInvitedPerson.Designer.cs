@@ -3,6 +3,7 @@ using System;
 using Gradebook.Foundation.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gradebook.Foundation.Database.Migrations
 {
     [DbContext(typeof(FoundationDatabaseContext))]
-    partial class FoundationDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20220901180212_optionalInvitedPerson")]
+    partial class optionalInvitedPerson
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

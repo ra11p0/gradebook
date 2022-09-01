@@ -12,6 +12,9 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
     public Task<IEnumerable<StudentDto>> GetAllAccessibleStudents(Guid relatedPersonGuid)
         => Base.GetAllAccessibleStudents(relatedPersonGuid);
 
+    public Task<IEnumerable<TeacherDto>> GetAllAccessibleTeachers(Guid relatedPersonGuid)
+        => Base.GetAllAccessibleTeachers(relatedPersonGuid);
+
     public Task<IEnumerable<InvitationDto>> GetInvitations(Guid personGuid)
         => Base.GetInvitations(personGuid);
 

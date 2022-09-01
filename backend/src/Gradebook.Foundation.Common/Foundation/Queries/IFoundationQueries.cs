@@ -12,4 +12,5 @@ public interface IFoundationQueries
     Task<ResponseWithStatus<IEnumerable<StudentDto>, bool>> GetAllAccessibleStudents();
     Task<ResponseWithStatus<IEnumerable<InvitationDto>, bool>> GetInvitations(Guid personGuid);
     Task<ResponseWithStatus<IEnumerable<InvitationDto>, bool>> GetInvitations();
+    Task<ResponseWithStatus<IEnumerable<TeacherDto>, bool>> GetAllAccessibleTeachers();
 }
