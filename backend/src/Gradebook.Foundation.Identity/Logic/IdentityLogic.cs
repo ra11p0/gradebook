@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Gradebook.Foundation.Common;
+using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 using Gradebook.Foundation.Identity.Models;
 using Microsoft.AspNetCore.Http;
@@ -21,11 +22,11 @@ public class IdentityLogic : IIdentityLogic
     private readonly ServiceResolver<IHttpContextAccessor> _httpContextAccessor;
     public IdentityLogic(IServiceProvider serviceProvider)
     {
-        _configuration = new ServiceResolver<IConfiguration>(serviceProvider);
-        _userManager = new ServiceResolver<UserManager<ApplicationUser>>(serviceProvider);
-        _roleManager = new ServiceResolver<RoleManager<IdentityRole>>(serviceProvider);
-        _identityContext = new ServiceResolver<ApplicationIdentityDatabaseContext>(serviceProvider);
-        _httpContextAccessor = new ServiceResolver<IHttpContextAccessor>(serviceProvider);
+        _configuration = serviceProvider.GetResolver<IConfiguration>();
+        _userManager = serviceProvider.GetResolver<UserManager<ApplicationUser>>();
+        _roleManager = serviceProvider.GetResolver<RoleManager<IdentityRole>>();
+        _identityContext = serviceProvider.GetResolver<ApplicationIdentityDatabaseContext>();
+        _httpContextAccessor = serviceProvider.GetResolver<IHttpContextAccessor>();
     }
     public JwtSecurityToken CreateToken(List<Claim> authClaims)
     {
@@ -104,7 +105,6 @@ public class IdentityLogic : IIdentityLogic
             .Select(e=>e.r.Name);
         return new ResponseWithStatus<string[], bool>(response.ToArray(), true);
     }
-
     public async Task<ResponseWithStatus<bool>> AddUserRole(string role, string? userGuid = null)
     {
         var r = (await GetUserRoles(userGuid)).Response!.Any(e=>e.Normalize() == role.Normalize());
@@ -112,7 +112,6 @@ public class IdentityLogic : IIdentityLogic
         await EditUserRoles( (await GetUserRoles(userGuid)).Response!.Append(role).ToArray() , userGuid);
         return new ResponseWithStatus<bool>(true);
     }
-
     public async Task<ResponseWithStatus<bool>> RemoveUserRole(string role, string? userGuid = null)
     {
         await EditUserRoles((await GetUserRoles(userGuid)).Response!.Where(e=>e.Normalize() != role.Normalize()).ToArray(), userGuid);

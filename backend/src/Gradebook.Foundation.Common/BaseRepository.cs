@@ -1,5 +1,5 @@
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using MySql.Data.MySqlClient;
 
 namespace Gradebook.Foundation.Common;
 
@@ -27,15 +27,15 @@ public abstract class BaseRepository : IBaseRepository
     {
         ConnectionString = connectionString;
     }
-    protected async Task<SqlConnection> GetOpenConnectionAsync()
+    protected async Task<MySqlConnection> GetOpenConnectionAsync()
     {
-        var connection = new SqlConnection(ConnectionString);
+        var connection = new MySqlConnection(ConnectionString);
         await connection.OpenAsync();
         return connection;
     }
-    protected SqlConnection GetOpenConnection()
+    protected MySqlConnection GetOpenConnection()
     {
-        var connection = new SqlConnection(ConnectionString);
+        var connection = new MySqlConnection(ConnectionString);
         connection.Open();
         return connection;
     }

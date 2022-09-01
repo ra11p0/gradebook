@@ -5,6 +5,7 @@
     <ProjectReference Include="..\Gradebook.Foundation.Database\Gradebook.Foundation.Database.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.*" />
   </ItemGroup>
 

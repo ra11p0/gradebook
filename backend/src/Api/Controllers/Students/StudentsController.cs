@@ -1,8 +1,10 @@
 using AutoMapper;
 using Gradebook.Foundation.Common;
+using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Foundation.Commands;
 using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
 using Gradebook.Foundation.Common.Foundation.Models;
+using Gradebook.Foundation.Common.Foundation.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,10 +17,12 @@ public class StudentsController : ControllerBase
 {
     private readonly ServiceResolver<IMapper> _mapper;
     private readonly ServiceResolver<IFoundationCommands> _foundationCommands;
+    private readonly ServiceResolver<IFoundationQueries> _foundationQueries;
     public StudentsController(IServiceProvider serviceProvider)
     {
-        _mapper = new ServiceResolver<IMapper>(serviceProvider);
-        _foundationCommands = new ServiceResolver<IFoundationCommands>(serviceProvider);
+        _mapper = serviceProvider.GetResolver<IMapper>();
+        _foundationCommands = serviceProvider.GetResolver<IFoundationCommands>();
+        _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
     }
     [HttpPost]
     [Route("")]
@@ -30,8 +34,9 @@ public class StudentsController : ControllerBase
     }
     [HttpGet]
     [Route("")]
-    public async Task<IActionResult> GetStudents(){
-        return Ok();
+    public async Task<IActionResult> GetAccessibleStudents(){
+        var students = await _foundationQueries.Service.GetAllAccessibleStudents();
+        return students.Status ? Ok(students.Response) : BadRequest(students.Message);
     }
     [HttpGet]
     [Route("{guid}")]

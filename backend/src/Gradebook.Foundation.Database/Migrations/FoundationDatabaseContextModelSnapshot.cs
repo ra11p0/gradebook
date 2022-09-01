@@ -25,9 +25,6 @@ namespace Gradebook.Foundation.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
@@ -48,9 +45,6 @@ namespace Gradebook.Foundation.Database.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
@@ -92,9 +86,6 @@ namespace Gradebook.Foundation.Database.Migrations
                     b.Property<Guid>("ClassGuid")
                         .HasColumnType("char(36)");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
@@ -115,9 +106,6 @@ namespace Gradebook.Foundation.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
@@ -135,12 +123,12 @@ namespace Gradebook.Foundation.Database.Migrations
                     b.Property<DateTime?>("Birthday")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<Guid?>("CreatorGuid")
+                        .HasColumnType("char(36)");
+
                     b.Property<string>("Discriminator")
                         .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
@@ -161,6 +149,8 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasKey("Guid");
 
+                    b.HasIndex("CreatorGuid");
+
                     b.ToTable("Person");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Person");
@@ -171,9 +161,6 @@ namespace Gradebook.Foundation.Database.Migrations
                     b.Property<Guid>("Guid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
@@ -204,9 +191,6 @@ namespace Gradebook.Foundation.Database.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
@@ -228,9 +212,6 @@ namespace Gradebook.Foundation.Database.Migrations
                     b.Property<Guid>("Guid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
@@ -256,9 +237,6 @@ namespace Gradebook.Foundation.Database.Migrations
                     b.Property<Guid>("Guid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
@@ -287,14 +265,11 @@ namespace Gradebook.Foundation.Database.Migrations
                     b.Property<DateTime>("ExprationDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
                     b.Property<string>("InvitationCode")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<Guid>("InvitedPersonGuid")
+                    b.Property<Guid?>("InvitedPersonGuid")
                         .HasColumnType("char(36)");
 
                     b.Property<bool>("IsDeleted")
@@ -323,9 +298,6 @@ namespace Gradebook.Foundation.Database.Migrations
                     b.Property<Guid>("Guid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
@@ -440,6 +412,15 @@ namespace Gradebook.Foundation.Database.Migrations
                     b.Navigation("Class");
                 });
 
+            modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Person", b =>
+                {
+                    b.HasOne("Gradebook.Foundation.Domain.Models.Administrator", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorGuid");
+
+                    b.Navigation("Creator");
+                });
+
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.StudentsAbsence", b =>
                 {
                     b.HasOne("Gradebook.Foundation.Domain.Models.Student", "Student")
@@ -461,9 +442,7 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasOne("Gradebook.Foundation.Domain.Models.Person", "InvitedPerson")
                         .WithMany()
-                        .HasForeignKey("InvitedPersonGuid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("InvitedPersonGuid");
 
                     b.Navigation("Creator");
 

@@ -1,5 +1,6 @@
 using AutoMapper;
 using Gradebook.Foundation.Common;
+using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Foundation.Commands;
 using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
 using Gradebook.Foundation.Common.Foundation.Models;
@@ -17,8 +18,8 @@ public class AdministratorsController : ControllerBase
     private readonly ServiceResolver<IMapper> _mapper;
     public AdministratorsController(IServiceProvider serviceProvider)
     {
-        _foundationCommands = new ServiceResolver<IFoundationCommands>(serviceProvider);
-        _mapper = new ServiceResolver<IMapper>(serviceProvider);
+        _foundationCommands = serviceProvider.GetResolver<IFoundationCommands>();
+        _mapper = serviceProvider.GetResolver<IMapper>();
     }
     [HttpPost]
     [Route("")]
