@@ -38,6 +38,13 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return personGuid;
     }
 
+    public async Task<ResponseWithStatus<InvitationDto, bool>> GetInvitationByActivationCode(string activationCode)
+    {
+        var invitation = await Repository.GetInvitationByActivationCode(activationCode);
+        if(invitation is null) return new ResponseWithStatus<InvitationDto, bool>(invitation, false, "Invitation does not exist");
+        return new ResponseWithStatus<InvitationDto, bool>(invitation, true);
+    }
+
     public async Task<ResponseWithStatus<IEnumerable<InvitationDto>, bool>> GetInvitations(Guid personGuid)
     {
         var resp = await Repository.GetInvitations(personGuid);
@@ -57,10 +64,17 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<IEnumerable<PersonDto>, bool>(resp, true);
     }
 
+    public async Task<ResponseWithStatus<PersonDto, bool>> GetPersonByGuid(Guid guid)
+    {
+        var resp = await Repository.GetPersonByGuid(guid);
+        if(resp is null) return new ResponseWithStatus<PersonDto, bool>(null, false, "Person does not exist");
+        return new ResponseWithStatus<PersonDto, bool>(resp, true);
+    }
+
     public async Task<ResponseWithStatus<Guid, bool>> GetPersonGuidForUser(string userId)
     {
         var resp = await Repository.GetPersonGuidForUser(userId);
-        return new ResponseWithStatus<Guid, bool>(resp.Value, !(resp is null));
+        return new ResponseWithStatus<Guid, bool>(resp.Value, resp != Guid.Empty);
     }
 
     public async Task<ResponseWithStatus<IEnumerable<SchoolDto>, bool>> GetSchoolsForPerson(Guid personGuid)

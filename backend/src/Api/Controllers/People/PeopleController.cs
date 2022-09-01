@@ -26,13 +26,16 @@ public class PeopleController : ControllerBase
         _foundationCommands = serviceProvider.GetResolver<IFoundationCommands>();
     }
     [HttpGet]
-    [Route("{userGuid}/schools")]
-    public async Task<IActionResult> GetSchools([FromRoute] string userGuid)
+    [Route("{personGuid}/schools")]
+    public async Task<IActionResult> GetSchools([FromRoute] Guid personGuid)
     {
-        var userId = await _foundationQueries.Service.GetPersonGuidForUser(userGuid);
-        if(!userId.Status)
-            return BadRequest(userId.Message);
-        var resp = await _foundationQueries.Service.GetSchoolsForPerson(userId.Response);
+        var resp = await _foundationQueries.Service.GetSchoolsForPerson(personGuid);
         return resp.Status ? Ok(resp.Response) : BadRequest();
+    }
+    [HttpPost]
+    [Route("Activation/Code/{activationCode}")]
+    public async Task<IActionResult> ActivatePerson([FromRoute] string activationCode){
+        var resp = await _foundationCommands.Service.ActivatePerson(activationCode);
+        return resp.Status ? Ok() : BadRequest(resp.Message);
     }
 }

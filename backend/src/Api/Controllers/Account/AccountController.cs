@@ -148,11 +148,16 @@ public class AccountController : ControllerBase
         var user = await _userManager.Service.FindByNameAsync(User.Identity!.Name);
         var roles = await _identityLogic.Service.GetUserRoles(user.Id);
         var personGuid = await _foundationQueries.Service.GetCurrentPersonGuid();
+        var person = await _foundationQueries.Service.GetPersonByGuid(personGuid.Response);
         return Ok(new{
             user.Id,
             user.UserName,
             personGuid = personGuid.Response,
-            roles = roles.Response
+            roles = roles.Response,
+            name = person.Response.Name,
+            surname = person.Response.Surname,
+            birthday = person.Response.Birthday,
+            schoolRole = person.Response.SchoolRole,
         });
     }
     [Authorize]

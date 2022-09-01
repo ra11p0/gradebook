@@ -76,6 +76,28 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
         return new ResponseWithStatus<bool>(true);
     }
 
+    public async Task<ResponseWithStatus<bool>> AssignUserToStudent(string userId, Guid personGuid)
+    {
+        var student = await Context.Students.FirstOrDefaultAsync(e=>e.Guid == personGuid);
+        if(student is null) return new ResponseWithStatus<bool>(false, "Person does not exist");
+        student.UserGuid = userId;
+        return new ResponseWithStatus<bool>(true);
+    }
+    public async Task<ResponseWithStatus<bool>> AssignUserToTeacher(string userId, Guid personGuid)
+    {
+        var teacher = await Context.Teachers.FirstOrDefaultAsync(e=>e.Guid == personGuid);
+        if(teacher is null) return new ResponseWithStatus<bool>(false, "Person does not exist");
+        teacher.UserGuid = userId;
+        return new ResponseWithStatus<bool>(true);
+    }
+    public async Task<ResponseWithStatus<bool>> AssignUserToAdministrator(string userId, Guid personGuid)
+    {
+        var administrator = await Context.Administrators.FirstOrDefaultAsync(e=>e.Guid == personGuid);
+        if(administrator is null) return new ResponseWithStatus<bool>(false, "Person does not exist");
+        administrator.UserGuid = userId;
+        return new ResponseWithStatus<bool>(true);
+    }
+
     public async Task<string?> GenerateSystemInvitation(Guid invitedPersonGuid, Guid invitingPersonGuid, SchoolRoleEnum role)
     {
         SystemInvitation systemInvitation = new(){
@@ -85,6 +107,15 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
         };
         Context.SystemInvitations.Add(systemInvitation);
         return systemInvitation.InvitationCode;
+    }
+
+    public async Task<ResponseWithStatus<bool>> UseInvitation(UseInvitationCommand command)
+    {
+        var invitation = await Context.SystemInvitations.FirstOrDefaultAsync(e=>e.Guid == command.InvitationGuid);
+        if(invitation is null) return new ResponseWithStatus<bool>(false, "Invitation does not exist");
+        invitation.IsUsed = true;
+        invitation.UsedDate = command.UsedDate;
+        return new ResponseWithStatus<bool>(true);
     }
 
     private async Task<Person?> GetPersonByGuid(Guid guid){

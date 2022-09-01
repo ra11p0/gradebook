@@ -11,4 +11,5 @@ public interface IFoundationCommands
     Task<ResponseWithStatus<bool>> NewAdministratorWithSchool(NewAdministratorCommand administratorCommand, NewSchoolCommand schoolCommand);
     Task<ResponseWithStatus<string, bool>> GenerateSystemInvitation(Guid personGuid, SchoolRoleEnum role);
     Task<ResponseWithStatus<bool>> AddPersonToSchool(Guid schoolGuid, Guid? personGuid = null);
+    Task<ResponseWithStatus<bool>> ActivatePerson(string activationCode);
 }

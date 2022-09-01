@@ -13,4 +13,8 @@ public interface IFoundationCommandsRepository : IBaseRepository
     Task<ResponseWithStatus<Guid, bool>> AddNewAdministrator(NewAdministratorCommand command);
     Task<string?> GenerateSystemInvitation(Guid invitedPersonGuid, Guid invitingPersonGuid, SchoolRoleEnum role);
     Task<ResponseWithStatus<bool>> AddPersonToSchool(Guid schoolGuid, Guid personGuid);
+    Task<ResponseWithStatus<bool>> AssignUserToStudent(string userId, Guid personGuid);
+    Task<ResponseWithStatus<bool>> AssignUserToAdministrator(string userId, Guid personGuid);
+    Task<ResponseWithStatus<bool>> AssignUserToTeacher(string userId, Guid personGuid);
+    Task<ResponseWithStatus<bool>> UseInvitation(UseInvitationCommand command);
 }

@@ -61,6 +61,19 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
         }
     }
 
+    public async Task<InvitationDto> GetInvitationByActivationCode(string activationCode)
+    {
+        using(var cn = await GetOpenConnectionAsync()){
+            return await cn.QueryFirstOrDefaultAsync<InvitationDto>(@"
+                SELECT CreatedDate, ExprationDate, IsUsed, CreatorGuid, UsedDate, InvitedPersonGuid, SchoolRole, Guid
+                FROM SystemInvitations
+                WHERE InvitationCode = @activationCode
+            ", new{
+                activationCode
+            });
+        }
+    }
+
     public async Task<IEnumerable<InvitationDto>> GetInvitations(Guid personGuid)
     {
         using (var cn = await GetOpenConnectionAsync()){
@@ -86,6 +99,20 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                 WHERE PS.SchoolsGuid = @schoolGuid
             ", new {
                 schoolGuid
+            });
+        }
+    }
+
+    public async Task<PersonDto> GetPersonByGuid(Guid guid)
+    {
+        using(var cn = await GetOpenConnectionAsync()){
+            return await cn.QueryFirstOrDefaultAsync<PersonDto>(@"
+            SELECT Guid, Name, Surname, SchoolRole, Birthday
+            FROM Person
+            WHERE Guid = @guid
+            ",
+            new{
+                guid
             });
         }
     }

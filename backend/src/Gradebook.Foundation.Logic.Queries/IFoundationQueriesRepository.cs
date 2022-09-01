@@ -11,4 +11,6 @@ public interface IFoundationQueriesRepository : IBaseRepository
     Task<IEnumerable<StudentDto>> GetAllAccessibleStudents(Guid relatedPersonGuid);
     Task<IEnumerable<TeacherDto>> GetAllAccessibleTeachers(Guid relatedPersonGuid);
     Task<IEnumerable<InvitationDto>> GetInvitations(Guid personGuid);
+    Task<InvitationDto> GetInvitationByActivationCode(string activationCode);
+    Task<PersonDto> GetPersonByGuid(Guid guid);
 }

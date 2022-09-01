@@ -4,6 +4,7 @@ namespace Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 
 public class InvitationDto
 {
+    public Guid Guid { get; set; }
     public DateTime CreatedDate { get; set; }
     public DateTime ExprationDate { get; set; }
     public string InvitationCode { get; set; }
