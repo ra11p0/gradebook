@@ -1,10 +1,11 @@
 import React, { ReactElement, useState } from 'react';
-import { Link, Navigate } from "react-router-dom";
 import { connect } from 'react-redux';
-import { logIn } from '../../Actions/Account/accountActions';
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { Button, Col, Row } from 'react-bootstrap';
+import InvitationsProxy from '../../ApiClient/Invitations/InvitationsProxy';
+import moment from 'moment';
+
 
 const mapStateToProps = (state: any) => ({
     
@@ -52,7 +53,18 @@ const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
 
     const handleAccessCodeChange = function(e:any){
         if(e.target.value.length == 6){
-            console.log(e.target.value);
+            InvitationsProxy.getInvitationDetails(e.target.value)
+                .then(resp=>{
+                    var data = resp.data;
+                    setName(data.person.name);
+                    setSurname(data.person.surname);
+                    setBirthday(moment(data.person.birthday).format('YYYY-MM-DD'));
+                })
+                .catch(err=>{
+                    setName('');
+                    setSurname('');
+                    setBirthday('');
+                });
         }
     };
 
@@ -62,8 +74,8 @@ const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
                 {t('back')}
             </Button>
             <Row className='text-center'>
-                <div>
-                    Register student
+                <div className='h4'>
+                    {t('registerStudent')}
                 </div>
             </Row>
             <form onSubmit={formik.handleSubmit}>
@@ -140,7 +152,7 @@ const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
              
                 <Button variant='outline-primary'
                     type='submit'>
-                        Potwierdzam dane
+                        {t('confirmInformation')}
                 </Button>
             </form>
         </div>

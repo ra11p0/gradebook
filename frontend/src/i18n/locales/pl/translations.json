@@ -36,5 +36,11 @@
     "manageSchool": "Zarządzanie szkołą",
     "nameInvalid": "Nieprawidłowe imię!",
     "surnameInvalid": "Nieprawidłowe nazwisko!",
-    "nameI": "Nazwa"
+    "nameI": "Nazwa",
+    "accessCode": "Kod dostępu",
+    "group": "Grupa",
+    "class": "Klasa",
+    "back": "Wstecz",
+    "registerStudent": "Zarejestruj się jako uczeń",
+    "confirmInformation": "Potwierdź informacje"
 }

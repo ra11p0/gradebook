@@ -67,9 +67,9 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
             return await cn.QueryFirstOrDefaultAsync<InvitationDto>(@"
                 SELECT CreatedDate, ExprationDate, IsUsed, CreatorGuid, UsedDate, InvitedPersonGuid, SchoolRole, Guid
                 FROM SystemInvitations
-                WHERE InvitationCode = @activationCode
+                WHERE InvitationCode like @activationCode
             ", new{
-                activationCode
+                activationCode = activationCode.Normalize()
             });
         }
     }
