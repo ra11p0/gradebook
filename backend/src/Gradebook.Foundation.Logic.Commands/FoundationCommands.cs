@@ -24,29 +24,35 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
     {
         var userGuid = await _identityLogic.Service.CurrentUserId();
         if(!userGuid.Status) return new ResponseWithStatus<bool>(false, userGuid.Message);
+
         var person = await _foundationQueries.Service.GetCurrentPersonGuid();
         if(person.Status) return new ResponseWithStatus<bool>(false, "Person already exists");
+
         var invitationResult = await _foundationQueries.Service.GetInvitationByActivationCode(activationCode);
         if(!invitationResult.Status) return new ResponseWithStatus<bool>(false, invitationResult.Message);
+
         var invitation = invitationResult.Response!;
         if(invitation.IsUsed) return new ResponseWithStatus<bool>(false, "Invitation already used");
         if(invitation.ExprationDate < DateTime.Now) return new ResponseWithStatus<bool>(false, "Invitation expired");
+
         var useInvitationResult = await Repository.UseInvitation(new UseInvitationCommand(){
             InvitationGuid = invitation.Guid,
             UsedDate = DateTime.Now,
             UserGuid = userGuid.Response!
         });
         if(!useInvitationResult.Status) return new ResponseWithStatus<bool>(false, useInvitationResult.Message);
+        if(!invitation.InvitedPersonGuid.HasValue) return new ResponseWithStatus<bool>(false, "Invitation is not binded to any person. Functionality is not yet avalible");
+
         ResponseWithStatus<bool> assigningResult;
         switch (invitation.SchoolRole){
             case SchoolRoleEnum.Student:
-            assigningResult = await Repository.AssignUserToStudent(userGuid.Response!, invitation.InvitedPersonGuid);
+            assigningResult = await Repository.AssignUserToStudent(userGuid.Response!, invitation.InvitedPersonGuid.Value);
             break;
             case SchoolRoleEnum.Teacher:
-            assigningResult = await Repository.AssignUserToTeacher(userGuid.Response!, invitation.InvitedPersonGuid);
+            assigningResult = await Repository.AssignUserToTeacher(userGuid.Response!, invitation.InvitedPersonGuid.Value);
             break;
             case SchoolRoleEnum.Admin:
-            assigningResult = await Repository.AssignUserToAdministrator(userGuid.Response!, invitation.InvitedPersonGuid);
+            assigningResult = await Repository.AssignUserToAdministrator(userGuid.Response!, invitation.InvitedPersonGuid.Value);
             break;
             default:
             return new ResponseWithStatus<bool>(false, "Wrong role");

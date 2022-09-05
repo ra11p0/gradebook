@@ -11,6 +11,6 @@ public class InvitationDto
     public bool IsUsed { get; set; } = false;
     public Guid CreatorGuid { get; set; }
     public DateTime? UsedDate { get; set; }
-    public Guid InvitedPersonGuid { get; set; }
+    public Guid? InvitedPersonGuid { get; set; }
     public SchoolRoleEnum SchoolRole { get; set; }
 }
