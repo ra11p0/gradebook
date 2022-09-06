@@ -17,16 +17,16 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         _mapper = serviceProvider.GetResolver<IMapper>();
     }
 
-    public async Task<ResponseWithStatus<ActivationCodeInfoDto, bool>> GetActivationCodeInfo(string activationCode, string method)
+    public async Task<ResponseWithStatus<ActivationCodeInfoDto>> GetActivationCodeInfo(string activationCode, string method)
     {
         var invitationResponse = await GetInvitationByActivationCode(activationCode);
-        if (!invitationResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto, bool>(false, invitationResponse.Message);
-        if (invitationResponse.Response!.IsUsed) return new ResponseWithStatus<ActivationCodeInfoDto, bool>("Invitation code is used");
-        if (invitationResponse.Response!.ExprationDate < DateTime.Now) return new ResponseWithStatus<ActivationCodeInfoDto, bool>("Invitation code expired");
+        if (!invitationResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto>(invitationResponse.Message);
+        if (invitationResponse.Response!.IsUsed) return new ResponseWithStatus<ActivationCodeInfoDto>("Invitation code is used");
+        if (invitationResponse.Response!.ExprationDate < DateTime.Now) return new ResponseWithStatus<ActivationCodeInfoDto>("Invitation code expired");
 
         var invitation = invitationResponse.Response!;
         var invitedPersonGuid = invitation.InvitedPersonGuid;
-        if (invitedPersonGuid is null) return new ResponseWithStatus<ActivationCodeInfoDto, bool>(false, "There is no information about activation code");
+        if (invitedPersonGuid is null) return new ResponseWithStatus<ActivationCodeInfoDto>("There is no information about activation code");
 
         var response = new ActivationCodeInfoDto();
 
@@ -34,30 +34,30 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         {
             case "student":
                 var studentResponse = await GetStudentByGuid(invitedPersonGuid.Value);
-                if (!studentResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto, bool>(false, studentResponse.Message);
+                if (!studentResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto>(studentResponse.Message);
                 response.Person = _mapper.Service.Map<PersonDto>(studentResponse.Response);
                 if (studentResponse.Response!.GroupGuid.HasValue)
                 {
                     var groupResponse = await GetGroupByGuid(studentResponse.Response!.GroupGuid.Value);
-                    if (!groupResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto, bool>(groupResponse.Message);
+                    if (!groupResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto>(groupResponse.Message);
                     response.Group = groupResponse.Response;
                 }
                 if (studentResponse.Response!.ClassGuid.HasValue)
                 {
                     var classResponse = await GetClassByGuid(studentResponse.Response!.ClassGuid.Value);
-                    if (!classResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto, bool>(classResponse.Message);
+                    if (!classResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto>(classResponse.Message);
                     response.Class = classResponse.Response;
                 }
                 break;
             case "teacher":
                 var teacherResponse = await GetTeacherByGuid(invitedPersonGuid.Value);
-                if (!teacherResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto, bool>(false, teacherResponse.Message);
+                if (!teacherResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto>(teacherResponse.Message);
                 response.Person = _mapper.Service.Map<PersonDto>(teacherResponse.Response);
                 break;
             default:
-                return new ResponseWithStatus<ActivationCodeInfoDto, bool>("Method not found");
+                return new ResponseWithStatus<ActivationCodeInfoDto>("Method not found");
         }
-        return new ResponseWithStatus<ActivationCodeInfoDto, bool>(response, true);
+        return new ResponseWithStatus<ActivationCodeInfoDto>(response, true);
     }
 
     public async Task<ResponseWithStatus<IEnumerable<StudentDto>, bool>> GetAllAccessibleStudents()

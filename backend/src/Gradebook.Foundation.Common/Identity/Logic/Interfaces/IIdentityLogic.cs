@@ -11,6 +11,6 @@ public interface IIdentityLogic
     Task EditUserRoles(string[] roles, string? userGuid = null);
     Task<ResponseWithStatus<string[], bool>> GetUserRoles(string? userGuid = null);
     Task<ResponseWithStatus<string, bool>> CurrentUserId();
-    Task<ResponseWithStatus<bool>> AddUserRole(string role, string? userGuid = null);
-    Task<ResponseWithStatus<bool>> RemoveUserRole(string role, string? userGuid = null);
+    Task<StatusResponse<bool>> AddUserRole(string role, string? userGuid = null);
+    Task<StatusResponse<bool>> RemoveUserRole(string role, string? userGuid = null);
 }

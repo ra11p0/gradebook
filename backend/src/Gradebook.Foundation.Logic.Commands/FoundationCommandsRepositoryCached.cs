@@ -10,7 +10,7 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
     {
     }
 
-    public Task<ResponseWithStatus<bool>> AddAdministratorToSchool(Guid administratorGuid, Guid schoolGuid)
+    public Task<StatusResponse<bool>> AddAdministratorToSchool(Guid administratorGuid, Guid schoolGuid)
         => Base.AddAdministratorToSchool(administratorGuid, schoolGuid);
 
     public Task<ResponseWithStatus<Guid, bool>> AddNewAdministrator(NewAdministratorCommand command)
@@ -19,22 +19,22 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
     public Task<ResponseWithStatus<Guid, bool>> AddNewSchool(NewSchoolCommand command)
         => Base.AddNewSchool(command);
 
-    public Task<ResponseWithStatus<bool>> AddNewStudent(NewStudentCommand newStudentDto)
+    public Task<StatusResponse<bool>> AddNewStudent(NewStudentCommand newStudentDto)
         => Base.AddNewStudent(newStudentDto);
 
-    public Task<ResponseWithStatus<bool>> AddNewTeacher(NewTeacherCommand newTeacherDto)
+    public Task<StatusResponse<bool>> AddNewTeacher(NewTeacherCommand newTeacherDto)
         => Base.AddNewTeacher(newTeacherDto);
 
-    public Task<ResponseWithStatus<bool>> AddPersonToSchool(Guid schoolGuid, Guid personGuid)
+    public Task<StatusResponse<bool>> AddPersonToSchool(Guid schoolGuid, Guid personGuid)
         => Base.AddPersonToSchool(schoolGuid, personGuid);
 
-    public Task<ResponseWithStatus<bool>> AssignUserToAdministrator(string userId, Guid personGuid)
+    public Task<StatusResponse<bool>> AssignUserToAdministrator(string userId, Guid personGuid)
         => Base.AssignUserToAdministrator(userId, personGuid);
 
-    public Task<ResponseWithStatus<bool>> AssignUserToStudent(string userId, Guid personGuid)
+    public Task<StatusResponse<bool>> AssignUserToStudent(string userId, Guid personGuid)
         => Base.AssignUserToStudent(userId, personGuid);
 
-    public Task<ResponseWithStatus<bool>> AssignUserToTeacher(string userId, Guid personGuid)
+    public Task<StatusResponse<bool>> AssignUserToTeacher(string userId, Guid personGuid)
         => Base.AssignUserToTeacher(userId, personGuid);
 
     public Task<string?> GenerateSystemInvitation(Guid invitedPersonGuid, Guid invitingPersonGuid, SchoolRoleEnum role)
@@ -50,6 +50,6 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
         return Base.SaveChangesAsync();
     }
 
-    public Task<ResponseWithStatus<bool>> UseInvitation(UseInvitationCommand command)
+    public Task<StatusResponse<bool>> UseInvitation(UseInvitationCommand command)
         => Base.UseInvitation(command);
 }
