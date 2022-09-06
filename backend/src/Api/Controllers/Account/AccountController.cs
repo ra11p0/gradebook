@@ -141,9 +141,9 @@ public class AccountController : ControllerBase
         await _identityLogic.Service.EditUserRoles(roles, userGuid);
         return Ok();
     }
-    [Authorize]
     [HttpGet]
     [Route("me")]
+    [Authorize]
     public async Task<IActionResult> Me(){
         var user = await _userManager.Service.FindByNameAsync(User.Identity!.Name);
         var roles = await _identityLogic.Service.GetUserRoles(user.Id);
@@ -154,10 +154,10 @@ public class AccountController : ControllerBase
             user.UserName,
             personGuid = personGuid.Response,
             roles = roles.Response,
-            name = person.Response.Name,
-            surname = person.Response.Surname,
-            birthday = person.Response.Birthday,
-            schoolRole = person.Response.SchoolRole,
+            name = person.Response?.Name,
+            surname = person.Response?.Surname,
+            birthday = person.Response?.Birthday,
+            schoolRole = person.Response?.SchoolRole,
         });
     }
     [Authorize]

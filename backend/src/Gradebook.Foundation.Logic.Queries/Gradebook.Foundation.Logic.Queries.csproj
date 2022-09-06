@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <ItemGroup>
     <ProjectReference Include="..\Gradebook.Foundation.Common\Gradebook.Foundation.Common.csproj" />
     <ProjectReference Include="..\Gradebook.Foundation.Database\Gradebook.Foundation.Database.csproj" />
@@ -8,11 +7,9 @@
     <PackageReference Include="Dapper" Version="2.0.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.*" />
   </ItemGroup>
-
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
 </Project>
