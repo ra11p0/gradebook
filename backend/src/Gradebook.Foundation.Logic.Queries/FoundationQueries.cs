@@ -14,6 +14,26 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         _identityLogic = serviceProvider.GetResolver<IIdentityLogic>();
     }
 
+    public async Task<ResponseWithStatus<ActivationCodeInfoDto, bool>> GetActivationCodeInfo(string activationCode)
+    {
+        var invitationResponse = await GetInvitationByActivationCode(activationCode);
+        if(!invitationResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto, bool>(false, invitationResponse.Message);
+        if(invitationResponse.Response!.IsUsed) return new ResponseWithStatus<ActivationCodeInfoDto, bool>("Invitation code is used");
+        if(invitationResponse.Response!.ExprationDate < DateTime.Now) return new ResponseWithStatus<ActivationCodeInfoDto, bool>("Invitation code expired");
+
+        var invitation = invitationResponse.Response!;
+        var invitedPersonGuid = invitation.InvitedPersonGuid;
+        if(invitedPersonGuid is null) return new ResponseWithStatus<ActivationCodeInfoDto, bool>(false, "There is no information about activation code");
+
+        var personResponse = await GetPersonByGuid(invitedPersonGuid.Value);
+        if(!personResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto, bool>(false, personResponse.Message);
+
+        var response = new ActivationCodeInfoDto(){
+            Person = personResponse.Response!
+        };
+        return new ResponseWithStatus<ActivationCodeInfoDto, bool>(response, true);
+    }
+
     public async Task<ResponseWithStatus<IEnumerable<StudentDto>, bool>> GetAllAccessibleStudents()
     {
         var relatedPersonGuid = await GetCurrentPersonGuid();
@@ -83,8 +103,4 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<IEnumerable<SchoolDto>, bool>(resp, true);
     }
 
-    public Task<InvitationDto> GetStudentInvitationByGuid(Guid guid)
-    {
-        throw new NotImplementedException();
-    }
 }

@@ -32,4 +32,10 @@ public class InvitationsController : ControllerBase
         var resp = await _foundationQueries.Service.GetInvitations();
         return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
     }
+    [HttpGet]
+    [Route("Activation/Code")]
+    public async Task<IActionResult> GetActivationCodeInfo([FromQuery] string activationCode){
+        var resp = await _foundationQueries.Service.GetActivationCodeInfo(activationCode);
+        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
+    }
 }

@@ -8,6 +8,8 @@ public class ResponseWithStatus<R, S> : ResponseWithStatus<S> where S : struct
     {
         Response = response;
     }
+    public ResponseWithStatus(S status, string? message = null): this(default, status, message){}
+    public ResponseWithStatus(string? message = null): this(default, message){}
 }
 
 public class ResponseWithStatus<S> where S : struct
