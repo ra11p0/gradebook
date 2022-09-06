@@ -15,6 +15,12 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
     public Task<IEnumerable<TeacherDto>> GetAllAccessibleTeachers(Guid relatedPersonGuid)
         => Base.GetAllAccessibleTeachers(relatedPersonGuid);
 
+    public Task<ClassDto> GetClassByGuid(Guid guid)
+        => Base.GetClassByGuid(guid);
+
+    public Task<GroupDto> GetGroupByGuid(Guid guid)
+        => Base.GetGroupByGuid(guid);
+
     public Task<InvitationDto> GetInvitationByActivationCode(string activationCode)
         => Base.GetInvitationByActivationCode(activationCode);
 
@@ -32,6 +38,12 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
 
     public Task<IEnumerable<SchoolDto>> GetSchoolsForPerson(Guid personGuid)
         => Base.GetSchoolsForPerson(personGuid);
+
+    public Task<StudentDto> GetStudentByGuid(Guid guid)
+        => Base.GetStudentByGuid(guid);
+
+    public Task<TeacherDto> GetTeacherByGuid(Guid guid)
+        => Base.GetTeacherByGuid(guid);
 
     public void SaveChanges()
     {

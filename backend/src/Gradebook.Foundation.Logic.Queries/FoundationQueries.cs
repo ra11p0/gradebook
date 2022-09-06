@@ -1,3 +1,4 @@
+using AutoMapper;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Foundation.Queries;
@@ -9,35 +10,60 @@ namespace Gradebook.Foundation.Logic.Queries;
 public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFoundationQueries
 {
     private readonly ServiceResolver<IIdentityLogic> _identityLogic;
+    private readonly ServiceResolver<IMapper> _mapper;
     public FoundationQueries(IFoundationQueriesRepository repository, IServiceProvider serviceProvider) : base(repository)
     {
         _identityLogic = serviceProvider.GetResolver<IIdentityLogic>();
+        _mapper = serviceProvider.GetResolver<IMapper>();
     }
 
-    public async Task<ResponseWithStatus<ActivationCodeInfoDto, bool>> GetActivationCodeInfo(string activationCode)
+    public async Task<ResponseWithStatus<ActivationCodeInfoDto, bool>> GetActivationCodeInfo(string activationCode, string method)
     {
         var invitationResponse = await GetInvitationByActivationCode(activationCode);
-        if(!invitationResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto, bool>(false, invitationResponse.Message);
-        if(invitationResponse.Response!.IsUsed) return new ResponseWithStatus<ActivationCodeInfoDto, bool>("Invitation code is used");
-        if(invitationResponse.Response!.ExprationDate < DateTime.Now) return new ResponseWithStatus<ActivationCodeInfoDto, bool>("Invitation code expired");
+        if (!invitationResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto, bool>(false, invitationResponse.Message);
+        if (invitationResponse.Response!.IsUsed) return new ResponseWithStatus<ActivationCodeInfoDto, bool>("Invitation code is used");
+        if (invitationResponse.Response!.ExprationDate < DateTime.Now) return new ResponseWithStatus<ActivationCodeInfoDto, bool>("Invitation code expired");
 
         var invitation = invitationResponse.Response!;
         var invitedPersonGuid = invitation.InvitedPersonGuid;
-        if(invitedPersonGuid is null) return new ResponseWithStatus<ActivationCodeInfoDto, bool>(false, "There is no information about activation code");
+        if (invitedPersonGuid is null) return new ResponseWithStatus<ActivationCodeInfoDto, bool>(false, "There is no information about activation code");
 
-        var personResponse = await GetPersonByGuid(invitedPersonGuid.Value);
-        if(!personResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto, bool>(false, personResponse.Message);
+        var response = new ActivationCodeInfoDto();
 
-        var response = new ActivationCodeInfoDto(){
-            Person = personResponse.Response!
-        };
+        switch (method)
+        {
+            case "student":
+                var studentResponse = await GetStudentByGuid(invitedPersonGuid.Value);
+                if (!studentResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto, bool>(false, studentResponse.Message);
+                response.Person = _mapper.Service.Map<PersonDto>(studentResponse.Response);
+                if (studentResponse.Response!.GroupGuid.HasValue)
+                {
+                    var groupResponse = await GetGroupByGuid(studentResponse.Response!.GroupGuid.Value);
+                    if (!groupResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto, bool>(groupResponse.Message);
+                    response.Group = groupResponse.Response;
+                }
+                if (studentResponse.Response!.ClassGuid.HasValue)
+                {
+                    var classResponse = await GetClassByGuid(studentResponse.Response!.ClassGuid.Value);
+                    if (!classResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto, bool>(classResponse.Message);
+                    response.Class = classResponse.Response;
+                }
+                break;
+            case "teacher":
+                var teacherResponse = await GetTeacherByGuid(invitedPersonGuid.Value);
+                if (!teacherResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto, bool>(false, teacherResponse.Message);
+                response.Person = _mapper.Service.Map<PersonDto>(teacherResponse.Response);
+                break;
+            default:
+                return new ResponseWithStatus<ActivationCodeInfoDto, bool>("Method not found");
+        }
         return new ResponseWithStatus<ActivationCodeInfoDto, bool>(response, true);
     }
 
     public async Task<ResponseWithStatus<IEnumerable<StudentDto>, bool>> GetAllAccessibleStudents()
     {
         var relatedPersonGuid = await GetCurrentPersonGuid();
-        if(!relatedPersonGuid.Status) return new ResponseWithStatus<IEnumerable<StudentDto>, bool>(null, false, "Cannot recognise current person");
+        if (!relatedPersonGuid.Status) return new ResponseWithStatus<IEnumerable<StudentDto>, bool>(null, false, "Cannot recognise current person");
         var students = await Repository.GetAllAccessibleStudents(relatedPersonGuid.Response);
         return new ResponseWithStatus<IEnumerable<StudentDto>, bool>(students, true);
     }
@@ -45,23 +71,37 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
     public async Task<ResponseWithStatus<IEnumerable<TeacherDto>, bool>> GetAllAccessibleTeachers()
     {
         var relatedPersonGuid = await GetCurrentPersonGuid();
-        if(!relatedPersonGuid.Status) return new ResponseWithStatus<IEnumerable<TeacherDto>, bool>(null, false, "Cannot recognise current person");
+        if (!relatedPersonGuid.Status) return new ResponseWithStatus<IEnumerable<TeacherDto>, bool>(null, false, "Cannot recognise current person");
         var teachers = await Repository.GetAllAccessibleTeachers(relatedPersonGuid.Response);
         return new ResponseWithStatus<IEnumerable<TeacherDto>, bool>(teachers, true);
+    }
+
+    public async Task<ResponseWithStatus<ClassDto, bool>> GetClassByGuid(Guid guid)
+    {
+        var resp = await Repository.GetClassByGuid(guid);
+        if (resp is null) return new ResponseWithStatus<ClassDto, bool>(null, false, "Class does not exist");
+        return new ResponseWithStatus<ClassDto, bool>(resp, true);
     }
 
     public async Task<ResponseWithStatus<Guid, bool>> GetCurrentPersonGuid()
     {
         var userGuid = await _identityLogic.Service.CurrentUserId();
-        if(!userGuid.Status) return new ResponseWithStatus<Guid, bool>(Guid.Empty, false, "Can't get current user guid");
+        if (!userGuid.Status) return new ResponseWithStatus<Guid, bool>(Guid.Empty, false, "Can't get current user guid");
         var personGuid = await GetPersonGuidForUser(userGuid.Response!);
         return personGuid;
+    }
+
+    public async Task<ResponseWithStatus<GroupDto, bool>> GetGroupByGuid(Guid guid)
+    {
+        var resp = await Repository.GetGroupByGuid(guid);
+        if (resp is null) return new ResponseWithStatus<GroupDto, bool>(null, false, "Group does not exist");
+        return new ResponseWithStatus<GroupDto, bool>(resp, true);
     }
 
     public async Task<ResponseWithStatus<InvitationDto, bool>> GetInvitationByActivationCode(string activationCode)
     {
         var invitation = await Repository.GetInvitationByActivationCode(activationCode);
-        if(invitation is null) return new ResponseWithStatus<InvitationDto, bool>(invitation, false, "Invitation does not exist");
+        if (invitation is null) return new ResponseWithStatus<InvitationDto, bool>(invitation, false, "Invitation does not exist");
         return new ResponseWithStatus<InvitationDto, bool>(invitation, true);
     }
 
@@ -74,7 +114,7 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
     public async Task<ResponseWithStatus<IEnumerable<InvitationDto>, bool>> GetInvitations()
     {
         var currentPersonGuid = await GetCurrentPersonGuid();
-        if(!currentPersonGuid.Status) return new ResponseWithStatus<IEnumerable<InvitationDto>, bool>(default, false, currentPersonGuid.Message);
+        if (!currentPersonGuid.Status) return new ResponseWithStatus<IEnumerable<InvitationDto>, bool>(default, false, currentPersonGuid.Message);
         return await GetInvitations(currentPersonGuid.Response);
     }
 
@@ -87,7 +127,7 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
     public async Task<ResponseWithStatus<PersonDto, bool>> GetPersonByGuid(Guid guid)
     {
         var resp = await Repository.GetPersonByGuid(guid);
-        if(resp is null) return new ResponseWithStatus<PersonDto, bool>(null, false, "Person does not exist");
+        if (resp is null) return new ResponseWithStatus<PersonDto, bool>(null, false, "Person does not exist");
         return new ResponseWithStatus<PersonDto, bool>(resp, true);
     }
 
@@ -103,4 +143,17 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<IEnumerable<SchoolDto>, bool>(resp, true);
     }
 
+    public async Task<ResponseWithStatus<StudentDto, bool>> GetStudentByGuid(Guid guid)
+    {
+        var resp = await Repository.GetStudentByGuid(guid);
+        if (resp is null) return new ResponseWithStatus<StudentDto, bool>(null, false, "Student does not exist");
+        return new ResponseWithStatus<StudentDto, bool>(resp, true);
+    }
+
+    public async Task<ResponseWithStatus<TeacherDto, bool>> GetTeacherByGuid(Guid guid)
+    {
+        var resp = await Repository.GetTeacherByGuid(guid);
+        if (resp is null) return new ResponseWithStatus<TeacherDto, bool>(null, false, "Teacher does not exist");
+        return new ResponseWithStatus<TeacherDto, bool>(resp, true);
+    }
 }

@@ -1,4 +1,12 @@
-export interface Person{
+export interface Class {
+    name: string;
+}
+
+export interface Group {
+    name: string;
+}
+
+export interface Person {
     name: string;
     surname: string;
     birthday: Date;
@@ -6,6 +14,8 @@ export interface Person{
     group: any;
 }
 
-export interface InvitationDetailsResponse{
+export interface InvitationDetailsResponse {
     person: Person;
+    class: Class;
+    group: Group;
 }

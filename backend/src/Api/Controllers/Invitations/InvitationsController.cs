@@ -23,21 +23,24 @@ public class InvitationsController : ControllerBase
     [HttpPost]
     [Route("")]
     [Authorize(Roles = "SuperAdmin")]
-    public async Task<IActionResult> AddNewInvitation([FromBody] NewInvitationModel model){
+    public async Task<IActionResult> AddNewInvitation([FromBody] NewInvitationModel model)
+    {
         var resp = await _foundationCommands.Service.GenerateSystemInvitation(model.InvitedPersonGuid, model.Role);
         return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
     }
     [HttpGet]
     [Route("")]
     [Authorize(Roles = "SuperAdmin")]
-    public async Task<IActionResult> GetMyInvitations(){
+    public async Task<IActionResult> GetMyInvitations()
+    {
         var resp = await _foundationQueries.Service.GetInvitations();
         return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
     }
     [HttpGet]
     [Route("Activation/Code")]
-    public async Task<IActionResult> GetActivationCodeInfo([FromQuery] string activationCode){
-        var resp = await _foundationQueries.Service.GetActivationCodeInfo(activationCode);
+    public async Task<IActionResult> GetActivationCodeInfo([FromQuery] string activationCode, [FromQuery] string method)
+    {
+        var resp = await _foundationQueries.Service.GetActivationCodeInfo(activationCode, method);
         return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
     }
 }

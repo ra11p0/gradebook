@@ -4,11 +4,16 @@ import { InvitationDetailsResponse } from "./Definitions/InvitationDetailsRespon
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-const getInvitationDetails = (activationCode: string): Promise<AxiosResponse<InvitationDetailsResponse>> => {
-    return axiosApiAuthorized.get(API_URL + `/Invitations/Activation/Code?activationCode=${activationCode}`);
+const getInvitationDetailsForStudent = (activationCode: string): Promise<AxiosResponse<InvitationDetailsResponse>> => {
+    return axiosApiAuthorized.get(API_URL + `/Invitations/Activation/Code`, {
+        params: {
+            activationCode,
+            method: 'student'
+        }
+    });
 };
 
 
 export default {
-    getInvitationDetails
+    getInvitationDetailsForStudent
 }

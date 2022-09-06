@@ -13,7 +13,8 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
 
     public async Task<IEnumerable<StudentDto>> GetAllAccessibleStudents(Guid relatedPersonGuid)
     {
-        using(var cn = await GetOpenConnectionAsync()){
+        using (var cn = await GetOpenConnectionAsync())
+        {
             return await cn.QueryAsync<StudentDto>(@"
                 SELECT Name, Surname, SchoolRole, Birthday, ClassGuid, GroupGuid, CreatorGuid, Guid
                 FROM Person
@@ -30,7 +31,8 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                                 WHERE PeopleGuid = @relatedPersonGuid
                             )
                     )
-            ", new {
+            ", new
+            {
                 relatedPersonGuid
             });
         }
@@ -38,7 +40,8 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
 
     public async Task<IEnumerable<TeacherDto>> GetAllAccessibleTeachers(Guid relatedPersonGuid)
     {
-        using(var cn = await GetOpenConnectionAsync()){
+        using (var cn = await GetOpenConnectionAsync())
+        {
             return await cn.QueryAsync<TeacherDto>(@"
                 SELECT Name, Surname, SchoolRole, Birthday, CreatorGuid, Guid
                 FROM Person
@@ -55,20 +58,53 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                                 WHERE PeopleGuid = @relatedPersonGuid
                             )
                     )
-            ", new {
+            ", new
+            {
                 relatedPersonGuid
+            });
+        }
+    }
+
+    public async Task<ClassDto> GetClassByGuid(Guid guid)
+    {
+        using (var cn = await GetOpenConnectionAsync())
+        {
+            return await cn.QueryFirstOrDefaultAsync<ClassDto>(@"
+                SELECT Name
+                FROM Classes
+                WHERE Guid like @guid
+            ", new
+            {
+                guid
+            });
+        }
+    }
+
+    public async Task<GroupDto> GetGroupByGuid(Guid guid)
+    {
+        using (var cn = await GetOpenConnectionAsync())
+        {
+            return await cn.QueryFirstOrDefaultAsync<GroupDto>(@"
+                SELECT Name
+                FROM Groups
+                WHERE Guid like @guid
+            ", new
+            {
+                guid
             });
         }
     }
 
     public async Task<InvitationDto> GetInvitationByActivationCode(string activationCode)
     {
-        using(var cn = await GetOpenConnectionAsync()){
+        using (var cn = await GetOpenConnectionAsync())
+        {
             return await cn.QueryFirstOrDefaultAsync<InvitationDto>(@"
                 SELECT CreatedDate, ExprationDate, IsUsed, CreatorGuid, UsedDate, InvitedPersonGuid, SchoolRole, Guid
                 FROM SystemInvitations
                 WHERE InvitationCode like @activationCode
-            ", new{
+            ", new
+            {
                 activationCode = activationCode.Normalize()
             });
         }
@@ -76,13 +112,15 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
 
     public async Task<IEnumerable<InvitationDto>> GetInvitations(Guid personGuid)
     {
-        using (var cn = await GetOpenConnectionAsync()){
+        using (var cn = await GetOpenConnectionAsync())
+        {
             return await cn.QueryAsync<InvitationDto>(@"
                 SELECT Guid, CreatedDate, ExprationDate, InvitationCode, IsUsed,
                     CreatorGuid, UsedDate, InvitedPersonGuid, SchoolRole
                 FROM SystemInvitations
                 WHERE CreatorGuid = @personGuid
-            ", new {
+            ", new
+            {
                 personGuid
             });
         }
@@ -90,14 +128,16 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
 
     public async Task<IEnumerable<PersonDto>> GetPeopleInSchool(Guid schoolGuid)
     {
-        using (var cn = await GetOpenConnectionAsync()){
+        using (var cn = await GetOpenConnectionAsync())
+        {
             return await cn.QueryAsync<PersonDto>(@"
                 SELECT Name, Surname, SchoolRole, Birthday, Guid
                 FROM Person
                 JOIN PersonSchool AS PS
                     ON PS.PeopleGuid = Guid
                 WHERE PS.SchoolsGuid = @schoolGuid
-            ", new {
+            ", new
+            {
                 schoolGuid
             });
         }
@@ -105,27 +145,32 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
 
     public async Task<PersonDto> GetPersonByGuid(Guid guid)
     {
-        using(var cn = await GetOpenConnectionAsync()){
+        using (var cn = await GetOpenConnectionAsync())
+        {
             return await cn.QueryFirstOrDefaultAsync<PersonDto>(@"
-            SELECT Guid, Name, Surname, SchoolRole, Birthday
-            FROM Person
-            WHERE Guid = @guid
+                SELECT Guid, Name, Surname, SchoolRole, Birthday
+                FROM Person
+                WHERE Guid = @guid
             ",
-            new{
-                guid
-            });
+        new
+        {
+            guid
+        });
         }
     }
 
     public async Task<Guid?> GetPersonGuidForUser(string userId)
     {
-        using (var cn = await GetOpenConnectionAsync()){
+        using (var cn = await GetOpenConnectionAsync())
+        {
             return await cn.QueryFirstOrDefaultAsync<Guid>(@"
                 SELECT Guid 
                 FROM Person
                 WHERE UserGuid = @userId
             ",
-            new{
+            new
+            {
+
                 userId
             });
         }
@@ -133,7 +178,8 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
 
     public async Task<IEnumerable<SchoolDto>> GetSchoolsForPerson(Guid personGuid)
     {
-        using (var cn = await GetOpenConnectionAsync()){
+        using (var cn = await GetOpenConnectionAsync())
+        {
             return await cn.QueryAsync<SchoolDto>(@"
                 SELECT Guid, Name, Address1, Address2, City, PostalCode
                 FROM Schools
@@ -141,8 +187,41 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                     ON PS.SchoolsGuid = Guid
                 WHERE PS.PeopleGuid = @personGuid
             ",
-            new{
+            new
+            {
                 personGuid
+            });
+        }
+    }
+
+    public async Task<StudentDto> GetStudentByGuid(Guid guid)
+    {
+        using (var cn = await GetOpenConnectionAsync())
+        {
+            return await cn.QueryFirstOrDefaultAsync<StudentDto>(@"
+                SELECT Name, Surname, SchoolRole, Birthday, ClassGuid, GroupGuid, CreatorGuid, Guid
+                FROM Person
+                WHERE Discriminator = 'Student'
+                    AND Guid = @guid
+            ", new
+            {
+                guid
+            });
+        }
+    }
+
+    public async Task<TeacherDto> GetTeacherByGuid(Guid guid)
+    {
+        using (var cn = await GetOpenConnectionAsync())
+        {
+            return await cn.QueryFirstOrDefaultAsync<TeacherDto>(@"
+                SELECT Name, Surname, SchoolRole, Birthday, CreatorGuid, Guid
+                FROM Person
+                WHERE Discriminator = 'Teacher'
+                    AND Guid = @guid
+            ", new
+            {
+                guid
             });
         }
     }

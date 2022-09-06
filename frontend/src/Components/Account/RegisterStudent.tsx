@@ -8,23 +8,23 @@ import moment from 'moment';
 
 
 const mapStateToProps = (state: any) => ({
-    
-});
-  
-const mapDispatchToProps = (dispatch: any) => ({
-    
+
 });
 
-interface RegisterStudentFormProps{
-    defaultOnBackHandler: ()=>void;
+const mapDispatchToProps = (dispatch: any) => ({
+
+});
+
+interface RegisterStudentFormProps {
+    defaultOnBackHandler: () => void;
 }
 
-interface RegisterStudentFormValues{
+interface RegisterStudentFormValues {
     accessCode: string;
 }
 
 const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
 
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
@@ -32,10 +32,9 @@ const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
     const [_class, setClass] = useState('');
     const [group, setGroup] = useState('');
 
-    const validate = (values: RegisterStudentFormValues)=>{
+    const validate = (values: RegisterStudentFormValues) => {
         const errors: any = {};
-        if(values.accessCode.length != 6)
-        {
+        if (values.accessCode.length != 6) {
             errors.accessCode = 'wrong access code length';
         }
         return errors;
@@ -46,24 +45,28 @@ const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
             accessCode: ''
         },
         validate,
-        onSubmit: (values: RegisterStudentFormValues)=>{
-           
+        onSubmit: (values: RegisterStudentFormValues) => {
+
         }
     });
 
-    const handleAccessCodeChange = function(e:any){
-        if(e.target.value.length == 6){
-            InvitationsProxy.getInvitationDetails(e.target.value)
-                .then(resp=>{
+    const handleAccessCodeChange = function (e: any) {
+        if (e.target.value.length == 6) {
+            InvitationsProxy.getInvitationDetailsForStudent(e.target.value)
+                .then(resp => {
                     var data = resp.data;
                     setName(data.person.name);
                     setSurname(data.person.surname);
                     setBirthday(moment(data.person.birthday).format('YYYY-MM-DD'));
+                    setClass(data.class?.name);
+                    setGroup(data.group?.name);
                 })
-                .catch(err=>{
+                .catch(err => {
                     setName('');
                     setSurname('');
                     setBirthday('');
+                    setClass('');
+                    setGroup('');
                 });
         }
     };
@@ -88,7 +91,7 @@ const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
                         onChange={formik.handleChange}
                         value={formik.values.accessCode}
                         onInput={handleAccessCodeChange}
-                        
+
                     />
                     {formik.errors.accessCode && formik.touched.accessCode ? <div className='invalid-feedback d-block'>{formik.errors.accessCode}</div> : null}
                 </div>
@@ -148,11 +151,11 @@ const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
                         </div>
                     </Col>
                 </Row>
-                
-             
+
+
                 <Button variant='outline-primary'
                     type='submit'>
-                        {t('confirmInformation')}
+                    {t('confirmInformation')}
                 </Button>
             </form>
         </div>
