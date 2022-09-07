@@ -6,13 +6,17 @@ i18n.use(initReactI18next).init({
   lng: 'en',
   resources: {
     en: {
-      translations: require('./locales/en/translations.json')
+      translations: require('./locales/en/translations.json'),
+      loginForm: require('./locales/en/loginForm.json'),
+      notifications: require('./locales/en/notifications.json'),
     },
     pl: {
-      translations: require('./locales/pl/translations.json')
+      translations: require('./locales/pl/translations.json'),
+      loginForm: require('./locales/pl/loginForm.json'),
+      notifications: require('./locales/pl/notifications.json'),
     }
   },
-  ns: ['translations'],
+  ns: ['translations', 'loginForm', 'notifications'],
   defaultNS: 'translations'
 });
 

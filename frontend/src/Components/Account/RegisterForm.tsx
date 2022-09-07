@@ -7,41 +7,41 @@ import { useTranslation } from 'react-i18next';
 import { Button } from 'react-bootstrap';
 import AccountProxy from '../../ApiClient/Account/AccountProxy';
 import Swal from 'sweetalert2';
-import CommonNotifications  from '../../Notifications/CommonNotifications'
+import CommonNotifications from '../../Notifications/Notifications'
 
 const mapStateToProps = (state: any) => ({
-      isLoggedIn: state.common.isLoggedIn
+    isLoggedIn: state.common.isLoggedIn
 });
-  
+
 const mapDispatchToProps = (dispatch: any) => ({
     onLogIn: () => dispatch(logIn)
 });
 
-interface RegisterFormProps{
-    onLogIn?: ()=>{},
+interface RegisterFormProps {
+    onLogIn?: () => {},
     isLoggedIn: boolean
 }
 
-interface RegisterFormValues{
+interface RegisterFormValues {
     email: string;
     password: string;
     password2: string;
 }
 
 const RegisterForm = (props: RegisterFormProps): ReactElement => {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
 
-    const validate = (values: RegisterFormValues)=>{
+    const validate = (values: RegisterFormValues) => {
         const errors: any = {};
-        if(values.email.length < 5){
+        if (values.email.length < 5) {
             errors.email = t('emailInvalid')
         }
 
-        if(values.password.length < 5){
+        if (values.password.length < 5) {
             errors.password = t('passwordTooShort')
         }
 
-        if(values.password !== values.password2){
+        if (values.password !== values.password2) {
             errors.password = t('passwordsNotTheSame')
         }
         return errors;
@@ -49,20 +49,20 @@ const RegisterForm = (props: RegisterFormProps): ReactElement => {
 
     const formik = useFormik({
         initialValues: {
-            email:'',
-            password:'',
-            password2:''
+            email: '',
+            password: '',
+            password2: ''
         },
         validate,
-        onSubmit: (values: RegisterFormValues)=>{
+        onSubmit: (values: RegisterFormValues) => {
             AccountProxy.register(values)
-                .then(()=>{
+                .then(() => {
                     Swal.fire({
                         title: t('userRegisteredAlertTitle'),
                         text: t('userRegisteredAlertText')
                     });
                 })
-                .catch(()=>{
+                .catch(() => {
                     CommonNotifications.showCommonError();
                 });
         }
@@ -70,7 +70,7 @@ const RegisterForm = (props: RegisterFormProps): ReactElement => {
 
     return (
         <div className='card m-3 p-3'>
- 
+
             <div className='card-body'>
                 <form onSubmit={formik.handleSubmit}>
                     <div className='m-1 p-1 display-6'>

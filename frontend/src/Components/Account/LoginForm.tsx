@@ -146,4 +146,4 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
     }
 }
 
-export default withTranslation()(connect(mapStateToProps, mapDispatchToProps)(LoginForm));
+export default withTranslation('loginForm')(connect(mapStateToProps, mapDispatchToProps)(LoginForm));

@@ -7,6 +7,7 @@ import { Grid, List, ListItem, Stack } from '@mui/material';
 import StudentsProxy from '../../../../ApiClient/Students/StudentsProxy';
 import StudentResponse from '../../../../ApiClient/Students/Definitions/StudentResponse';
 import moment from 'moment';
+import Notifications from '../../../../Notifications/Notifications';
 const mapStateToProps = (state: any) => ({});
 const mapDispatchToProps = (dispatch: any) => ({});
 interface StudentsListProps { }
@@ -15,9 +16,13 @@ const StudentsList = (props: StudentsListProps): ReactElement => {
     const [showAddStudentModal, setShowAddStudentModal] = useState(false);
     const [accessibleStudents, setAccessibleStudents] = useState([] as StudentResponse[]);
     useEffect(() => {
-        StudentsProxy.getAccessibleStudents().then(response => {
-            setAccessibleStudents(response.data);
-        });
+        StudentsProxy.getAccessibleStudents()
+            .then(response => {
+                setAccessibleStudents(response.data);
+            })
+            .catch(error => {
+                Notifications.showError(error.response.data);
+            });
     }, [showAddStudentModal]);
 
     return (

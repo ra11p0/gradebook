@@ -7,27 +7,27 @@ import { useTranslation } from 'react-i18next';
 import { Button, Row } from 'react-bootstrap';
 import AccountProxy from '../../ApiClient/Account/AccountProxy';
 import Swal from 'sweetalert2';
-import CommonNotifications  from '../../Notifications/CommonNotifications'
+import CommonNotifications from '../../Notifications/Notifications'
 
 const mapStateToProps = (state: any) => ({
-    
-});
-  
-const mapDispatchToProps = (dispatch: any) => ({
-    
+
 });
 
-interface RegisterTeacherFormProps{
-    defaultOnBackHandler: ()=>void;
+const mapDispatchToProps = (dispatch: any) => ({
+
+});
+
+interface RegisterTeacherFormProps {
+    defaultOnBackHandler: () => void;
 }
 
-interface RegisterTeacherFormValues{
+interface RegisterTeacherFormValues {
 }
 
 const RegisterTeacherForm = (props: RegisterTeacherFormProps): ReactElement => {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
 
-    const validate = (values: RegisterTeacherFormValues)=>{
+    const validate = (values: RegisterTeacherFormValues) => {
         const errors: any = {};
         return errors;
     };
@@ -36,7 +36,7 @@ const RegisterTeacherForm = (props: RegisterTeacherFormProps): ReactElement => {
         initialValues: {
         },
         validate,
-        onSubmit: (values: RegisterTeacherFormValues)=>{
+        onSubmit: (values: RegisterTeacherFormValues) => {
 
         }
     });
