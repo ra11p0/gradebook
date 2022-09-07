@@ -5,42 +5,42 @@ import { Button, Modal } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import NewStudentRequest from '../../../../ApiClient/Students/Definitions/NewStudentRequest';
 import StudentsProxy from '../../../../ApiClient/Students/StudentsProxy';
-const mapStateToProps = (state: any) => ({ });
-const mapDispatchToProps = (dispatch: any) => ({ });
-interface formValues{
+const mapStateToProps = (state: any) => ({});
+const mapDispatchToProps = (dispatch: any) => ({});
+interface formValues {
     name: string;
     surname: string;
     birthday: any;
 
 }
-interface AddNewStudentModalProps{ 
+interface AddNewStudentModalProps {
     show: boolean;
-    onHide: ()=>void;
+    onHide: () => void;
 }
 const AddNewStudentModal = (props: AddNewStudentModalProps): ReactElement => {
-    const {t} = useTranslation();
-    const validate = (values: formValues)=>{
+    const { t } = useTranslation();
+    const validate = (values: formValues) => {
         const errors: any = {};
-        if(values.name.length < 3)
+        if (values.name.length < 3)
             errors.name = t('nameInvalid');
-        if(values.surname.length < 3)
+        if (values.surname.length < 3)
             errors.surname = t('surnameInvalid');
         return errors;
     };
     const formik = useFormik({
-        initialValues:{
+        initialValues: {
             name: '',
             surname: '',
             birthday: new Date().toDateString()
         },
         validate,
-        onSubmit: (values: formValues)=>{
+        onSubmit: (values: formValues) => {
             var student: NewStudentRequest = {
                 Name: values.name,
                 Surname: values.surname,
                 Birthday: new Date(values.birthday)
             }
-            StudentsProxy.addNewStudent(student);
+            StudentsProxy.addNewStudent(student).then(props.onHide);
         }
     });
     return (
@@ -83,7 +83,7 @@ const AddNewStudentModal = (props: AddNewStudentModalProps): ReactElement => {
                         />
                         {formik.errors.birthday && formik.touched.birthday ? <div className='invalid-feedback d-block'>{formik.errors.birthday as string}</div> : null}
                     </div>
-             
+
                 </Modal.Body>
                 <Modal.Footer>
                     <Button type='submit'>

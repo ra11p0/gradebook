@@ -8,42 +8,42 @@ import { Button } from 'react-bootstrap';
 import { refreshToken as refreshTokenAction } from '../../Actions/Account/accountActions';
 
 const mapStateToProps = (state: any) => ({
-      isLoggedIn: state.common.isLoggedIn
+    isLoggedIn: state.common.isLoggedIn
 });
-  
+
 const mapDispatchToProps = (dispatch: any) => ({
     onLogIn: (token: string,
         refreshToken: string,
         username: string,
         userId: string,
-        roles: string[]) => dispatch({
-        ...logIn, 
-        isLoggedIn: true,
-        token: token,
-        refreshToken: refreshToken,
-        username: username,
-        userId: userId,
-        roles: roles
-    }),
-    refreshToken: (token: string, refresh: string)=>dispatch({
+        roles: string[] | undefined) => dispatch({
+            ...logIn,
+            isLoggedIn: true,
+            token: token,
+            refreshToken: refreshToken,
+            username: username,
+            userId: userId,
+            roles: roles
+        }),
+    refreshToken: (token: string, refresh: string) => dispatch({
         ...refreshTokenAction,
         token: token,
         refreshToken: refresh
-      })
+    })
 });
 
-interface LogInProps{
+interface LogInProps {
     onLogIn?: (token: string,
         refreshToken: string,
         username: string,
         userId: string,
-        roles: string[])=>{},
-    refreshToken: (token: string, refresh: string)=>void,
+        roles: string[] | undefined) => {},
+    refreshToken: (token: string, refresh: string) => void,
     isLoggedIn: boolean,
     t: any
 }
 
-interface LogInState{
+interface LogInState {
     username?: string,
     password?: string,
     loginFailed?: boolean
@@ -59,11 +59,11 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
         var accessToken = localStorage.getItem('access_token');
         var refresh = localStorage.getItem('refresh');
-        if(accessToken && refresh){
-            AccountRepository.refreshAccessToken(accessToken, refresh).then(response=>{
+        if (accessToken && refresh) {
+            AccountRepository.refreshAccessToken(accessToken, refresh).then(response => {
                 const { accessToken, refreshToken } = response.data;
                 this.props.refreshToken(accessToken, refreshToken);
                 AccountRepository.getMe().then(getMeResponse => {
@@ -76,15 +76,15 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
         }
     }
 
-    onLogIn(){
+    onLogIn() {
         AccountRepository.logIn({
             username: this.state.username!,
             password: this.state.password!
-        }).then((r: any)=>{
-            this.props.onLogIn!( r.data.access_token, r.data.refreshToken, r.data.username, r.data.userId, r.data.roles );
+        }).then((r: any) => {
+            this.props.onLogIn!(r.data.access_token, r.data.refreshToken, r.data.username, r.data.userId, r.data.roles);
             localStorage.setItem('access_token', r.data.access_token);
             localStorage.setItem('refresh', r.data.refreshToken);
-        }).catch((r:any)=>{
+        }).catch((r: any) => {
             this.setState({
                 ...this.state,
                 loginFailed: true
@@ -108,8 +108,8 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
                     }
                     <div className='m-1 p-1'>
                         <label>{t('email')}</label>
-                        <input className='form-control' 
-                            value={this.state.username} 
+                        <input className='form-control'
+                            value={this.state.username}
                             onChange={(e) => this.setState({
                                 ...this.state,
                                 username: e.target.value
@@ -118,14 +118,14 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
                     </div>
                     <div className='m-1 p-1'>
                         <label>{t('password')}</label>
-                        <input className='form-control' 
+                        <input className='form-control'
                             type='password'
-                            value={this.state.password} 
+                            value={this.state.password}
                             onChange={(e) => this.setState({
                                 ...this.state,
                                 password: e.target.value
                             })}
-                            >
+                        >
                         </input>
                     </div>
                     <div className='m-1 p-1 d-flex justify-content-between'>
@@ -134,15 +134,15 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
                             <Link to={''}>{t('changePassword')}</Link>
                             <Link to={''}>{t('recoverAccess')}</Link>
                         </div>
-                        <Button variant='outline-primary' 
-                            onClick={()=> this.onLogIn!()} 
+                        <Button variant='outline-primary'
+                            onClick={() => this.onLogIn!()}
                             type='submit'>
-                                {t('logIn')}
-                            </Button>
+                            {t('logIn')}
+                        </Button>
                     </div>
                 </div>
             </div>
-          );
+        );
     }
 }
 
