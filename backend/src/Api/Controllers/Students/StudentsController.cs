@@ -45,6 +45,15 @@ public class StudentsController : ControllerBase
         return students.Status ? Ok(students.Response) : BadRequest(students.Message);
     }
     [HttpGet]
+    [Route("Inactive")]
+    [ProducesResponseType(typeof(IEnumerable<StudentDto>), 200)]
+    [ProducesResponseType(typeof(string), 400)]
+    public async Task<IActionResult> GetInactiveStudents()
+    {
+        var resp = await _foundationQueries.Service.GetInactiveStudents();
+        return resp.Status ? Ok(resp.Response) : BadRequest();
+    }
+    [HttpGet]
     [Route("{guid}")]
     public async Task<IActionResult> GetStudent([FromRoute] string guid)
     {

@@ -2,5 +2,7 @@
   "addStudent": "Add student",
   "name": "Name",
   "surname": "Surname",
-  "birthday": "Birthday"
+  "birthday": "Birthday",
+  "nameInvalid": "Name invalid",
+  "surnameInvalid": "Surname invalid"
 }

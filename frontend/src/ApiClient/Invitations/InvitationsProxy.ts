@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { axiosApiAuthorized } from "../AxiosInterceptor";
 import { InvitationDetailsResponse } from "./Definitions/InvitationDetailsResponse";
+import InvitationResponse from "./Definitions/InvitationResponse";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -13,7 +14,12 @@ const getInvitationDetailsForStudent = (activationCode: string): Promise<AxiosRe
     });
 };
 
+const getUsersInvitations = (): Promise<AxiosResponse<InvitationResponse[]>> => {
+    return axiosApiAuthorized.get(API_URL + `/Invitations`);
+};
+
 
 export default {
-    getInvitationDetailsForStudent
+    getInvitationDetailsForStudent,
+    getUsersInvitations
 }

@@ -98,6 +98,14 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<GroupDto, bool>(resp, true);
     }
 
+    public async Task<ResponseWithStatus<IEnumerable<StudentDto>>> GetInactiveStudents()
+    {
+        var relatedPersonGuid = await GetCurrentPersonGuid();
+        if (!relatedPersonGuid.Status) return new ResponseWithStatus<IEnumerable<StudentDto>>("Cannot recognise current person");
+        var students = await Repository.GetAllInactiveAccessibleStudents(relatedPersonGuid.Response);
+        return new ResponseWithStatus<IEnumerable<StudentDto>>(students, true);
+    }
+
     public async Task<ResponseWithStatus<InvitationDto, bool>> GetInvitationByActivationCode(string activationCode)
     {
         var invitation = await Repository.GetInvitationByActivationCode(activationCode);

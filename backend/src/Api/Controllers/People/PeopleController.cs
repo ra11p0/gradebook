@@ -34,7 +34,8 @@ public class PeopleController : ControllerBase
     }
     [HttpPost]
     [Route("Activation/Code/{activationCode}")]
-    public async Task<IActionResult> ActivatePerson([FromRoute] string activationCode){
+    public async Task<IActionResult> ActivatePerson([FromRoute] string activationCode)
+    {
         var resp = await _foundationCommands.Service.ActivatePerson(activationCode);
         return resp.Status ? Ok() : BadRequest(resp.Message);
     }

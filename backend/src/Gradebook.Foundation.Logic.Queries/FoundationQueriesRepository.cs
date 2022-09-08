@@ -65,6 +65,34 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
         }
     }
 
+    public async Task<IEnumerable<StudentDto>> GetAllInactiveAccessibleStudents(Guid relatedPersonGuid)
+    {
+        using (var cn = await GetOpenConnectionAsync())
+        {
+            return await cn.QueryAsync<StudentDto>(@"
+                SELECT Name, Surname, SchoolRole, Birthday, ClassGuid, GroupGuid, CreatorGuid, Guid
+                FROM Person
+                LEFT JOIN PersonSchool AS PS
+                    ON Guid = PS.PeopleGuid
+                WHERE Discriminator = 'Student'
+                    AND 
+                    (
+                        CreatorGuid = @relatedPersonGuid
+                        OR PS.SchoolsGuid IN 
+                            (
+                                SELECT SchoolsGuid
+                                FROM PersonSchool
+                                WHERE PeopleGuid = @relatedPersonGuid
+                            )
+                    )
+                    AND UserGuid IS NULL
+            ", new
+            {
+                relatedPersonGuid
+            });
+        }
+    }
+
     public async Task<ClassDto> GetClassByGuid(Guid guid)
     {
         using (var cn = await GetOpenConnectionAsync())

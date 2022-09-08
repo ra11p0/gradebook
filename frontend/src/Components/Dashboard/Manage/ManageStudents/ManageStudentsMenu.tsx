@@ -1,7 +1,6 @@
 import React, { ReactElement, useState } from 'react';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 const mapStateToProps = (state: any) => ({});
 const mapDispatchToProps = (dispatch: any) => ({});

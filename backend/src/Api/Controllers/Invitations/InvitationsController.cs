@@ -3,6 +3,7 @@ using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Foundation.Commands;
 using Gradebook.Foundation.Common.Foundation.Queries;
+using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,6 +32,8 @@ public class InvitationsController : ControllerBase
     [HttpGet]
     [Route("")]
     [Authorize(Roles = "SuperAdmin")]
+    [ProducesResponseType(typeof(IEnumerable<InvitationDto>), 200)]
+    [ProducesResponseType(typeof(string), 400)]
     public async Task<IActionResult> GetMyInvitations()
     {
         var resp = await _foundationQueries.Service.GetInvitations();

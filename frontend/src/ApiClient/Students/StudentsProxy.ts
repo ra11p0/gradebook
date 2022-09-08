@@ -13,8 +13,13 @@ const getAccessibleStudents = (): Promise<AxiosResponse<StudentResponse[]>> => {
     return axiosApiAuthorized.get(API_URL + '/students');
 }
 
+const getInactiveAccessibleStudents = (): Promise<AxiosResponse<StudentResponse[]>> => {
+    return axiosApiAuthorized.get(API_URL + '/students/inactive');
+}
+
 
 export default {
     addNewStudent,
-    getAccessibleStudents
+    getAccessibleStudents,
+    getInactiveAccessibleStudents
 }
