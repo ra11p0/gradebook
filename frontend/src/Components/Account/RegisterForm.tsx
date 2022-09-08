@@ -29,7 +29,7 @@ interface RegisterFormValues {
 }
 
 const RegisterForm = (props: RegisterFormProps): ReactElement => {
-    const { t } = useTranslation();
+    const { t } = useTranslation('registerForm');
 
     const validate = (values: RegisterFormValues) => {
         const errors: any = {};

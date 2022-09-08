@@ -8,7 +8,7 @@ const mapDispatchToProps = (dispatch: any) => ({});
 interface ManageStudentsMenuProps { }
 const ManageStudentsMenu = (props: ManageStudentsMenuProps): ReactElement => {
     const [activeTab, setActiveTab] = useState('studentsList');
-    const { t } = useTranslation();
+    const { t } = useTranslation('manageStudentsMenu');
     return (
         <div className='d-flex flex-wrap gap-3'>
             <Link

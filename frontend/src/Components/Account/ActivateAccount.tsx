@@ -13,18 +13,18 @@ const mapStateToProps = (state: any) => ({
     isUserLoggedIn: state.common.isLoggedIn,
     isUserActivated: state.common.session?.roles.length != 0
 });
-  
+
 const mapDispatchToProps = (dispatch: any) => ({
-    
+
 });
 
-interface ActivateAccountProps{
+interface ActivateAccountProps {
     t: any,
     isUserLoggedIn: boolean;
     isUserActivated: boolean;
 }
 
-interface ActivateAccountState{
+interface ActivateAccountState {
     role?: string
 }
 
@@ -38,11 +38,12 @@ class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAcco
     render(): React.ReactNode {
         const { t } = this.props;
 
-        const defaultOnBackHandler=()=>{
+        const defaultOnBackHandler = () => {
             this.setState({
                 ...this.state,
                 role: undefined
-        })};
+            })
+        };
 
         return (
             <>
@@ -53,10 +54,10 @@ class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAcco
                                 {t('activateToUseGradebook')}
                             </div>
                             <Row className='m-3 p-3'>
-                                <Col xs={3}/>
+                                <Col xs={3} />
                                 <Col className='text-center'>
                                     {
-                                        !this.state.role && 
+                                        !this.state.role &&
                                         <>
                                             <Row className='text-center'>
                                                 <div>
@@ -65,25 +66,25 @@ class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAcco
                                             </Row>
                                             <Row>
                                                 <Col>
-                                                    <Button className='fs-3 m-3 p-3' 
+                                                    <Button className='fs-3 m-3 p-3'
                                                         variant='outline-secondary'
-                                                        onClick={()=>this.setState({
+                                                        onClick={() => this.setState({
                                                             ...this.state,
                                                             role: 'student'
                                                         })}>
                                                         {t("student")}
                                                     </Button>
-                                                    <Button className='fs-3 m-3 p-3' 
-                                                        variant='outline-secondary' 
-                                                        onClick={()=>this.setState({
+                                                    <Button className='fs-3 m-3 p-3'
+                                                        variant='outline-secondary'
+                                                        onClick={() => this.setState({
                                                             ...this.state,
                                                             role: 'teacher'
                                                         })}>
                                                         {t("teacher")}
                                                     </Button>
-                                                    <Button className='fs-3 m-3 p-3' 
-                                                        variant='outline-secondary' 
-                                                        onClick={()=>this.setState({
+                                                    <Button className='fs-3 m-3 p-3'
+                                                        variant='outline-secondary'
+                                                        onClick={() => this.setState({
                                                             ...this.state,
                                                             role: 'administrator'
                                                         })}>
@@ -94,25 +95,25 @@ class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAcco
                                         </>
                                     }
                                     {
-                                        this.state.role === 'teacher' && 
+                                        this.state.role === 'teacher' &&
                                         <RegisterTeacher
                                             defaultOnBackHandler={defaultOnBackHandler}
                                         />
                                     }
                                     {
-                                        this.state.role === 'administrator' && 
+                                        this.state.role === 'administrator' &&
                                         <RegisterAdministrator
                                             defaultOnBackHandler={defaultOnBackHandler}
                                         />
                                     }
                                     {
-                                        this.state.role === 'student' && 
+                                        this.state.role === 'student' &&
                                         <RegisterStudent
                                             defaultOnBackHandler={defaultOnBackHandler}
                                         />
                                     }
                                 </Col>
-                                <Col xs={3}/>
+                                <Col xs={3} />
                             </Row>
                         </div>
                     </Card.Body>
@@ -122,4 +123,4 @@ class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAcco
     }
 }
 
-export default withTranslation()(connect(mapStateToProps, mapDispatchToProps)(ActivateAccount));
+export default withTranslation('activateAccount')(connect(mapStateToProps, mapDispatchToProps)(ActivateAccount));

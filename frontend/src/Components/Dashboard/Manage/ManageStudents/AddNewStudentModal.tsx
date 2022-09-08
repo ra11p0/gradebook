@@ -18,7 +18,7 @@ interface AddNewStudentModalProps {
     onHide: () => void;
 }
 const AddNewStudentModal = (props: AddNewStudentModalProps): ReactElement => {
-    const { t } = useTranslation();
+    const { t } = useTranslation('addNewStudentModal');
     const validate = (values: formValues) => {
         const errors: any = {};
         if (values.name.length < 3)

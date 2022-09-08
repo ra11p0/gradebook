@@ -24,7 +24,7 @@ interface RegisterStudentFormValues {
 }
 
 const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
-    const { t } = useTranslation();
+    const { t } = useTranslation('registerStudent');
 
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');

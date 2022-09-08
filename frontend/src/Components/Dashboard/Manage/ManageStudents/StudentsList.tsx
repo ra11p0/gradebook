@@ -12,7 +12,7 @@ const mapStateToProps = (state: any) => ({});
 const mapDispatchToProps = (dispatch: any) => ({});
 interface StudentsListProps { }
 const StudentsList = (props: StudentsListProps): ReactElement => {
-    const { t } = useTranslation();
+    const { t } = useTranslation('studentsList');
     const [showAddStudentModal, setShowAddStudentModal] = useState(false);
     const [accessibleStudents, setAccessibleStudents] = useState([] as StudentResponse[]);
     useEffect(() => {
@@ -30,7 +30,7 @@ const StudentsList = (props: StudentsListProps): ReactElement => {
             <Stack>
                 <div className='d-flex justify-content-between'>
                     <div className='my-auto'>
-                        StudentsList
+                        {t('studentsList')}
                     </div>
                     <div>
                         <AddNewStudentModal show={showAddStudentModal} onHide={() => {

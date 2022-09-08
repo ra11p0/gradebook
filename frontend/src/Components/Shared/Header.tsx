@@ -9,26 +9,26 @@ import { logOut } from '../../Actions/Account/accountActions';
 
 const mapStateToProps = (state: any) => {
     return {
-      isLoggedIn: state.common.isLoggedIn,
-      username: state.common.session?.username,
-      isActive: state.common.session?.roles.length != 0
+        isLoggedIn: state.common.isLoggedIn,
+        username: state.common.session?.username,
+        isActive: state.common.session?.roles.length != 0
     }
 };
 
 const mapDispatchToProps = (dispatch: any) => ({
     logOutHandler: () => dispatch(logOut)
 });
-  
-interface HeaderProps{
+
+interface HeaderProps {
     isLoggedIn?: boolean;
-    logOutHandler?: ()=>void;
+    logOutHandler?: () => void;
     username: string,
     isActive: boolean,
     i18n: any,
     t: any
 }
 
-interface HeaderState{
+interface HeaderState {
     isLoggedIn?: boolean
 }
 
@@ -39,7 +39,7 @@ class Header extends React.Component<HeaderProps, HeaderState>{
             isLoggedIn: props.isLoggedIn
         };
     }
-    logOut(): void{
+    logOut(): void {
         this.props.logOutHandler!();
     }
     render(): React.ReactNode {
@@ -51,32 +51,32 @@ class Header extends React.Component<HeaderProps, HeaderState>{
                         Gradebook
                     </Link>
                     <div className='my-auto d-flex gap-2'>
-                    {
-                        this.props.isLoggedIn &&
+                        {
+                            this.props.isLoggedIn &&
+                            <div className='d-flex gap-2'>
+                                {
+                                    this.props.isActive &&
+                                    <>
+                                        <Link to='/account/profile' className='btn btn-outline-primary' >{this.props.username}</Link>
+                                        <Link to='/dashboard' className='btn btn-outline-primary' >{t('dashboard')}</Link>
+                                    </>
+                                }
+                                <a className='btn btn-outline-primary' onClick={() => this.logOut()}> {t('logout')}</a>
+                            </div>
+                        }
                         <div className='d-flex gap-2'>
-                            {
-                                this.props.isActive &&
-                                <>
-                                    <Link to='/account/profile' className='btn btn-outline-primary' >{this.props.username}</Link>
-                                    <Link to='/dashboard' className='btn btn-outline-primary' >{t('dashboard')}</Link>
-                                </>
-                            }
-                            <a className='btn btn-outline-primary' onClick={() => this.logOut()}> {t('logout')}</a>
+                            <Dropdown>
+                                <Dropdown.Toggle variant='outline-secondary'>
+                                    <FontAwesomeIcon icon={faLanguage} />
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu>
+                                    <Dropdown.Item onClick={() => i18n.changeLanguage('pl')}>{t('polish')} (Polish)</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => i18n.changeLanguage('en')}>{t('english')} (English)</Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
                         </div>
-                    }
-                    <div className='d-flex gap-2'>
-                        <Dropdown>
-                            <Dropdown.Toggle variant='outline-secondary'>
-                                <FontAwesomeIcon icon={faLanguage}/>
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu>
-                                <Dropdown.Item onClick={()=>i18n.changeLanguage('pl')}>Polish</Dropdown.Item>
-                                <Dropdown.Item onClick={()=>i18n.changeLanguage('en')}>English</Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
-                    </div>
 
-                    
+
                     </div>
                 </div>
             </header>
@@ -84,4 +84,4 @@ class Header extends React.Component<HeaderProps, HeaderState>{
     }
 }
 
-export default withTranslation()(connect(mapStateToProps, mapDispatchToProps)(Header));
+export default withTranslation('header')(connect(mapStateToProps, mapDispatchToProps)(Header));

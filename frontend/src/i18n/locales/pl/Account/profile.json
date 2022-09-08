@@ -1,0 +1,10 @@
+{
+  "id": "Identyfikator",
+  "userName": "Nazwa uzytkownika",
+  "name": "Imię",
+  "surname": "Nazwisko",
+  "birthday": "Data urodzenia",
+  "personGuid": "GUID osoby",
+  "roles": "Role",
+  "schoolRole": "Rola w szkole"
+}

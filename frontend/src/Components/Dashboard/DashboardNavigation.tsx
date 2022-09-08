@@ -120,4 +120,4 @@ class DashboardNavigation extends React.Component<DashboardNavigationProps, Dash
     }
 }
 
-export default withTranslation()(connect(mapStateToProps, mapDispatchToProps)(DashboardNavigation));
+export default withTranslation('dashboardNavigation')(connect(mapStateToProps, mapDispatchToProps)(DashboardNavigation));

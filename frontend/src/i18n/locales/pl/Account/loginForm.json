@@ -1,0 +1,10 @@
+{
+  "logIn": "Login",
+  "loging": "Logowanie",
+  "loginFailed": "Logowanie nieudane",
+  "email": "Email",
+  "password": "Hasło",
+  "register": "Rejestracja",
+  "changePassword": "Zmień hasło",
+  "recoverAccess": "Przywróć dostęp"
+}

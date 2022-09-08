@@ -1,0 +1,10 @@
+{
+  "logIn": "Login",
+  "loging": "Log in",
+  "loginFailed": "Login failed",
+  "email": "Email",
+  "password": "Password",
+  "register": "Register",
+  "changePassword": "Change password",
+  "recoverAccess": "Recover access"
+}

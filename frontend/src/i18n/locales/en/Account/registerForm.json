@@ -1,0 +1,13 @@
+{
+  "email": "Email",
+  "passwordTooShort": "Password too short!",
+  "passwordsNotTheSame": "Passwords do not match!",
+  "emailInvalid": "Email address invalid!",
+  "registerButtonLabel": "Register",
+  "userRegisteredAlertTitle": "User registered!",
+  "userRegisteredAlertText": "Now you can log in and activate your account.",
+  "register": "Register",
+  "password": "Password",
+  "confirmPassword": "Confirm password",
+  "goBackToLoginPage": "Go back to login page"
+}

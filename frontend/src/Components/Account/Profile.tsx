@@ -126,4 +126,4 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
     }
 }
 
-export default withTranslation()(connect(mapStateToProps, mapDispatchToProps)(Profile));
+export default withTranslation('profile')(connect(mapStateToProps, mapDispatchToProps)(Profile));
