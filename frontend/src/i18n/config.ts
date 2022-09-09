@@ -20,6 +20,9 @@ i18n.use(initReactI18next).init({
       profile: require('./locales/en/Account/profile.json'),
       invitations: require('./locales/en/Dashboard/Manage/ManageStudents/invitations.json'),
       addInvitationModal: require('./locales/en/Dashboard/Manage/ManageStudents/addInvitationModal.json'),
+      registerAdministrator: require('./locales/en/Account/registerAdministrator.json'),
+      registerAdministratorPerson: require('./locales/en/Account/registerAdministratorPerson.json'),
+      registerAdministratorSchool: require('./locales/en/Account/registerAdministratorSchool.json'),
     },
     pl: {
       translations: require('./locales/pl/common.json'),
@@ -36,11 +39,14 @@ i18n.use(initReactI18next).init({
       profile: require('./locales/pl/Account/profile.json'),
       invitations: require('./locales/pl/Dashboard/Manage/ManageStudents/invitations.json'),
       addInvitationModal: require('./locales/pl/Dashboard/Manage/ManageStudents/addInvitationModal.json'),
+      registerAdministrator: require('./locales/pl/Account/registerAdministrator.json'),
+      registerAdministratorPerson: require('./locales/pl/Account/registerAdministratorPerson.json'),
+      registerAdministratorSchool: require('./locales/pl/Account/registerAdministratorSchool.json'),
     }
   },
   ns: ['common', 'loginForm', 'registerForm', 'activateAccount', 'registerStudent', 'header', 'notifications',
     'dashboardNavigation', 'addNewStudentModal', 'manageStudentsMenu', 'studentsList', 'profile', 'invitations',
-    'addInvitationModal'],
+    'addInvitationModal', 'registerAdministrator', 'registerAdministratorPerson', 'registerAdministratorSchool'],
   defaultNS: 'common'
 });
 

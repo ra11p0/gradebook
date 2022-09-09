@@ -1,4 +1,4 @@
-import { APP_LOAD, LOG_IN, LOG_OUT, REFRESH_TOKEN } from '../../Constraints/actionTypes'
+import { APP_LOAD, LOG_IN, LOG_OUT, REFRESH_TOKEN, REFRESH_USER } from '../../Constraints/actionTypes'
 
 export const appLoad = {
     type: APP_LOAD,
@@ -13,4 +13,7 @@ export const logOut = {
 }
 export const refreshToken = {
     type: REFRESH_TOKEN,
+}
+export const refreshUser = {
+    type: REFRESH_USER
 }

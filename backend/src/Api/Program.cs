@@ -6,8 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 DependencyInjector.Inject(builder.Services, builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(o=>{
-    o.SwaggerDoc("v1", new OpenApiInfo{Title="Gradebook", Version="pre-0-0-2"});
+builder.Services.AddSwaggerGen(o =>
+{
+    o.SwaggerDoc("v1", new OpenApiInfo { Title = "Gradebook", Version = "pre-0-0-2" });
     o.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -34,8 +35,10 @@ builder.Services.AddSwaggerGen(o=>{
 });
 builder.Services.AddControllers();
 
-builder.Services.AddCors(e=>{
-    e.AddDefaultPolicy(p=>{
+builder.Services.AddCors(e =>
+{
+    e.AddDefaultPolicy(p =>
+    {
         p.WithOrigins("https://127.0.0.1:3005", "http://127.0.0.1:3005",
                       "https://localhost:3005", "http://localhost:3005",
                       "https://127.0.0.1:7059", "http://127.0.0.1:7059",
