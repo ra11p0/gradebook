@@ -2,9 +2,11 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Modal } from 'react-bootstrap';
-import { Button, FormControl, ListItemText, MenuItem, OutlinedInput, Select, Stack } from '@mui/material';
+import { Button, FormControl, InputLabel, MenuItem, OutlinedInput, Select, Stack } from '@mui/material';
 import StudentResponse from '../../../../ApiClient/Students/Definitions/StudentResponse';
 import StudentsProxy from '../../../../ApiClient/Students/StudentsProxy';
+import Person from '../../../Shared/Person';
+import PersonSmall from '../../../Shared/PersonSmall';
 const mapStateToProps = (state: any) => ({});
 const mapDispatchToProps = (dispatch: any) => ({});
 interface AddInvitationModalProps {
@@ -29,32 +31,49 @@ const AddInvitationModal = (props: AddInvitationModalProps): ReactElement => {
             </Modal.Header>
             <Modal.Body>
                 <Stack>
-                    <div>
-                        {t('selectPeopleToInvite')}
-                    </div>
-                    <div>
+                    <Stack>
                         <FormControl>
+                            <InputLabel>
+                                {t('selectPeopleToInvite')}
+                            </InputLabel>
                             <Select
-                                //labelId="demo-multiple-checkbox-label"
-                                //id="demo-multiple-checkbox"
                                 multiple
                                 value={selectedStudents}
                                 onChange={(event) => {
                                     const { target: { value } } = event;
                                     setSelectedStudents(typeof value === 'string' ? value.split(',') : value);
                                 }}
-                                //input={<OutlinedInput label="Tag" />}
                                 renderValue={(selected) => selected.length}
-                            //MenuProps={MenuProps}
+                                label={t('selectPeopleToInvite')}
                             >
                                 {inactiveStudents.map((student) => (
-                                    <MenuItem key={student.guid} value={student.guid}>
-                                        <ListItemText primary={`${student.name} ${student.surname}`} />
+                                    <MenuItem key={student.guid} value={student.guid}
+                                        className='row'>
+                                        <Person
+                                            name={student.name}
+                                            surname={student.surname}
+                                            birthday={student.birthday}
+                                        />
                                     </MenuItem>
                                 ))}
                             </Select>
                         </FormControl>
-                    </div>
+                    </Stack>
+                    <Stack>
+                        <div className='d-flex flex-wrap justify-content-center'>
+                            <>
+                                {
+                                    inactiveStudents.filter(student => selectedStudents.includes(student.guid)).map(student =>
+                                        <PersonSmall
+                                            name={student.name}
+                                            surname={student.surname}
+                                            key={student.guid}
+                                        />
+                                    )
+                                }
+                            </>
+                        </div>
+                    </Stack>
                 </Stack>
 
             </Modal.Body>

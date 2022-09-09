@@ -123,7 +123,19 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
     {
         var currentPersonGuid = await GetCurrentPersonGuid();
         if (!currentPersonGuid.Status) return new ResponseWithStatus<IEnumerable<InvitationDto>, bool>(default, false, currentPersonGuid.Message);
-        return await GetInvitations(currentPersonGuid.Response);
+        var invitationsResponse = await GetInvitations(currentPersonGuid.Response);
+        if (!invitationsResponse.Status) return new ResponseWithStatus<IEnumerable<InvitationDto>, bool>(invitationsResponse.Message);
+        var invitationsWithPeople = await Task.WhenAll(invitationsResponse.Response!.Select(async invitation =>
+        {
+            if (invitation.InvitedPersonGuid.HasValue)
+            {
+                var personResponse = await GetPersonByGuid(invitation.InvitedPersonGuid.Value);
+                if (personResponse.Status)
+                    invitation.InvitedPerson = personResponse.Response;
+            }
+            return invitation;
+        }));
+        return new ResponseWithStatus<IEnumerable<InvitationDto>, bool>(invitationsWithPeople, true);
     }
 
     public async Task<ResponseWithStatus<IEnumerable<PersonDto>, bool>> GetPeopleInSchool(Guid schoolGuid)

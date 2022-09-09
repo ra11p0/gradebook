@@ -8,6 +8,8 @@ import StudentsProxy from '../../../../ApiClient/Students/StudentsProxy';
 import StudentResponse from '../../../../ApiClient/Students/Definitions/StudentResponse';
 import moment from 'moment';
 import Notifications from '../../../../Notifications/Notifications';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 const mapStateToProps = (state: any) => ({});
 const mapDispatchToProps = (dispatch: any) => ({});
 interface StudentsListProps { }
@@ -41,20 +43,55 @@ const StudentsList = (props: StudentsListProps): ReactElement => {
                         </Button>
                     </div>
                 </div>
+                <Stack className={'border rounded-3 my-1 p-3 bg-light'}>
+                    <Grid container spacing={2} >
+                        <Grid item xs>
+                            <div>
+                                {t('name')}
+                            </div>
+                        </Grid>
+                        <Grid item xs>
+                            <div>
+                                {t('surname')}
+                            </div>
+                        </Grid>
+                        <Grid item xs>
+                            <div>
+                                {t('birthday')}
+                            </div>
+                        </Grid>
+                        <Grid item xs>
+                            <div>
+                                {t('isActive')}
+                            </div>
+                        </Grid>
+                    </Grid>
+                </Stack>
                 <Stack>
                     <List>
                         {
                             accessibleStudents.map((element, index) =>
-                                <ListItem key={index}>
-                                    <Grid container columnGap={1}>
-                                        <Grid>
-                                            {element.name}
+                                <ListItem key={index} className={'border rounded-3 my-1 p-3'}>
+                                    <Grid container spacing={2}>
+                                        <Grid item xs>
+                                            <div>
+                                                {element.name}
+                                            </div>
                                         </Grid>
-                                        <Grid>
-                                            {element.surname}
+                                        <Grid item xs>
+                                            <div>
+                                                {element.surname}
+                                            </div>
                                         </Grid>
-                                        <Grid>
-                                            {moment(element.birthday).format('YYYY-MM-DD')}
+                                        <Grid item xs>
+                                            <div>
+                                                {moment(element.birthday).format('YYYY-MM-DD')}
+                                            </div>
+                                        </Grid>
+                                        <Grid item xs>
+                                            <div>
+                                                <FontAwesomeIcon icon={element.isActive ? faCheck : faTimes} />
+                                            </div>
                                         </Grid>
                                     </Grid>
                                 </ListItem>

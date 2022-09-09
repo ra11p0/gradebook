@@ -7,4 +7,6 @@ export default interface StudentResponse {
     surname: string;
     schoolRole: number;
     birthday: Date;
+    isActive: boolean;
+    userGuid: string;
 }

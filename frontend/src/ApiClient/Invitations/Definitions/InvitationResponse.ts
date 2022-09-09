@@ -1,3 +1,5 @@
+import PersonResponse from "./PersonResponse";
+
 export default interface InvitationResponse {
     guid: string;
     createdDate: Date;
@@ -8,4 +10,5 @@ export default interface InvitationResponse {
     usedDate?: Date;
     invitedPersonGuid?: string;
     schoolRole?: string;
+    invitedPerson?: PersonResponse;
 }

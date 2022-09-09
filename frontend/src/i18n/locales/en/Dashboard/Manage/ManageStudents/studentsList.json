@@ -1,4 +1,9 @@
 {
   "addStudent": "Add student",
-  "studentsList": "Students list"
+  "studentsList": "Students list",
+
+  "name": "Name",
+  "surname": "Surname",
+  "isActive": "Is active",
+  "birthday": "Birthday"
 }
