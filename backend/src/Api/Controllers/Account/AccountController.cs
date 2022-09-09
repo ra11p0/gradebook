@@ -61,6 +61,8 @@ public class AccountController : ControllerBase
             await _userManager.Service.UpdateAsync(user);
 
             var roles = await _userManager.Service.GetRolesAsync(user);
+            var personGuid = await _foundationQueries.Service.GetPersonGuidForUser(user.Id);
+
 
             return Ok(new
             {
@@ -71,6 +73,7 @@ public class AccountController : ControllerBase
                 expires_in = int.Parse(_configuration.Service["JWT:TokenValidityInMinutes"]) * 60,
                 Username = user.UserName,
                 UserId = user.Id,
+                PersonGuid = personGuid.Response,
                 Roles = roles
             });
         }

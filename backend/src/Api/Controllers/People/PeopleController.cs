@@ -6,6 +6,7 @@ using Gradebook.Foundation.Common.Foundation.Commands;
 using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
 using Gradebook.Foundation.Common.Foundation.Models;
 using Gradebook.Foundation.Common.Foundation.Queries;
+using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,6 +28,10 @@ public class PeopleController : ControllerBase
     }
     [HttpGet]
     [Route("{personGuid}/schools")]
+
+    [ProducesResponseType(typeof(IEnumerable<SchoolDto>), 200)]
+
+    [ProducesResponseType(typeof(string), statusCode: 400)]
     public async Task<IActionResult> GetSchools([FromRoute] Guid personGuid)
     {
         var resp = await _foundationQueries.Service.GetSchoolsForPerson(personGuid);

@@ -1,4 +1,4 @@
-import { APP_LOAD, LOG_IN, LOG_OUT, REFRESH_TOKEN, REFRESH_USER } from '../../Constraints/actionTypes'
+import { APP_LOAD, LOG_IN, LOG_OUT, REFRESH_TOKEN, REFRESH_USER, SET_SCHOOL } from '../../Constraints/actionTypes'
 
 const defaultState = {
     appLoaded: false,
@@ -21,6 +21,7 @@ export default (state: any = defaultState, action: any) => {
                     refreshToken: action.refreshToken,
                     username: action.username,
                     userId: action.userId,
+                    personGuid: action.personGuid,
                     roles: action.roles
                 }
             };
@@ -51,7 +52,16 @@ export default (state: any = defaultState, action: any) => {
                 session: {
                     ...state.session,
                     roles: action.roles,
-                    userId: action.userId
+                    userId: action.userId,
+                    personGuid: action.personGuid,
+                }
+            };
+        case SET_SCHOOL:
+            return {
+                ...state,
+                school: {
+                    ...state.school,
+                    schoolGuid: action.schoolGuid
                 }
             };
         default:

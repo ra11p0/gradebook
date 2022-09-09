@@ -29,6 +29,7 @@ const activateWithoutSchool = (person: RegisterAdministratorPersonValues) => {
         ...refreshUser,
         roles: meResponse.data.roles,
         userId: meResponse.data.id,
+        personGuid: meResponse.data.personGuid,
       });
     });
   });
@@ -44,6 +45,7 @@ const activateWithSchool = (
         ...refreshUser,
         roles: meResponse.data.roles,
         userId: meResponse.data.id,
+        personGuid: meResponse.data.personGuid,
       });
     });
   });
