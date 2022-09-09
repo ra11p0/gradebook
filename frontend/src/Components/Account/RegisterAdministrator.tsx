@@ -38,9 +38,15 @@ const activateWithSchool = (
   person: RegisterAdministratorPersonValues,
   school: RegisterAdministratorSchoolValues
 ) => {
-  AdministratorsProxy.newAdministratorWithSchool(person, school).then((e) =>
-    console.dir(e)
-  );
+  AdministratorsProxy.newAdministratorWithSchool(person, school).then((e) => {
+    AccountProxy.getMe().then((meResponse) => {
+      store.dispatch({
+        ...refreshUser,
+        roles: meResponse.data.roles,
+        userId: meResponse.data.id,
+      });
+    });
+  });
 };
 
 const RegisterAdministratorForm = (
