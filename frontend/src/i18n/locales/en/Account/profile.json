@@ -1,0 +1,10 @@
+{
+  "id": "Id",
+  "userName": "Username",
+  "name": "Name",
+  "surname": "Surname",
+  "birthday": "Birthday",
+  "personGuid": "Person GUID",
+  "roles": "Roles",
+  "schoolRole": "School role"
+}

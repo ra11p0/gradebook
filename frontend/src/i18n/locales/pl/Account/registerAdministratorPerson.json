@@ -1,0 +1,8 @@
+{
+  "name": "Imię",
+  "surname": "Nazwisko",
+  "birthday": "Data urodzenia",
+  "nextStep": "Dalej",
+  "invalidName": "Nieprawidłowe imię",
+  "invalidSurname": "Nieprawidłowe nazwisko"
+}

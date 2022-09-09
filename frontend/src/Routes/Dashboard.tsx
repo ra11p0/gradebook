@@ -11,7 +11,7 @@ import ManageStudents from '../Components/Dashboard/Manage/ManageStudents/Manage
 import ManageTeachers from '../Components/Dashboard/Manage/ManageTeachers/ManageTeachers';
 import ManageSchool from '../Components/Dashboard/Manage/ManageSchool/ManageSchool';
 
-const mapStateToProps = (state: any) =>({
+const mapStateToProps = (state: any) => ({
     isLoggedIn: state.common.isLoggedIn,
     isSuperAdmin: state.common.session.roles.includes('SuperAdmin')
 });
@@ -20,37 +20,37 @@ const mapDispatchToProps = (dispatch: any) => ({
 
 });
 
-interface DashboardProps{
+interface DashboardProps {
     isLoggedIn?: boolean;
     isSuperAdmin: boolean;
 }
 
 class Dashboard extends React.Component<DashboardProps>{
-    render(){
+    render() {
         return (
-        <div className='m-3 card'>
+            <div className='m-3 card'>
 
-            <div className='card-header'>
-                <DashboardNavigation/>
+                <div className='card-header'>
+                    <DashboardNavigation />
+                </div>
+                <div className='card-body'>
+                    <Routes>
+                        <Route path="*" element={<DashboardIndex />}></Route>
+                        <Route path="absence" element={<Absence />}></Route>
+                        <Route path="grades" element={<Grades />}></Route>
+                        <Route path="subject" element={<Subject />}></Route>
+                        <Route path="timetable" element={<Timetable />}></Route>
+                        {
+                            this.props.isSuperAdmin &&
+                            <>
+                                <Route path="manageStudents/*" element={<ManageStudents />}></Route>
+                                <Route path="manageTeachers/*" element={<ManageTeachers />}></Route>
+                                <Route path="manageSchool/*" element={<ManageSchool />}></Route>
+                            </>
+                        }
+                    </Routes>
+                </div>
             </div>
-            <div className='card-body'>
-                 <Routes>
-                    <Route path="*" element={<DashboardIndex/>}></Route>
-                    <Route path="absence" element={<Absence/>}></Route>
-                    <Route path="grades" element={<Grades/>}></Route>
-                    <Route path="subject" element={<Subject/>}></Route>
-                    <Route path="timetable" element={<Timetable/>}></Route>
-                    {
-                        this.props.isSuperAdmin &&
-                        <>
-                            <Route path="manageStudents/*" element={<ManageStudents/>}></Route>
-                            <Route path="manageTeachers/*" element={<ManageTeachers/>}></Route>
-                            <Route path="manageSchool/*" element={<ManageSchool/>}></Route>
-                        </>
-                    }
-                 </Routes>
-            </div>
-        </div>
         );
     }
 }

@@ -13,4 +13,5 @@ public class InvitationDto
     public DateTime? UsedDate { get; set; }
     public Guid? InvitedPersonGuid { get; set; }
     public SchoolRoleEnum SchoolRole { get; set; }
+    public PersonDto? InvitedPerson { get; set; }
 }

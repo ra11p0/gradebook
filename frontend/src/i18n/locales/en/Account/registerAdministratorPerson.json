@@ -1,0 +1,8 @@
+{
+  "name": "Name",
+  "surname": "Surname",
+  "birthday": "Birthday",
+  "nextStep": "Next",
+  "invalidName": "Invalid name",
+  "invalidSurname": "Invalid surname"
+}

@@ -93,13 +93,23 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         return new StatusResponse<bool>(resp.Status, resp.Message);
     }
 
+    public async Task<ResponseWithStatus<string[], bool>> GenerateMultipleSystemInvitation(Guid[] peopleGuid, SchoolRoleEnum role)
+    {
+        var currentPersonGuid = await _foundationQueries.Service.GetCurrentPersonGuid();
+        if (!currentPersonGuid.Status) return new ResponseWithStatus<string[], bool>(default, false, "Could not find current person");
+
+        var response = await Task.WhenAll(peopleGuid.Select(async personGuid => await Repository.GenerateSystemInvitation(personGuid, currentPersonGuid.Response, role)));
+        await Repository.SaveChangesAsync();
+        return new ResponseWithStatus<string[], bool>(response!, response is not null);
+    }
+
     public async Task<ResponseWithStatus<string, bool>> GenerateSystemInvitation(Guid personGuid, SchoolRoleEnum role)
     {
         var currentPersonGuid = await _foundationQueries.Service.GetCurrentPersonGuid();
         if (!currentPersonGuid.Status) return new ResponseWithStatus<string, bool>(default, false, "Could not find current person");
         var response = await Repository.GenerateSystemInvitation(personGuid, currentPersonGuid.Response, role);
         await Repository.SaveChangesAsync();
-        return new ResponseWithStatus<string, bool>(response, !(response is null));
+        return new ResponseWithStatus<string, bool>(response, response is not null);
     }
 
     public async Task<StatusResponse<bool>> NewAdministrator(NewAdministratorCommand command)

@@ -5,6 +5,7 @@ using Gradebook.Foundation.Common.Foundation.Commands;
 using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
 using Gradebook.Foundation.Common.Foundation.Models;
 using Gradebook.Foundation.Common.Foundation.Queries;
+using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,20 +28,35 @@ public class StudentsController : ControllerBase
     [HttpPost]
     [Route("")]
     [Authorize(Roles = "SuperAdmin")]
-    public async Task<IActionResult> AddNewStudent([FromBody] NewStudentModel model){
+    [ProducesResponseType(typeof(string), 400)]
+    public async Task<IActionResult> AddNewStudent([FromBody] NewStudentModel model)
+    {
         var command = _mapper.Service.Map<NewStudentCommand>(model);
         var response = await _foundationCommands.Service.AddNewStudent(command);
-        return response.Status ? Ok(): BadRequest();
+        return response.Status ? Ok() : BadRequest(response.Message);
     }
     [HttpGet]
     [Route("")]
-    public async Task<IActionResult> GetAccessibleStudents(){
+    [ProducesResponseType(typeof(IEnumerable<StudentDto>), 200)]
+    [ProducesResponseType(typeof(string), 400)]
+    public async Task<IActionResult> GetAccessibleStudents()
+    {
         var students = await _foundationQueries.Service.GetAllAccessibleStudents();
         return students.Status ? Ok(students.Response) : BadRequest(students.Message);
     }
     [HttpGet]
+    [Route("Inactive")]
+    [ProducesResponseType(typeof(IEnumerable<StudentDto>), 200)]
+    [ProducesResponseType(typeof(string), 400)]
+    public async Task<IActionResult> GetInactiveStudents()
+    {
+        var resp = await _foundationQueries.Service.GetInactiveStudents();
+        return resp.Status ? Ok(resp.Response) : BadRequest();
+    }
+    [HttpGet]
     [Route("{guid}")]
-    public async Task<IActionResult> GetStudent([FromRoute] string guid){
+    public async Task<IActionResult> GetStudent([FromRoute] string guid)
+    {
         return Ok();
     }
 }

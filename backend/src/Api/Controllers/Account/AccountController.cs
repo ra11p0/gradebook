@@ -9,6 +9,7 @@ using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 using Gradebook.Foundation.Common.Foundation.Queries;
+using Api.Controllers.Account.Responses;
 
 namespace Api.Controllers;
 
@@ -58,8 +59,10 @@ public class AccountController : ControllerBase
             user.RefreshTokenExpiryTime = DateTime.Now.AddDays(refreshTokenValidityInDays);
 
             await _userManager.Service.UpdateAsync(user);
-            
+
             var roles = await _userManager.Service.GetRolesAsync(user);
+            var personGuid = await _foundationQueries.Service.GetPersonGuidForUser(user.Id);
+
 
             return Ok(new
             {
@@ -70,6 +73,7 @@ public class AccountController : ControllerBase
                 expires_in = int.Parse(_configuration.Service["JWT:TokenValidityInMinutes"]) * 60,
                 Username = user.UserName,
                 UserId = user.Id,
+                PersonGuid = personGuid.Response,
                 Roles = roles
             });
         }
@@ -137,27 +141,31 @@ public class AccountController : ControllerBase
     [Authorize(Roles = "SuperAdmin")]
     [HttpPost]
     [Route("{userGuid}/roles")]
-    public async Task<IActionResult> PostRoles([FromRoute] string userGuid, [FromBody] string[] roles){
+    public async Task<IActionResult> PostRoles([FromRoute] string userGuid, [FromBody] string[] roles)
+    {
         await _identityLogic.Service.EditUserRoles(roles, userGuid);
         return Ok();
     }
     [HttpGet]
     [Route("me")]
     [Authorize]
-    public async Task<IActionResult> Me(){
+    [ProducesResponseType(typeof(MeResponse), 200)]
+    public async Task<IActionResult> Me()
+    {
         var user = await _userManager.Service.FindByNameAsync(User.Identity!.Name);
         var roles = await _identityLogic.Service.GetUserRoles(user.Id);
         var personGuid = await _foundationQueries.Service.GetCurrentPersonGuid();
         var person = await _foundationQueries.Service.GetPersonByGuid(personGuid.Response);
-        return Ok(new{
-            user.Id,
-            user.UserName,
-            personGuid = personGuid.Response,
-            roles = roles.Response,
-            name = person.Response?.Name,
-            surname = person.Response?.Surname,
-            birthday = person.Response?.Birthday,
-            schoolRole = person.Response?.SchoolRole,
+        return Ok(new MeResponse
+        {
+            Id = user.Id,
+            UserName = user.UserName,
+            PersonGuid = personGuid.Response,
+            Roles = roles.Response,
+            Name = person.Response?.Name,
+            Surname = person.Response?.Surname,
+            Birthday = person.Response?.Birthday,
+            SchoolRole = person.Response?.SchoolRole,
         });
     }
     [Authorize]

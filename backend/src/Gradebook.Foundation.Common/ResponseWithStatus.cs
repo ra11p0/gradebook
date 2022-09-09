@@ -26,7 +26,6 @@ public class ResponseWithStatus<R> : ResponseWithStatus<R, bool>
     }
     public ResponseWithStatus(R? response, bool status, string? message = null) : base(response, status, message)
     {
-
     }
 }
 public class StatusResponse : StatusResponse<bool>

@@ -3,6 +3,7 @@ using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Foundation.Commands;
 using Gradebook.Foundation.Common.Foundation.Queries;
+using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,9 +29,19 @@ public class InvitationsController : ControllerBase
         var resp = await _foundationCommands.Service.GenerateSystemInvitation(model.InvitedPersonGuid, model.Role);
         return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
     }
+    [HttpPost]
+    [Route("Multiple")]
+    [Authorize(Roles = "SuperAdmin")]
+    public async Task<IActionResult> AddMultipleNewInvitation([FromBody] NewMultipleInvitationModel model)
+    {
+        var resp = await _foundationCommands.Service.GenerateMultipleSystemInvitation(model.InvitedPersonGuidArray, model.Role);
+        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
+    }
     [HttpGet]
     [Route("")]
     [Authorize(Roles = "SuperAdmin")]
+    [ProducesResponseType(typeof(IEnumerable<InvitationDto>), 200)]
+    [ProducesResponseType(typeof(string), 400)]
     public async Task<IActionResult> GetMyInvitations()
     {
         var resp = await _foundationQueries.Service.GetInvitations();

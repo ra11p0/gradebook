@@ -1,3 +1,5 @@
+import PersonResponse from "./PersonResponse";
+
 export interface Class {
     name: string;
 }
@@ -6,16 +8,8 @@ export interface Group {
     name: string;
 }
 
-export interface Person {
-    name: string;
-    surname: string;
-    birthday: Date;
-    class: any;
-    group: any;
-}
-
 export interface InvitationDetailsResponse {
-    person: Person;
+    person: PersonResponse;
     class: Class;
     group: Group;
 }

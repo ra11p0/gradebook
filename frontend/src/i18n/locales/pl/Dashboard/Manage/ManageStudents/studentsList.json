@@ -1,0 +1,9 @@
+{
+  "addStudent": "Dodaj ucznia",
+  "studentsList": "Lista uczniów",
+
+  "name": "Imię",
+  "surname": "Nazwisko",
+  "isActive": "Czy aktywny",
+  "birthday": "Data urodzenia"
+}

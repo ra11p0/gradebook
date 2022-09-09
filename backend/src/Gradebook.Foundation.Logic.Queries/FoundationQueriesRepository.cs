@@ -16,7 +16,7 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
         using (var cn = await GetOpenConnectionAsync())
         {
             return await cn.QueryAsync<StudentDto>(@"
-                SELECT Name, Surname, SchoolRole, Birthday, ClassGuid, GroupGuid, CreatorGuid, Guid
+                SELECT Name, Surname, SchoolRole, Birthday, ClassGuid, GroupGuid, CreatorGuid, Guid, UserGuid
                 FROM Person
                 LEFT JOIN PersonSchool AS PS
                     ON Guid = PS.PeopleGuid
@@ -58,6 +58,34 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                                 WHERE PeopleGuid = @relatedPersonGuid
                             )
                     )
+            ", new
+            {
+                relatedPersonGuid
+            });
+        }
+    }
+
+    public async Task<IEnumerable<StudentDto>> GetAllInactiveAccessibleStudents(Guid relatedPersonGuid)
+    {
+        using (var cn = await GetOpenConnectionAsync())
+        {
+            return await cn.QueryAsync<StudentDto>(@"
+                SELECT Name, Surname, SchoolRole, Birthday, ClassGuid, GroupGuid, CreatorGuid, Guid, UserGuid
+                FROM Person
+                LEFT JOIN PersonSchool AS PS
+                    ON Guid = PS.PeopleGuid
+                WHERE Discriminator = 'Student'
+                    AND 
+                    (
+                        CreatorGuid = @relatedPersonGuid
+                        OR PS.SchoolsGuid IN 
+                            (
+                                SELECT SchoolsGuid
+                                FROM PersonSchool
+                                WHERE PeopleGuid = @relatedPersonGuid
+                            )
+                    )
+                    AND UserGuid IS NULL
             ", new
             {
                 relatedPersonGuid
@@ -148,7 +176,7 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
         using (var cn = await GetOpenConnectionAsync())
         {
             return await cn.QueryFirstOrDefaultAsync<PersonDto>(@"
-                SELECT Guid, Name, Surname, SchoolRole, Birthday
+                SELECT Guid, Name, Surname, SchoolRole, Birthday, UserGuid
                 FROM Person
                 WHERE Guid = @guid
             ",
@@ -199,7 +227,7 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
         using (var cn = await GetOpenConnectionAsync())
         {
             return await cn.QueryFirstOrDefaultAsync<StudentDto>(@"
-                SELECT Name, Surname, SchoolRole, Birthday, ClassGuid, GroupGuid, CreatorGuid, Guid
+                SELECT Name, Surname, SchoolRole, Birthday, ClassGuid, GroupGuid, CreatorGuid, Guid, UserGuid
                 FROM Person
                 WHERE Discriminator = 'Student'
                     AND Guid = @guid
@@ -215,7 +243,7 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
         using (var cn = await GetOpenConnectionAsync())
         {
             return await cn.QueryFirstOrDefaultAsync<TeacherDto>(@"
-                SELECT Name, Surname, SchoolRole, Birthday, CreatorGuid, Guid
+                SELECT Name, Surname, SchoolRole, Birthday, CreatorGuid, Guid, UserGuid
                 FROM Person
                 WHERE Discriminator = 'Teacher'
                     AND Guid = @guid

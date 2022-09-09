@@ -1,0 +1,13 @@
+{
+  "email": "Email",
+  "passwordTooShort": "Hasło zbyt krótkie!",
+  "passwordsNotTheSame": "Hasła nie są takie same!",
+  "emailInvalid": "Niepoprawny adres email!",
+  "registerButtonLabel": "Zarejestruj",
+  "userRegisteredAlertTitle": "Zarejestrowano!",
+  "userRegisteredAlertText": "Teraz mozesz się zalogować i aktywować swoje konto.",
+  "register": "Rejestracja",
+  "password": "Hasło",
+  "confirmPassword": "Potwierdź hasło",
+  "goBackToLoginPage": "Wróć do strony logowania"
+}
