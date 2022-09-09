@@ -18,7 +18,7 @@ then:
 
     docker exec -it mysql bash
 
-    mysql -uroot -p
+    mysql -u root -p
 
     ALTER USER 'root'@'localhost' IDENTIFIED BY 'P@55W0RD';
 
