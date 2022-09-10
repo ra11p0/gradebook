@@ -31,7 +31,8 @@ export default (state: any = defaultState, action: any) => {
             return {
                 ...state,
                 isLoggedIn: false,
-                session: null
+                session: null,
+                school: null
             };
         case REFRESH_TOKEN:
             localStorage.setItem('access_token', action.token);

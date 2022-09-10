@@ -30,6 +30,8 @@ const SchoolSelect = (props: SchoolSelectProps): ReactElement => {
     PeopleProxy.getAccessibleSchools(props.currentPersonGuid!).then(
       (schoolsArray) => {
         setSchools(schoolsArray.data);
+        if (schoolsArray.data.length != 0)
+          props.setSchoolGuid!(schoolsArray.data[0].guid);
       }
     );
   }, []);
@@ -39,14 +41,19 @@ const SchoolSelect = (props: SchoolSelectProps): ReactElement => {
       <FormControl sx={{ m: 1, minWidth: 380 }}>
         <InputLabel>{t("selectSchool")}</InputLabel>
         <Select
-          value={props.currentSchoolGuid}
+          value={
+            schools?.find((school) => school.guid == props.currentSchoolGuid)
+              ?.guid ?? ""
+          }
           label={t("selectSchool")}
           onChange={(change) => {
             props.setSchoolGuid!(change.target.value);
           }}
         >
           {schools?.map((school) => (
-            <MenuItem value={school.guid}>{school.name}</MenuItem>
+            <MenuItem value={school.guid} key={school.guid}>
+              {school.name}
+            </MenuItem>
           ))}
         </Select>
       </FormControl>
