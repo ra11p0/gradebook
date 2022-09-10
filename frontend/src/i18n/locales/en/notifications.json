@@ -1,3 +1,5 @@
 {
-  "error": "Error!"
+  "error": "Error!",
+  "Cannot recognise current person": "Cannot recognise current person",
+  "commonErrorMessage": "Error occured. Try again later."
 }

@@ -7,5 +7,6 @@
   "birthday": "Data urodzenia",
   "name": "Imię",
   "surname": "Nazwisko",
-  "confirmInformation": "Potwierdź informacje"
+  "confirmInformation": "Potwierdź informacje",
+  "wrongAccessCodeLength": "Nieprawidłowa długość kodu dostępu"
 }

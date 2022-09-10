@@ -5,6 +5,11 @@ import { useTranslation } from "react-i18next";
 import { Button, Col, Row } from "react-bootstrap";
 import InvitationsProxy from "../../ApiClient/Invitations/InvitationsProxy";
 import moment from "moment";
+import PeopleProxy from "../../ApiClient/People/PeopleProxy";
+import Notifications from "../../Notifications/Notifications";
+import AccountProxy from "../../ApiClient/Account/AccountProxy";
+import { store } from "../../store";
+import { refreshUser } from "../../Actions/Account/accountActions";
 
 const mapStateToProps = (state: any) => ({});
 
@@ -30,7 +35,7 @@ const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
   const validate = (values: RegisterStudentFormValues) => {
     const errors: any = {};
     if (values.accessCode.length != 6) {
-      errors.accessCode = "wrong access code length";
+      errors.accessCode = t("wrongAccessCodeLength");
     }
     return errors;
   };
@@ -40,7 +45,22 @@ const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
       accessCode: "",
     },
     validate,
-    onSubmit: (values: RegisterStudentFormValues) => {},
+    onSubmit: (values: RegisterStudentFormValues) => {
+      PeopleProxy.activatePerson(values.accessCode)
+        .then(() => {
+          AccountProxy.getMe().then((meResponse) => {
+            store.dispatch({
+              ...refreshUser,
+              roles: meResponse.data.roles,
+              userId: meResponse.data.id,
+              personGuid: meResponse.data.personGuid,
+            });
+          });
+        })
+        .catch((err) => {
+          Notifications.showCommonError();
+        });
+    },
   });
 
   const handleAccessCodeChange = function (e: any) {

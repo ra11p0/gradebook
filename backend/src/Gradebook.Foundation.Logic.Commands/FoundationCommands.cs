@@ -45,21 +45,27 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         if (!invitation.InvitedPersonGuid.HasValue) return new StatusResponse<bool>(false, "Invitation is not binded to any person. Functionality is not yet avalible");
 
         StatusResponse<bool> assigningResult;
+        string userRoleToAdd;
         switch (invitation.SchoolRole)
         {
             case SchoolRoleEnum.Student:
                 assigningResult = await Repository.AssignUserToStudent(userGuid.Response!, invitation.InvitedPersonGuid.Value);
+                userRoleToAdd = UserRoles.Student;
                 break;
             case SchoolRoleEnum.Teacher:
                 assigningResult = await Repository.AssignUserToTeacher(userGuid.Response!, invitation.InvitedPersonGuid.Value);
+                userRoleToAdd = UserRoles.Teacher;
                 break;
             case SchoolRoleEnum.Admin:
                 assigningResult = await Repository.AssignUserToAdministrator(userGuid.Response!, invitation.InvitedPersonGuid.Value);
+                userRoleToAdd = UserRoles.SuperAdmin;
                 break;
             default:
                 return new StatusResponse<bool>(false, "Wrong role");
         }
         if (!assigningResult.Status) return new StatusResponse<bool>(false, assigningResult.Message);
+        var addRoleResponse = await _identityLogic.Service.AddUserRole(userRoleToAdd);
+        if (!addRoleResponse.Status) return new StatusResponse<bool>(false, addRoleResponse.Message);
         await Repository.SaveChangesAsync();
         return new StatusResponse<bool>(true);
     }
