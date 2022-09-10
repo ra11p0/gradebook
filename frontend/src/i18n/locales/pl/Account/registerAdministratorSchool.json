@@ -4,5 +4,10 @@
   "address": "Adres",
   "postalCode": "Kod pocztowy",
   "city": "Miasto",
-  "continueWithoutNewSchool": "Kontynuuj bez stworzenia szkoły"
+  "continueWithoutNewSchool": "Kontynuuj bez stworzenia szkoły",
+  "addSchool": "Dodaj szkołę",
+  "nameTooShort": "Nazwa nieprawidłowa",
+  "addressTooShort": "Adres nieprawidłowy",
+  "postalCodeTooShort": "Kod pocztowy nieprawidłowy",
+  "cityNameTooShort": "Nazwa miasta nieprawidłowa"
 }
