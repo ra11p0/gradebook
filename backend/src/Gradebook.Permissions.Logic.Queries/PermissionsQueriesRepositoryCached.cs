@@ -8,6 +8,21 @@ public class PermissionsQueriesRepositoryCached : BaseRepositoryCached<Permissio
     {
     }
 
+    public void BeginTransaction()
+    {
+        Base.BeginTransaction();
+    }
+
+    public void CommitTransaction()
+    {
+        Base.CommitTransaction();
+    }
+
+    public void RollbackTransaction()
+    {
+        Base.RollbackTransaction();
+    }
+
     public void SaveChanges()
     {
         Base.SaveChanges();

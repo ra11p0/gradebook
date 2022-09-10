@@ -91,7 +91,7 @@ const RegisterAdministratorForm = (
             <RegisterAdministratorSchool
               onSubmit={(values: RegisterAdministratorSchoolValues) => {
                 setSchool(values);
-                activateWithSchool(person, school!);
+                activateWithSchool(person, values);
               }}
               onContinueWithoutSchool={() => activateWithoutSchool(person)}
             />

@@ -1,4 +1,3 @@
-using System.Linq;
 using AutoMapper;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
@@ -83,6 +82,7 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
         student.UserGuid = userId;
         return new StatusResponse<bool>(true);
     }
+
     public async Task<StatusResponse<bool>> AssignUserToTeacher(string userId, Guid personGuid)
     {
         var teacher = await Context.Teachers.FirstOrDefaultAsync(e => e.Guid == personGuid);
@@ -90,6 +90,7 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
         teacher.UserGuid = userId;
         return new StatusResponse<bool>(true);
     }
+
     public async Task<StatusResponse<bool>> AssignUserToAdministrator(string userId, Guid personGuid)
     {
         var administrator = await Context.Administrators.FirstOrDefaultAsync(e => e.Guid == personGuid);

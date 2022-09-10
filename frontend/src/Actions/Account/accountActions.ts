@@ -1,4 +1,4 @@
-import { APP_LOAD, LOG_IN, LOG_OUT, REFRESH_TOKEN, REFRESH_USER, SET_SCHOOL } from '../../Constraints/actionTypes'
+import { APP_LOAD, LOG_IN, LOG_OUT, REFRESH_TOKEN, REFRESH_USER, SET_SCHOOL, SET_SCHOOLS_LIST } from '../../Constraints/actionTypes'
 
 export const appLoad = {
     type: APP_LOAD,
@@ -19,4 +19,7 @@ export const refreshUser = {
 }
 export const setSchool = {
     type: SET_SCHOOL
+}
+export const setSchoolsList = {
+    type: SET_SCHOOLS_LIST
 }

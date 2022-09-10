@@ -7,6 +7,7 @@ public interface IFoundationCommands
 {
     Task<StatusResponse<bool>> AddNewStudent(NewStudentCommand newStudentDto);
     Task<StatusResponse<bool>> AddNewTeacher(NewTeacherCommand newTeacherCommand);
+    Task<StatusResponse> AddNewSchool(NewSchoolCommand newSchoolCommand);
     Task<StatusResponse<bool>> NewAdministrator(NewAdministratorCommand command);
     Task<StatusResponse<bool>> NewAdministratorWithSchool(NewAdministratorCommand administratorCommand, NewSchoolCommand schoolCommand);
     Task<ResponseWithStatus<string, bool>> GenerateSystemInvitation(Guid personGuid, SchoolRoleEnum role);

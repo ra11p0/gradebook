@@ -28,9 +28,7 @@ public class PeopleController : ControllerBase
     }
     [HttpGet]
     [Route("{personGuid}/schools")]
-
     [ProducesResponseType(typeof(IEnumerable<SchoolDto>), 200)]
-
     [ProducesResponseType(typeof(string), statusCode: 400)]
     public async Task<IActionResult> GetSchools([FromRoute] Guid personGuid)
     {

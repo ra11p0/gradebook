@@ -209,7 +209,7 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
         using (var cn = await GetOpenConnectionAsync())
         {
             return await cn.QueryAsync<SchoolDto>(@"
-                SELECT Guid, Name, Address1, Address2, City, PostalCode
+                SELECT Guid, Name, AddressLine1, AddressLine2, City, PostalCode
                 FROM Schools
                 JOIN PersonSchool AS PS
                     ON PS.SchoolsGuid = Guid

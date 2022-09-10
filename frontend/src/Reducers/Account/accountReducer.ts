@@ -1,4 +1,4 @@
-import { APP_LOAD, LOG_IN, LOG_OUT, REFRESH_TOKEN, REFRESH_USER, SET_SCHOOL } from '../../Constraints/actionTypes'
+import { APP_LOAD, LOG_IN, LOG_OUT, REFRESH_TOKEN, REFRESH_USER, SET_SCHOOL, SET_SCHOOLS_LIST } from '../../Constraints/actionTypes'
 
 const defaultState = {
     appLoaded: false,
@@ -31,7 +31,9 @@ export default (state: any = defaultState, action: any) => {
             return {
                 ...state,
                 isLoggedIn: false,
-                session: null
+                session: null,
+                school: null,
+                schoolsList: null
             };
         case REFRESH_TOKEN:
             localStorage.setItem('access_token', action.token);
@@ -63,6 +65,11 @@ export default (state: any = defaultState, action: any) => {
                     ...state.school,
                     schoolGuid: action.schoolGuid
                 }
+            };
+        case SET_SCHOOLS_LIST:
+            return {
+                ...state,
+                schoolsList: action.schoolsList
             };
         default:
             return state;
