@@ -10,7 +10,7 @@ const newAdministrator = (admin: NewAdministratorRequest): Promise<AxiosResponse
 };
 
 const newAdministratorWithSchool = (administrator: NewAdministratorRequest, school: NewSchoolRequest): Promise<AxiosResponse<any>> => {
-    return axiosApiAuthorized.post(API_URL + '/administrators', {administrator, school});
+    return axiosApiAuthorized.post(API_URL + '/administrators/withSchool', { administrator, school });
 };
 
 export default {

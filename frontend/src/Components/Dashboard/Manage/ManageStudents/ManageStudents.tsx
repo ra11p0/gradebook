@@ -7,14 +7,14 @@ import StudentsList from './StudentsList';
 
 
 const mapStateToProps = (state: any) => ({
-     
-});
-  
-const mapDispatchToProps = (dispatch: any) => ({
-    
+
 });
 
-interface ManageStudentsProps{
+const mapDispatchToProps = (dispatch: any) => ({
+
+});
+
+interface ManageStudentsProps {
 
 }
 
@@ -23,16 +23,17 @@ class ManageStudents extends React.Component<ManageStudentsProps> {
         return (
             <div className='row'>
                 <div className='col-3'>
-                    <ManageStudentsMenu/>
+                    <ManageStudentsMenu />
                 </div>
                 <div className='col'>
                     <Routes>
-                        <Route path='invitations' element={<Invitations/>}/>
-                        <Route path='studentsList' element={<StudentsList/>}/>
+                        <Route path='/' element={<StudentsList />} />
+                        <Route path='studentsList' element={<StudentsList />} />
+                        <Route path='invitations' element={<Invitations />} />
                     </Routes>
                 </div>
             </div>
-          );
+        );
     }
 }
 

@@ -1,4 +1,9 @@
 using Api.Models.Invitations;
+using Gradebook.Foundation.Common;
+using Gradebook.Foundation.Common.Extensions;
+using Gradebook.Foundation.Common.Foundation.Commands;
+using Gradebook.Foundation.Common.Foundation.Queries;
+using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,18 +11,47 @@ namespace Api.Controllers.Invitations;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize("Teacher")]
+[Authorize]
 public class InvitationsController : ControllerBase
 {
+    private readonly ServiceResolver<IFoundationCommands> _foundationCommands;
+    private readonly ServiceResolver<IFoundationQueries> _foundationQueries;
+    public InvitationsController(IServiceProvider serviceProvider)
+    {
+        _foundationCommands = serviceProvider.GetResolver<IFoundationCommands>();
+        _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
+    }
     [HttpPost]
     [Route("")]
-    public async Task<IActionResult> AddNewInvitation([FromBody] NewInvitationModel model){
-        return Ok();
+    [Authorize(Roles = "SuperAdmin")]
+    public async Task<IActionResult> AddNewInvitation([FromBody] NewInvitationModel model)
+    {
+        var resp = await _foundationCommands.Service.GenerateSystemInvitation(model.InvitedPersonGuid, model.Role);
+        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
+    }
+    [HttpPost]
+    [Route("Multiple")]
+    [Authorize(Roles = "SuperAdmin")]
+    public async Task<IActionResult> AddMultipleNewInvitation([FromBody] NewMultipleInvitationModel model)
+    {
+        var resp = await _foundationCommands.Service.GenerateMultipleSystemInvitation(model.InvitedPersonGuidArray, model.Role);
+        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
     }
     [HttpGet]
-    [Route("student/{guid}")]
-    public async Task<IActionResult> GetStudentInvitation([FromRoute] Guid guid){
-        
-        return Ok();
+    [Route("")]
+    [Authorize(Roles = "SuperAdmin")]
+    [ProducesResponseType(typeof(IEnumerable<InvitationDto>), 200)]
+    [ProducesResponseType(typeof(string), 400)]
+    public async Task<IActionResult> GetMyInvitations()
+    {
+        var resp = await _foundationQueries.Service.GetInvitations();
+        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
+    }
+    [HttpGet]
+    [Route("Activation/Code")]
+    public async Task<IActionResult> GetActivationCodeInfo([FromQuery] string activationCode, [FromQuery] string method)
+    {
+        var resp = await _foundationQueries.Service.GetActivationCodeInfo(activationCode, method);
+        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
     }
 }

@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Gradebook.Foundation.Common;
+using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 using Gradebook.Foundation.Identity.Models;
 using Microsoft.AspNetCore.Http;
@@ -21,11 +22,11 @@ public class IdentityLogic : IIdentityLogic
     private readonly ServiceResolver<IHttpContextAccessor> _httpContextAccessor;
     public IdentityLogic(IServiceProvider serviceProvider)
     {
-        _configuration = new ServiceResolver<IConfiguration>(serviceProvider);
-        _userManager = new ServiceResolver<UserManager<ApplicationUser>>(serviceProvider);
-        _roleManager = new ServiceResolver<RoleManager<IdentityRole>>(serviceProvider);
-        _identityContext = new ServiceResolver<ApplicationIdentityDatabaseContext>(serviceProvider);
-        _httpContextAccessor = new ServiceResolver<IHttpContextAccessor>(serviceProvider);
+        _configuration = serviceProvider.GetResolver<IConfiguration>();
+        _userManager = serviceProvider.GetResolver<UserManager<ApplicationUser>>();
+        _roleManager = serviceProvider.GetResolver<RoleManager<IdentityRole>>();
+        _identityContext = serviceProvider.GetResolver<ApplicationIdentityDatabaseContext>();
+        _httpContextAccessor = serviceProvider.GetResolver<IHttpContextAccessor>();
     }
     public JwtSecurityToken CreateToken(List<Claim> authClaims)
     {
@@ -46,17 +47,18 @@ public class IdentityLogic : IIdentityLogic
     {
         if (userGuid is null) userGuid = (await CurrentUserId()).Response;
         var user = await _userManager.Service.FindByIdAsync(userGuid);
-        if(user is null) return;
+        if (user is null) return;
         var rolesToRemove = _identityContext.Service.Roles
-            .Join(_identityContext.Service.UserRoles, r=>r.Id, ur => ur.RoleId, (r, ur)=>new {r, ur})
-            .Where(e=>e.ur.UserId == userGuid)
-            .Where(e=>!roles.Select(o=>o.Normalize()).Contains(e.r.NormalizedName))
-            .Select(e=>e.r.Name);
-        if(rolesToRemove.Any())
+            .Join(_identityContext.Service.UserRoles, r => r.Id, ur => ur.RoleId, (r, ur) => new { r, ur })
+            .Where(e => e.ur.UserId == userGuid)
+            .Where(e => !roles.Select(o => o.Normalize()).Contains(e.r.NormalizedName))
+            .Select(e => e.r.Name);
+        if (rolesToRemove.Any())
             await _userManager.Service.RemoveFromRolesAsync(user, rolesToRemove);
-        if(roles.Any())
+        if (roles.Any())
         {
-            foreach(var role in roles){
+            foreach (var role in roles)
+            {
                 if (!await _roleManager.Service.RoleExistsAsync(role))
                     await _roleManager.Service.CreateAsync(new IdentityRole(role));
                 await _userManager.Service.AddToRoleAsync(user, role);
@@ -92,30 +94,28 @@ public class IdentityLogic : IIdentityLogic
     {
         var user = await _userManager.Service.FindByNameAsync(_httpContextAccessor.Service.HttpContext.User.Identity!.Name);
         return user is null ?
-            new ResponseWithStatus<string, bool>(null, false) : 
+            new ResponseWithStatus<string, bool>(null, false) :
             new ResponseWithStatus<string, bool>(user.Id, true);
     }
     public async Task<ResponseWithStatus<string[], bool>> GetUserRoles(string? userGuid = null)
     {
-        if(userGuid is null) userGuid = (await this.CurrentUserId()).Response;
+        if (userGuid is null) userGuid = (await this.CurrentUserId()).Response;
         var response = _identityContext.Service.Roles
-            .Join(_identityContext.Service.UserRoles, r=>r.Id, ur=>ur.RoleId, (r, ur)=>new{r, ur})
-            .Where(e=>e.ur.UserId == userGuid)
-            .Select(e=>e.r.Name);
+            .Join(_identityContext.Service.UserRoles, r => r.Id, ur => ur.RoleId, (r, ur) => new { r, ur })
+            .Where(e => e.ur.UserId == userGuid)
+            .Select(e => e.r.Name);
         return new ResponseWithStatus<string[], bool>(response.ToArray(), true);
     }
-
-    public async Task<ResponseWithStatus<bool>> AddUserRole(string role, string? userGuid = null)
+    public async Task<StatusResponse<bool>> AddUserRole(string role, string? userGuid = null)
     {
-        var r = (await GetUserRoles(userGuid)).Response!.Any(e=>e.Normalize() == role.Normalize());
-        if(r) return new ResponseWithStatus<bool>(true);
-        await EditUserRoles( (await GetUserRoles(userGuid)).Response!.Append(role).ToArray() , userGuid);
-        return new ResponseWithStatus<bool>(true);
+        var r = (await GetUserRoles(userGuid)).Response!.Any(e => e.Normalize() == role.Normalize());
+        if (r) return new StatusResponse<bool>(true);
+        await EditUserRoles((await GetUserRoles(userGuid)).Response!.Append(role).ToArray(), userGuid);
+        return new StatusResponse<bool>(true);
     }
-
-    public async Task<ResponseWithStatus<bool>> RemoveUserRole(string role, string? userGuid = null)
+    public async Task<StatusResponse<bool>> RemoveUserRole(string role, string? userGuid = null)
     {
-        await EditUserRoles((await GetUserRoles(userGuid)).Response!.Where(e=>e.Normalize() != role.Normalize()).ToArray(), userGuid);
-        return new ResponseWithStatus<bool>(true);
+        await EditUserRoles((await GetUserRoles(userGuid)).Response!.Where(e => e.Normalize() != role.Normalize()).ToArray(), userGuid);
+        return new StatusResponse<bool>(true);
     }
 }

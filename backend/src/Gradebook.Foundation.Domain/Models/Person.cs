@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Foundation.Enums;
 
@@ -10,5 +11,11 @@ public class Person : BaseDomainModel
     public string? UserGuid { get; set; }
     public SchoolRoleEnum SchoolRole { get; set; }
     public DateTime? Birthday { get; set; }
+    public Guid? CreatorGuid { get; set; }
+
+    //**********
+
+    [ForeignKey("CreatorGuid")]
+    public Administrator Creator { get; set; }
     public ICollection<School> Schools { get; set; }
 }

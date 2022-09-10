@@ -1,0 +1,583 @@
+{
+	"info": {
+		"_postman_id": "6c64b89a-457f-4cb9-9ed0-0a774a9d55a1",
+		"name": "Gradebook",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21209235"
+	},
+	"item": [
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "Me",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var userId = JSON.parse(responseBody).id;",
+									"pm.collectionVariables.set(\"userId\", userId);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/Account/me",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"Account",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set roles",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    \n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/Account/{{userId}}/roles",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"Account",
+								"{{userId}}",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"qaz@su.pl\",\n    \"password\": \"!QAZ2wsx\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/Account/register",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"Account",
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Administrators",
+			"item": [
+				{
+					"name": "Activate as administrator",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"\",\n    \"surname\": \"\",\n    \"birthday\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/Administrators",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"Administrators"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Activate as administrator with new school",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"school\": {\n        \"name\":\"superSchool1\",\n        \"address1\": \"addresOne\",\n        \"address2\": \"addressSec\",\n        \"postalCode\": \"02-2002\",\n        \"city\": \"Warsaw\"\n    },\n    \"administrator\":{\n        \"name\": \"Maria\",\n        \"surname\": \"Zielnicka\",\n        \"birthday\": \"1991-12-08\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/Administrators/WithSchool",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"Administrators",
+								"WithSchool"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "People",
+			"item": [
+				{
+					"name": "Schools list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/People/{{userId}}/schools",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"People",
+								"{{userId}}",
+								"schools"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Schools",
+			"item": [
+				{
+					"name": "GetPeopleInSchool",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/Schools/{{schoolGuid}}/People",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"Schools",
+								"{{schoolGuid}}",
+								"People"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add person to school",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\"6d6b4a17-75b5-4c87-a566-7f44c30359ce\"",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/Schools/{{schoolGuid}}/People",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"Schools",
+								"{{schoolGuid}}",
+								"People"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Students",
+			"item": [
+				{
+					"name": "get accessible students",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/Students/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"Students",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add new student",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Aleksander\",\n  \"surname\": \"Wisigrosz\",\n  \"birthday\": \"2007-01-12\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/Students/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"Students",
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Add new student",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Aleksander\",\n  \"surname\": \"Wisigrosz\",\n  \"birthday\": \"2007-01-12\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/Students/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"Students",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Length",
+									"value": "0"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 31 Aug 2022 21:11:44 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Invitations",
+			"item": [
+				{
+					"name": "Invite",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"invitedPersonGuid\": \"6d6b4a17-75b5-4c87-a566-7f44c30359ce\",\n  \"role\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/Invitations",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"Invitations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invitations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/Invitations",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"Invitations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Teachers",
+			"item": [
+				{
+					"name": "Add new teacher",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Piotr\",\n  \"surname\": \"Grucha\",\n  \"birthday\": \"1979-01-12\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/Teachers/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"Teachers",
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Add new student",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Aleksander\",\n  \"surname\": \"Wisigrosz\",\n  \"birthday\": \"2007-01-12\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/Students/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"Students",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Length",
+									"value": "0"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 31 Aug 2022 21:11:44 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "password",
+				"value": "!QAZ2wsx",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "qaz@su.pl",
+				"type": "string"
+			},
+			{
+				"key": "tokenName",
+				"value": "superAdmin",
+				"type": "string"
+			},
+			{
+				"key": "tokenType",
+				"value": "",
+				"type": "string"
+			},
+			{
+				"key": "accessToken",
+				"value": "",
+				"type": "string"
+			},
+			{
+				"key": "client_authentication",
+				"value": "header",
+				"type": "string"
+			},
+			{
+				"key": "grant_type",
+				"value": "password_credentials",
+				"type": "string"
+			},
+			{
+				"key": "useBrowser",
+				"value": false,
+				"type": "boolean"
+			},
+			{
+				"key": "challengeAlgorithm",
+				"value": "S256",
+				"type": "string"
+			},
+			{
+				"key": "authUrl",
+				"value": "https://127.0.0.1:7059/api/Account/login",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			},
+			{
+				"key": "accessTokenUrl",
+				"value": "https://127.0.0.1:7059/api/Account/login",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "userId",
+			"value": ""
+		},
+		{
+			"key": "url",
+			"value": "https://127.0.0.1:7059/api",
+			"type": "string"
+		},
+		{
+			"key": "schoolGuid",
+			"value": "61d86b16-0a28-47e7-a6a0-a5f2e7fcc398",
+			"type": "string"
+		}
+	]
+}

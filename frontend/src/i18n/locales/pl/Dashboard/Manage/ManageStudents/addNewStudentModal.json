@@ -1,0 +1,8 @@
+{
+  "addStudent": "Dodaj ucznia",
+  "name": "Imię",
+  "surname": "Nazwisko",
+  "birthday": "Data urodzenia",
+  "nameInvalid": "Nieprawidłowe imię",
+  "surnameInvalid": "Nieprawidłowe nazwisko"
+}

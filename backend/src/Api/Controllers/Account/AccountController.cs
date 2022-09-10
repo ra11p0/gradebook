@@ -6,7 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using Gradebook.Foundation.Identity.Models;
 using Gradebook.Foundation.Common;
+using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
+using Gradebook.Foundation.Common.Foundation.Queries;
+using Api.Controllers.Account.Responses;
 
 namespace Api.Controllers;
 
@@ -18,12 +21,14 @@ public class AccountController : ControllerBase
     private readonly ServiceResolver<RoleManager<IdentityRole>> _roleManager;
     private readonly ServiceResolver<IConfiguration> _configuration;
     private readonly ServiceResolver<IIdentityLogic> _identityLogic;
+    private readonly ServiceResolver<IFoundationQueries> _foundationQueries;
     public AccountController(IServiceProvider serviceProvider)
     {
-        _userManager = new ServiceResolver<UserManager<ApplicationUser>>(serviceProvider);
-        _roleManager = new ServiceResolver<RoleManager<IdentityRole>>(serviceProvider);
-        _configuration = new ServiceResolver<IConfiguration>(serviceProvider);
-        _identityLogic = new ServiceResolver<IIdentityLogic>(serviceProvider);
+        _userManager = serviceProvider.GetResolver<UserManager<ApplicationUser>>();
+        _roleManager = serviceProvider.GetResolver<RoleManager<IdentityRole>>();
+        _configuration = serviceProvider.GetResolver<IConfiguration>();
+        _identityLogic = serviceProvider.GetResolver<IIdentityLogic>();
+        _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
     }
     [HttpPost]
     [Route("login")]
@@ -54,16 +59,21 @@ public class AccountController : ControllerBase
             user.RefreshTokenExpiryTime = DateTime.Now.AddDays(refreshTokenValidityInDays);
 
             await _userManager.Service.UpdateAsync(user);
-            
+
             var roles = await _userManager.Service.GetRolesAsync(user);
+            var personGuid = await _foundationQueries.Service.GetPersonGuidForUser(user.Id);
+
 
             return Ok(new
             {
                 access_token = new JwtSecurityTokenHandler().WriteToken(token),
                 RefreshToken = refreshToken,
+                refresh_token = refreshToken,
                 Expiration = token.ValidTo,
+                expires_in = int.Parse(_configuration.Service["JWT:TokenValidityInMinutes"]) * 60,
                 Username = user.UserName,
                 UserId = user.Id,
+                PersonGuid = personGuid.Response,
                 Roles = roles
             });
         }
@@ -131,20 +141,31 @@ public class AccountController : ControllerBase
     [Authorize(Roles = "SuperAdmin")]
     [HttpPost]
     [Route("{userGuid}/roles")]
-    public async Task<IActionResult> PostRoles([FromRoute] string userGuid, [FromBody] string[] roles){
+    public async Task<IActionResult> PostRoles([FromRoute] string userGuid, [FromBody] string[] roles)
+    {
         await _identityLogic.Service.EditUserRoles(roles, userGuid);
         return Ok();
     }
-    [Authorize]
     [HttpGet]
     [Route("me")]
-    public async Task<IActionResult> Me(){
+    [Authorize]
+    [ProducesResponseType(typeof(MeResponse), 200)]
+    public async Task<IActionResult> Me()
+    {
         var user = await _userManager.Service.FindByNameAsync(User.Identity!.Name);
         var roles = await _identityLogic.Service.GetUserRoles(user.Id);
-        return Ok(new{
-            user.Id,
-            user.UserName,
-            roles = roles.Response
+        var personGuid = await _foundationQueries.Service.GetCurrentPersonGuid();
+        var person = await _foundationQueries.Service.GetPersonByGuid(personGuid.Response);
+        return Ok(new MeResponse
+        {
+            Id = user.Id,
+            UserName = user.UserName,
+            PersonGuid = personGuid.Response,
+            Roles = roles.Response,
+            Name = person.Response?.Name,
+            Surname = person.Response?.Surname,
+            Birthday = person.Response?.Birthday,
+            SchoolRole = person.Response?.SchoolRole,
         });
     }
     [Authorize]

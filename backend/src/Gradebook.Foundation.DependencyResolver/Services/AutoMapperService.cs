@@ -1,5 +1,6 @@
 using Gradebook.Foundation.Common.Foundation;
 using Gradebook.Foundation.Logic.Commands;
+using Gradebook.Foundation.Logic.Queries;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -10,9 +11,11 @@ public class AutoMapperService
 {
     public static void Inject(IServiceCollection services, IConfigurationRoot configuration)
     {
-        services.AddAutoMapper(o=>{
+        services.AddAutoMapper(o =>
+        {
             o.AddProfile<FoundationMappings>();
             o.AddProfile<FoundationCommandsMappings>();
+            o.AddProfile<FoundationQueriesMappings>();
         });
     }
 }

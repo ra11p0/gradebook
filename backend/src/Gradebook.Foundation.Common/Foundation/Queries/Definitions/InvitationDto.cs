@@ -1,10 +1,17 @@
+using Gradebook.Foundation.Common.Foundation.Enums;
+
 namespace Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 
 public class InvitationDto
 {
-    public string Name { get; set; }
-    public string Surname { get; set; }
-    public DateTime Birthday { get; set; }
-    public string Class { get; set; }
-    public string Group { get; set; }
+    public Guid Guid { get; set; }
+    public DateTime CreatedDate { get; set; }
+    public DateTime ExprationDate { get; set; }
+    public string InvitationCode { get; set; }
+    public bool IsUsed { get; set; } = false;
+    public Guid CreatorGuid { get; set; }
+    public DateTime? UsedDate { get; set; }
+    public Guid? InvitedPersonGuid { get; set; }
+    public SchoolRoleEnum SchoolRole { get; set; }
+    public PersonDto? InvitedPerson { get; set; }
 }

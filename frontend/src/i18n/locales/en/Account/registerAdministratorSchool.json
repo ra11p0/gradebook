@@ -1,0 +1,13 @@
+{
+  "createYourFirstSchool": "Create your first school",
+  "name": "Name",
+  "address": "Address",
+  "postalCode": "Postal code",
+  "city": "City",
+  "continueWithoutNewSchool": "Continue without creating school",
+  "addSchool": "Add school",
+  "nameTooShort": "Name invalid",
+  "addressTooShort": "Address invalid",
+  "postalCodeTooShort": "Postal code invalid",
+  "cityNameTooShort": "City name invalid"
+}
