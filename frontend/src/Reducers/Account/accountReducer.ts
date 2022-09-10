@@ -63,7 +63,8 @@ export default (state: any = defaultState, action: any) => {
                 ...state,
                 school: {
                     ...state.school,
-                    schoolGuid: action.schoolGuid
+                    schoolGuid: action.schoolGuid,
+                    schoolName: action.schoolName
                 }
             };
         case SET_SCHOOLS_LIST:

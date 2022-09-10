@@ -62,13 +62,13 @@ function SchoolsList(props: SchoolsListProps) {
               <div>{t("name")}</div>
             </Grid>
             <Grid item xs>
-              <div>{t("surname")}</div>
+              <div>{t("address")}</div>
             </Grid>
             <Grid item xs>
-              <div>{t("birthday")}</div>
+              <div>{t("postalCode")}</div>
             </Grid>
             <Grid item xs>
-              <div>{t("isActive")}</div>
+              <div>{t("city")}</div>
             </Grid>
           </Grid>
         </Stack>
@@ -76,11 +76,23 @@ function SchoolsList(props: SchoolsListProps) {
           <List>
             {props.schoolsList?.map((school, index) => (
               <ListItem key={index} className={"border rounded-3 my-1 p-3"}>
-                <School
-                  name={school.name}
-                  city={school.city}
-                  addresLine={school.addressLine1}
-                />
+                <Grid container spacing={2}>
+                  <Grid item xs className="my-auto">
+                    <div>{school.name}</div>
+                  </Grid>
+                  <Grid item xs>
+                    <Stack>
+                      <div>{school.addressLine1}</div>
+                      {school.addressLine2 && <div>{school.addressLine2}</div>}
+                    </Stack>
+                  </Grid>
+                  <Grid item xs className="my-auto">
+                    <div>{school.postalCode}</div>
+                  </Grid>
+                  <Grid item xs className="my-auto">
+                    <div>{school.city}</div>
+                  </Grid>
+                </Grid>
               </ListItem>
             ))}
           </List>
