@@ -39,6 +39,20 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
 
     public Task<string?> GenerateSystemInvitation(Guid invitedPersonGuid, Guid invitingPersonGuid, SchoolRoleEnum role)
         => Base.GenerateSystemInvitation(invitedPersonGuid, invitingPersonGuid, role);
+    public void BeginTransaction()
+    {
+        Base.BeginTransaction();
+    }
+
+    public void CommitTransaction()
+    {
+        Base.CommitTransaction();
+    }
+
+    public void RollbackTransaction()
+    {
+        Base.RollbackTransaction();
+    }
 
     public void SaveChanges()
     {

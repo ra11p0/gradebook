@@ -3,6 +3,7 @@ import { useFormik } from "formik";
 import React from "react";
 import { Modal } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
+import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
 
 interface AddNewSchoolModalProps {
   show: boolean;
@@ -37,7 +38,9 @@ function AddNewSchoolModal(props: AddNewSchoolModalProps) {
     },
     validate,
     onSubmit: (values: formValues) => {
-      console.dir(values);
+      SchoolsProxy.addNewSchool(values).then(() => {
+        props.onHide();
+      });
     },
   });
   return (

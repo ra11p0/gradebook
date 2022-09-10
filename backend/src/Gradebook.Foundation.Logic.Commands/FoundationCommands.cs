@@ -64,6 +64,22 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         return new StatusResponse<bool>(true);
     }
 
+    public async Task<StatusResponse> AddNewSchool(NewSchoolCommand newSchoolCommand)
+    {
+        Repository.BeginTransaction();
+        var currentPerson = await _foundationQueries.Service.GetCurrentPersonGuid();
+        if (!currentPerson.Status) return new StatusResponse(currentPerson.Message);
+        var respSchool = await Repository.AddNewSchool(newSchoolCommand);
+        if (!respSchool.Status) return new StatusResponse(respSchool.Message);
+        await Repository.SaveChangesAsync();
+        var respAddAdminToSchool = await Repository.AddAdministratorToSchool(currentPerson.Response, respSchool.Response);
+        if (!respAddAdminToSchool.Status) return new StatusResponse(respAddAdminToSchool.Message);
+        await Repository.SaveChangesAsync();
+        Repository.CommitTransaction();
+        return new StatusResponse(true);
+
+    }
+
     public async Task<StatusResponse<bool>> AddNewStudent(NewStudentCommand command)
     {
         command.CreatorGuid = (await _foundationQueries.Service.GetCurrentPersonGuid()).Response;
@@ -134,6 +150,7 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
 
     public async Task<StatusResponse<bool>> NewAdministratorWithSchool(NewAdministratorCommand administratorCommand, NewSchoolCommand schoolCommand)
     {
+        Repository.BeginTransaction();
         if (administratorCommand.UserGuid is null)
         {
             var currentUserId = await _identityLogic.Service.CurrentUserId();
@@ -152,6 +169,7 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         if (respAddAdminToSchool.Status)
         {
             await Repository.SaveChangesAsync();
+            Repository.CommitTransaction();
             return new StatusResponse<bool>(true);
         }
         return new StatusResponse<bool>(false);

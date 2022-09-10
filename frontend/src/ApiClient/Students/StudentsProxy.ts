@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 import { axiosApiAuthorized } from "../AxiosInterceptor";
 import NewStudentRequest from "./Definitions/NewStudentRequest";
 import StudentResponse from "./Definitions/StudentResponse";

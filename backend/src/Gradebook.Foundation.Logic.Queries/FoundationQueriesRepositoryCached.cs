@@ -48,6 +48,20 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
     public Task<TeacherDto> GetTeacherByGuid(Guid guid)
         => Base.GetTeacherByGuid(guid);
 
+    public void BeginTransaction()
+    {
+        Base.BeginTransaction();
+    }
+
+    public void CommitTransaction()
+    {
+        Base.CommitTransaction();
+    }
+
+    public void RollbackTransaction()
+    {
+        Base.RollbackTransaction();
+    }
     public void SaveChanges()
     {
         Base.SaveChanges();
