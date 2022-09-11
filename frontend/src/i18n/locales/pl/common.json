@@ -1,1 +1,7 @@
-{}
+{
+  "yes": "Tak",
+  "no": "Nie",
+  "noResults": "Brak wyników",
+  "noMoreResults": "Koniec wyników",
+  "loading": "Ładowanie"
+}

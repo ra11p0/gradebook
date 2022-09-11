@@ -1,0 +1,12 @@
+{
+  "managedSchools": "Managed schools",
+  "addSchool": "Add new school",
+  "name": "Name",
+  "address": "Address",
+  "postalCode": "Postal code",
+  "city": "City",
+  "actions": "Actions",
+  "showSchool": "Show school",
+  "removeSchool": "Remove school",
+  "youSureRemoveSchool": "Are you sure you want to remove school?"
+}

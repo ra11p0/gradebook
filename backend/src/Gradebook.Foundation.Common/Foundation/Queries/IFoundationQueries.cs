@@ -5,6 +5,7 @@ namespace Gradebook.Foundation.Common.Foundation.Queries;
 public interface IFoundationQueries
 {
     Task<ResponseWithStatus<IEnumerable<SchoolDto>, bool>> GetSchoolsForPerson(Guid personGuid);
+    Task<ResponseWithStatus<SchoolDto>> GetSchool(Guid schoolGuid);
     Task<ResponseWithStatus<Guid, bool>> GetPersonGuidForUser(string userId);
     Task<ResponseWithStatus<IEnumerable<PersonDto>, bool>> GetPeopleInSchool(Guid schoolGuid);
     Task<ResponseWithStatus<Guid, bool>> GetCurrentPersonGuid();
@@ -20,4 +21,5 @@ public interface IFoundationQueries
     Task<ResponseWithStatus<GroupDto, bool>> GetGroupByGuid(Guid guid);
     Task<ResponseWithStatus<StudentDto, bool>> GetStudentByGuid(Guid guid);
     Task<ResponseWithStatus<TeacherDto, bool>> GetTeacherByGuid(Guid guid);
+    Task<ResponseWithStatus<IPagedList<StudentDto>>> GetStudentsInSchool(Guid schoolGuid, int page);
 }

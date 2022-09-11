@@ -1,5 +1,6 @@
 using Dapper;
 using Gradebook.Foundation.Common;
+using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Database;
 
@@ -204,6 +205,22 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
         }
     }
 
+    public async Task<SchoolDto> GetSchoolByGuid(Guid guid)
+    {
+        using (var cn = await GetOpenConnectionAsync())
+        {
+            return await cn.QueryFirstOrDefaultAsync<SchoolDto>(@"
+                SELECT Guid, Name, AddressLine1, AddressLine2, City, PostalCode
+                FROM Schools
+                WHERE Guid = @guid AND IsDeleted = 0
+            ",
+            new
+            {
+                guid
+            });
+        }
+    }
+
     public async Task<IEnumerable<SchoolDto>> GetSchoolsForPerson(Guid personGuid)
     {
         using (var cn = await GetOpenConnectionAsync())
@@ -213,7 +230,7 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                 FROM Schools
                 JOIN PersonSchool AS PS
                     ON PS.SchoolsGuid = Guid
-                WHERE PS.PeopleGuid = @personGuid
+                WHERE PS.PeopleGuid = @personGuid AND IsDeleted = 0
             ",
             new
             {
@@ -235,6 +252,24 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
             {
                 guid
             });
+        }
+    }
+
+    public async Task<IPagedList<StudentDto>> GetStudentsInSchool(Guid schoolGuid, Pager pager)
+    {
+        using (var cn = await GetOpenConnectionAsync())
+        {
+            return await cn.QueryPagedAsync<StudentDto>(@"
+                SELECT Name, Surname, SchoolRole, Birthday, ClassGuid, GroupGuid, CreatorGuid, Guid, UserGuid
+                FROM Person
+                JOIN PersonSchool AS PS
+                    ON PS.PeopleGuid = Guid
+                WHERE PS.SchoolsGuid = @schoolGuid AND Discriminator = 'Student'
+                ORDER BY Name, Surname
+            ", new
+            {
+                schoolGuid
+            }, pager);
         }
     }
 

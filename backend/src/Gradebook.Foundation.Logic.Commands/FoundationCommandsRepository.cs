@@ -47,13 +47,13 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
         return new ResponseWithStatus<Guid, bool>(school.Guid, true);
     }
 
-    public async Task<StatusResponse<bool>> AddNewStudent(NewStudentCommand newStudentDto)
+    public async Task<ResponseWithStatus<Guid, bool>> AddNewStudent(NewStudentCommand newStudentDto)
     {
         var student = _mapper.Map<Student>(newStudentDto);
         student.SchoolRole = Common.Foundation.Enums.SchoolRoleEnum.Student;
         await Context.Students.AddAsync(student);
 
-        return new StatusResponse<bool>(true);
+        return new ResponseWithStatus<Guid, bool>(student.Guid, true);
     }
 
     public async Task<StatusResponse<bool>> AddNewTeacher(NewTeacherCommand newTeacherDto)
@@ -126,5 +126,18 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
             (Person?)await Context.Teachers.FirstOrDefaultAsync(e => e.Guid == guid) ??
             (Person?)await Context.Administrators.FirstOrDefaultAsync(e => e.Guid == guid);
         return person;
+    }
+    private async Task<School?> GetSchoolByGuid(Guid guid)
+    {
+        return await Context.Schools.FirstOrDefaultAsync(school => school.Guid == guid);
+    }
+
+    public async Task<StatusResponse> DeleteSchool(Guid schoolGuid)
+    {
+        School? school = await GetSchoolByGuid(schoolGuid);
+        if (school is null) return new StatusResponse(true);
+        school.IsDeleted = true;
+        await Context.SaveChangesAsync();
+        return new StatusResponse(true);
     }
 }

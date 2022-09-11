@@ -2,11 +2,12 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 i18n.use(initReactI18next).init({
+  fallbackNS: 'common',
   fallbackLng: 'en',
   lng: 'pl',
   resources: {
     en: {
-      translations: require('./locales/en/common.json'),
+      common: require('./locales/en/common.json'),
       loginForm: require('./locales/en/Account/loginForm.json'),
       notifications: require('./locales/en/notifications.json'),
       registerForm: require('./locales/en/Account/registerForm.json'),
@@ -25,9 +26,10 @@ i18n.use(initReactI18next).init({
       registerAdministratorSchool: require('./locales/en/Account/registerAdministratorSchool.json'),
       schoolSelect: require('./locales/en/Shared/schoolSelect.json'),
       manageSchoolMenu: require('./locales/en/Dashboard/Manage/ManageSchool/manageSchoolMenu.json'),
+      schoolsList: require('./locales/en/Dashboard/Manage/ManageSchool/schoolsList.json'),
     },
     pl: {
-      translations: require('./locales/pl/common.json'),
+      common: require('./locales/pl/common.json'),
       loginForm: require('./locales/pl/Account/loginForm.json'),
       notifications: require('./locales/pl/notifications.json'),
       registerForm: require('./locales/pl/Account/registerForm.json'),
@@ -46,12 +48,13 @@ i18n.use(initReactI18next).init({
       registerAdministratorSchool: require('./locales/pl/Account/registerAdministratorSchool.json'),
       schoolSelect: require('./locales/pl/Shared/schoolSelect.json'),
       manageSchoolMenu: require('./locales/pl/Dashboard/Manage/ManageSchool/manageSchoolMenu.json'),
+      schoolsList: require('./locales/pl/Dashboard/Manage/ManageSchool/schoolsList.json'),
     }
   },
   ns: ['common', 'loginForm', 'registerForm', 'activateAccount', 'registerStudent', 'header', 'notifications',
     'dashboardNavigation', 'addNewStudentModal', 'manageStudentsMenu', 'studentsList', 'profile', 'invitations',
     'addInvitationModal', 'registerAdministrator', 'registerAdministratorPerson', 'registerAdministratorSchool', 'schoolSelect',
-    'manageSchoolMenu'],
+    'manageSchoolMenu', 'schoolsList'],
   defaultNS: 'common'
 });
 

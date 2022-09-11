@@ -1,5 +1,9 @@
 {
   "error": "Błąd!",
   "Cannot recognise current person": "Nie odnaleziono osoby przypisanej do konta.",
-  "commonErrorMessage": "Wystąpił błąd. Spróbuj ponownie później."
+  "commonErrorMessage": "Wystąpił błąd. Spróbuj ponownie później.",
+  "schoolRemovedNotificationTitle": "Szkoła usunięta",
+  "schoolRemovedNotificationText": "Szkoła została pomyślnie usunięta",
+  "School not found": "Szkoła nie została odnaleziona",
+  "One or more validation errors occurred.": "Niepoprawne dane zostały wprowadzone"
 }

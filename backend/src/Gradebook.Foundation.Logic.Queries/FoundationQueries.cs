@@ -157,6 +157,14 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<Guid, bool>(resp.Value, resp != Guid.Empty);
     }
 
+    public async Task<ResponseWithStatus<SchoolDto>> GetSchool(Guid schoolGuid)
+    {
+        var school = await Repository.GetSchoolByGuid(schoolGuid);
+        if (school is null)
+            return new ResponseWithStatus<SchoolDto>(404, "School not found");
+        return new ResponseWithStatus<SchoolDto>(school, true);
+    }
+
     public async Task<ResponseWithStatus<IEnumerable<SchoolDto>, bool>> GetSchoolsForPerson(Guid personGuid)
     {
         var resp = await Repository.GetSchoolsForPerson(personGuid);
@@ -168,6 +176,13 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         var resp = await Repository.GetStudentByGuid(guid);
         if (resp is null) return new ResponseWithStatus<StudentDto, bool>(null, false, "Student does not exist");
         return new ResponseWithStatus<StudentDto, bool>(resp, true);
+    }
+
+    public async Task<ResponseWithStatus<IPagedList<StudentDto>>> GetStudentsInSchool(Guid schoolGuid, int page)
+    {
+        var pager = new Pager(page);
+        var response = await Repository.GetStudentsInSchool(schoolGuid, pager);
+        return new ResponseWithStatus<IPagedList<StudentDto>>(response, true);
     }
 
     public async Task<ResponseWithStatus<TeacherDto, bool>> GetTeacherByGuid(Guid guid)
