@@ -14,11 +14,15 @@ interface PersonProps {
   surname: string;
   birthday: Date;
   className?: string;
+  noLink?: boolean;
 }
 const Person = (props: PersonProps): ReactElement => {
   const { t } = useTranslation("person");
   return (
-    <Link to={`/person/show/${props.guid}`} className={"text-reset"}>
+    <Link
+      to={props.noLink ? `#` : `/person/show/${props.guid}`}
+      className={`text-reset`}
+    >
       <div className={`bg-light border rounded-3 m-1 p-2 ${props.className}`}>
         <Row>
           <Col xs={2} className="my-auto text-center">

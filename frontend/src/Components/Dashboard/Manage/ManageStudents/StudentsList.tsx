@@ -10,8 +10,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
 import StudentInSchoolResponse from "../../../../ApiClient/Schools/Definitions/StudentInSchoolResponse";
+import InfiniteScroll from "react-infinite-scroll-component";
+import InfinireScrollWrapper from "../../../Shared/InfinireScrollWrapper";
 const mapStateToProps = (state: any) => ({
-  currentSchoolGuid: state.common.school.schoolGuid,
+  currentSchoolGuid: state.common.school?.schoolGuid,
 });
 const mapDispatchToProps = (dispatch: any) => ({});
 interface StudentsListProps {
@@ -24,13 +26,13 @@ const StudentsList = (props: StudentsListProps): ReactElement => {
     [] as StudentInSchoolResponse[]
   );
   useEffect(() => {
-    SchoolsProxy.getStudentsInSchool(props.currentSchoolGuid!)
+    /*SchoolsProxy.getStudentsInSchool(props.currentSchoolGuid!)
       .then((response) => {
         setStudentsInSchool(response.data);
       })
       .catch((error) => {
-        Notifications.showError(error.response.data);
-      });
+        Notifications.showApiError(error);
+      });*/
   }, [showAddStudentModal]);
 
   return (
@@ -68,7 +70,7 @@ const StudentsList = (props: StudentsListProps): ReactElement => {
         </Stack>
         <Stack>
           <List>
-            {studentsInSchool.map((element, index) => (
+            {/*studentsInSchool.map((element, index) => (
               <ListItem key={index} className={"border rounded-3 my-1 p-3"}>
                 <Grid container spacing={2}>
                   <Grid item xs>
@@ -89,7 +91,40 @@ const StudentsList = (props: StudentsListProps): ReactElement => {
                   </Grid>
                 </Grid>
               </ListItem>
-            ))}
+            ))*/}
+            <InfinireScrollWrapper
+              mapper={(element: StudentInSchoolResponse, index) => (
+                <ListItem key={index} className={"border rounded-3 my-1 p-3"}>
+                  <Grid container spacing={2}>
+                    <Grid item xs>
+                      <div>{element.name}</div>
+                    </Grid>
+                    <Grid item xs>
+                      <div>{element.surname}</div>
+                    </Grid>
+                    <Grid item xs>
+                      <div>{moment(element.birthday).format("YYYY-MM-DD")}</div>
+                    </Grid>
+                    <Grid item xs>
+                      <div>
+                        <FontAwesomeIcon
+                          icon={element.isActive ? faCheck : faTimes}
+                        />
+                      </div>
+                    </Grid>
+                  </Grid>
+                </ListItem>
+              )}
+              fetch={async (page: number) => {
+                if (!props.currentSchoolGuid) return [];
+                let resp = await SchoolsProxy.getStudentsInSchool(
+                  props.currentSchoolGuid!,
+                  page
+                );
+                return resp.data as [];
+              }}
+              effect={[props.currentSchoolGuid, showAddStudentModal]}
+            />
           </List>
         </Stack>
       </Stack>

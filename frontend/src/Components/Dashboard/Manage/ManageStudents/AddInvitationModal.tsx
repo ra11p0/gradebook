@@ -79,6 +79,7 @@ const AddInvitationModal = (props: AddInvitationModalProps): ReactElement => {
                       name={student.name}
                       surname={student.surname}
                       birthday={student.birthday}
+                      noLink={true}
                     />
                   </MenuItem>
                 ))}

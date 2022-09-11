@@ -1,4 +1,7 @@
 {
   "yes": "Yes",
-  "no": "No"
+  "no": "No",
+  "noResults": "No results",
+  "noMoreResults": "No more results",
+  "loading": "Loading"
 }
