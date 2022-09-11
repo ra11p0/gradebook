@@ -18,4 +18,5 @@ public interface IFoundationQueriesRepository : IBaseRepository
     Task<TeacherDto> GetTeacherByGuid(Guid guid);
     Task<GroupDto> GetGroupByGuid(Guid guid);
     Task<ClassDto> GetClassByGuid(Guid guid);
+    Task<SchoolDto> GetSchoolByGuid(Guid guid);
 }

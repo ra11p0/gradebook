@@ -49,26 +49,21 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
         => Base.GetTeacherByGuid(guid);
 
     public void BeginTransaction()
-    {
-        Base.BeginTransaction();
-    }
+        => Base.BeginTransaction();
 
     public void CommitTransaction()
-    {
-        Base.CommitTransaction();
-    }
+        => Base.CommitTransaction();
 
     public void RollbackTransaction()
-    {
-        Base.RollbackTransaction();
-    }
+        => Base.RollbackTransaction();
+
     public void SaveChanges()
-    {
-        Base.SaveChanges();
-    }
+        => Base.SaveChanges();
 
     public Task SaveChangesAsync()
-    {
-        return Base.SaveChangesAsync();
-    }
+        => Base.SaveChangesAsync();
+
+
+    public Task<SchoolDto> GetSchoolByGuid(Guid guid)
+        => Base.GetSchoolByGuid(guid);
 }

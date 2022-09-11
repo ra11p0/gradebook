@@ -204,6 +204,22 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
         }
     }
 
+    public async Task<SchoolDto> GetSchoolByGuid(Guid guid)
+    {
+        using (var cn = await GetOpenConnectionAsync())
+        {
+            return await cn.QueryFirstOrDefaultAsync<SchoolDto>(@"
+                SELECT Guid, Name, AddressLine1, AddressLine2, City, PostalCode
+                FROM Schools
+                WHERE Guid = @guid AND IsDeleted = 0
+            ",
+            new
+            {
+                guid
+            });
+        }
+    }
+
     public async Task<IEnumerable<SchoolDto>> GetSchoolsForPerson(Guid personGuid)
     {
         using (var cn = await GetOpenConnectionAsync())
@@ -213,7 +229,7 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                 FROM Schools
                 JOIN PersonSchool AS PS
                     ON PS.SchoolsGuid = Guid
-                WHERE PS.PeopleGuid = @personGuid
+                WHERE PS.PeopleGuid = @personGuid AND IsDeleted = 0
             ",
             new
             {

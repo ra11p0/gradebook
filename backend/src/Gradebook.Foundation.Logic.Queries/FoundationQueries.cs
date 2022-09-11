@@ -157,6 +157,14 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<Guid, bool>(resp.Value, resp != Guid.Empty);
     }
 
+    public async Task<ResponseWithStatus<SchoolDto>> GetSchool(Guid schoolGuid)
+    {
+        var school = await Repository.GetSchoolByGuid(schoolGuid);
+        if (school is null)
+            return new ResponseWithStatus<SchoolDto>(404);
+        return new ResponseWithStatus<SchoolDto>(school, true);
+    }
+
     public async Task<ResponseWithStatus<IEnumerable<SchoolDto>, bool>> GetSchoolsForPerson(Guid personGuid)
     {
         var resp = await Repository.GetSchoolsForPerson(personGuid);

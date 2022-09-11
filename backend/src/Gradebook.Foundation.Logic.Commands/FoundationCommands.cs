@@ -115,6 +115,10 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         return new StatusResponse<bool>(resp.Status, resp.Message);
     }
 
+    public Task<StatusResponse> DeleteSchool(Guid schoolGuid)
+        => Repository.DeleteSchool(schoolGuid);
+
+
     public async Task<ResponseWithStatus<string[], bool>> GenerateMultipleSystemInvitation(Guid[] peopleGuid, SchoolRoleEnum role)
     {
         var currentPersonGuid = await _foundationQueries.Service.GetCurrentPersonGuid();

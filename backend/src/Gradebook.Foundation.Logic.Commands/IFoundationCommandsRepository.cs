@@ -17,4 +17,5 @@ public interface IFoundationCommandsRepository : IBaseRepository
     Task<StatusResponse<bool>> AssignUserToAdministrator(string userId, Guid personGuid);
     Task<StatusResponse<bool>> AssignUserToTeacher(string userId, Guid personGuid);
     Task<StatusResponse<bool>> UseInvitation(UseInvitationCommand command);
+    Task<StatusResponse> DeleteSchool(Guid schoolGuid);
 }

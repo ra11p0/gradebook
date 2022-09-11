@@ -74,6 +74,7 @@ const Invitations = (props: InvitationsProps): ReactElement => {
                   {invitation.invitedPerson && (
                     <Grid item xs className="my-auto">
                       <Person
+                        guid={invitation.invitedPersonGuid ?? ""}
                         name={invitation.invitedPerson.name}
                         surname={invitation.invitedPerson.surname}
                         birthday={invitation.invitedPerson.birthday}

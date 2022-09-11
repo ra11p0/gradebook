@@ -31,7 +31,23 @@ const showError = (message: string) => {
     });
 };
 
+const showSuccessNotification = (title: string, message: string) => {
+    NorificationsStore.addNotification({
+        title: t(title, { ns: 'notifications' }).toString(),
+        message: t(message, { ns: 'notifications' }).toString(),
+        type: 'success',
+        container: 'top-right',
+        animationIn: ["animate__animated", "animate__slideInRight"],
+        animationOut: ["animate__animated", "animate__fadeOut"],
+        dismiss: {
+            duration: 5000,
+            onScreen: true
+        }
+    });
+};
+
 export default {
     showCommonError,
-    showError
+    showError,
+    showSuccessNotification
 }

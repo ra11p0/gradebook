@@ -127,4 +127,17 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
             (Person?)await Context.Administrators.FirstOrDefaultAsync(e => e.Guid == guid);
         return person;
     }
+    private async Task<School?> GetSchoolByGuid(Guid guid)
+    {
+        return await Context.Schools.FirstOrDefaultAsync(school => school.Guid == guid);
+    }
+
+    public async Task<StatusResponse> DeleteSchool(Guid schoolGuid)
+    {
+        School? school = await GetSchoolByGuid(schoolGuid);
+        if (school is null) return new StatusResponse(true);
+        school.IsDeleted = true;
+        await Context.SaveChangesAsync();
+        return new StatusResponse(true);
+    }
 }

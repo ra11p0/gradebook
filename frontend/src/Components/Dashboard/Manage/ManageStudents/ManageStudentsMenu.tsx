@@ -29,6 +29,7 @@ const ManageStudentsMenu = (props: ManageStudentsMenuProps): ReactElement => {
   return (
     <div className="d-flex flex-wrap gap-3 justify-content-center">
       <School
+        guid={props.activeSchoolGuid ?? ""}
         name={props.activeSchoolName ?? ""}
         city={props.activeSchoolCity ?? ""}
         addresLine={props.activeSchoolAddressLine ?? ""}

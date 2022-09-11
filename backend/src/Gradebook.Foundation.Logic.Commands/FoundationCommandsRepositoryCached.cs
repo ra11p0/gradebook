@@ -66,4 +66,7 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
 
     public Task<StatusResponse<bool>> UseInvitation(UseInvitationCommand command)
         => Base.UseInvitation(command);
+
+    public Task<StatusResponse> DeleteSchool(Guid schoolGuid)
+        => Base.DeleteSchool(schoolGuid);
 }

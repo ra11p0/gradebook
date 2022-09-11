@@ -75,6 +75,7 @@ const AddInvitationModal = (props: AddInvitationModalProps): ReactElement => {
                     className="row"
                   >
                     <Person
+                      guid={student.guid}
                       name={student.name}
                       surname={student.surname}
                       birthday={student.birthday}
