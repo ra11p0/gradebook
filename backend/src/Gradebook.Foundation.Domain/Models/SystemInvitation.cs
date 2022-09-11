@@ -18,6 +18,7 @@ public class SystemInvitation : BaseDomainModel
     public DateTime? UsedDate { get; set; }
     public Guid? InvitedPersonGuid { get; set; }
     public SchoolRoleEnum SchoolRole { get; set; }
+    public Guid SchoolGuid { get; set; }
 
     //**********
 
@@ -25,4 +26,6 @@ public class SystemInvitation : BaseDomainModel
     public virtual Person Creator { get; set; }
     [ForeignKey("InvitedPersonGuid")]
     public virtual Person? InvitedPerson { get; set; }
+    [ForeignKey("SchoolGuid")]
+    public virtual School School { get; set; }
 }

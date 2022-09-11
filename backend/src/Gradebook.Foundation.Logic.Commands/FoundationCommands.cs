@@ -124,21 +124,21 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
     public Task<StatusResponse> DeleteSchool(Guid schoolGuid)
         => Repository.DeleteSchool(schoolGuid);
 
-    public async Task<ResponseWithStatus<string[], bool>> GenerateMultipleSystemInvitation(Guid[] peopleGuid, SchoolRoleEnum role)
+    public async Task<ResponseWithStatus<string[], bool>> GenerateMultipleSystemInvitation(Guid[] peopleGuid, SchoolRoleEnum role, Guid schoolGuid)
     {
         var currentPersonGuid = await _foundationQueries.Service.GetCurrentPersonGuid();
         if (!currentPersonGuid.Status) return new ResponseWithStatus<string[], bool>(default, false, "Could not find current person");
 
-        var response = await Task.WhenAll(peopleGuid.Select(async personGuid => await Repository.GenerateSystemInvitation(personGuid, currentPersonGuid.Response, role)));
+        var response = await Task.WhenAll(peopleGuid.Select(async personGuid => await Repository.GenerateSystemInvitation(personGuid, currentPersonGuid.Response, role, schoolGuid)));
         await Repository.SaveChangesAsync();
         return new ResponseWithStatus<string[], bool>(response!, response is not null);
     }
 
-    public async Task<ResponseWithStatus<string, bool>> GenerateSystemInvitation(Guid personGuid, SchoolRoleEnum role)
+    public async Task<ResponseWithStatus<string, bool>> GenerateSystemInvitation(Guid personGuid, SchoolRoleEnum role, Guid schoolGuid)
     {
         var currentPersonGuid = await _foundationQueries.Service.GetCurrentPersonGuid();
         if (!currentPersonGuid.Status) return new ResponseWithStatus<string, bool>(default, false, "Could not find current person");
-        var response = await Repository.GenerateSystemInvitation(personGuid, currentPersonGuid.Response, role);
+        var response = await Repository.GenerateSystemInvitation(personGuid, currentPersonGuid.Response, role, schoolGuid);
         await Repository.SaveChangesAsync();
         return new ResponseWithStatus<string, bool>(response, response is not null);
     }
