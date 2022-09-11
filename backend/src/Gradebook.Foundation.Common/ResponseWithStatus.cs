@@ -24,10 +24,10 @@ public class ResponseWithStatus<R, S> : StatusResponse<S> where S : struct
 
 public class ResponseWithStatus<R> : ResponseWithStatus<R, bool>
 {
-    public ResponseWithStatus(int statusCode) : this(statusCode, false)
+    public ResponseWithStatus(string? message = null) : this(400, false, message)
     {
     }
-    public ResponseWithStatus(string? message = null) : this(false, message)
+    public ResponseWithStatus(int statusCode, string? message = null) : this(statusCode, false, message)
     {
     }
     public ResponseWithStatus(bool status, string? message = null) : this(400, status, message)

@@ -63,7 +63,7 @@ function SchoolsList(props: SchoolsListProps) {
             setRefreshEffectKey((k) => k + 1);
           })
           .catch((err) => {
-            Notifications.showError(err.data ?? err.message);
+            Notifications.showApiError(err);
           });
       }
     });

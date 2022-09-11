@@ -161,7 +161,7 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
     {
         var school = await Repository.GetSchoolByGuid(schoolGuid);
         if (school is null)
-            return new ResponseWithStatus<SchoolDto>(404);
+            return new ResponseWithStatus<SchoolDto>(404, "School not found");
         return new ResponseWithStatus<SchoolDto>(school, true);
     }
 

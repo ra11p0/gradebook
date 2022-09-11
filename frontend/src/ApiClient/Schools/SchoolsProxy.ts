@@ -1,5 +1,6 @@
 import { AxiosResponse } from "axios";
 import { axiosApiAuthorized } from "../AxiosInterceptor";
+import GetSchoolResponse from "./Definitions/GetSchoolResponse";
 import NewSchoolRequest from "./Definitions/NewSchoolRequest";
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -12,7 +13,12 @@ const removeSchool = (schoolGuid: string): Promise<AxiosResponse> => {
     return axiosApiAuthorized.delete(API_URL + `/schools/${schoolGuid}`);
 }
 
+const getSchool = (schoolGuid: string): Promise<AxiosResponse<GetSchoolResponse>> => {
+    return axiosApiAuthorized.get(API_URL + `/schools/${schoolGuid}`);
+}
+
 export default {
     addNewSchool,
-    removeSchool
+    removeSchool,
+    getSchool
 }
