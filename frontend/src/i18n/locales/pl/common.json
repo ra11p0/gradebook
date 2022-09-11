@@ -3,5 +3,7 @@
   "no": "Nie",
   "noResults": "Brak wyników",
   "noMoreResults": "Koniec wyników",
-  "loading": "Ładowanie"
+  "loading": "Ładowanie",
+  "schoolIsNotSelected": "Szkoła nie została wybrana",
+  "selectSchoolToManageStudents": "Wybierz szkołę by zarządzać uczniami "
 }

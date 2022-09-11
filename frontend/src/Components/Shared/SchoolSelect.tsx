@@ -15,7 +15,7 @@ const mapStateToProps = (state: any) => ({
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
-  setSchoolGuid: (schoolGuid: string, schoolName: string) => {
+  setSchool: (schoolGuid: string | null, schoolName: string | null) => {
     dispatch({ ...setSchool, schoolGuid, schoolName });
   },
   setSchoolsList: (schoolsList: GetAccessibleSchoolsResponse[]) => {
@@ -27,7 +27,7 @@ interface SchoolSelectProps {
   currentSchoolGuid?: string;
   currentPersonGuid?: string;
   schoolsList?: GetAccessibleSchoolsResponse[];
-  setSchoolGuid?: (schoolGuid: string, schoolName: string) => void;
+  setSchool?: (schoolGuid: string | null, schoolName: string | null) => void;
   setSchoolsList?: (schoolsList: GetAccessibleSchoolsResponse[]) => void;
 }
 const SchoolSelect = (props: SchoolSelectProps): ReactElement => {
@@ -37,7 +37,7 @@ const SchoolSelect = (props: SchoolSelectProps): ReactElement => {
       (schoolsArray) => {
         props.setSchoolsList!(schoolsArray.data);
         if (schoolsArray.data.length != 0)
-          props.setSchoolGuid!(
+          props.setSchool!(
             schoolsArray.data[0].guid,
             schoolsArray.data[0].name
           );
@@ -60,8 +60,11 @@ const SchoolSelect = (props: SchoolSelectProps): ReactElement => {
             let selectedSchool = props.schoolsList?.find(
               (school) => change.target.value == school.guid
             );
-            if (!selectedSchool) return;
-            props.setSchoolGuid!(selectedSchool?.guid, selectedSchool?.name);
+            if (!selectedSchool) {
+              props.setSchool!(null, null);
+              return;
+            }
+            props.setSchool!(selectedSchool?.guid, selectedSchool?.name);
           }}
         >
           {props.schoolsList?.map((school) => (

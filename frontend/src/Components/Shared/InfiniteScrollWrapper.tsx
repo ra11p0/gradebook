@@ -59,7 +59,7 @@ function InfiniteScrollWrapper(props: Props) {
       }
     >
       {items.map(props.mapper)}
-      {itemsCount == 0 && (
+      {itemsCount == 0 && !hasMore && (
         <div className="d-flex gap-3 justify-content-center fs-3">
           <FontAwesomeIcon icon={faFlagCheckered} />
           {t("noResults")}

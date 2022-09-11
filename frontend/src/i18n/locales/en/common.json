@@ -3,5 +3,7 @@
   "no": "No",
   "noResults": "No results",
   "noMoreResults": "No more results",
-  "loading": "Loading"
+  "loading": "Loading",
+  "schoolIsNotSelected": "School is not selected",
+  "selectSchoolToManageStudents": "Select school to manage students"
 }
