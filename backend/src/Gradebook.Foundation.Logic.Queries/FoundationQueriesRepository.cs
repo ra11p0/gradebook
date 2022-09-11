@@ -1,5 +1,6 @@
 using Dapper;
 using Gradebook.Foundation.Common;
+using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Database;
 
@@ -251,6 +252,24 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
             {
                 guid
             });
+        }
+    }
+
+    public async Task<IPagedList<StudentDto>> GetStudentsInSchool(Guid schoolGuid, Pager pager)
+    {
+        using (var cn = await GetOpenConnectionAsync())
+        {
+            return await cn.QueryPagedAsync<StudentDto>(@"
+                SELECT Name, Surname, SchoolRole, Birthday, ClassGuid, GroupGuid, CreatorGuid, Guid, UserGuid
+                FROM Person
+                JOIN PersonSchool AS PS
+                    ON PS.PeopleGuid = Guid
+                WHERE PS.SchoolsGuid = @schoolGuid AND Discriminator = 'Student'
+                ORDER BY Name, Surname
+            ", new
+            {
+                schoolGuid
+            }, pager);
         }
     }
 

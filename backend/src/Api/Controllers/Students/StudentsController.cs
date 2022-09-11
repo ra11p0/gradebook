@@ -25,16 +25,6 @@ public class StudentsController : ControllerBase
         _foundationCommands = serviceProvider.GetResolver<IFoundationCommands>();
         _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
     }
-    [HttpPost]
-    [Route("")]
-    [Authorize(Roles = "SuperAdmin")]
-    [ProducesResponseType(typeof(string), 400)]
-    public async Task<IActionResult> AddNewStudent([FromBody] NewStudentModel model)
-    {
-        var command = _mapper.Service.Map<NewStudentCommand>(model);
-        var response = await _foundationCommands.Service.AddNewStudent(command);
-        return response.Status ? Ok() : BadRequest(response.Message);
-    }
     [HttpGet]
     [Route("")]
     [ProducesResponseType(typeof(IEnumerable<StudentDto>), 200)]

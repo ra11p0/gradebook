@@ -86,11 +86,17 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
 
     }
 
-    public async Task<StatusResponse<bool>> AddNewStudent(NewStudentCommand command)
+    public async Task<StatusResponse<bool>> AddNewStudent(NewStudentCommand command, Guid schoolGuid)
     {
+        Repository.BeginTransaction();
         command.CreatorGuid = (await _foundationQueries.Service.GetCurrentPersonGuid()).Response;
         var resp = await Repository.AddNewStudent(command);
+        if (resp.Status is not true) return new StatusResponse<bool>(false);
         await Repository.SaveChangesAsync();
+        var addToSchoolResponse = await AddPersonToSchool(schoolGuid, resp.Response);
+        if (addToSchoolResponse.Status is not true) return new StatusResponse<bool>(addToSchoolResponse.Message);
+        await Repository.SaveChangesAsync();
+        Repository.CommitTransaction();
         return resp;
     }
 
@@ -117,7 +123,6 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
 
     public Task<StatusResponse> DeleteSchool(Guid schoolGuid)
         => Repository.DeleteSchool(schoolGuid);
-
 
     public async Task<ResponseWithStatus<string[], bool>> GenerateMultipleSystemInvitation(Guid[] peopleGuid, SchoolRoleEnum role)
     {

@@ -76,4 +76,7 @@ public class StatusResponse<S> where S : struct
     public StatusResponse(S status, string? message = null) : this(0, status, message)
     {
     }
+    public StatusResponse(string? message = null) : this(default, message)
+    {
+    }
 }

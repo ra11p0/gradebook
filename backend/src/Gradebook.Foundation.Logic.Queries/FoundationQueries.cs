@@ -178,6 +178,13 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<StudentDto, bool>(resp, true);
     }
 
+    public async Task<ResponseWithStatus<IPagedList<StudentDto>>> GetStudentsInSchool(Guid schoolGuid, int page)
+    {
+        var pager = new Pager(page);
+        var response = await Repository.GetStudentsInSchool(schoolGuid, pager);
+        return new ResponseWithStatus<IPagedList<StudentDto>>(response, true);
+    }
+
     public async Task<ResponseWithStatus<TeacherDto, bool>> GetTeacherByGuid(Guid guid)
     {
         var resp = await Repository.GetTeacherByGuid(guid);

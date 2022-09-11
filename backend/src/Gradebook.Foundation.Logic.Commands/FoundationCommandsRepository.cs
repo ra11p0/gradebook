@@ -47,13 +47,13 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
         return new ResponseWithStatus<Guid, bool>(school.Guid, true);
     }
 
-    public async Task<StatusResponse<bool>> AddNewStudent(NewStudentCommand newStudentDto)
+    public async Task<ResponseWithStatus<Guid, bool>> AddNewStudent(NewStudentCommand newStudentDto)
     {
         var student = _mapper.Map<Student>(newStudentDto);
         student.SchoolRole = Common.Foundation.Enums.SchoolRoleEnum.Student;
         await Context.Students.AddAsync(student);
 
-        return new StatusResponse<bool>(true);
+        return new ResponseWithStatus<Guid, bool>(student.Guid, true);
     }
 
     public async Task<StatusResponse<bool>> AddNewTeacher(NewTeacherCommand newTeacherDto)
