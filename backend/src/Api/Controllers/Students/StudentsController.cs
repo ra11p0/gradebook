@@ -38,9 +38,9 @@ public class StudentsController : ControllerBase
     [Route("Inactive")]
     [ProducesResponseType(typeof(IEnumerable<StudentDto>), 200)]
     [ProducesResponseType(typeof(string), 400)]
-    public async Task<IActionResult> GetInactiveStudents()
+    public async Task<IActionResult> GetInactiveStudents(Guid schoolGuid)
     {
-        var resp = await _foundationQueries.Service.GetInactiveStudents();
+        var resp = await _foundationQueries.Service.GetInactiveStudents(schoolGuid);
         return resp.Status ? Ok(resp.Response) : BadRequest();
     }
 }

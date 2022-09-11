@@ -5,13 +5,11 @@ import { Button } from "react-bootstrap";
 import AddNewStudentModal from "./AddNewStudentModal";
 import { Grid, List, ListItem, Stack } from "@mui/material";
 import moment from "moment";
-import Notifications from "../../../../Notifications/Notifications";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
 import StudentInSchoolResponse from "../../../../ApiClient/Schools/Definitions/StudentInSchoolResponse";
-import InfiniteScroll from "react-infinite-scroll-component";
-import InfinireScrollWrapper from "../../../Shared/InfinireScrollWrapper";
+import InfiniteScrollWrapper from "../../../Shared/InfiniteScrollWrapper";
 const mapStateToProps = (state: any) => ({
   currentSchoolGuid: state.common.school?.schoolGuid,
 });
@@ -92,7 +90,7 @@ const StudentsList = (props: StudentsListProps): ReactElement => {
                 </Grid>
               </ListItem>
             ))*/}
-            <InfinireScrollWrapper
+            <InfiniteScrollWrapper
               mapper={(element: StudentInSchoolResponse, index) => (
                 <ListItem key={index} className={"border rounded-3 my-1 p-3"}>
                   <Grid container spacing={2}>

@@ -112,4 +112,13 @@ public class SchoolsController : ControllerBase
         var response = await _foundationCommands.Service.AddNewStudent(command, schoolGuid);
         return response.Status ? Ok() : BadRequest(response.Message);
     }
+    [HttpGet]
+    [Route("{schoolGuid}/Students/Inactive")]
+    [ProducesResponseType(typeof(IEnumerable<StudentDto>), 200)]
+    [ProducesResponseType(typeof(string), 400)]
+    public async Task<IActionResult> GetInactiveStudentsInSchool([FromRoute] Guid schoolGuid)
+    {
+        var resp = await _foundationQueries.Service.GetInactiveStudents(schoolGuid);
+        return resp.Status ? Ok(resp.Response) : BadRequest();
+    }
 }

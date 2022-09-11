@@ -12,7 +12,7 @@ type Props = {
   effect?: any;
 };
 
-function InfinireScrollWrapper(props: Props) {
+function InfiniteScrollWrapper(props: Props) {
   const { t } = useTranslation();
   const [items, setItems] = useState([]);
   const [itemsCount, setItemsCount] = useState(0);
@@ -69,4 +69,4 @@ function InfinireScrollWrapper(props: Props) {
   );
 }
 
-export default InfinireScrollWrapper;
+export default InfiniteScrollWrapper;

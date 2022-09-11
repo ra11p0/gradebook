@@ -66,32 +66,21 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
         }
     }
 
-    public async Task<IEnumerable<StudentDto>> GetAllInactiveAccessibleStudents(Guid relatedPersonGuid)
+    public async Task<IEnumerable<StudentDto>> GetAllInactiveAccessibleStudents(Guid schoolGuid)
     {
-        using (var cn = await GetOpenConnectionAsync())
-        {
-            return await cn.QueryAsync<StudentDto>(@"
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryAsync<StudentDto>(@"
                 SELECT Name, Surname, SchoolRole, Birthday, ClassGuid, GroupGuid, CreatorGuid, Guid, UserGuid
                 FROM Person
                 LEFT JOIN PersonSchool AS PS
                     ON Guid = PS.PeopleGuid
                 WHERE Discriminator = 'Student'
-                    AND 
-                    (
-                        CreatorGuid = @relatedPersonGuid
-                        OR PS.SchoolsGuid IN 
-                            (
-                                SELECT SchoolsGuid
-                                FROM PersonSchool
-                                WHERE PeopleGuid = @relatedPersonGuid
-                            )
-                    )
+                    AND PS.SchoolsGuid = @schoolGuid
                     AND UserGuid IS NULL
             ", new
-            {
-                relatedPersonGuid
-            });
-        }
+        {
+            schoolGuid
+        });
     }
 
     public async Task<ClassDto> GetClassByGuid(Guid guid)
@@ -163,6 +152,7 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                     CreatorGuid, UsedDate, InvitedPersonGuid, SchoolRole, SchoolGuid
                 FROM SystemInvitations
                 WHERE SchoolGuid = @schoolGuid
+                ORDER BY CreatedDate
         ", new { schoolGuid }, pager);
     }
 
