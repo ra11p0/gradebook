@@ -99,13 +99,14 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
         return new StatusResponse<bool>(true);
     }
 
-    public async Task<string?> GenerateSystemInvitation(Guid invitedPersonGuid, Guid invitingPersonGuid, SchoolRoleEnum role)
+    public async Task<string?> GenerateSystemInvitation(Guid invitedPersonGuid, Guid invitingPersonGuid, SchoolRoleEnum role, Guid schoolGuid)
     {
         SystemInvitation systemInvitation = new()
         {
             SchoolRole = role,
             CreatorGuid = invitingPersonGuid,
-            InvitedPersonGuid = invitedPersonGuid
+            InvitedPersonGuid = invitedPersonGuid,
+            SchoolGuid = schoolGuid
         };
         Context.SystemInvitations.Add(systemInvitation);
         return systemInvitation.InvitationCode;

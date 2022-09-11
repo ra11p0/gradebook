@@ -35,8 +35,8 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
     public Task<StatusResponse<bool>> AssignUserToTeacher(string userId, Guid personGuid)
         => Base.AssignUserToTeacher(userId, personGuid);
 
-    public Task<string?> GenerateSystemInvitation(Guid invitedPersonGuid, Guid invitingPersonGuid, SchoolRoleEnum role)
-        => Base.GenerateSystemInvitation(invitedPersonGuid, invitingPersonGuid, role);
+    public Task<string?> GenerateSystemInvitation(Guid invitedPersonGuid, Guid invitingPersonGuid, SchoolRoleEnum role, Guid schoolGuid)
+        => Base.GenerateSystemInvitation(invitedPersonGuid, invitingPersonGuid, role, schoolGuid);
     public void BeginTransaction()
     {
         Base.BeginTransaction();

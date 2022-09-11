@@ -12,7 +12,7 @@ type Props = {
   effect?: any;
 };
 
-function InfinireScrollWrapper(props: Props) {
+function InfiniteScrollWrapper(props: Props) {
   const { t } = useTranslation();
   const [items, setItems] = useState([]);
   const [itemsCount, setItemsCount] = useState(0);
@@ -45,13 +45,13 @@ function InfinireScrollWrapper(props: Props) {
       next={() => fetch(page)}
       hasMore={hasMore}
       loader={
-        <div className="d-flex gap-3 justify-content-center display-6 ">
+        <div className="d-flex gap-3 justify-content-center fs-3">
           <CircularProgress /> {t("loading")}
         </div>
       }
       endMessage={
         itemsCount != 0 && (
-          <div className="d-flex gap-3 justify-content-center display-6">
+          <div className="d-flex gap-3 justify-content-center fs-3">
             <FontAwesomeIcon icon={faFlagCheckered} />
             {t("noMoreResults")}
           </div>
@@ -59,8 +59,8 @@ function InfinireScrollWrapper(props: Props) {
       }
     >
       {items.map(props.mapper)}
-      {itemsCount == 0 && (
-        <div className="d-flex gap-3 justify-content-center display-6">
+      {itemsCount == 0 && !hasMore && (
+        <div className="d-flex gap-3 justify-content-center fs-3">
           <FontAwesomeIcon icon={faFlagCheckered} />
           {t("noResults")}
         </div>
@@ -69,4 +69,4 @@ function InfinireScrollWrapper(props: Props) {
   );
 }
 
-export default InfinireScrollWrapper;
+export default InfiniteScrollWrapper;

@@ -1,3 +1,4 @@
+using Api.Models.Invitations;
 using AutoMapper;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
@@ -61,11 +62,31 @@ public class SchoolsController : ControllerBase
         var resp = await _foundationCommands.Service.AddPersonToSchool(schoolGuid, personGuid);
         return resp.Status ? Ok() : BadRequest(resp.Message);
     }
+    [HttpPost]
+    [Route("{schoolGuid}/Invitations")]
+    [Authorize(Roles = "SuperAdmin")]
+    [ProducesResponseType(typeof(string[]), 200)]
+    [ProducesErrorResponseType(typeof(string))]
+    public async Task<IActionResult> AddMultipleNewInvitations([FromBody] NewMultipleInvitationModel model, [FromRoute] Guid schoolGuid)
+    {
+        var resp = await _foundationCommands.Service.GenerateMultipleSystemInvitation(model.InvitedPersonGuidArray, model.Role, schoolGuid);
+        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
+    }
+    [HttpGet]
+    [Route("{schoolGuid}/Invitations")]
+    [Authorize(Roles = "SuperAdmin")]
+    [ProducesResponseType(typeof(IPagedList<InvitationDto>), 200)]
+    [ProducesErrorResponseType(typeof(string))]
+    public async Task<IActionResult> GetMyInvitations([FromRoute] Guid schoolGuid, [FromQuery] int page = 1)
+    {
+        var resp = await _foundationQueries.Service.GetInvitationsToSchool(schoolGuid, page);
+        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
+    }
     [HttpGet]
     [Route("{schoolGuid}/Students")]
     [Authorize(Roles = "SuperAdmin")]
     [ProducesResponseType(typeof(IPagedList<StudentDto>), statusCode: 200)]
-    [ProducesResponseType(typeof(string), statusCode: 400)]
+    [ProducesErrorResponseType(typeof(string))]
     public async Task<IActionResult> GetStudentsInSchool([FromRoute] Guid schoolGuid, int page = 1)
     {
         var resp = await _foundationQueries.Service.GetStudentsInSchool(schoolGuid, page);
@@ -73,7 +94,7 @@ public class SchoolsController : ControllerBase
     }
     [HttpPost]
     [Route("")]
-    [ProducesResponseType(typeof(string), statusCode: 400)]
+    [ProducesErrorResponseType(typeof(string))]
     [Authorize(Roles = "SuperAdmin")]
     public async Task<IActionResult> AddNewSchool([FromBody] NewSchoolModel model)
     {
@@ -90,5 +111,14 @@ public class SchoolsController : ControllerBase
         var command = _mapper.Service.Map<NewStudentCommand>(model);
         var response = await _foundationCommands.Service.AddNewStudent(command, schoolGuid);
         return response.Status ? Ok() : BadRequest(response.Message);
+    }
+    [HttpGet]
+    [Route("{schoolGuid}/Students/Inactive")]
+    [ProducesResponseType(typeof(IEnumerable<StudentDto>), 200)]
+    [ProducesResponseType(typeof(string), 400)]
+    public async Task<IActionResult> GetInactiveStudentsInSchool([FromRoute] Guid schoolGuid)
+    {
+        var resp = await _foundationQueries.Service.GetInactiveStudents(schoolGuid);
+        return resp.Status ? Ok(resp.Response) : BadRequest();
     }
 }

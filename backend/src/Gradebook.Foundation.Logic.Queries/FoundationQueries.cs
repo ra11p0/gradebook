@@ -98,11 +98,9 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<GroupDto, bool>(resp, true);
     }
 
-    public async Task<ResponseWithStatus<IEnumerable<StudentDto>>> GetInactiveStudents()
+    public async Task<ResponseWithStatus<IEnumerable<StudentDto>>> GetInactiveStudents(Guid schoolGuid)
     {
-        var relatedPersonGuid = await GetCurrentPersonGuid();
-        if (!relatedPersonGuid.Status) return new ResponseWithStatus<IEnumerable<StudentDto>>("Cannot recognise current person");
-        var students = await Repository.GetAllInactiveAccessibleStudents(relatedPersonGuid.Response);
+        var students = await Repository.GetAllInactiveAccessibleStudents(schoolGuid);
         return new ResponseWithStatus<IEnumerable<StudentDto>>(students, true);
     }
 
@@ -136,6 +134,25 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
             return invitation;
         }));
         return new ResponseWithStatus<IEnumerable<InvitationDto>, bool>(invitationsWithPeople, true);
+    }
+
+    public async Task<ResponseWithStatus<IPagedList<InvitationDto>, bool>> GetInvitationsToSchool(Guid schoolGuid, int page)
+    {
+        var pager = new Pager(page);
+        var invitationsResponse = await Repository.GetInvitationsToSchool(schoolGuid, pager);
+
+
+        var invitationsWithPeople = await Task.WhenAll(invitationsResponse.Select(async invitation =>
+        {
+            if (invitation.InvitedPersonGuid.HasValue)
+            {
+                var personResponse = await GetPersonByGuid(invitation.InvitedPersonGuid.Value);
+                if (personResponse.Status)
+                    invitation.InvitedPerson = personResponse.Response;
+            }
+            return invitation;
+        }));
+        return new ResponseWithStatus<IPagedList<InvitationDto>, bool>(invitationsWithPeople.ToPagedList(invitationsResponse.Page, invitationsResponse.Total, invitationsResponse.TotalPages), true);
     }
 
     public async Task<ResponseWithStatus<IEnumerable<PersonDto>, bool>> GetPeopleInSchool(Guid schoolGuid)

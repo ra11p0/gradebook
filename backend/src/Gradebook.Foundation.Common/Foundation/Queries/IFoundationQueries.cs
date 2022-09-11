@@ -10,9 +10,10 @@ public interface IFoundationQueries
     Task<ResponseWithStatus<IEnumerable<PersonDto>, bool>> GetPeopleInSchool(Guid schoolGuid);
     Task<ResponseWithStatus<Guid, bool>> GetCurrentPersonGuid();
     Task<ResponseWithStatus<IEnumerable<StudentDto>, bool>> GetAllAccessibleStudents();
-    Task<ResponseWithStatus<IEnumerable<StudentDto>>> GetInactiveStudents();
+    Task<ResponseWithStatus<IEnumerable<StudentDto>>> GetInactiveStudents(Guid schoolGuid);
     Task<ResponseWithStatus<IEnumerable<InvitationDto>, bool>> GetInvitations(Guid personGuid);
     Task<ResponseWithStatus<IEnumerable<InvitationDto>, bool>> GetInvitations();
+    Task<ResponseWithStatus<IPagedList<InvitationDto>, bool>> GetInvitationsToSchool(Guid schoolGuid, int page);
     Task<ResponseWithStatus<IEnumerable<TeacherDto>, bool>> GetAllAccessibleTeachers();
     Task<ResponseWithStatus<InvitationDto, bool>> GetInvitationByActivationCode(string activationCode);
     Task<ResponseWithStatus<PersonDto, bool>> GetPersonByGuid(Guid guid);

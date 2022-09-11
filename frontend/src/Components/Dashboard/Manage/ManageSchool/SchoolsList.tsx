@@ -2,7 +2,10 @@ import { Box, Button, Grid, List, ListItem, Stack } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { connect } from "react-redux";
-import { setSchoolsList } from "../../../../Actions/Account/accountActions";
+import {
+  setSchool,
+  setSchoolsList,
+} from "../../../../Actions/Account/accountActions";
 import GetAccessibleSchoolsResponse from "../../../../ApiClient/People/Definitions/GetAccessibleSchoolsResponse";
 import PeopleProxy from "../../../../ApiClient/People/PeopleProxy";
 import { Link } from "react-router-dom";
@@ -18,16 +21,22 @@ const mapDispatchToProps = (dispatch: any) => ({
   setSchoolsList: (schoolsList: GetAccessibleSchoolsResponse[]) => {
     dispatch({ ...setSchoolsList, schoolsList });
   },
+  setCurrentSchool: (guid: string | null, name: string | null) => {
+    dispatch({ ...setSchool, schoolGuid: guid, schoolName: name });
+  },
 });
 const mapStateToProps = (state: any) => ({
   personGuid: state.common.session?.personGuid,
   schoolsList: state.common.schoolsList,
+  currentSchoolGuid: state.common.school?.schoolGuid,
 });
 
 interface SchoolsListProps {
   personGuid?: string;
   schoolsList?: GetAccessibleSchoolsResponse[];
+  currentSchoolGuid?: string;
   setSchoolsList?: (schoolsList: GetAccessibleSchoolsResponse[]) => void;
+  setCurrentSchool?: (guid: string | null, name: string | null) => void;
 }
 
 function SchoolsList(props: SchoolsListProps) {
@@ -39,6 +48,18 @@ function SchoolsList(props: SchoolsListProps) {
     PeopleProxy.getAccessibleSchools(props.personGuid!).then(
       (schoolsResponse) => {
         props.setSchoolsList!(schoolsResponse.data);
+        if (
+          !schoolsResponse.data
+            .map((e) => e.guid)
+            .includes(props.currentSchoolGuid!)
+        ) {
+          if (schoolsResponse.data.length != 0)
+            props.setCurrentSchool!(
+              schoolsResponse.data[0].guid,
+              schoolsResponse.data[0].name
+            );
+          else props.setCurrentSchool!(null, null);
+        }
       }
     );
   }, [showAddSchoolModal, refreshEffectKey]);
