@@ -152,6 +152,18 @@ class DashboardNavigation extends React.Component<
               {t("manageStudents")}
             </Link>
             <Link
+              to="manageInvitations"
+              className={
+                "btn btn-outline-primary " +
+                (this.state.activeTab == "manageInvitations" ? "active" : "")
+              }
+              onClick={() => {
+                this.setActiveTab("manageInvitations");
+              }}
+            >
+              {t("manageInvitations")}
+            </Link>
+            <Link
               to="manageTeachers"
               className={
                 "btn btn-outline-primary " +
@@ -174,6 +186,18 @@ class DashboardNavigation extends React.Component<
               }}
             >
               {t("manageSchool")}
+            </Link>{" "}
+            <Link
+              to="manageClasses"
+              className={
+                "btn btn-outline-primary " +
+                (this.state.activeTab == "manageClasses" ? "active" : "")
+              }
+              onClick={() => {
+                this.setActiveTab("manageClasses");
+              }}
+            >
+              {t("manageClasses")}
             </Link>
           </SuperAdminOnly>
         </Nav>

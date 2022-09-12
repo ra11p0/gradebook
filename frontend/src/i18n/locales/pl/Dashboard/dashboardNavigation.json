@@ -3,7 +3,9 @@
   "absence": "Nieobecności",
   "subjects": "Przedmioty",
   "timetable": "Plan lekcji",
-  "manageStudents": "Zarządzanie uczniami",
-  "manageTeachers": "Zarządzanie nauczycielami",
-  "manageSchool": "Zarządzanie szkołami"
+  "manageStudents": "Uczniowie",
+  "manageTeachers": "Nauczyciele",
+  "manageSchool": "Szkoły",
+  "manageInvitations": "Zaproszenia",
+  "manageClasses": "Klasy"
 }
