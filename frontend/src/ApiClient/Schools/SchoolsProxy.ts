@@ -4,6 +4,7 @@ import InvitationResponse from "../Invitations/Definitions/InvitationResponse";
 import StudentResponse from "../Students/Definitions/StudentResponse";
 import GetSchoolResponse from "./Definitions/GetSchoolResponse";
 import InviteMultiplePeopleRequest from "./Definitions/InviteMultiplePeopleRequest";
+import NewClassRequest from "./Definitions/NewClassRequest";
 import NewSchoolRequest from "./Definitions/NewSchoolRequest";
 import NewStudentRequest from "./Definitions/NewStudentRequest";
 import StudentInSchoolResponse from "./Definitions/StudentInSchoolResponse";
@@ -46,6 +47,10 @@ const getInactiveAccessibleStudentsInSchool = (schoolGuid: string): Promise<Axio
     return axiosApiAuthorized.get(API_URL + `/schools/${schoolGuid}/students/inactive`);
 }
 
+const addNewClass = (classRequest: NewClassRequest, schoolGuid: string): Promise<AxiosResponse<any>> => {
+    return axiosApiAuthorized.post(API_URL + `/schools/${schoolGuid}/Classes`, classRequest);
+}
+
 
 export default {
     addNewSchool,
@@ -55,5 +60,6 @@ export default {
     addNewStudent,
     inviteMultiplePeople,
     getInvitationsInSchool,
-    getInactiveAccessibleStudentsInSchool
+    getInactiveAccessibleStudentsInSchool,
+    addNewClass
 }

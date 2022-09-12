@@ -70,6 +70,13 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         return new StatusResponse<bool>(true);
     }
 
+    public async Task<StatusResponse> AddNewClass(NewClassCommand command)
+    {
+        command.CreatedDate = DateTime.Now;
+        var resp = await Repository.AddNewClass(command);
+        return new StatusResponse(resp.Status);
+    }
+
     public async Task<StatusResponse> AddNewSchool(NewSchoolCommand newSchoolCommand)
     {
         Repository.BeginTransaction();

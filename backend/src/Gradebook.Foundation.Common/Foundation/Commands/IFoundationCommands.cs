@@ -15,4 +15,5 @@ public interface IFoundationCommands
     Task<ResponseWithStatus<string[], bool>> GenerateMultipleSystemInvitation(Guid[] peopleGuid, SchoolRoleEnum role, Guid schoolGuid);
     Task<StatusResponse<bool>> AddPersonToSchool(Guid schoolGuid, Guid? personGuid = null);
     Task<StatusResponse<bool>> ActivatePerson(string activationCode);
+    Task<StatusResponse> AddNewClass(NewClassCommand command);
 }

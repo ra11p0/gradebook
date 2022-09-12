@@ -36,18 +36,6 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
                 var studentResponse = await GetStudentByGuid(invitedPersonGuid.Value);
                 if (!studentResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto>(studentResponse.Message);
                 response.Person = _mapper.Service.Map<PersonDto>(studentResponse.Response);
-                if (studentResponse.Response!.GroupGuid.HasValue)
-                {
-                    var groupResponse = await GetGroupByGuid(studentResponse.Response!.GroupGuid.Value);
-                    if (!groupResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto>(groupResponse.Message);
-                    response.Group = groupResponse.Response;
-                }
-                if (studentResponse.Response!.ClassGuid.HasValue)
-                {
-                    var classResponse = await GetClassByGuid(studentResponse.Response!.ClassGuid.Value);
-                    if (!classResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto>(classResponse.Message);
-                    response.Class = classResponse.Response;
-                }
                 break;
             case "teacher":
                 var teacherResponse = await GetTeacherByGuid(invitedPersonGuid.Value);

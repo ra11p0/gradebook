@@ -29,8 +29,6 @@ const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [birthday, setBirthday] = useState("");
-  const [_class, setClass] = useState("");
-  const [group, setGroup] = useState("");
 
   const validate = (values: RegisterStudentFormValues) => {
     const errors: any = {};
@@ -71,15 +69,11 @@ const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
           setName(data.person.name);
           setSurname(data.person.surname);
           setBirthday(moment(data.person.birthday).format("YYYY-MM-DD"));
-          setClass(data.class?.name);
-          setGroup(data.group?.name);
         })
         .catch((err) => {
           setName("");
           setSurname("");
           setBirthday("");
-          setClass("");
-          setGroup("");
         });
     }
   };
@@ -142,30 +136,6 @@ const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
                 className="form-control"
                 type="text"
                 defaultValue={birthday}
-                disabled
-              />
-            </div>
-          </Col>
-          <Col>
-            <div className="m-1 p-1">
-              <label>{t("class")}</label>
-              <input
-                className="form-control"
-                type="text"
-                defaultValue={_class}
-                disabled
-              />
-            </div>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <div className="m-1 p-1">
-              <label>{t("group")}</label>
-              <input
-                className="form-control"
-                type="text"
-                defaultValue={group}
                 disabled
               />
             </div>
