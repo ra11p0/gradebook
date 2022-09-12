@@ -46,13 +46,18 @@ function InfiniteScrollWrapper(props: Props) {
       hasMore={hasMore}
       loader={
         <div className="d-flex gap-3 justify-content-center fs-3">
-          <CircularProgress /> {t("loading")}
+          <div className="my-auto">
+            <CircularProgress />{" "}
+          </div>
+          {t("loading")}
         </div>
       }
       endMessage={
         itemsCount != 0 && (
           <div className="d-flex gap-3 justify-content-center fs-3">
-            <FontAwesomeIcon icon={faFlagCheckered} />
+            <div className="my-auto">
+              <FontAwesomeIcon icon={faFlagCheckered} />
+            </div>
             {t("noMoreResults")}
           </div>
         )
@@ -61,7 +66,9 @@ function InfiniteScrollWrapper(props: Props) {
       {items.map(props.mapper)}
       {itemsCount == 0 && !hasMore && (
         <div className="d-flex gap-3 justify-content-center fs-3">
-          <FontAwesomeIcon icon={faFlagCheckered} />
+          <div className="my-auto">
+            <FontAwesomeIcon icon={faFlagCheckered} />
+          </div>
           {t("noResults")}
         </div>
       )}

@@ -90,18 +90,18 @@ function ManageClasses(props: Props) {
               mapper={(element: ClassResponse, index) => (
                 <ListItem key={index} className={"border rounded-3 my-1 p-3"}>
                   <Grid container spacing={2}>
-                    <Grid item xs>
+                    <Grid item xs className="my-auto">
                       <div>{element.name}</div>
                     </Grid>
-                    <Grid item xs>
+                    <Grid item xs className="my-auto">
                       <div>{element.description}</div>
                     </Grid>
-                    <Grid item xs>
+                    <Grid item xs className="my-auto">
                       <div>
                         {moment(element.createdDate).format("YYYY-MM-DD")}
                       </div>
                     </Grid>
-                    <Grid item xs={1}>
+                    <Grid item xs={1} className="my-auto">
                       <div className="d-flex gap-1 flex-wrap">
                         <Link to={`/class/show/${element.guid}`}>
                           <Tippy

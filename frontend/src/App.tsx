@@ -12,6 +12,7 @@ import { ReactNotifications } from "react-notifications-component";
 import School from "./Routes/School";
 import Student from "./Routes/Student";
 import Person from "./Routes/Person";
+import Class from "./Routes/Class";
 
 const mapStateToProps = (state: any) => {
   return {
@@ -53,6 +54,7 @@ class App extends React.Component<AppProps> {
                   <Route path="/school/*" element={<School />} />
                   <Route path="/student/*" element={<Student />} />
                   <Route path="/person/*" element={<Person />} />
+                  <Route path="/class/*" element={<Class />} />
                 </>
               )
             }

@@ -7,7 +7,6 @@ const removeClass = (classGuid: string): Promise<AxiosResponse> => {
     return axiosApiAuthorized.delete(API_URL + `/classes/${classGuid}`);
 }
 
-
 export default {
     removeClass
 }
