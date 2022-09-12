@@ -1,0 +1,8 @@
+{
+  "addClass": "Dodaj klasę",
+  "name": "Nazwa",
+  "description": "Opis",
+  "nameIsRequired": "Nazwa jest wymagana",
+  "nameTooShort": "Nazwa zbyt krótka",
+  "nameTooLong": "Nazwa zbyt długa"
+}

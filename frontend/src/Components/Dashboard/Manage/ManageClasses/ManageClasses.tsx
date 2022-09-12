@@ -17,7 +17,7 @@ type Props = {
 };
 
 function ManageClasses(props: Props) {
-  const { t } = useTranslation("manageClasses");
+  const { t } = useTranslation("classes");
   const [showAddClassModal, setShowAddClassModal] = useState(false);
   return (
     <div>
@@ -37,19 +37,16 @@ function ManageClasses(props: Props) {
             />
           </div>
         </div>
-        <Stack>
+        <Stack className={"border rounded-3 my-1 p-3 bg-light"}>
           <Grid container spacing={2}>
             <Grid item xs>
-              <div>{t("invitationCode")}</div>
+              <div>{t("name")}</div>
             </Grid>
             <Grid item xs>
-              <div>{t("isUsed")}</div>
+              <div>{t("description")}</div>
             </Grid>
             <Grid item xs>
-              <div>{t("exprationDate")}</div>
-            </Grid>
-            <Grid item xs>
-              <div>{t("person")}</div>
+              <div>{t("createdDate")}</div>
             </Grid>
           </Grid>
         </Stack>
@@ -90,4 +87,4 @@ function ManageClasses(props: Props) {
   );
 }
 
-export default connect(mapStateToProps, () => {})(ManageClasses);
+export default connect(mapStateToProps, () => ({}))(ManageClasses);

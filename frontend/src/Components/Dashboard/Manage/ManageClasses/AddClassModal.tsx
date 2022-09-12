@@ -23,7 +23,7 @@ interface FormValues {
 }
 
 function AddClassModal(props: Props) {
-  const { t } = useTranslation("addClassModal");
+  const { t } = useTranslation("addNewClassModal");
   const formValuesSchema = Yup.object().shape({
     name: Yup.string()
       .required(t("nameIsRequired"))
