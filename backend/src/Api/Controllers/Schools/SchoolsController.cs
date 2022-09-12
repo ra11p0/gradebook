@@ -26,15 +26,19 @@ public class SchoolsController : ControllerBase
         _foundationCommands = serviceProvider.GetResolver<IFoundationCommands>();
         _mapper = serviceProvider.GetResolver<IMapper>();
     }
-    [HttpGet]
-    [Route("{schoolGuid}/People")]
-    [ProducesResponseType(typeof(IEnumerable<PersonDto>), statusCode: 200)]
-    [ProducesResponseType(typeof(string), statusCode: 400)]
-    public async Task<IActionResult> GetPeopleInSchool([FromRoute] Guid schoolGuid)
+
+    #region school
+    [HttpPost]
+    [Route("")]
+    [ProducesErrorResponseType(typeof(string))]
+    [Authorize(Roles = "SuperAdmin")]
+    public async Task<IActionResult> AddNewSchool([FromBody] NewSchoolModel model)
     {
-        var resp = await _foundationQueries.Service.GetPeopleInSchool(schoolGuid);
-        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
+        var newSchoolCommand = _mapper.Service.Map<NewSchoolCommand>(model);
+        var resp = await _foundationCommands.Service.AddNewSchool(newSchoolCommand);
+        return resp.Status ? Ok() : BadRequest(resp.Message);
     }
+
     [HttpGet]
     [Route("{schoolGuid}")]
     [ProducesResponseType(typeof(SchoolDto), statusCode: 200)]
@@ -54,6 +58,19 @@ public class SchoolsController : ControllerBase
         var resp = await _foundationCommands.Service.DeleteSchool(schoolGuid);
         return resp.Status ? Ok() : BadRequest(resp.Message);
     }
+    #endregion
+
+    #region people
+    [HttpGet]
+    [Route("{schoolGuid}/People")]
+    [ProducesResponseType(typeof(IEnumerable<PersonDto>), statusCode: 200)]
+    [ProducesResponseType(typeof(string), statusCode: 400)]
+    public async Task<IActionResult> GetPeopleInSchool([FromRoute] Guid schoolGuid)
+    {
+        var resp = await _foundationQueries.Service.GetPeopleInSchool(schoolGuid);
+        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
+    }
+
     [HttpPost]
     [Route("{schoolGuid}/People")]
     [Authorize(Roles = "SuperAdmin")]
@@ -62,6 +79,9 @@ public class SchoolsController : ControllerBase
         var resp = await _foundationCommands.Service.AddPersonToSchool(schoolGuid, personGuid);
         return resp.Status ? Ok() : BadRequest(resp.Message);
     }
+    #endregion
+
+    #region invitations
     [HttpPost]
     [Route("{schoolGuid}/Invitations")]
     [Authorize(Roles = "SuperAdmin")]
@@ -72,6 +92,7 @@ public class SchoolsController : ControllerBase
         var resp = await _foundationCommands.Service.GenerateMultipleSystemInvitation(model.InvitedPersonGuidArray, model.Role, schoolGuid);
         return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
     }
+
     [HttpGet]
     [Route("{schoolGuid}/Invitations")]
     [Authorize(Roles = "SuperAdmin")]
@@ -82,6 +103,9 @@ public class SchoolsController : ControllerBase
         var resp = await _foundationQueries.Service.GetInvitationsToSchool(schoolGuid, page);
         return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
     }
+    #endregion
+
+    #region students
     [HttpGet]
     [Route("{schoolGuid}/Students")]
     [Authorize(Roles = "SuperAdmin")]
@@ -92,16 +116,7 @@ public class SchoolsController : ControllerBase
         var resp = await _foundationQueries.Service.GetStudentsInSchool(schoolGuid, page);
         return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
     }
-    [HttpPost]
-    [Route("")]
-    [ProducesErrorResponseType(typeof(string))]
-    [Authorize(Roles = "SuperAdmin")]
-    public async Task<IActionResult> AddNewSchool([FromBody] NewSchoolModel model)
-    {
-        var newSchoolCommand = _mapper.Service.Map<NewSchoolCommand>(model);
-        var resp = await _foundationCommands.Service.AddNewSchool(newSchoolCommand);
-        return resp.Status ? Ok() : BadRequest(resp.Message);
-    }
+
     [HttpPost]
     [Route("{schoolGuid}/Students")]
     [Authorize(Roles = "SuperAdmin")]
@@ -112,6 +127,7 @@ public class SchoolsController : ControllerBase
         var response = await _foundationCommands.Service.AddNewStudent(command, schoolGuid);
         return response.Status ? Ok() : BadRequest(response.Message);
     }
+
     [HttpGet]
     [Route("{schoolGuid}/Students/Inactive")]
     [ProducesResponseType(typeof(IEnumerable<StudentDto>), 200)]
@@ -121,4 +137,29 @@ public class SchoolsController : ControllerBase
         var resp = await _foundationQueries.Service.GetInactiveStudents(schoolGuid);
         return resp.Status ? Ok(resp.Response) : BadRequest();
     }
+    #endregion
+
+    #region classes
+    [HttpPost]
+    [Route("{schoolGuid}/Classes")]
+    [ProducesResponseType(typeof(string), 400)]
+    [Authorize(Roles = "SuperAdmin")]
+    public async Task<IActionResult> AddNewClass([FromRoute] Guid schoolGuid, [FromBody] NewClassModel model)
+    {
+        var command = _mapper.Service.Map<NewClassCommand>(model);
+        command.SchoolGuid = schoolGuid;
+        var resp = await _foundationCommands.Service.AddNewClass(command);
+        return resp.Status ? Ok() : BadRequest(resp.Message);
+    }
+    [HttpGet]
+    [Route("{schoolGuid}/Classes")]
+    [ProducesResponseType(typeof(IPagedList<ClassDto>), 200)]
+    [ProducesResponseType(typeof(string), 400)]
+    [Authorize(Roles = "SuperAdmin")]
+    public async Task<IActionResult> AddNewClass([FromRoute] Guid schoolGuid, [FromQuery] int page = 1)
+    {
+        var resp = await _foundationQueries.Service.GetClassesInSchool(schoolGuid, page);
+        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
+    }
+    #endregion
 }

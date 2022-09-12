@@ -6,10 +6,9 @@ namespace Gradebook.Foundation.Domain.Models;
 public class Group : BaseDomainModel
 {
     public string Name { get; set; }
-    
-    public virtual List<Student> Students { get; set; }
-    
-    public Guid ClassGuid { get; set; }
-    [ForeignKey("ClassGuid")]
-    public virtual Class Class { get; set; }
+    public string? Description { get; set; }
+    public DateTime CreatedDate { get; set; }
+    public virtual ICollection<Student> Students { get; set; }
+    public virtual ICollection<Teacher> OwnersTeachers { get; set; }
+
 }

@@ -1,9 +1,5 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
 import { connect } from "react-redux";
-import ManageStudentsMenu from "./ManageStudentsMenu";
-import Invitations from "./Invitations";
-import StudentsList from "./StudentsList";
 import { t } from "i18next";
 
 const mapStateToProps = (state: any) => ({
@@ -16,27 +12,17 @@ const mapStateToProps = (state: any) => ({
 
 const mapDispatchToProps = (dispatch: any) => ({});
 
-interface ManageStudentsProps {
+interface Props {
   isSchoolSelected?: boolean;
+  children: any;
 }
 
-class ManageStudents extends React.Component<ManageStudentsProps> {
+class SchoolSelectedOnly extends React.Component<Props> {
   render(): React.ReactNode {
     return (
       <>
         {this.props.isSchoolSelected ? (
-          <div className="row">
-            <div className="col-3">
-              <ManageStudentsMenu />
-            </div>
-            <div className="col">
-              <Routes>
-                <Route path="/" element={<StudentsList />} />
-                <Route path="studentsList" element={<StudentsList />} />
-                <Route path="invitations" element={<Invitations />} />
-              </Routes>
-            </div>
-          </div>
+          <>{this.props.children}</>
         ) : (
           <>
             <div className="text-center">
@@ -56,4 +42,4 @@ class ManageStudents extends React.Component<ManageStudentsProps> {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ManageStudents);
+export default connect(mapStateToProps, mapDispatchToProps)(SchoolSelectedOnly);

@@ -128,6 +128,7 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
             (Person?)await Context.Administrators.FirstOrDefaultAsync(e => e.Guid == guid);
         return person;
     }
+
     private async Task<School?> GetSchoolByGuid(Guid guid)
     {
         return await Context.Schools.FirstOrDefaultAsync(school => school.Guid == guid);
@@ -138,7 +139,20 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
         School? school = await GetSchoolByGuid(schoolGuid);
         if (school is null) return new StatusResponse(true);
         school.IsDeleted = true;
-        await Context.SaveChangesAsync();
+        return new StatusResponse(true);
+    }
+
+    public async Task<StatusResponse> AddNewClass(NewClassCommand command)
+    {
+        var dbModel = _mapper.Map<Class>(command);
+        await Context.AddAsync(dbModel);
+        return new StatusResponse(true);
+    }
+    public async Task<StatusResponse> DeleteClass(Guid classGuid)
+    {
+        var _class = await Context.Classes.FirstOrDefaultAsync(c => c.Guid == classGuid);
+        if (_class is null) return new StatusResponse(true);
+        _class.IsDeleted = true;
         return new StatusResponse(true);
     }
 }

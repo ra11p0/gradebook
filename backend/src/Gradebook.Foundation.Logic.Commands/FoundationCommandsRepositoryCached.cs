@@ -70,4 +70,10 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
 
     public Task<ResponseWithStatus<Guid, bool>> AddNewStudent(NewStudentCommand newStudentDto)
         => Base.AddNewStudent(newStudentDto);
+
+    public Task<StatusResponse> AddNewClass(NewClassCommand command)
+        => Base.AddNewClass(command);
+
+    public Task<StatusResponse> DeleteClass(Guid classGuid)
+        => Base.DeleteClass(classGuid);
 }

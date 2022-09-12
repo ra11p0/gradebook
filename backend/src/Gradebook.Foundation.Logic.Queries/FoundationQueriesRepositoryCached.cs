@@ -72,4 +72,7 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
 
     public Task<IPagedList<InvitationDto>> GetInvitationsToSchool(Guid schoolGuid, Pager pager)
         => Base.GetInvitationsToSchool(schoolGuid, pager);
+
+    public Task<IPagedList<ClassDto>> GetClassesInSchool(Guid schoolGuid, Pager pager)
+        => Base.GetClassesInSchool(schoolGuid, pager);
 }

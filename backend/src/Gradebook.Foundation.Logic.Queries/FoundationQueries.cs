@@ -36,18 +36,6 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
                 var studentResponse = await GetStudentByGuid(invitedPersonGuid.Value);
                 if (!studentResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto>(studentResponse.Message);
                 response.Person = _mapper.Service.Map<PersonDto>(studentResponse.Response);
-                if (studentResponse.Response!.GroupGuid.HasValue)
-                {
-                    var groupResponse = await GetGroupByGuid(studentResponse.Response!.GroupGuid.Value);
-                    if (!groupResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto>(groupResponse.Message);
-                    response.Group = groupResponse.Response;
-                }
-                if (studentResponse.Response!.ClassGuid.HasValue)
-                {
-                    var classResponse = await GetClassByGuid(studentResponse.Response!.ClassGuid.Value);
-                    if (!classResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto>(classResponse.Message);
-                    response.Class = classResponse.Response;
-                }
                 break;
             case "teacher":
                 var teacherResponse = await GetTeacherByGuid(invitedPersonGuid.Value);
@@ -81,6 +69,14 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         var resp = await Repository.GetClassByGuid(guid);
         if (resp is null) return new ResponseWithStatus<ClassDto, bool>(null, false, "Class does not exist");
         return new ResponseWithStatus<ClassDto, bool>(resp, true);
+    }
+
+    public async Task<ResponseWithStatus<IPagedList<ClassDto>>> GetClassesInSchool(Guid schoolGuid, int page)
+    {
+        var pager = new Pager(page);
+        var resp = await Repository.GetClassesInSchool(schoolGuid, pager);
+        if (resp is null) return new ResponseWithStatus<IPagedList<ClassDto>>(404);
+        return new ResponseWithStatus<IPagedList<ClassDto>>(resp, true);
     }
 
     public async Task<ResponseWithStatus<Guid, bool>> GetCurrentPersonGuid()
