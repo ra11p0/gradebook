@@ -19,4 +19,5 @@ public interface IFoundationCommandsRepository : IBaseRepository
     Task<StatusResponse<bool>> UseInvitation(UseInvitationCommand command);
     Task<StatusResponse> DeleteSchool(Guid schoolGuid);
     Task<StatusResponse> AddNewClass(NewClassCommand command);
+    Task<StatusResponse> DeleteClass(Guid classGuid);
 }

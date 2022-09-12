@@ -73,4 +73,7 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
 
     public Task<StatusResponse> AddNewClass(NewClassCommand command)
         => Base.AddNewClass(command);
+
+    public Task<StatusResponse> DeleteClass(Guid classGuid)
+        => Base.DeleteClass(classGuid);
 }

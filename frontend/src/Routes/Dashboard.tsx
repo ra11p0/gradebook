@@ -8,7 +8,6 @@ import Grades from "../Components/Dashboard/Grades";
 import Subject from "../Components/Dashboard/Subject";
 import Timetable from "../Components/Dashboard/Timetable";
 import ManageTeachers from "../Components/Dashboard/Manage/ManageTeachers/ManageTeachers";
-import ManageSchool from "../Components/Dashboard/Manage/ManageSchool/ManageSchool";
 import Invitations from "../Components/Dashboard/Manage/ManageInvitations/Invitations";
 import StudentsList from "../Components/Dashboard/Manage/ManageStudents/StudentsList";
 import SchoolsList from "../Components/Dashboard/Manage/ManageSchool/SchoolsList";

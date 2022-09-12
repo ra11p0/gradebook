@@ -102,10 +102,11 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
     {
         using var cn = await GetOpenConnectionAsync();
         return await cn.QueryPagedAsync<ClassDto>(@"
-            SELECT Name, Description, CreatedDate
+            SELECT Name, Description, CreatedDate, Guid
             FROM Classes
             WHERE IsDeleted = 0 
                 AND SchoolGuid = @schoolGuid
+            ORDER BY CreatedDate DESC
          ", new { schoolGuid }, pager);
     }
 
@@ -163,7 +164,7 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                     CreatorGuid, UsedDate, InvitedPersonGuid, SchoolRole, SchoolGuid
                 FROM SystemInvitations
                 WHERE SchoolGuid = @schoolGuid
-                ORDER BY CreatedDate
+                ORDER BY CreatedDate DESC
         ", new { schoolGuid }, pager);
     }
 

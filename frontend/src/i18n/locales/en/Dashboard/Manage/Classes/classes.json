@@ -3,5 +3,9 @@
   "classes": "Classes",
   "description": "Description",
   "name": "Name",
-  "createdDate": "Created date"
+  "createdDate": "Created date",
+  "actions": "Actions",
+  "showClass": "Show class",
+  "removeClass": "Remove class",
+  "youSureRemoveClass": "Are you sure you want to remove class?"
 }
