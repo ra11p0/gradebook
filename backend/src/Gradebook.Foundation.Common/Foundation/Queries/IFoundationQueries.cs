@@ -23,4 +23,5 @@ public interface IFoundationQueries
     Task<ResponseWithStatus<StudentDto, bool>> GetStudentByGuid(Guid guid);
     Task<ResponseWithStatus<TeacherDto, bool>> GetTeacherByGuid(Guid guid);
     Task<ResponseWithStatus<IPagedList<StudentDto>>> GetStudentsInSchool(Guid schoolGuid, int page);
+    Task<ResponseWithStatus<IPagedList<ClassDto>>> GetClassesInSchool(Guid schoolGuid, int page);
 }

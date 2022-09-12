@@ -71,6 +71,14 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<ClassDto, bool>(resp, true);
     }
 
+    public async Task<ResponseWithStatus<IPagedList<ClassDto>>> GetClassesInSchool(Guid schoolGuid, int page)
+    {
+        var pager = new Pager(page);
+        var resp = await Repository.GetClassesInSchool(schoolGuid, pager);
+        if (resp is null) return new ResponseWithStatus<IPagedList<ClassDto>>(404);
+        return new ResponseWithStatus<IPagedList<ClassDto>>(resp, true);
+    }
+
     public async Task<ResponseWithStatus<Guid, bool>> GetCurrentPersonGuid()
     {
         var userGuid = await _identityLogic.Service.CurrentUserId();

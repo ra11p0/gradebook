@@ -151,5 +151,15 @@ public class SchoolsController : ControllerBase
         var resp = await _foundationCommands.Service.AddNewClass(command);
         return resp.Status ? Ok() : BadRequest(resp.Message);
     }
+    [HttpGet]
+    [Route("{schoolGuid}/Classes")]
+    [ProducesResponseType(typeof(IPagedList<ClassDto>), 200)]
+    [ProducesResponseType(typeof(string), 400)]
+    [Authorize(Roles = "SuperAdmin")]
+    public async Task<IActionResult> AddNewClass([FromRoute] Guid schoolGuid, [FromQuery] int page = 1)
+    {
+        var resp = await _foundationQueries.Service.GetClassesInSchool(schoolGuid, page);
+        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
+    }
     #endregion
 }

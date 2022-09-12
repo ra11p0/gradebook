@@ -98,6 +98,17 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
         }
     }
 
+    public async Task<IPagedList<ClassDto>> GetClassesInSchool(Guid schoolGuid, Pager pager)
+    {
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryPagedAsync<ClassDto>(@"
+            SELECT Name, Description, CreatedDate
+            FROM Classes
+            WHERE IsDeleted = 0 
+                AND SchoolGuid = @schoolGuid
+         ", new { schoolGuid }, pager);
+    }
+
     public async Task<GroupDto> GetGroupByGuid(Guid guid)
     {
         using (var cn = await GetOpenConnectionAsync())
