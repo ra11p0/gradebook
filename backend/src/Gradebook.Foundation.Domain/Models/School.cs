@@ -9,5 +9,5 @@ public class School : BaseDomainModel
     public string? AddressLine2 { get; set; }
     public string PostalCode { get; set; }
     public string City { get; set; }
-    public ICollection<Person> People { get; set; }
+    public virtual ICollection<Person> People { get; set; }
 }

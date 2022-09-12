@@ -17,5 +17,5 @@ public class Person : BaseDomainModel
 
     [ForeignKey("CreatorGuid")]
     public Administrator Creator { get; set; }
-    public ICollection<School> Schools { get; set; }
+    public virtual ICollection<School> Schools { get; set; }
 }

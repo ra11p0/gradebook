@@ -3,6 +3,7 @@ using System;
 using Gradebook.Foundation.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gradebook.Foundation.Database.Migrations
 {
     [DbContext(typeof(FoundationDatabaseContext))]
-    partial class FoundationDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20220912183707_groupsClassesStudentsTeachersRelations")]
+    partial class groupsClassesStudentsTeachersRelations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,15 +38,15 @@ namespace Gradebook.Foundation.Database.Migrations
 
             modelBuilder.Entity("ClassTeacher", b =>
                 {
-                    b.Property<Guid>("OwnedClassesGuid")
+                    b.Property<Guid>("ClassesGuid")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("OwnersTeachersGuid")
+                    b.Property<Guid>("TeachersGuid")
                         .HasColumnType("char(36)");
 
-                    b.HasKey("OwnedClassesGuid", "OwnersTeachersGuid");
+                    b.HasKey("ClassesGuid", "TeachersGuid");
 
-                    b.HasIndex("OwnersTeachersGuid");
+                    b.HasIndex("TeachersGuid");
 
                     b.ToTable("ClassTeacher");
                 });
@@ -54,12 +56,6 @@ namespace Gradebook.Foundation.Database.Migrations
                     b.Property<Guid>("Guid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
@@ -123,11 +119,8 @@ namespace Gradebook.Foundation.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                    b.Property<Guid>("ClassGuid")
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
@@ -137,6 +130,8 @@ namespace Gradebook.Foundation.Database.Migrations
                         .HasColumnType("longtext");
 
                     b.HasKey("Guid");
+
+                    b.HasIndex("ClassGuid");
 
                     b.ToTable("Groups");
                 });
@@ -381,15 +376,15 @@ namespace Gradebook.Foundation.Database.Migrations
 
             modelBuilder.Entity("GroupTeacher", b =>
                 {
-                    b.Property<Guid>("OwnedGroupsGuid")
+                    b.Property<Guid>("GroupsGuid")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("OwnersTeachersGuid")
+                    b.Property<Guid>("TeachersGuid")
                         .HasColumnType("char(36)");
 
-                    b.HasKey("OwnedGroupsGuid", "OwnersTeachersGuid");
+                    b.HasKey("GroupsGuid", "TeachersGuid");
 
-                    b.HasIndex("OwnersTeachersGuid");
+                    b.HasIndex("TeachersGuid");
 
                     b.ToTable("GroupTeacher");
                 });
@@ -449,13 +444,13 @@ namespace Gradebook.Foundation.Database.Migrations
                 {
                     b.HasOne("Gradebook.Foundation.Domain.Models.Class", null)
                         .WithMany()
-                        .HasForeignKey("OwnedClassesGuid")
+                        .HasForeignKey("ClassesGuid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Gradebook.Foundation.Domain.Models.Teacher", null)
                         .WithMany()
-                        .HasForeignKey("OwnersTeachersGuid")
+                        .HasForeignKey("TeachersGuid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -493,6 +488,17 @@ namespace Gradebook.Foundation.Database.Migrations
                     b.Navigation("Student");
 
                     b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Group", b =>
+                {
+                    b.HasOne("Gradebook.Foundation.Domain.Models.Class", "Class")
+                        .WithMany()
+                        .HasForeignKey("ClassGuid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Class");
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Person", b =>
@@ -570,13 +576,13 @@ namespace Gradebook.Foundation.Database.Migrations
                 {
                     b.HasOne("Gradebook.Foundation.Domain.Models.Group", null)
                         .WithMany()
-                        .HasForeignKey("OwnedGroupsGuid")
+                        .HasForeignKey("GroupsGuid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Gradebook.Foundation.Domain.Models.Teacher", null)
                         .WithMany()
-                        .HasForeignKey("OwnersTeachersGuid")
+                        .HasForeignKey("TeachersGuid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
