@@ -16,6 +16,7 @@ import Tippy from "@tippyjs/react";
 import Swal from "sweetalert2";
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
 import Notifications from "../../../../Notifications/Notifications";
+import { Row } from "react-bootstrap";
 
 const mapDispatchToProps = (dispatch: any) => ({
   setSchoolsList: (schoolsList: GetAccessibleSchoolsResponse[]) => {
@@ -180,6 +181,13 @@ function SchoolsList(props: SchoolsListProps) {
                 </Grid>
               </ListItem>
             ))}
+            {
+              props.schoolsList?.length == 0 && <Row className="text-center">
+                <div>
+                  {t('noSchoolsManaged')}
+                </div>
+              </Row>
+            }
           </List>
         </Stack>
       </Stack>

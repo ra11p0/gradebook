@@ -1,14 +1,20 @@
+import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import ClassesProxy from "../../ApiClient/Classes/ClassesProxy";
 import ClassResponse from "../../ApiClient/Schools/Definitions/ClassResponse";
+import SchoolsProxy from "../../ApiClient/Schools/SchoolsProxy";
+import PeoplePicker from "../Shared/PeoplePicker";
 
 type Props = {};
 
 function ClassIndex(props: Props) {
-  let { classGuid } = useParams();
+  const { t } = useTranslation('classIndex');
+  const { classGuid } = useParams();
   const [_class, setClass] = useState<ClassResponse | null>(null);
+  const [showStudentsPicker, setShowStudentsPicker] = useState(false);
   useEffect(() => {
     ClassesProxy.getClass(classGuid!).then((classResponse) => {
       setClass(classResponse.data);
@@ -26,6 +32,22 @@ function ClassIndex(props: Props) {
               <Col>{_class?.description}</Col>
             </Row>
           </Col>
+          <Col>
+            <div className="d-flex justify-content-end">
+              <Button variant="outlined" onClick={() => { setShowStudentsPicker(e => !e) }}>{t('addStudentsToClass')}</Button>
+              <PeoplePicker show={showStudentsPicker}
+                onHide={() => {
+                  setShowStudentsPicker(false);
+                }}
+                onConfirm={(studentsGuids: string[]) => {
+                  console.dir(studentsGuids);
+                }}
+                getPeople={async (schoolGuid, discriminator: string, query: string, page: number) => {
+                  return (await SchoolsProxy.searchPeople(schoolGuid, discriminator, query, page)).data
+                }} />
+            </div>
+          </Col>
+
         </Row>
       </div>
       <div className="m-4"></div>

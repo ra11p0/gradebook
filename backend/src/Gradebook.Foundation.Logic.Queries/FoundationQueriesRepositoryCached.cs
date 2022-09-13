@@ -63,7 +63,6 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
     public Task SaveChangesAsync()
         => Base.SaveChangesAsync();
 
-
     public Task<SchoolDto> GetSchoolByGuid(Guid guid)
         => Base.GetSchoolByGuid(guid);
 
@@ -81,4 +80,7 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
 
     public Task<IPagedList<TeacherDto>> GetTeachersInClass(Guid schoolGuid, Pager pager)
         => Base.GetTeachersInClass(schoolGuid, pager);
+
+    public Task<IPagedList<PersonDto>> GetPeopleInSchool(Guid schoolGuid, string schoolRole, string query, Pager pager)
+        => Base.GetPeopleInSchool(schoolGuid, schoolRole, query, pager);
 }

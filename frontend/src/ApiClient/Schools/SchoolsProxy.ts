@@ -8,6 +8,7 @@ import InviteMultiplePeopleRequest from "./Definitions/InviteMultiplePeopleReque
 import NewClassRequest from "./Definitions/NewClassRequest";
 import NewSchoolRequest from "./Definitions/NewSchoolRequest";
 import NewStudentRequest from "./Definitions/NewStudentRequest";
+import PersonResponse from "./Definitions/PersonResponse";
 import StudentInSchoolResponse from "./Definitions/StudentInSchoolResponse";
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -56,6 +57,14 @@ const getClassesInSchool = (schoolGuid: string, page: number): Promise<AxiosResp
     return axiosApiAuthorized.get(API_URL + `/schools/${schoolGuid}/Classes`, { params: { page } });
 }
 
+const searchPeople = (schoolGuid: string, discriminator: string, query: string, page: number): Promise<AxiosResponse<PersonResponse[]>> => {
+    return axiosApiAuthorized.get(API_URL + `/schools/${schoolGuid}/People/Search`, {
+        params: {
+            discriminator, query, page
+        }
+    });
+}
+
 
 export default {
     addNewSchool,
@@ -67,5 +76,6 @@ export default {
     getInvitationsInSchool,
     getInactiveAccessibleStudentsInSchool,
     addNewClass,
-    getClassesInSchool
+    getClassesInSchool,
+    searchPeople
 }

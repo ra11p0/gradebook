@@ -202,6 +202,33 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
         });
     }
 
+    public async Task<IPagedList<PersonDto>> GetPeopleInSchool(Guid schoolGuid, string discriminator, string query, Pager pager)
+    {
+        var discriminatorQuery = String.IsNullOrEmpty(discriminator) ? null : @"
+            Discriminator = @discriminator
+        ";
+
+        var queryQuery = String.IsNullOrEmpty(query) ? null : @"
+            (CONCAT(Name, ' ', Surname) like @query)
+        ";
+        var dataQuery = $@"
+            SELECT Name, Surname, SchoolRole, Birthday, Guid
+            FROM Person
+            {(discriminatorQuery != null || queryQuery != null ? "WHERE" : null)}
+            {discriminatorQuery}
+            {(discriminatorQuery != null && queryQuery != null ? "AND" : null)}
+            {queryQuery}
+            ORDER BY Name, Surname
+        ";
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryPagedAsync<PersonDto>(dataQuery, new
+        {
+            schoolGuid,
+            discriminator,
+            query = $"%{query}%",
+        }, pager);
+    }
+
     public async Task<PersonDto> GetPersonByGuid(Guid guid)
     {
         using (var cn = await GetOpenConnectionAsync())
