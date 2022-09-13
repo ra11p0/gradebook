@@ -17,4 +17,9 @@ public interface IFoundationCommands
     Task<StatusResponse<bool>> ActivatePerson(string activationCode);
     Task<StatusResponse> AddNewClass(NewClassCommand command);
     Task<StatusResponse> DeleteClass(Guid classGuid);
+    Task<StatusResponse> DeletePerson(Guid personGuid);
+    Task<StatusResponse> AddStudentsToClass(Guid classGuid, IEnumerable<Guid> studentsGuids);
+    Task<StatusResponse> AddTeachersToClass(Guid classGuid, IEnumerable<Guid> teachersGuids);
+    Task<StatusResponse> DeleteTeachersFromClass(Guid classGuid, IEnumerable<Guid> teachersGuids);
+    Task<StatusResponse> DeleteStudentsFromClass(Guid classGuid, IEnumerable<Guid> studentsGuids);
 }

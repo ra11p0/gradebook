@@ -1,10 +1,7 @@
-using Api.Models.Invitations;
 using AutoMapper;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Foundation.Commands;
-using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
-using Gradebook.Foundation.Common.Foundation.Models;
 using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Microsoft.AspNetCore.Authorization;
@@ -34,6 +31,14 @@ public class PeopleController : ControllerBase
     {
         var resp = await _foundationQueries.Service.GetSchoolsForPerson(personGuid);
         return resp.Status ? Ok(resp.Response) : BadRequest();
+    }
+    [HttpDelete]
+    [Route("{personGuid}")]
+    [ProducesResponseType(typeof(string), statusCode: 400)]
+    public async Task<IActionResult> DeletePerson([FromRoute] Guid personGuid)
+    {
+        var resp = await _foundationCommands.Service.DeletePerson(personGuid);
+        return resp.Status ? Ok() : BadRequest();
     }
     [HttpPost]
     [Route("Activation/Code/{activationCode}")]

@@ -29,11 +29,11 @@ interface DashboardProps {
 class Dashboard extends React.Component<DashboardProps> {
   render() {
     return (
-      <div className="m-3 card">
-        <div className="card-header">
+      <div className="">
+        <div className="p-3 bg-light">
           <DashboardNavigation />
         </div>
-        <div className="card-body">
+        <div className="m-4">
           <Routes>
             <Route path="*" element={<DashboardIndex />}></Route>
             <Route path="absence" element={<Absence />}></Route>

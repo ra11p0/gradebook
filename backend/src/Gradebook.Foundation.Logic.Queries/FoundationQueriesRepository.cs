@@ -22,6 +22,7 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                 LEFT JOIN PersonSchool AS PS
                     ON Guid = PS.PeopleGuid
                 WHERE Discriminator = 'Student'
+                    AND IsDeleted = 0
                     AND 
                     (
                         CreatorGuid = @relatedPersonGuid
@@ -49,6 +50,7 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                 LEFT JOIN PersonSchool AS PS
                     ON Guid = PS.PeopleGuid
                 WHERE Discriminator = 'Teacher'
+                    AND IsDeleted = 0
                     AND 
                     (
                         CreatorGuid = @relatedPersonGuid
@@ -77,6 +79,7 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                 WHERE Discriminator = 'Student'
                     AND PS.SchoolsGuid = @schoolGuid
                     AND UserGuid IS NULL
+                    AND IsDeleted = 0
             ", new
         {
             schoolGuid
@@ -88,9 +91,10 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
         using (var cn = await GetOpenConnectionAsync())
         {
             return await cn.QueryFirstOrDefaultAsync<ClassDto>(@"
-                SELECT Name, CreatedDate, Description
+                SELECT Name, CreatedDate, Description, Guid
                 FROM Classes
                 WHERE Guid like @guid
+                    AND IsDeleted = 0
             ", new
             {
                 guid
@@ -118,6 +122,7 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                 SELECT Name
                 FROM Groups
                 WHERE Guid like @guid
+                    AND IsDeleted = 0
             ", new
             {
                 guid
@@ -130,9 +135,14 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
         using (var cn = await GetOpenConnectionAsync())
         {
             return await cn.QueryFirstOrDefaultAsync<InvitationDto>(@"
-                SELECT CreatedDate, ExprationDate, IsUsed, CreatorGuid, UsedDate, InvitedPersonGuid, SchoolRole, Guid
-                FROM SystemInvitations
+                SELECT SI.Guid, SI.CreatedDate, ExprationDate, InvitationCode, IsUsed,
+                    SI.CreatorGuid, UsedDate, InvitedPersonGuid, SI.SchoolRole
+                FROM SystemInvitations AS SI
+                JOIN Person AS P
+                    ON SI.InvitedPersonGuid = P.Guid
                 WHERE InvitationCode like @activationCode
+                    AND SI.IsDeleted = 0
+                    AND P.IsDeleted = 0
             ", new
             {
                 activationCode = activationCode.Normalize()
@@ -145,10 +155,14 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
         using (var cn = await GetOpenConnectionAsync())
         {
             return await cn.QueryAsync<InvitationDto>(@"
-                SELECT Guid, CreatedDate, ExprationDate, InvitationCode, IsUsed,
-                    CreatorGuid, UsedDate, InvitedPersonGuid, SchoolRole
-                FROM SystemInvitations
+                SELECT SI.Guid, SI.CreatedDate, ExprationDate, InvitationCode, IsUsed,
+                    SI.CreatorGuid, UsedDate, InvitedPersonGuid, SI.SchoolRole
+                FROM SystemInvitations AS SI
+                JOIN Person AS P
+                    ON SI.InvitedPersonGuid = P.Guid
                 WHERE CreatorGuid = @personGuid
+                    AND SI.IsDeleted = 0
+                    AND P.IsDeleted = 0
             ", new
             {
                 personGuid
@@ -160,10 +174,14 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
     {
         using var cn = await GetOpenConnectionAsync();
         return await cn.QueryPagedAsync<InvitationDto>(@"
-                SELECT Guid, CreatedDate, ExprationDate, InvitationCode, IsUsed,
-                    CreatorGuid, UsedDate, InvitedPersonGuid, SchoolRole, SchoolGuid
-                FROM SystemInvitations
+                SELECT SI.Guid, SI.CreatedDate, ExprationDate, InvitationCode, IsUsed,
+                    SI.CreatorGuid, UsedDate, InvitedPersonGuid, SI.SchoolRole, SchoolGuid
+                FROM SystemInvitations AS SI
+                JOIN Person AS P
+                    ON SI.InvitedPersonGuid = P.Guid
                 WHERE SchoolGuid = @schoolGuid
+                    AND SI.IsDeleted = 0
+                    AND P.IsDeleted = 0
                 ORDER BY CreatedDate DESC
         ", new { schoolGuid }, pager);
     }
@@ -177,6 +195,7 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                 JOIN PersonSchool AS PS
                     ON PS.PeopleGuid = Guid
                 WHERE PS.SchoolsGuid = @schoolGuid
+                    AND IsDeleted = 0
             ", new
         {
             schoolGuid
@@ -191,6 +210,7 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                 SELECT Guid, Name, Surname, SchoolRole, Birthday, UserGuid
                 FROM Person
                 WHERE Guid = @guid
+                    AND IsDeleted = 0
             ",
         new
         {
@@ -207,6 +227,7 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                 SELECT Guid 
                 FROM Person
                 WHERE UserGuid = @userId
+                    AND IsDeleted = 0
             ",
             new
             {
@@ -223,7 +244,8 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
             return await cn.QueryFirstOrDefaultAsync<SchoolDto>(@"
                 SELECT Guid, Name, AddressLine1, AddressLine2, City, PostalCode
                 FROM Schools
-                WHERE Guid = @guid AND IsDeleted = 0
+                WHERE Guid = @guid 
+                    AND IsDeleted = 0
             ",
             new
             {
@@ -241,7 +263,8 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                 FROM Schools
                 JOIN PersonSchool AS PS
                     ON PS.SchoolsGuid = Guid
-                WHERE PS.PeopleGuid = @personGuid AND IsDeleted = 0
+                WHERE PS.PeopleGuid = @personGuid 
+                    AND IsDeleted = 0
             ",
             new
             {
@@ -258,10 +281,16 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                 FROM Person
                 WHERE Discriminator = 'Student'
                     AND Guid = @guid
+                    AND IsDeleted = 0
             ", new
         {
             guid
         });
+    }
+
+    public Task<IPagedList<StudentDto>> GetStudentsInClass(Guid schoolGuid, Pager pager)
+    {
+        throw new NotImplementedException();
     }
 
     public async Task<IPagedList<StudentDto>> GetStudentsInSchool(Guid schoolGuid, Pager pager)
@@ -272,7 +301,9 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                 FROM Person
                 JOIN PersonSchool AS PS
                     ON PS.PeopleGuid = Guid
-                WHERE PS.SchoolsGuid = @schoolGuid AND Discriminator = 'Student'
+                WHERE PS.SchoolsGuid = @schoolGuid 
+                    AND Discriminator = 'Student'
+                    AND IsDeleted = 0
                 ORDER BY Name, Surname
             ", new
         {
@@ -289,10 +320,16 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                 FROM Person
                 WHERE Discriminator = 'Teacher'
                     AND Guid = @guid
+                    AND IsDeleted = 0
             ", new
             {
                 guid
             });
         }
+    }
+
+    public Task<IPagedList<TeacherDto>> GetTeachersInClass(Guid schoolGuid, Pager pager)
+    {
+        throw new NotImplementedException();
     }
 }

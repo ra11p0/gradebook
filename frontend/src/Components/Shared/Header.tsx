@@ -46,9 +46,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   render(): React.ReactNode {
     const { i18n, t } = this.props;
     return (
-      <header className="p-4 bg-light bg-gradient">
+      <header className="p-4 bg-grey-light bg-gradient">
         <div className="d-flex justify-content-between">
-          <Link to="/" className="text-dark display-6 text-decoration-none">
+          <Link
+            to="/"
+            className="text-dark display-6 text-decoration-none my-auto"
+          >
             Gradebook
           </Link>
           <div className="my-auto d-flex gap-2">

@@ -12,13 +12,9 @@ interface DashboardProps {}
 class Person extends React.Component<DashboardProps> {
   render() {
     return (
-      <div className="m-3 card">
-        <div className="card-body">
-          <Routes>
-            <Route path="/show/:personGuid" element={<PersonIndex />}></Route>
-          </Routes>
-        </div>
-      </div>
+      <Routes>
+        <Route path="/show/:personGuid" element={<PersonIndex />}></Route>
+      </Routes>
     );
   }
 }
