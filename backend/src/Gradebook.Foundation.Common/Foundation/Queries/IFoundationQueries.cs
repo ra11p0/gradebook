@@ -11,6 +11,7 @@ public interface IFoundationQueries
     Task<ResponseWithStatus<Guid, bool>> GetCurrentPersonGuid();
     Task<ResponseWithStatus<IEnumerable<StudentDto>, bool>> GetAllAccessibleStudents();
     Task<ResponseWithStatus<IEnumerable<StudentDto>>> GetInactiveStudents(Guid schoolGuid);
+    Task<ResponseWithStatus<IEnumerable<TeacherDto>>> GetInactiveTeachers(Guid schoolGuid);
     Task<ResponseWithStatus<IEnumerable<InvitationDto>, bool>> GetInvitations(Guid personGuid);
     Task<ResponseWithStatus<IEnumerable<InvitationDto>, bool>> GetInvitations();
     Task<ResponseWithStatus<IPagedList<InvitationDto>, bool>> GetInvitationsToSchool(Guid schoolGuid, int page);
@@ -23,6 +24,7 @@ public interface IFoundationQueries
     Task<ResponseWithStatus<StudentDto, bool>> GetStudentByGuid(Guid guid);
     Task<ResponseWithStatus<TeacherDto, bool>> GetTeacherByGuid(Guid guid);
     Task<ResponseWithStatus<IPagedList<StudentDto>>> GetStudentsInSchool(Guid schoolGuid, int page);
+    Task<ResponseWithStatus<IPagedList<TeacherDto>>> GetTeachersInSchool(Guid schoolGuid, int page);
     Task<ResponseWithStatus<IPagedList<ClassDto>>> GetClassesInSchool(Guid schoolGuid, int page);
     Task<ResponseWithStatus<IPagedList<StudentDto>>> GetStudentsInClass(Guid classGuid, int page);
     Task<ResponseWithStatus<IPagedList<TeacherDto>>> GetTeachersInClass(Guid classGuid, int page);

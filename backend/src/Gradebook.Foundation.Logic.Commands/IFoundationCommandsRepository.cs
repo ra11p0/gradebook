@@ -7,7 +7,7 @@ namespace Gradebook.Foundation.Logic.Commands;
 public interface IFoundationCommandsRepository : IBaseRepository
 {
     Task<ResponseWithStatus<Guid, bool>> AddNewStudent(NewStudentCommand newStudentDto);
-    Task<StatusResponse<bool>> AddNewTeacher(NewTeacherCommand newTeacherDto);
+    Task<ResponseWithStatus<Guid, bool>> AddNewTeacher(NewTeacherCommand newTeacherDto);
     Task<ResponseWithStatus<Guid, bool>> AddNewSchool(NewSchoolCommand command);
     Task<StatusResponse<bool>> AddAdministratorToSchool(Guid administratorGuid, Guid schoolGuid);
     Task<ResponseWithStatus<Guid, bool>> AddNewAdministrator(NewAdministratorCommand command);

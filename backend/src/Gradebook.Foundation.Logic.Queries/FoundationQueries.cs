@@ -100,6 +100,11 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<IEnumerable<StudentDto>>(students, true);
     }
 
+    public Task<ResponseWithStatus<IEnumerable<TeacherDto>>> GetInactiveTeachers(Guid schoolGuid)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<ResponseWithStatus<InvitationDto, bool>> GetInvitationByActivationCode(string activationCode)
     {
         var invitation = await Repository.GetInvitationByActivationCode(activationCode);
@@ -224,5 +229,11 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         var pager = new Pager(page);
         var response = await Repository.GetTeachersInClass(classGuid, pager);
         return new ResponseWithStatus<IPagedList<TeacherDto>>(response, true);
+    }
+
+    public Task<ResponseWithStatus<IPagedList<TeacherDto>>> GetTeachersInSchool(Guid schoolGuid, int page)
+    {
+        var pager = new Pager(page);
+        throw new NotImplementedException();
     }
 }

@@ -20,7 +20,7 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
         => Base.AddNewSchool(command);
 
 
-    public Task<StatusResponse<bool>> AddNewTeacher(NewTeacherCommand newTeacherDto)
+    public Task<ResponseWithStatus<Guid, bool>> AddNewTeacher(NewTeacherCommand newTeacherDto)
         => Base.AddNewTeacher(newTeacherDto);
 
     public Task<StatusResponse<bool>> AddPersonToSchool(Guid schoolGuid, Guid personGuid)
