@@ -7,7 +7,7 @@ import Absence from "../Components/Dashboard/Absence";
 import Grades from "../Components/Dashboard/Grades";
 import Subject from "../Components/Dashboard/Subject";
 import Timetable from "../Components/Dashboard/Timetable";
-import ManageTeachers from "../Components/Dashboard/Manage/ManageTeachers/ManageTeachers";
+import TeachersList from "../Components/Dashboard/Manage/ManageTeachers/TeachersList";
 import Invitations from "../Components/Dashboard/Manage/ManageInvitations/Invitations";
 import StudentsList from "../Components/Dashboard/Manage/ManageStudents/StudentsList";
 import SchoolsList from "../Components/Dashboard/Manage/ManageSchool/SchoolsList";
@@ -54,7 +54,7 @@ class Dashboard extends React.Component<DashboardProps> {
                   path="manageTeachers/*"
                   element={
                     <SchoolSelectedOnly>
-                      <ManageTeachers />
+                      <TeachersList />
                     </SchoolSelectedOnly>
                   }
                 ></Route>

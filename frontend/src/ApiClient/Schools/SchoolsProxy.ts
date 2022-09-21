@@ -8,8 +8,10 @@ import InviteMultiplePeopleRequest from "./Definitions/InviteMultiplePeopleReque
 import NewClassRequest from "./Definitions/NewClassRequest";
 import NewSchoolRequest from "./Definitions/NewSchoolRequest";
 import NewStudentRequest from "./Definitions/NewStudentRequest";
+import NewTeacherRequest from "./Definitions/NewTeacherRequest";
 import PersonResponse from "./Definitions/PersonResponse";
 import StudentInSchoolResponse from "./Definitions/StudentInSchoolResponse";
+import TeacherInSchoolResponse from "./Definitions/TeacherInSchoolResponse";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -33,12 +35,24 @@ const getStudentsInSchool = (schoolGuid: string, page: number = 1): Promise<Axio
     });
 }
 
+const getTeachersInSchool = (schoolGuid: string, page: number = 1): Promise<AxiosResponse<TeacherInSchoolResponse[]>> => {
+    return axiosApiAuthorized.get(API_URL + `/schools/${schoolGuid}/teachers`, {
+        params: {
+            page
+        }
+    });
+}
+
 const inviteMultiplePeople = (request: InviteMultiplePeopleRequest, schoolGuid: string): Promise<AxiosResponse<string[]>> => {
     return axiosApiAuthorized.post(API_URL + `/schools/${schoolGuid}/Invitations`, request);
 };
 
 const addNewStudent = (student: NewStudentRequest, schoolGuid: string): Promise<AxiosResponse<any>> => {
     return axiosApiAuthorized.post(API_URL + `/schools/${schoolGuid}/students`, student);
+};
+
+const addNewTeacher = (teacher: NewTeacherRequest, schoolGuid: string): Promise<AxiosResponse<any>> => {
+    return axiosApiAuthorized.post(API_URL + `/schools/${schoolGuid}/teachers`, teacher);
 };
 
 const getInvitationsInSchool = (schoolGuid: string, page: number = 1): Promise<AxiosResponse<InvitationResponse[]>> => {
@@ -77,5 +91,7 @@ export default {
     getInactiveAccessibleStudentsInSchool,
     addNewClass,
     getClassesInSchool,
-    searchPeople
+    searchPeople,
+    getTeachersInSchool,
+    addNewTeacher
 }
