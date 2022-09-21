@@ -5,7 +5,7 @@ namespace Api.Controllers.Account.Responses;
 public class MeResponse
 {
     public string Id { get; set; }
-    public string UserName { get; set; }
+    public string Username { get; set; }
     public Guid PersonGuid { get; set; }
     public string[]? Roles { get; set; }
     public string? Name { get; set; }

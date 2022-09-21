@@ -62,7 +62,7 @@ public class AccountController : ControllerBase
 
             var roles = await _userManager.Service.GetRolesAsync(user);
             var personGuid = await _foundationQueries.Service.GetPersonGuidForUser(user.Id);
-
+            var person = await _foundationQueries.Service.GetPersonByGuid(personGuid.Response);
 
             return Ok(new
             {
@@ -74,6 +74,8 @@ public class AccountController : ControllerBase
                 Username = user.UserName,
                 UserId = user.Id,
                 PersonGuid = personGuid.Response,
+                person.Response.Name,
+                person.Response.Surname,
                 Roles = roles
             });
         }
@@ -155,7 +157,7 @@ public class AccountController : ControllerBase
         return Ok(new MeResponse
         {
             Id = user.Id,
-            UserName = user.UserName,
+            Username = user.UserName,
             PersonGuid = personGuid.Response,
             Roles = roles.Response,
             Name = person.Response?.Name,

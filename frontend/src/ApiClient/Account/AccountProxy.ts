@@ -1,12 +1,13 @@
 import axios, { AxiosResponse } from "axios";
 import { axiosApiAuthorized } from "../AxiosInterceptor";
 import LoginRequest from "./Definitions/LoginRequest";
+import LoginResponse from "./Definitions/LoginResponse";
 import MeResponse from "./Definitions/MeResponse";
 import RegisterRequest from "./Definitions/RegisterRequest";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-function logIn(request: LoginRequest): Promise<AxiosResponse<any>> {
+function logIn(request: LoginRequest): Promise<AxiosResponse<LoginResponse>> {
     return axios.post(API_URL + '/Account/login', request, {
         headers: {
             'Content-Type': 'multipart/form-data'
