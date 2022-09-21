@@ -1,7 +1,8 @@
 {
   "error": "Error!",
-  "Cannot recognise current person": "Cannot recognise current person",
   "commonErrorMessage": "Error occured. Try again later.",
   "schoolRemovedNotificationTitle": "School removed",
-  "schoolRemovedNotificationText": "School has been removed successfully"
+  "schoolRemovedNotificationText": "School has been removed successfully",
+  "personRemovedNotificationTitle": "Person removed",
+  "personRemovedNotificationText": "Person has been removed successfully"
 }

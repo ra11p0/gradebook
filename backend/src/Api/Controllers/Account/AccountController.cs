@@ -1,31 +1,31 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Api.Controllers.Account.Responses;
 using Api.Models.Account;
+using Gradebook.Foundation.Common;
+using Gradebook.Foundation.Common.Extensions;
+using Gradebook.Foundation.Common.Foundation.Queries;
+using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
+using Gradebook.Foundation.Identity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
-using Gradebook.Foundation.Identity.Models;
-using Gradebook.Foundation.Common;
-using Gradebook.Foundation.Common.Extensions;
-using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
-using Gradebook.Foundation.Common.Foundation.Queries;
-using Api.Controllers.Account.Responses;
 
-namespace Api.Controllers;
+namespace Api.Controllers.Account;
 
 [Route("api/[controller]")]
 [ApiController]
 public class AccountController : ControllerBase
 {
     private readonly ServiceResolver<UserManager<ApplicationUser>> _userManager;
-    private readonly ServiceResolver<RoleManager<IdentityRole>> _roleManager;
+    //private readonly ServiceResolver<RoleManager<IdentityRole>> _roleManager;
     private readonly ServiceResolver<IConfiguration> _configuration;
     private readonly ServiceResolver<IIdentityLogic> _identityLogic;
     private readonly ServiceResolver<IFoundationQueries> _foundationQueries;
     public AccountController(IServiceProvider serviceProvider)
     {
         _userManager = serviceProvider.GetResolver<UserManager<ApplicationUser>>();
-        _roleManager = serviceProvider.GetResolver<RoleManager<IdentityRole>>();
+        //_roleManager = serviceProvider.GetResolver<RoleManager<IdentityRole>>();
         _configuration = serviceProvider.GetResolver<IConfiguration>();
         _identityLogic = serviceProvider.GetResolver<IIdentityLogic>();
         _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
@@ -62,7 +62,7 @@ public class AccountController : ControllerBase
 
             var roles = await _userManager.Service.GetRolesAsync(user);
             var personGuid = await _foundationQueries.Service.GetPersonGuidForUser(user.Id);
-
+            var person = await _foundationQueries.Service.GetPersonByGuid(personGuid.Response);
 
             return Ok(new
             {
@@ -74,6 +74,8 @@ public class AccountController : ControllerBase
                 Username = user.UserName,
                 UserId = user.Id,
                 PersonGuid = personGuid.Response,
+                person.Response.Name,
+                person.Response.Surname,
                 Roles = roles
             });
         }
@@ -103,10 +105,6 @@ public class AccountController : ControllerBase
     [Route("refresh-token")]
     public async Task<IActionResult> RefreshToken(TokenModel tokenModel)
     {
-        if (tokenModel is null)
-        {
-            return BadRequest("Invalid client request");
-        }
 
         string? accessToken = tokenModel.AccessToken;
         string? refreshToken = tokenModel.RefreshToken;
@@ -159,7 +157,7 @@ public class AccountController : ControllerBase
         return Ok(new MeResponse
         {
             Id = user.Id,
-            UserName = user.UserName,
+            Username = user.UserName,
             PersonGuid = personGuid.Response,
             Roles = roles.Response,
             Name = person.Response?.Name,

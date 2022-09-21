@@ -1,4 +1,3 @@
-using Api.Models.Invitations;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Foundation.Commands;
@@ -28,6 +27,90 @@ public class ClassesController : ControllerBase
     public async Task<IActionResult> DeleteClass([FromRoute] Guid classGuid)
     {
         var resp = await _foundationCommands.Service.DeleteClass(classGuid);
+        return resp.Status ? Ok() : BadRequest(resp.Message);
+    }
+    [HttpGet]
+    [Route("{classGuid}")]
+    [Authorize(Roles = "SuperAdmin")]
+    [ProducesResponseType(typeof(ClassDto), statusCode: 200)]
+    [ProducesResponseType(typeof(string), 400)]
+    public async Task<IActionResult> GetClass([FromRoute] Guid classGuid)
+    {
+        var resp = await _foundationQueries.Service.GetClassByGuid(classGuid);
+        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
+    }
+    [HttpGet]
+    [Route("{classGuid}/Students")]
+    [Authorize(Roles = "SuperAdmin")]
+    [ProducesResponseType(typeof(IPagedList<StudentDto>), statusCode: 200)]
+    [ProducesResponseType(typeof(string), 400)]
+    public async Task<IActionResult> GetStudentsInClass([FromRoute] Guid classGuid, [FromQuery] int page = 1)
+    {
+        var resp = await _foundationQueries.Service.GetStudentsInClass(classGuid, page);
+        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
+    }
+    [HttpGet]
+    [Route("{classGuid}/Teachers")]
+    [Authorize(Roles = "SuperAdmin")]
+    [ProducesResponseType(typeof(IPagedList<TeacherDto>), statusCode: 200)]
+    [ProducesResponseType(typeof(string), 400)]
+    public async Task<IActionResult> GetTeachersInClass([FromRoute] Guid classGuid, [FromQuery] int page = 1)
+    {
+        var resp = await _foundationQueries.Service.GetTeachersInClass(classGuid, page);
+        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
+    }
+    [HttpPut]
+    [Route("{classGuid}/Students")]
+    [Authorize(Roles = "SuperAdmin")]
+    [ProducesResponseType(typeof(string), 400)]
+    public async Task<IActionResult> PutStudentToClass([FromRoute] Guid classGuid, [FromBody] Guid studentGuid)
+    {
+        var resp = await _foundationCommands.Service.AddStudentsToClass(classGuid, studentGuid.AsEnumerable());
+        return resp.Status ? Ok() : BadRequest(resp.Message);
+    }
+    [HttpPost]
+    [Route("{classGuid}/Students")]
+    [Authorize(Roles = "SuperAdmin")]
+    [ProducesResponseType(typeof(string), 400)]
+    public async Task<IActionResult> AddStudentsToClass([FromRoute] Guid classGuid, [FromBody] IEnumerable<Guid> studentsGuids)
+    {
+        var resp = await _foundationCommands.Service.AddStudentsToClass(classGuid, studentsGuids);
+        return resp.Status ? Ok() : BadRequest(resp.Message);
+    }
+    [HttpDelete]
+    [Route("{classGuid}/Students")]
+    [Authorize(Roles = "SuperAdmin")]
+    [ProducesResponseType(typeof(string), 400)]
+    public async Task<IActionResult> DeleteStudentsFromClass([FromRoute] Guid classGuid, [FromBody] IEnumerable<Guid> studentsGuids)
+    {
+        var resp = await _foundationCommands.Service.DeleteStudentsFromClass(classGuid, studentsGuids);
+        return resp.Status ? Ok() : BadRequest(resp.Message);
+    }
+    [HttpPut]
+    [Route("{classGuid}/Teachers")]
+    [Authorize(Roles = "SuperAdmin")]
+    [ProducesResponseType(typeof(string), 400)]
+    public async Task<IActionResult> PutTeacherToClass([FromRoute] Guid classGuid, [FromBody] Guid teacherGuid)
+    {
+        var resp = await _foundationCommands.Service.AddTeachersToClass(classGuid, teacherGuid.AsEnumerable());
+        return resp.Status ? Ok() : BadRequest(resp.Message);
+    }
+    [HttpPost]
+    [Route("{classGuid}/Teachers")]
+    [Authorize(Roles = "SuperAdmin")]
+    [ProducesResponseType(typeof(string), 400)]
+    public async Task<IActionResult> AddTeachersToClass([FromRoute] Guid classGuid, [FromBody] IEnumerable<Guid> teachersGuids)
+    {
+        var resp = await _foundationCommands.Service.AddTeachersToClass(classGuid, teachersGuids);
+        return resp.Status ? Ok() : BadRequest(resp.Message);
+    }
+    [HttpDelete]
+    [Route("{classGuid}/Teachers")]
+    [Authorize(Roles = "SuperAdmin")]
+    [ProducesResponseType(typeof(string), 400)]
+    public async Task<IActionResult> DeleteTeachersFromClass([FromRoute] Guid classGuid, [FromBody] IEnumerable<Guid> teachersGuids)
+    {
+        var resp = await _foundationCommands.Service.DeleteTeachersFromClass(classGuid, teachersGuids);
         return resp.Status ? Ok() : BadRequest(resp.Message);
     }
 }

@@ -1,7 +1,5 @@
-using Api.Models.Invitations;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
-using Gradebook.Foundation.Common.Foundation.Commands;
 using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Microsoft.AspNetCore.Authorization;
@@ -14,11 +12,11 @@ namespace Api.Controllers.Invitations;
 [Authorize]
 public class InvitationsController : ControllerBase
 {
-    private readonly ServiceResolver<IFoundationCommands> _foundationCommands;
+    //private readonly ServiceResolver<IFoundationCommands> _foundationCommands;
     private readonly ServiceResolver<IFoundationQueries> _foundationQueries;
     public InvitationsController(IServiceProvider serviceProvider)
     {
-        _foundationCommands = serviceProvider.GetResolver<IFoundationCommands>();
+        //_foundationCommands = serviceProvider.GetResolver<IFoundationCommands>();
         _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
     }
     [HttpGet]

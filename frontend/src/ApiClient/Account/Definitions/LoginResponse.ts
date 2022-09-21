@@ -1,5 +1,10 @@
-export default interface LoginResponse{
-    token: string;
+export default interface LoginResponse {
+    access_token: string;
     refreshToken: string;
-    expiration: Date;
+    username: string;
+    userId: string;
+    name: string;
+    surname: string;
+    personGuid: string;
+    roles: string[]
 }

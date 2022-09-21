@@ -70,6 +70,15 @@ public class SchoolsController : ControllerBase
         var resp = await _foundationQueries.Service.GetPeopleInSchool(schoolGuid);
         return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
     }
+    [HttpGet]
+    [Route("{schoolGuid}/People/Search")]
+    [ProducesResponseType(typeof(IPagedList<PersonDto>), statusCode: 200)]
+    [ProducesResponseType(typeof(string), statusCode: 400)]
+    public async Task<IActionResult> GetPeopleInSchoolSearch([FromRoute] Guid schoolGuid, [FromQuery] int page = 1, [FromQuery] string discriminator = "", [FromQuery] string query = "")
+    {
+        var resp = await _foundationQueries.Service.GetPeopleInSchool(schoolGuid, discriminator, query, page);
+        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
+    }
 
     [HttpPost]
     [Route("{schoolGuid}/People")]
@@ -135,6 +144,40 @@ public class SchoolsController : ControllerBase
     public async Task<IActionResult> GetInactiveStudentsInSchool([FromRoute] Guid schoolGuid)
     {
         var resp = await _foundationQueries.Service.GetInactiveStudents(schoolGuid);
+        return resp.Status ? Ok(resp.Response) : BadRequest();
+    }
+    #endregion
+
+    #region teachers
+    [HttpGet]
+    [Route("{schoolGuid}/Teachers")]
+    [Authorize(Roles = "SuperAdmin")]
+    [ProducesResponseType(typeof(IPagedList<TeacherDto>), statusCode: 200)]
+    [ProducesErrorResponseType(typeof(string))]
+    public async Task<IActionResult> GetTeachersInSchool([FromRoute] Guid schoolGuid, int page = 1)
+    {
+        var resp = await _foundationQueries.Service.GetTeachersInSchool(schoolGuid, page);
+        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
+    }
+
+    [HttpPost]
+    [Route("{schoolGuid}/Teachers")]
+    [Authorize(Roles = "SuperAdmin")]
+    [ProducesResponseType(typeof(string), 400)]
+    public async Task<IActionResult> AddNewTeacher([FromBody] NewTeacherModel model, [FromRoute] Guid schoolGuid)
+    {
+        var command = _mapper.Service.Map<NewTeacherCommand>(model);
+        var response = await _foundationCommands.Service.AddNewTeacher(command, schoolGuid);
+        return response.Status ? Ok() : BadRequest(response.Message);
+    }
+
+    [HttpGet]
+    [Route("{schoolGuid}/Teachers/Inactive")]
+    [ProducesResponseType(typeof(IEnumerable<TeacherDto>), 200)]
+    [ProducesResponseType(typeof(string), 400)]
+    public async Task<IActionResult> GetInactiveTeachersInSchool([FromRoute] Guid schoolGuid)
+    {
+        var resp = await _foundationQueries.Service.GetInactiveTeachers(schoolGuid);
         return resp.Status ? Ok(resp.Response) : BadRequest();
     }
     #endregion

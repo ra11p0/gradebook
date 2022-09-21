@@ -12,13 +12,9 @@ interface Props {}
 class School extends React.Component<Props> {
   render() {
     return (
-      <div className="m-3 card">
-        <div className="card-body">
-          <Routes>
-            <Route path="/show/:schoolGuid" element={<SchoolIndex />}></Route>
-          </Routes>
-        </div>
-      </div>
+      <Routes>
+        <Route path="/show/:schoolGuid" element={<SchoolIndex />}></Route>
+      </Routes>
     );
   }
 }

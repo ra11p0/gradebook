@@ -20,7 +20,7 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
         => Base.AddNewSchool(command);
 
 
-    public Task<StatusResponse<bool>> AddNewTeacher(NewTeacherCommand newTeacherDto)
+    public Task<ResponseWithStatus<Guid, bool>> AddNewTeacher(NewTeacherCommand newTeacherDto)
         => Base.AddNewTeacher(newTeacherDto);
 
     public Task<StatusResponse<bool>> AddPersonToSchool(Guid schoolGuid, Guid personGuid)
@@ -76,4 +76,19 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
 
     public Task<StatusResponse> DeleteClass(Guid classGuid)
         => Base.DeleteClass(classGuid);
+
+    public Task<StatusResponse> DeletePerson(Guid personGuid)
+        => Base.DeletePerson(personGuid);
+
+    public Task<StatusResponse> AddStudentsToClass(Guid classGuid, IEnumerable<Guid> studentsGuids)
+        => Base.AddStudentsToClass(classGuid, studentsGuids);
+
+    public Task<StatusResponse> AddTeachersToClass(Guid classGuid, IEnumerable<Guid> teachersGuids)
+        => Base.AddTeachersToClass(classGuid, teachersGuids);
+
+    public Task<StatusResponse> DeleteStudentsFromClass(Guid classGuid, IEnumerable<Guid> studentsGuids)
+        => Base.DeleteStudentsFromClass(classGuid, studentsGuids);
+
+    public Task<StatusResponse> DeleteTeachersFromClass(Guid classGuid, IEnumerable<Guid> teachersGuids)
+        => Base.DeleteTeachersFromClass(classGuid, teachersGuids);
 }

@@ -8,5 +8,6 @@
   "actions": "Actions",
   "showSchool": "Show school",
   "removeSchool": "Remove school",
-  "youSureRemoveSchool": "Are you sure you want to remove school?"
+  "youSureRemoveSchool": "Are you sure you want to remove school?",
+  "noSchoolsManaged": "No managed schools"
 }

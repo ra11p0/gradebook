@@ -5,5 +5,9 @@
   "name": "Imię",
   "surname": "Nazwisko",
   "isActive": "Czy aktywny",
-  "birthday": "Data urodzenia"
+  "birthday": "Data urodzenia",
+
+  "showPerson": "Pokaż osobę",
+  "removePerson": "Usuń osobę",
+  "youSureRemovePerson": "Czy na pewno chcesz usunąć osobę?"
 }

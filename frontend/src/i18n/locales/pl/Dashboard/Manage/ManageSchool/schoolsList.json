@@ -8,5 +8,6 @@
   "actions": "Akcje",
   "showSchool": "Pokaż szkołę",
   "removeSchool": "Usuń szkołę",
-  "youSureRemoveSchool": "Czy na pewno chcesz usunąć szkołę?"
+  "youSureRemoveSchool": "Czy na pewno chcesz usunąć szkołę?",
+  "noSchoolsManaged": "Brak zarządzanych szkół"
 }

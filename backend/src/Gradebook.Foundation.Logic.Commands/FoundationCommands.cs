@@ -109,11 +109,17 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         return resp;
     }
 
-    public async Task<StatusResponse<bool>> AddNewTeacher(NewTeacherCommand command)
+    public async Task<StatusResponse<bool>> AddNewTeacher(NewTeacherCommand command, Guid schoolGuid)
     {
+        Repository.BeginTransaction();
         command.CreatorGuid = (await _foundationQueries.Service.GetCurrentPersonGuid()).Response;
         var resp = await Repository.AddNewTeacher(command);
+        if (!resp.Status) return new StatusResponse<bool>(false, resp.Message);
         await Repository.SaveChangesAsync();
+        var addToSchoolResponse = await AddPersonToSchool(schoolGuid, resp.Response);
+        if (!addToSchoolResponse.Status) return new StatusResponse<bool>(addToSchoolResponse.Message);
+        await Repository.SaveChangesAsync();
+        Repository.CommitTransaction();
         return resp;
     }
 
@@ -130,6 +136,22 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         return new StatusResponse<bool>(resp.Status, resp.Message);
     }
 
+    public async Task<StatusResponse> AddStudentsToClass(Guid classGuid, IEnumerable<Guid> studentsGuids)
+    {
+        var resp = await Repository.AddStudentsToClass(classGuid, studentsGuids);
+        if (!resp.Status) return new StatusResponse(resp.Message);
+        await Repository.SaveChangesAsync();
+        return new StatusResponse(true);
+    }
+
+    public async Task<StatusResponse> AddTeachersToClass(Guid classGuid, IEnumerable<Guid> teachersGuids)
+    {
+        var resp = await Repository.AddTeachersToClass(classGuid, teachersGuids);
+        if (!resp.Status) return new StatusResponse(resp.Message);
+        await Repository.SaveChangesAsync();
+        return new StatusResponse(true);
+    }
+
     public async Task<StatusResponse> DeleteClass(Guid classGuid)
     {
         var resp = await Repository.DeleteClass(classGuid);
@@ -138,12 +160,36 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         return resp;
     }
 
+    public async Task<StatusResponse> DeletePerson(Guid personGuid)
+    {
+        var resp = await Repository.DeletePerson(personGuid);
+        if (!resp.Status) return new StatusResponse(false);
+        await Repository.SaveChangesAsync();
+        return new StatusResponse(true);
+    }
+
     public async Task<StatusResponse> DeleteSchool(Guid schoolGuid)
     {
         var resp = await Repository.DeleteSchool(schoolGuid);
         if (!resp.Status) return new StatusResponse(false, resp.Message);
         await Repository.SaveChangesAsync();
         return resp;
+    }
+
+    public async Task<StatusResponse> DeleteStudentsFromClass(Guid classGuid, IEnumerable<Guid> studentsGuids)
+    {
+        var resp = await Repository.DeleteStudentsFromClass(classGuid, studentsGuids);
+        if (!resp.Status) return new StatusResponse(resp.Message);
+        await Repository.SaveChangesAsync();
+        return new StatusResponse(true);
+    }
+
+    public async Task<StatusResponse> DeleteTeachersFromClass(Guid classGuid, IEnumerable<Guid> teachersGuids)
+    {
+        var resp = await Repository.DeleteTeachersFromClass(classGuid, teachersGuids);
+        if (!resp.Status) return new StatusResponse(resp.Message);
+        await Repository.SaveChangesAsync();
+        return new StatusResponse(true);
     }
 
     public async Task<ResponseWithStatus<string[], bool>> GenerateMultipleSystemInvitation(Guid[] peopleGuid, SchoolRoleEnum role, Guid schoolGuid)
