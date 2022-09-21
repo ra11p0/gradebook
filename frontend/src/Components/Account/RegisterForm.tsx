@@ -1,7 +1,6 @@
 import React, { ReactElement } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { logIn } from "../../Actions/Account/accountActions";
 import { useFormik } from "formik";
 import { useTranslation } from "react-i18next";
 import { Button } from "react-bootstrap";
@@ -13,9 +12,7 @@ const mapStateToProps = (state: any) => ({
   isLoggedIn: state.common.isLoggedIn,
 });
 
-const mapDispatchToProps = (dispatch: any) => ({
-  onLogIn: () => dispatch(logIn),
-});
+const mapDispatchToProps = (dispatch: any) => ({});
 
 interface RegisterFormProps {
   onLogIn?: () => {};

@@ -1,4 +1,9 @@
-import { logIn } from '../Actions/Account/accountActions';
+import { LOG_IN } from "../Constraints/actionTypes";
+
+const logIn = {
+    type: LOG_IN,
+    isLoggedIn: true
+}
 
 export interface logInAction {
     access_token: string;

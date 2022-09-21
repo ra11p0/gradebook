@@ -1,11 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import AccountRepository from "../../ApiClient/Account/AccountProxy";
+import AccountProxy from "../../ApiClient/Account/AccountProxy";
 import { withTranslation } from "react-i18next";
 import { Button } from "react-bootstrap";
-import { refreshToken as refreshTokenAction } from "../../Actions/Account/accountActions";
 import { logInAction, loginWrapper } from "../../ReduxWrappers/loginWrapper";
+import {
+  refreshTokenAction,
+  refreshTokenWrapper,
+} from "../../ReduxWrappers/refreshTokenWrapper";
 
 const mapStateToProps = (state: any) => ({
   isLoggedIn: state.common.isLoggedIn,
@@ -13,17 +16,13 @@ const mapStateToProps = (state: any) => ({
 
 const mapDispatchToProps = (dispatch: any) => ({
   onLogIn: (action: logInAction) => loginWrapper(dispatch, action),
-  refreshToken: (token: string, refresh: string) =>
-    dispatch({
-      ...refreshTokenAction,
-      token: token,
-      refreshToken: refresh,
-    }),
+  refreshToken: (action: refreshTokenAction) =>
+    refreshTokenWrapper(dispatch, action),
 });
 
 interface LogInProps {
   onLogIn?: (action: logInAction) => void;
-  refreshToken: (token: string, refresh: string) => void;
+  refreshToken: (action: refreshTokenAction) => void;
   isLoggedIn: boolean;
   t: any;
 }
@@ -45,20 +44,20 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
   }
 
   componentDidMount() {
-    var accessToken = localStorage.getItem("access_token");
+    var access = localStorage.getItem("access_token");
     var refresh = localStorage.getItem("refresh");
-    if (accessToken && refresh) {
-      AccountRepository.refreshAccessToken(accessToken, refresh).then(
-        (response) => {
-          const { accessToken, refreshToken } = response.data;
-          this.props.refreshToken(accessToken, refreshToken);
-          AccountRepository.getMe().then((getMeResponse) => {
-            const { id, username, roles, personGuid } = getMeResponse.data;
+    if (access && refresh) {
+      AccountProxy.refreshAccessToken(access, refresh).then(
+        (refreshAccessTokenResponse) => {
+          const { accessToken, refreshToken } = refreshAccessTokenResponse.data;
+          this.props.refreshToken({ token: accessToken, refreshToken });
+          AccountProxy.getMe().then((getMeResponse) => {
             this.props.onLogIn!({
-              ...response.data,
-              username,
-              roles,
-              personGuid,
+              ...refreshAccessTokenResponse.data,
+              ...getMeResponse.data,
+              access_token: accessToken,
+              refreshToken,
+              userId: getMeResponse.data.id,
             });
             localStorage.setItem("access_token", accessToken);
             localStorage.setItem("refresh", refreshToken);
@@ -69,7 +68,7 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
   }
 
   onLogIn() {
-    AccountRepository.logIn({
+    AccountProxy.logIn({
       username: this.state.username!,
       password: this.state.password!,
     })

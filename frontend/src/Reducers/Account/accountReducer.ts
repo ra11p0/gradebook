@@ -28,8 +28,7 @@ export default (state: any = defaultState, action: any) => {
                 }
             };
         case LOG_OUT:
-            //should be in middleware
-            localStorage.removeItem('access_token');
+            localStorage.removeItem('access_token');  //should be in middleware
             localStorage.removeItem('refresh');
             return {
                 ...state,
@@ -39,8 +38,7 @@ export default (state: any = defaultState, action: any) => {
                 schoolsList: null
             };
         case REFRESH_TOKEN:
-            //should be in middleware
-            localStorage.setItem('access_token', action.token);
+            localStorage.setItem('access_token', action.token);  //should be in middleware
             localStorage.setItem('refresh', action.refreshToken);
             return {
                 ...state,

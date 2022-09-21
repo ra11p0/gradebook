@@ -12,6 +12,8 @@ const mapStateToProps = (state: any) => {
   return {
     isLoggedIn: state.common.isLoggedIn,
     username: state.common.session?.username,
+    name: state.common.session?.name,
+    surname: state.common.session?.surname,
     isActive: state.common.session?.roles.length != 0,
   };
 };
@@ -24,6 +26,8 @@ interface HeaderProps {
   isLoggedIn?: boolean;
   logOutHandler?: () => void;
   username: string;
+  name: string;
+  surname: string;
   isActive: boolean;
   i18n: any;
   t: any;
@@ -68,7 +72,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                         to="/account/profile"
                         className="btn btn-outline-primary"
                       >
-                        {this.props.username}
+                        {`${this.props.name} ${this.props.surname}`}
                       </Link>
                     </div>
                     <div className="my-auto">
