@@ -16,11 +16,11 @@ public class PeopleController : ControllerBase
 {
     private readonly ServiceResolver<IFoundationQueries> _foundationQueries;
     private readonly ServiceResolver<IFoundationCommands> _foundationCommands;
-    private readonly ServiceResolver<IMapper> _mapper;
+    //private readonly ServiceResolver<IMapper> _mapper;
     public PeopleController(IServiceProvider serviceProvider)
     {
         _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
-        _mapper = serviceProvider.GetResolver<IMapper>();
+        //_mapper = serviceProvider.GetResolver<IMapper>();
         _foundationCommands = serviceProvider.GetResolver<IFoundationCommands>();
     }
     [HttpGet]

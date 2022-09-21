@@ -1,35 +1,18 @@
 import React from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { logIn } from "../../Actions/Account/accountActions";
 import AccountRepository from "../../ApiClient/Account/AccountProxy";
 import { withTranslation } from "react-i18next";
 import { Button } from "react-bootstrap";
 import { refreshToken as refreshTokenAction } from "../../Actions/Account/accountActions";
+import { logInAction, loginWrapper } from "../../ReduxWrappers/loginWrapper";
 
 const mapStateToProps = (state: any) => ({
   isLoggedIn: state.common.isLoggedIn,
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
-  onLogIn: (
-    token: string,
-    refreshToken: string,
-    username: string,
-    userId: string,
-    personGuid: string,
-    roles: string[] | undefined
-  ) =>
-    dispatch({
-      ...logIn,
-      isLoggedIn: true,
-      token: token,
-      refreshToken: refreshToken,
-      username: username,
-      userId: userId,
-      roles: roles,
-      personGuid: personGuid,
-    }),
+  onLogIn: (action: logInAction) => loginWrapper(dispatch, action),
   refreshToken: (token: string, refresh: string) =>
     dispatch({
       ...refreshTokenAction,
@@ -39,14 +22,7 @@ const mapDispatchToProps = (dispatch: any) => ({
 });
 
 interface LogInProps {
-  onLogIn?: (
-    token: string,
-    refreshToken: string,
-    username: string,
-    userId: string,
-    personGuid: string,
-    roles: string[] | undefined
-  ) => {};
+  onLogIn?: (action: logInAction) => void;
   refreshToken: (token: string, refresh: string) => void;
   isLoggedIn: boolean;
   t: any;
@@ -77,15 +53,13 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
           const { accessToken, refreshToken } = response.data;
           this.props.refreshToken(accessToken, refreshToken);
           AccountRepository.getMe().then((getMeResponse) => {
-            const { id, userName, roles, personGuid } = getMeResponse.data;
-            this.props.onLogIn!(
-              accessToken,
-              refreshToken,
-              userName,
-              id,
+            const { id, username, roles, personGuid } = getMeResponse.data;
+            this.props.onLogIn!({
+              ...response.data,
+              username,
+              roles,
               personGuid,
-              roles
-            );
+            });
             localStorage.setItem("access_token", accessToken);
             localStorage.setItem("refresh", refreshToken);
           });
@@ -99,19 +73,12 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
       username: this.state.username!,
       password: this.state.password!,
     })
-      .then((r: any) => {
-        this.props.onLogIn!(
-          r.data.access_token,
-          r.data.refreshToken,
-          r.data.username,
-          r.data.userId,
-          r.data.personGuid,
-          r.data.roles
-        );
+      .then((r) => {
+        this.props.onLogIn!({ ...r.data });
         localStorage.setItem("access_token", r.data.access_token);
         localStorage.setItem("refresh", r.data.refreshToken);
       })
-      .catch((r: any) => {
+      .catch((r) => {
         this.setState({
           ...this.state,
           loginFailed: true,

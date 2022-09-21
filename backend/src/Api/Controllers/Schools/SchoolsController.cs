@@ -74,7 +74,7 @@ public class SchoolsController : ControllerBase
     [Route("{schoolGuid}/People/Search")]
     [ProducesResponseType(typeof(IPagedList<PersonDto>), statusCode: 200)]
     [ProducesResponseType(typeof(string), statusCode: 400)]
-    public async Task<IActionResult> GetPeopleInSchoolSearch([FromRoute] Guid schoolGuid, [FromQuery] int page = 1, [FromQuery] string? discriminator = "", [FromQuery] string? query = "")
+    public async Task<IActionResult> GetPeopleInSchoolSearch([FromRoute] Guid schoolGuid, [FromQuery] int page = 1, [FromQuery] string discriminator = "", [FromQuery] string query = "")
     {
         var resp = await _foundationQueries.Service.GetPeopleInSchool(schoolGuid, discriminator, query, page);
         return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
