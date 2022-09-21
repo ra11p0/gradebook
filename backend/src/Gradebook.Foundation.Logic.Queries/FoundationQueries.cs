@@ -231,9 +231,10 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<IPagedList<TeacherDto>>(response, true);
     }
 
-    public Task<ResponseWithStatus<IPagedList<TeacherDto>>> GetTeachersInSchool(Guid schoolGuid, int page)
+    public async Task<ResponseWithStatus<IPagedList<TeacherDto>>> GetTeachersInSchool(Guid schoolGuid, int page)
     {
-        var pager = new Pager(page);
-        throw new NotImplementedException();
+        var pager = new Pager(page);        
+        var response = await Repository.GetTeachersInSchool(schoolGuid, pager);
+        return new ResponseWithStatus<IPagedList<TeacherDto>>(response, true);
     }
 }
