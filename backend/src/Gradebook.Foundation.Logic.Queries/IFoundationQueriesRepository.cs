@@ -9,13 +9,21 @@ public interface IFoundationQueriesRepository : IBaseRepository
     Task<IEnumerable<SchoolDto>> GetSchoolsForPerson(Guid personGuid);
     Task<IEnumerable<PersonDto>> GetPeopleInSchool(Guid schoolGuid);
     Task<IEnumerable<StudentDto>> GetAllAccessibleStudents(Guid relatedPersonGuid);
-    Task<IEnumerable<StudentDto>> GetAllInactiveAccessibleStudents(Guid relatedPersonGuid);
+    Task<IEnumerable<StudentDto>> GetAllInactiveAccessibleStudents(Guid schoolGuid);
     Task<IEnumerable<TeacherDto>> GetAllAccessibleTeachers(Guid relatedPersonGuid);
     Task<IEnumerable<InvitationDto>> GetInvitations(Guid personGuid);
+    Task<IPagedList<InvitationDto>> GetInvitationsToSchool(Guid schoolGuid, Pager pager);
     Task<InvitationDto> GetInvitationByActivationCode(string activationCode);
     Task<PersonDto> GetPersonByGuid(Guid guid);
     Task<StudentDto> GetStudentByGuid(Guid guid);
     Task<TeacherDto> GetTeacherByGuid(Guid guid);
     Task<GroupDto> GetGroupByGuid(Guid guid);
     Task<ClassDto> GetClassByGuid(Guid guid);
+    Task<SchoolDto> GetSchoolByGuid(Guid guid);
+    Task<IPagedList<StudentDto>> GetStudentsInSchool(Guid schoolGuid, Pager pager);
+    Task<IPagedList<ClassDto>> GetClassesInSchool(Guid schoolGuid, Pager pager);
+    Task<IPagedList<StudentDto>> GetStudentsInClass(Guid schoolGuid, Pager pager);
+    Task<IPagedList<TeacherDto>> GetTeachersInClass(Guid schoolGuid, Pager pager);
+    Task<IPagedList<TeacherDto>> GetTeachersInSchool(Guid schoolGuid, Pager pager);
+    Task<IPagedList<PersonDto>> GetPeopleInSchool(Guid schoolGuid, string discriminator, string query, Pager pager);
 }

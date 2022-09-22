@@ -8,6 +8,15 @@ const getAccessibleSchools = (personGuid: string): Promise<AxiosResponse<GetAcce
     return axiosApiAuthorized.get(API_URL + `/people/${personGuid}/schools`);
 };
 
+const activatePerson = (activationCode: string): Promise<AxiosResponse> => {
+    return axiosApiAuthorized.post(API_URL + `/people/activation/code/${activationCode}`);
+}
+const removePerson = (personGuid: string) => {
+    return axiosApiAuthorized.delete(API_URL + `/people/${personGuid}`);
+}
+
 export default {
-    getAccessibleSchools
+    getAccessibleSchools,
+    activatePerson,
+    removePerson
 }

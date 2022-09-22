@@ -1,0 +1,11 @@
+{
+  "addClasses": "Dodaj klasy",
+  "classes": "Klasy",
+  "description": "Opis",
+  "name": "Nazwa",
+  "createdDate": "Data utworzenia",
+  "actions": "Akcje",
+  "showClass": "Pokaż klasę",
+  "removeClass": "Usuń klasę",
+  "youSureRemoveClass": "Czy na pewno chcesz usunąć klasę?"
+}

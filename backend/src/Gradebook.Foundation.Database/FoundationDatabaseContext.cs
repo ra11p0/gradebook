@@ -23,14 +23,16 @@ public class FoundationDatabaseContext : DbContext
 
     public FoundationDatabaseContext()
     {
-        
+
     }
     public FoundationDatabaseContext(DbContextOptions<FoundationDatabaseContext> options)
         : base(options)
     {
-        
-    }
 
+    }
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+    }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
@@ -45,7 +47,7 @@ public class FoundationDatabaseContext : DbContext
             optionsBuilder.UseMySql(
                 cn,
                 new MySqlServerVersion(new Version(8, 30, 0)),
-                e=>e.MigrationsHistoryTable("__FoundationMigrationsHistory")
+                e => e.MigrationsHistoryTable("__FoundationMigrationsHistory")
             );
         }
     }

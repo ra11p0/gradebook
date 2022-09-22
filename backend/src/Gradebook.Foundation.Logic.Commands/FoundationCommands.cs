@@ -45,23 +45,38 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         if (!invitation.InvitedPersonGuid.HasValue) return new StatusResponse<bool>(false, "Invitation is not binded to any person. Functionality is not yet avalible");
 
         StatusResponse<bool> assigningResult;
+        string userRoleToAdd;
         switch (invitation.SchoolRole)
         {
             case SchoolRoleEnum.Student:
                 assigningResult = await Repository.AssignUserToStudent(userGuid.Response!, invitation.InvitedPersonGuid.Value);
+                userRoleToAdd = UserRoles.Student;
                 break;
             case SchoolRoleEnum.Teacher:
                 assigningResult = await Repository.AssignUserToTeacher(userGuid.Response!, invitation.InvitedPersonGuid.Value);
+                userRoleToAdd = UserRoles.Teacher;
                 break;
             case SchoolRoleEnum.Admin:
                 assigningResult = await Repository.AssignUserToAdministrator(userGuid.Response!, invitation.InvitedPersonGuid.Value);
+                userRoleToAdd = UserRoles.SuperAdmin;
                 break;
             default:
                 return new StatusResponse<bool>(false, "Wrong role");
         }
         if (!assigningResult.Status) return new StatusResponse<bool>(false, assigningResult.Message);
+        var addRoleResponse = await _identityLogic.Service.AddUserRole(userRoleToAdd);
+        if (!addRoleResponse.Status) return new StatusResponse<bool>(false, addRoleResponse.Message);
         await Repository.SaveChangesAsync();
         return new StatusResponse<bool>(true);
+    }
+
+    public async Task<StatusResponse> AddNewClass(NewClassCommand command)
+    {
+        command.CreatedDate = DateTime.Now;
+        var resp = await Repository.AddNewClass(command);
+        if (!resp.Status) return new StatusResponse(false, resp.Message);
+        await Repository.SaveChangesAsync();
+        return resp;
     }
 
     public async Task<StatusResponse> AddNewSchool(NewSchoolCommand newSchoolCommand)
@@ -80,19 +95,31 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
 
     }
 
-    public async Task<StatusResponse<bool>> AddNewStudent(NewStudentCommand command)
+    public async Task<StatusResponse<bool>> AddNewStudent(NewStudentCommand command, Guid schoolGuid)
     {
+        Repository.BeginTransaction();
         command.CreatorGuid = (await _foundationQueries.Service.GetCurrentPersonGuid()).Response;
         var resp = await Repository.AddNewStudent(command);
+        if (resp.Status is not true) return new StatusResponse<bool>(false);
         await Repository.SaveChangesAsync();
+        var addToSchoolResponse = await AddPersonToSchool(schoolGuid, resp.Response);
+        if (addToSchoolResponse.Status is not true) return new StatusResponse<bool>(addToSchoolResponse.Message);
+        await Repository.SaveChangesAsync();
+        Repository.CommitTransaction();
         return resp;
     }
 
-    public async Task<StatusResponse<bool>> AddNewTeacher(NewTeacherCommand command)
+    public async Task<StatusResponse<bool>> AddNewTeacher(NewTeacherCommand command, Guid schoolGuid)
     {
+        Repository.BeginTransaction();
         command.CreatorGuid = (await _foundationQueries.Service.GetCurrentPersonGuid()).Response;
         var resp = await Repository.AddNewTeacher(command);
+        if (!resp.Status) return new StatusResponse<bool>(false, resp.Message);
         await Repository.SaveChangesAsync();
+        var addToSchoolResponse = await AddPersonToSchool(schoolGuid, resp.Response);
+        if (!addToSchoolResponse.Status) return new StatusResponse<bool>(addToSchoolResponse.Message);
+        await Repository.SaveChangesAsync();
+        Repository.CommitTransaction();
         return resp;
     }
 
@@ -109,21 +136,77 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         return new StatusResponse<bool>(resp.Status, resp.Message);
     }
 
-    public async Task<ResponseWithStatus<string[], bool>> GenerateMultipleSystemInvitation(Guid[] peopleGuid, SchoolRoleEnum role)
+    public async Task<StatusResponse> AddStudentsToClass(Guid classGuid, IEnumerable<Guid> studentsGuids)
+    {
+        var resp = await Repository.AddStudentsToClass(classGuid, studentsGuids);
+        if (!resp.Status) return new StatusResponse(resp.Message);
+        await Repository.SaveChangesAsync();
+        return new StatusResponse(true);
+    }
+
+    public async Task<StatusResponse> AddTeachersToClass(Guid classGuid, IEnumerable<Guid> teachersGuids)
+    {
+        var resp = await Repository.AddTeachersToClass(classGuid, teachersGuids);
+        if (!resp.Status) return new StatusResponse(resp.Message);
+        await Repository.SaveChangesAsync();
+        return new StatusResponse(true);
+    }
+
+    public async Task<StatusResponse> DeleteClass(Guid classGuid)
+    {
+        var resp = await Repository.DeleteClass(classGuid);
+        if (!resp.Status) return new StatusResponse(false, resp.Message);
+        await Repository.SaveChangesAsync();
+        return resp;
+    }
+
+    public async Task<StatusResponse> DeletePerson(Guid personGuid)
+    {
+        var resp = await Repository.DeletePerson(personGuid);
+        if (!resp.Status) return new StatusResponse(false);
+        await Repository.SaveChangesAsync();
+        return new StatusResponse(true);
+    }
+
+    public async Task<StatusResponse> DeleteSchool(Guid schoolGuid)
+    {
+        var resp = await Repository.DeleteSchool(schoolGuid);
+        if (!resp.Status) return new StatusResponse(false, resp.Message);
+        await Repository.SaveChangesAsync();
+        return resp;
+    }
+
+    public async Task<StatusResponse> DeleteStudentsFromClass(Guid classGuid, IEnumerable<Guid> studentsGuids)
+    {
+        var resp = await Repository.DeleteStudentsFromClass(classGuid, studentsGuids);
+        if (!resp.Status) return new StatusResponse(resp.Message);
+        await Repository.SaveChangesAsync();
+        return new StatusResponse(true);
+    }
+
+    public async Task<StatusResponse> DeleteTeachersFromClass(Guid classGuid, IEnumerable<Guid> teachersGuids)
+    {
+        var resp = await Repository.DeleteTeachersFromClass(classGuid, teachersGuids);
+        if (!resp.Status) return new StatusResponse(resp.Message);
+        await Repository.SaveChangesAsync();
+        return new StatusResponse(true);
+    }
+
+    public async Task<ResponseWithStatus<string[], bool>> GenerateMultipleSystemInvitation(Guid[] peopleGuid, SchoolRoleEnum role, Guid schoolGuid)
     {
         var currentPersonGuid = await _foundationQueries.Service.GetCurrentPersonGuid();
         if (!currentPersonGuid.Status) return new ResponseWithStatus<string[], bool>(default, false, "Could not find current person");
 
-        var response = await Task.WhenAll(peopleGuid.Select(async personGuid => await Repository.GenerateSystemInvitation(personGuid, currentPersonGuid.Response, role)));
+        var response = await Task.WhenAll(peopleGuid.Select(async personGuid => await Repository.GenerateSystemInvitation(personGuid, currentPersonGuid.Response, role, schoolGuid)));
         await Repository.SaveChangesAsync();
         return new ResponseWithStatus<string[], bool>(response!, response is not null);
     }
 
-    public async Task<ResponseWithStatus<string, bool>> GenerateSystemInvitation(Guid personGuid, SchoolRoleEnum role)
+    public async Task<ResponseWithStatus<string, bool>> GenerateSystemInvitation(Guid personGuid, SchoolRoleEnum role, Guid schoolGuid)
     {
         var currentPersonGuid = await _foundationQueries.Service.GetCurrentPersonGuid();
         if (!currentPersonGuid.Status) return new ResponseWithStatus<string, bool>(default, false, "Could not find current person");
-        var response = await Repository.GenerateSystemInvitation(personGuid, currentPersonGuid.Response, role);
+        var response = await Repository.GenerateSystemInvitation(personGuid, currentPersonGuid.Response, role, schoolGuid);
         await Repository.SaveChangesAsync();
         return new ResponseWithStatus<string, bool>(response, response is not null);
     }

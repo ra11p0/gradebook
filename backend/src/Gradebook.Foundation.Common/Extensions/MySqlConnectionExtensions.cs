@@ -5,19 +5,22 @@ namespace Gradebook.Foundation.Common.Extensions;
 
 public static class MyMySqlConnectionExtensions
 {
-    public static async Task<IPagedList<T>> QueryPagedAsync<T>(this MySqlConnection cn, string orderedQuery, object queryData, IPager pager){
+    public static async Task<IPagedList<T>> QueryPagedAsync<T>(this MySqlConnection cn, string orderedQuery, object queryData, IPager pager)
+    {
         var countQuery = $@"
         SELECT COUNT(*) 
-        FROM ({orderedQuery})
+        FROM ({orderedQuery}) AS _;
         ";
         var pagedQuery = $@"
         SELECT *
-        FROM ({orderedQuery})
+        FROM ({orderedQuery}) AS _
         LIMIT {pager.PageSize}
-        OFFSET {pager.PageSize * pager.Page}
+        OFFSET {pager.PageSize * (pager.Page - 1)};
         ";
-        var total = await cn.QueryFirstOrDefaultAsync<int>(countQuery, queryData);
-        var resp = await cn.QueryAsync<T>(pagedQuery, queryData);
-        return resp.ToPagedList(pager.Page, total, ((int)Math.Ceiling(((decimal)total/ (decimal)pager.PageSize))));
+
+        using var query = await cn.QueryMultipleAsync(countQuery + pagedQuery, queryData);
+        var total = await query.ReadFirstOrDefaultAsync<int>();
+        var resp = await query.ReadAsync<T>();
+        return resp.ToPagedList(pager.Page, total, (int)Math.Ceiling(total / (decimal)pager.PageSize));
     }
 }

@@ -11,18 +11,20 @@ import {
   Stack,
 } from "@mui/material";
 import StudentResponse from "../../../../ApiClient/Students/Definitions/StudentResponse";
-import StudentsProxy from "../../../../ApiClient/Students/StudentsProxy";
 import Person from "../../../Shared/Person";
 import PersonSmall from "../../../Shared/PersonSmall";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import InvitationsProxy from "../../../../ApiClient/Invitations/InvitationsProxy";
 import SchoolRolesEnum from "../../../../Common/Enums/SchoolRolesEnum";
-const mapStateToProps = (state: any) => ({});
+import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
+const mapStateToProps = (state: any) => ({
+  currentSchoolGuid: state.common.school?.schoolGuid,
+});
 const mapDispatchToProps = (dispatch: any) => ({});
 interface AddInvitationModalProps {
   show: boolean;
   onHide: () => void;
+  currentSchoolGuid?: string;
 }
 const AddInvitationModal = (props: AddInvitationModalProps): ReactElement => {
   const { t } = useTranslation("addInvitationModal");
@@ -32,15 +34,20 @@ const AddInvitationModal = (props: AddInvitationModalProps): ReactElement => {
   const [selectedStudents, setSelectedStudents] = useState<string[]>([]);
 
   useEffect(() => {
-    StudentsProxy.getInactiveAccessibleStudents().then((response) => {
+    SchoolsProxy.getInactiveAccessibleStudentsInSchool(
+      props.currentSchoolGuid!
+    ).then((response) => {
       setInactiveStudents(response.data);
     });
   }, []);
   const sendButtonHandler = () => {
-    InvitationsProxy.inviteMultiplePeople({
-      invitedPersonGuidArray: selectedStudents,
-      role: SchoolRolesEnum.Student,
-    }).then((response) => {
+    SchoolsProxy.inviteMultiplePeople(
+      {
+        invitedPersonGuidArray: selectedStudents,
+        role: SchoolRolesEnum.Student,
+      },
+      props.currentSchoolGuid!
+    ).then((response) => {
       props.onHide();
     });
   };
@@ -75,9 +82,11 @@ const AddInvitationModal = (props: AddInvitationModalProps): ReactElement => {
                     className="row"
                   >
                     <Person
+                      guid={student.guid}
                       name={student.name}
                       surname={student.surname}
                       birthday={student.birthday}
+                      noLink={true}
                     />
                   </MenuItem>
                 ))}

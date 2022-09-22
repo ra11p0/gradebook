@@ -1,5 +1,6 @@
 using AutoMapper;
 using Gradebook.Foundation.Common;
+using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
 using Gradebook.Foundation.Common.Foundation.Enums;
 using Gradebook.Foundation.Database;
@@ -47,22 +48,21 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
         return new ResponseWithStatus<Guid, bool>(school.Guid, true);
     }
 
-    public async Task<StatusResponse<bool>> AddNewStudent(NewStudentCommand newStudentDto)
+    public async Task<ResponseWithStatus<Guid, bool>> AddNewStudent(NewStudentCommand newStudentDto)
     {
         var student = _mapper.Map<Student>(newStudentDto);
         student.SchoolRole = Common.Foundation.Enums.SchoolRoleEnum.Student;
         await Context.Students.AddAsync(student);
 
-        return new StatusResponse<bool>(true);
+        return new ResponseWithStatus<Guid, bool>(student.Guid, true);
     }
 
-    public async Task<StatusResponse<bool>> AddNewTeacher(NewTeacherCommand newTeacherDto)
+    public async Task<ResponseWithStatus<Guid, bool>> AddNewTeacher(NewTeacherCommand newTeacherDto)
     {
         var teacher = _mapper.Map<Teacher>(newTeacherDto);
         teacher.SchoolRole = Common.Foundation.Enums.SchoolRoleEnum.Teacher;
         await Context.Teachers.AddAsync(teacher);
-
-        return new StatusResponse<bool>(true);
+        return new ResponseWithStatus<Guid, bool>(teacher.Guid, true);
     }
 
     public async Task<StatusResponse<bool>> AddPersonToSchool(Guid schoolGuid, Guid personGuid)
@@ -99,13 +99,14 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
         return new StatusResponse<bool>(true);
     }
 
-    public async Task<string?> GenerateSystemInvitation(Guid invitedPersonGuid, Guid invitingPersonGuid, SchoolRoleEnum role)
+    public async Task<string?> GenerateSystemInvitation(Guid invitedPersonGuid, Guid invitingPersonGuid, SchoolRoleEnum role, Guid schoolGuid)
     {
         SystemInvitation systemInvitation = new()
         {
             SchoolRole = role,
             CreatorGuid = invitingPersonGuid,
-            InvitedPersonGuid = invitedPersonGuid
+            InvitedPersonGuid = invitedPersonGuid,
+            SchoolGuid = schoolGuid
         };
         Context.SystemInvitations.Add(systemInvitation);
         return systemInvitation.InvitationCode;
@@ -126,5 +127,77 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
             (Person?)await Context.Teachers.FirstOrDefaultAsync(e => e.Guid == guid) ??
             (Person?)await Context.Administrators.FirstOrDefaultAsync(e => e.Guid == guid);
         return person;
+    }
+
+    private async Task<School?> GetSchoolByGuid(Guid guid)
+    {
+        return await Context.Schools.FirstOrDefaultAsync(school => school.Guid == guid);
+    }
+
+    public async Task<StatusResponse> DeleteSchool(Guid schoolGuid)
+    {
+        School? school = await GetSchoolByGuid(schoolGuid);
+        if (school is null) return new StatusResponse(true);
+        school.IsDeleted = true;
+        return new StatusResponse(true);
+    }
+
+    public async Task<StatusResponse> AddNewClass(NewClassCommand command)
+    {
+        var dbModel = _mapper.Map<Class>(command);
+        await Context.AddAsync(dbModel);
+        return new StatusResponse(true);
+    }
+
+    public async Task<StatusResponse> DeleteClass(Guid classGuid)
+    {
+        var _class = await Context.Classes.FirstOrDefaultAsync(c => c.Guid == classGuid);
+        if (_class is null) return new StatusResponse(true);
+        _class.IsDeleted = true;
+        return new StatusResponse(true);
+    }
+
+    public async Task<StatusResponse> DeletePerson(Guid personGuid)
+    {
+        var person = await GetPersonByGuid(personGuid);
+        if (person is null) return new StatusResponse(true);
+        person.IsDeleted = true;
+        return new StatusResponse(true);
+    }
+
+    public async Task<StatusResponse> AddStudentsToClass(Guid classGuid, IEnumerable<Guid> studentsGuids)
+    {
+        var students = Context.Students.Where(student => studentsGuids.Contains(student.Guid));
+        var _class = await Context.Classes.Include(entity => entity.Students).FirstOrDefaultAsync(_class => _class.Guid == classGuid);
+        if (_class is null) return new StatusResponse("Class does not exist");
+        _class.Students.AddRange(students);
+        return new StatusResponse(true);
+    }
+
+    public async Task<StatusResponse> AddTeachersToClass(Guid classGuid, IEnumerable<Guid> teachersGuids)
+    {
+        var teachers = Context.Teachers.Where(teacher => teachersGuids.Contains(teacher.Guid));
+        var _class = await Context.Classes.Include(entity => entity.OwnersTeachers).FirstOrDefaultAsync(_class => _class.Guid == classGuid);
+        if (_class is null) return new StatusResponse("Class does not exist");
+        _class.OwnersTeachers.AddRange(teachers);
+        return new StatusResponse(true);
+    }
+
+    public async Task<StatusResponse> DeleteStudentsFromClass(Guid classGuid, IEnumerable<Guid> studentsGuids)
+    {
+        var students = Context.Students.Where(student => studentsGuids.Contains(student.Guid));
+        var _class = await Context.Classes.Include(entity => entity.Students).FirstOrDefaultAsync(_class => _class.Guid == classGuid);
+        if (_class is null) return new StatusResponse("Class does not exist");
+        _class.Students.RemoveRange(students);
+        return new StatusResponse(true);
+    }
+
+    public async Task<StatusResponse> DeleteTeachersFromClass(Guid classGuid, IEnumerable<Guid> teachersGuids)
+    {
+        var teachers = Context.Teachers.Where(teacher => teachersGuids.Contains(teacher.Guid));
+        var _class = await Context.Classes.Include(entity => entity.OwnersTeachers).FirstOrDefaultAsync(_class => _class.Guid == classGuid);
+        if (_class is null) return new StatusResponse("Class does not exist");
+        _class.OwnersTeachers.RemoveRange(teachers);
+        return new StatusResponse(true);
     }
 }

@@ -36,18 +36,6 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
                 var studentResponse = await GetStudentByGuid(invitedPersonGuid.Value);
                 if (!studentResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto>(studentResponse.Message);
                 response.Person = _mapper.Service.Map<PersonDto>(studentResponse.Response);
-                if (studentResponse.Response!.GroupGuid.HasValue)
-                {
-                    var groupResponse = await GetGroupByGuid(studentResponse.Response!.GroupGuid.Value);
-                    if (!groupResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto>(groupResponse.Message);
-                    response.Group = groupResponse.Response;
-                }
-                if (studentResponse.Response!.ClassGuid.HasValue)
-                {
-                    var classResponse = await GetClassByGuid(studentResponse.Response!.ClassGuid.Value);
-                    if (!classResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto>(classResponse.Message);
-                    response.Class = classResponse.Response;
-                }
                 break;
             case "teacher":
                 var teacherResponse = await GetTeacherByGuid(invitedPersonGuid.Value);
@@ -83,6 +71,14 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<ClassDto, bool>(resp, true);
     }
 
+    public async Task<ResponseWithStatus<IPagedList<ClassDto>>> GetClassesInSchool(Guid schoolGuid, int page)
+    {
+        var pager = new Pager(page);
+        var resp = await Repository.GetClassesInSchool(schoolGuid, pager);
+        if (resp is null) return new ResponseWithStatus<IPagedList<ClassDto>>(404);
+        return new ResponseWithStatus<IPagedList<ClassDto>>(resp, true);
+    }
+
     public async Task<ResponseWithStatus<Guid, bool>> GetCurrentPersonGuid()
     {
         var userGuid = await _identityLogic.Service.CurrentUserId();
@@ -98,12 +94,15 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<GroupDto, bool>(resp, true);
     }
 
-    public async Task<ResponseWithStatus<IEnumerable<StudentDto>>> GetInactiveStudents()
+    public async Task<ResponseWithStatus<IEnumerable<StudentDto>>> GetInactiveStudents(Guid schoolGuid)
     {
-        var relatedPersonGuid = await GetCurrentPersonGuid();
-        if (!relatedPersonGuid.Status) return new ResponseWithStatus<IEnumerable<StudentDto>>("Cannot recognise current person");
-        var students = await Repository.GetAllInactiveAccessibleStudents(relatedPersonGuid.Response);
+        var students = await Repository.GetAllInactiveAccessibleStudents(schoolGuid);
         return new ResponseWithStatus<IEnumerable<StudentDto>>(students, true);
+    }
+
+    public Task<ResponseWithStatus<IEnumerable<TeacherDto>>> GetInactiveTeachers(Guid schoolGuid)
+    {
+        throw new NotImplementedException();
     }
 
     public async Task<ResponseWithStatus<InvitationDto, bool>> GetInvitationByActivationCode(string activationCode)
@@ -138,10 +137,36 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<IEnumerable<InvitationDto>, bool>(invitationsWithPeople, true);
     }
 
+    public async Task<ResponseWithStatus<IPagedList<InvitationDto>, bool>> GetInvitationsToSchool(Guid schoolGuid, int page)
+    {
+        var pager = new Pager(page);
+        var invitationsResponse = await Repository.GetInvitationsToSchool(schoolGuid, pager);
+
+
+        var invitationsWithPeople = await Task.WhenAll(invitationsResponse.Select(async invitation =>
+        {
+            if (invitation.InvitedPersonGuid.HasValue)
+            {
+                var personResponse = await GetPersonByGuid(invitation.InvitedPersonGuid.Value);
+                if (personResponse.Status)
+                    invitation.InvitedPerson = personResponse.Response;
+            }
+            return invitation;
+        }));
+        return new ResponseWithStatus<IPagedList<InvitationDto>, bool>(invitationsWithPeople.ToPagedList(invitationsResponse.Page, invitationsResponse.Total, invitationsResponse.TotalPages), true);
+    }
+
     public async Task<ResponseWithStatus<IEnumerable<PersonDto>, bool>> GetPeopleInSchool(Guid schoolGuid)
     {
         var resp = await Repository.GetPeopleInSchool(schoolGuid);
         return new ResponseWithStatus<IEnumerable<PersonDto>, bool>(resp, true);
+    }
+
+    public async Task<ResponseWithStatus<IPagedList<PersonDto>>> GetPeopleInSchool(Guid schoolGuid, string discriminator, string query, int page)
+    {
+        var pager = new Pager(page);
+        var resp = await Repository.GetPeopleInSchool(schoolGuid, discriminator, query, pager);
+        return new ResponseWithStatus<IPagedList<PersonDto>>(resp, true);
     }
 
     public async Task<ResponseWithStatus<PersonDto, bool>> GetPersonByGuid(Guid guid)
@@ -157,6 +182,14 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<Guid, bool>(resp.Value, resp != Guid.Empty);
     }
 
+    public async Task<ResponseWithStatus<SchoolDto>> GetSchool(Guid schoolGuid)
+    {
+        var school = await Repository.GetSchoolByGuid(schoolGuid);
+        if (school is null)
+            return new ResponseWithStatus<SchoolDto>(404, "School not found");
+        return new ResponseWithStatus<SchoolDto>(school, true);
+    }
+
     public async Task<ResponseWithStatus<IEnumerable<SchoolDto>, bool>> GetSchoolsForPerson(Guid personGuid)
     {
         var resp = await Repository.GetSchoolsForPerson(personGuid);
@@ -170,10 +203,38 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<StudentDto, bool>(resp, true);
     }
 
+    public async Task<ResponseWithStatus<IPagedList<StudentDto>>> GetStudentsInClass(Guid classGuid, int page)
+    {
+        var pager = new Pager(page);
+        var response = await Repository.GetStudentsInClass(classGuid, pager);
+        return new ResponseWithStatus<IPagedList<StudentDto>>(response, true);
+    }
+
+    public async Task<ResponseWithStatus<IPagedList<StudentDto>>> GetStudentsInSchool(Guid schoolGuid, int page)
+    {
+        var pager = new Pager(page);
+        var response = await Repository.GetStudentsInSchool(schoolGuid, pager);
+        return new ResponseWithStatus<IPagedList<StudentDto>>(response, true);
+    }
+
     public async Task<ResponseWithStatus<TeacherDto, bool>> GetTeacherByGuid(Guid guid)
     {
         var resp = await Repository.GetTeacherByGuid(guid);
         if (resp is null) return new ResponseWithStatus<TeacherDto, bool>(null, false, "Teacher does not exist");
         return new ResponseWithStatus<TeacherDto, bool>(resp, true);
+    }
+
+    public async Task<ResponseWithStatus<IPagedList<TeacherDto>>> GetTeachersInClass(Guid classGuid, int page)
+    {
+        var pager = new Pager(page);
+        var response = await Repository.GetTeachersInClass(classGuid, pager);
+        return new ResponseWithStatus<IPagedList<TeacherDto>>(response, true);
+    }
+
+    public async Task<ResponseWithStatus<IPagedList<TeacherDto>>> GetTeachersInSchool(Guid schoolGuid, int page)
+    {
+        var pager = new Pager(page);        
+        var response = await Repository.GetTeachersInSchool(schoolGuid, pager);
+        return new ResponseWithStatus<IPagedList<TeacherDto>>(response, true);
     }
 }

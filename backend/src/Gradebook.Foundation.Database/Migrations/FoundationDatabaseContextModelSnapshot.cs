@@ -19,11 +19,47 @@ namespace Gradebook.Foundation.Database.Migrations
                 .HasAnnotation("ProductVersion", "6.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("ClassStudent", b =>
+                {
+                    b.Property<Guid>("ClassesGuid")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("StudentsGuid")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("ClassesGuid", "StudentsGuid");
+
+                    b.HasIndex("StudentsGuid");
+
+                    b.ToTable("ClassStudent", (string)null);
+                });
+
+            modelBuilder.Entity("ClassTeacher", b =>
+                {
+                    b.Property<Guid>("OwnedClassesGuid")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("OwnersTeachersGuid")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("OwnedClassesGuid", "OwnersTeachersGuid");
+
+                    b.HasIndex("OwnersTeachersGuid");
+
+                    b.ToTable("ClassTeacher", (string)null);
+                });
+
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Class", b =>
                 {
                     b.Property<Guid>("Guid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
@@ -32,9 +68,14 @@ namespace Gradebook.Foundation.Database.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<Guid>("SchoolGuid")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("Guid");
 
-                    b.ToTable("Classes");
+                    b.HasIndex("SchoolGuid");
+
+                    b.ToTable("Classes", (string)null);
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Grade", b =>
@@ -78,7 +119,7 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasIndex("TeacherGuid");
 
-                    b.ToTable("Grades");
+                    b.ToTable("Grades", (string)null);
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Group", b =>
@@ -87,8 +128,11 @@ namespace Gradebook.Foundation.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("ClassGuid")
-                        .HasColumnType("char(36)");
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
@@ -99,9 +143,7 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasKey("Guid");
 
-                    b.HasIndex("ClassGuid");
-
-                    b.ToTable("Groups");
+                    b.ToTable("Groups", (string)null);
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Lesson", b =>
@@ -115,7 +157,7 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasKey("Guid");
 
-                    b.ToTable("Lessons");
+                    b.ToTable("Lessons", (string)null);
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Person", b =>
@@ -155,7 +197,7 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasIndex("CreatorGuid");
 
-                    b.ToTable("Person");
+                    b.ToTable("Person", (string)null);
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Person");
                 });
@@ -175,7 +217,7 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasKey("Guid");
 
-                    b.ToTable("Positions");
+                    b.ToTable("Positions", (string)null);
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.School", b =>
@@ -208,7 +250,7 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasKey("Guid");
 
-                    b.ToTable("Schools");
+                    b.ToTable("Schools", (string)null);
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.StudentsAbsence", b =>
@@ -233,7 +275,7 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasIndex("StudentGuid");
 
-                    b.ToTable("StudentsAbsences");
+                    b.ToTable("StudentsAbsences", (string)null);
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Subject", b =>
@@ -251,7 +293,7 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasKey("Guid");
 
-                    b.ToTable("Subjects");
+                    b.ToTable("Subjects", (string)null);
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.SystemInvitation", b =>
@@ -282,6 +324,9 @@ namespace Gradebook.Foundation.Database.Migrations
                     b.Property<bool>("IsUsed")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<Guid>("SchoolGuid")
+                        .HasColumnType("char(36)");
+
                     b.Property<int>("SchoolRole")
                         .HasColumnType("int");
 
@@ -294,7 +339,9 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasIndex("InvitedPersonGuid");
 
-                    b.ToTable("SystemInvitations");
+                    b.HasIndex("SchoolGuid");
+
+                    b.ToTable("SystemInvitations", (string)null);
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.TeachersAbsence", b =>
@@ -319,7 +366,37 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasIndex("TeacherGuid");
 
-                    b.ToTable("TeachersAbsences");
+                    b.ToTable("TeachersAbsences", (string)null);
+                });
+
+            modelBuilder.Entity("GroupStudent", b =>
+                {
+                    b.Property<Guid>("GroupsGuid")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("StudentsGuid")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("GroupsGuid", "StudentsGuid");
+
+                    b.HasIndex("StudentsGuid");
+
+                    b.ToTable("GroupStudent", (string)null);
+                });
+
+            modelBuilder.Entity("GroupTeacher", b =>
+                {
+                    b.Property<Guid>("OwnedGroupsGuid")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("OwnersTeachersGuid")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("OwnedGroupsGuid", "OwnersTeachersGuid");
+
+                    b.HasIndex("OwnersTeachersGuid");
+
+                    b.ToTable("GroupTeacher", (string)null);
                 });
 
             modelBuilder.Entity("PersonSchool", b =>
@@ -334,7 +411,7 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasIndex("SchoolsGuid");
 
-                    b.ToTable("PersonSchool");
+                    b.ToTable("PersonSchool", (string)null);
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Administrator", b =>
@@ -348,18 +425,6 @@ namespace Gradebook.Foundation.Database.Migrations
                 {
                     b.HasBaseType("Gradebook.Foundation.Domain.Models.Person");
 
-                    b.Property<Guid?>("ClassGuid")
-                        .IsRequired()
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid?>("GroupGuid")
-                        .IsRequired()
-                        .HasColumnType("char(36)");
-
-                    b.HasIndex("ClassGuid");
-
-                    b.HasIndex("GroupGuid");
-
                     b.HasDiscriminator().HasValue("Student");
                 });
 
@@ -368,6 +433,47 @@ namespace Gradebook.Foundation.Database.Migrations
                     b.HasBaseType("Gradebook.Foundation.Domain.Models.Person");
 
                     b.HasDiscriminator().HasValue("Teacher");
+                });
+
+            modelBuilder.Entity("ClassStudent", b =>
+                {
+                    b.HasOne("Gradebook.Foundation.Domain.Models.Class", null)
+                        .WithMany()
+                        .HasForeignKey("ClassesGuid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Gradebook.Foundation.Domain.Models.Student", null)
+                        .WithMany()
+                        .HasForeignKey("StudentsGuid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ClassTeacher", b =>
+                {
+                    b.HasOne("Gradebook.Foundation.Domain.Models.Class", null)
+                        .WithMany()
+                        .HasForeignKey("OwnedClassesGuid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Gradebook.Foundation.Domain.Models.Teacher", null)
+                        .WithMany()
+                        .HasForeignKey("OwnersTeachersGuid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Class", b =>
+                {
+                    b.HasOne("Gradebook.Foundation.Domain.Models.School", "School")
+                        .WithMany("Classes")
+                        .HasForeignKey("SchoolGuid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("School");
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Grade", b =>
@@ -405,17 +511,6 @@ namespace Gradebook.Foundation.Database.Migrations
                     b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Group", b =>
-                {
-                    b.HasOne("Gradebook.Foundation.Domain.Models.Class", "Class")
-                        .WithMany()
-                        .HasForeignKey("ClassGuid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Class");
-                });
-
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Person", b =>
                 {
                     b.HasOne("Gradebook.Foundation.Domain.Models.Administrator", "Creator")
@@ -448,9 +543,17 @@ namespace Gradebook.Foundation.Database.Migrations
                         .WithMany()
                         .HasForeignKey("InvitedPersonGuid");
 
+                    b.HasOne("Gradebook.Foundation.Domain.Models.School", "School")
+                        .WithMany()
+                        .HasForeignKey("SchoolGuid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Creator");
 
                     b.Navigation("InvitedPerson");
+
+                    b.Navigation("School");
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.TeachersAbsence", b =>
@@ -462,6 +565,36 @@ namespace Gradebook.Foundation.Database.Migrations
                         .IsRequired();
 
                     b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("GroupStudent", b =>
+                {
+                    b.HasOne("Gradebook.Foundation.Domain.Models.Group", null)
+                        .WithMany()
+                        .HasForeignKey("GroupsGuid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Gradebook.Foundation.Domain.Models.Student", null)
+                        .WithMany()
+                        .HasForeignKey("StudentsGuid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GroupTeacher", b =>
+                {
+                    b.HasOne("Gradebook.Foundation.Domain.Models.Group", null)
+                        .WithMany()
+                        .HasForeignKey("OwnedGroupsGuid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Gradebook.Foundation.Domain.Models.Teacher", null)
+                        .WithMany()
+                        .HasForeignKey("OwnersTeachersGuid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PersonSchool", b =>
@@ -479,33 +612,9 @@ namespace Gradebook.Foundation.Database.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Student", b =>
+            modelBuilder.Entity("Gradebook.Foundation.Domain.Models.School", b =>
                 {
-                    b.HasOne("Gradebook.Foundation.Domain.Models.Class", "Class")
-                        .WithMany("Students")
-                        .HasForeignKey("ClassGuid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Gradebook.Foundation.Domain.Models.Group", "Group")
-                        .WithMany("Students")
-                        .HasForeignKey("GroupGuid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Class");
-
-                    b.Navigation("Group");
-                });
-
-            modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Class", b =>
-                {
-                    b.Navigation("Students");
-                });
-
-            modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Group", b =>
-                {
-                    b.Navigation("Students");
+                    b.Navigation("Classes");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,1 +1,10 @@
-{}
+{
+  "yes": "Tak",
+  "no": "Nie",
+  "noResults": "Brak wyników",
+  "noMoreResults": "Koniec wyników",
+  "loading": "Ładowanie",
+  "schoolIsNotSelected": "Szkoła nie została wybrana",
+  "selectSchoolToManageStudents": "Wybierz szkołę by zarządzać uczniami ",
+  "actions": "Akcje"
+}

@@ -19,10 +19,8 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
     public Task<ResponseWithStatus<Guid, bool>> AddNewSchool(NewSchoolCommand command)
         => Base.AddNewSchool(command);
 
-    public Task<StatusResponse<bool>> AddNewStudent(NewStudentCommand newStudentDto)
-        => Base.AddNewStudent(newStudentDto);
 
-    public Task<StatusResponse<bool>> AddNewTeacher(NewTeacherCommand newTeacherDto)
+    public Task<ResponseWithStatus<Guid, bool>> AddNewTeacher(NewTeacherCommand newTeacherDto)
         => Base.AddNewTeacher(newTeacherDto);
 
     public Task<StatusResponse<bool>> AddPersonToSchool(Guid schoolGuid, Guid personGuid)
@@ -37,8 +35,8 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
     public Task<StatusResponse<bool>> AssignUserToTeacher(string userId, Guid personGuid)
         => Base.AssignUserToTeacher(userId, personGuid);
 
-    public Task<string?> GenerateSystemInvitation(Guid invitedPersonGuid, Guid invitingPersonGuid, SchoolRoleEnum role)
-        => Base.GenerateSystemInvitation(invitedPersonGuid, invitingPersonGuid, role);
+    public Task<string?> GenerateSystemInvitation(Guid invitedPersonGuid, Guid invitingPersonGuid, SchoolRoleEnum role, Guid schoolGuid)
+        => Base.GenerateSystemInvitation(invitedPersonGuid, invitingPersonGuid, role, schoolGuid);
     public void BeginTransaction()
     {
         Base.BeginTransaction();
@@ -66,4 +64,31 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
 
     public Task<StatusResponse<bool>> UseInvitation(UseInvitationCommand command)
         => Base.UseInvitation(command);
+
+    public Task<StatusResponse> DeleteSchool(Guid schoolGuid)
+        => Base.DeleteSchool(schoolGuid);
+
+    public Task<ResponseWithStatus<Guid, bool>> AddNewStudent(NewStudentCommand newStudentDto)
+        => Base.AddNewStudent(newStudentDto);
+
+    public Task<StatusResponse> AddNewClass(NewClassCommand command)
+        => Base.AddNewClass(command);
+
+    public Task<StatusResponse> DeleteClass(Guid classGuid)
+        => Base.DeleteClass(classGuid);
+
+    public Task<StatusResponse> DeletePerson(Guid personGuid)
+        => Base.DeletePerson(personGuid);
+
+    public Task<StatusResponse> AddStudentsToClass(Guid classGuid, IEnumerable<Guid> studentsGuids)
+        => Base.AddStudentsToClass(classGuid, studentsGuids);
+
+    public Task<StatusResponse> AddTeachersToClass(Guid classGuid, IEnumerable<Guid> teachersGuids)
+        => Base.AddTeachersToClass(classGuid, teachersGuids);
+
+    public Task<StatusResponse> DeleteStudentsFromClass(Guid classGuid, IEnumerable<Guid> studentsGuids)
+        => Base.DeleteStudentsFromClass(classGuid, studentsGuids);
+
+    public Task<StatusResponse> DeleteTeachersFromClass(Guid classGuid, IEnumerable<Guid> teachersGuids)
+        => Base.DeleteTeachersFromClass(classGuid, teachersGuids);
 }

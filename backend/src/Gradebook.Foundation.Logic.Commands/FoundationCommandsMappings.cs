@@ -8,6 +8,7 @@ public class FoundationCommandsMappings : Profile
 {
     public FoundationCommandsMappings()
     {
+        CreateMap<NewClassCommand, Class>();
         CreateMap<NewStudentCommand, Student>();
         CreateMap<NewTeacherCommand, Teacher>();
         CreateMap<NewSchoolCommand, School>();

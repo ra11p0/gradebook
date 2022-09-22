@@ -1,3 +1,8 @@
 {
-  "error": "Error!"
+  "error": "Error!",
+  "commonErrorMessage": "Error occured. Try again later.",
+  "schoolRemovedNotificationTitle": "School removed",
+  "schoolRemovedNotificationText": "School has been removed successfully",
+  "personRemovedNotificationTitle": "Person removed",
+  "personRemovedNotificationText": "Person has been removed successfully"
 }

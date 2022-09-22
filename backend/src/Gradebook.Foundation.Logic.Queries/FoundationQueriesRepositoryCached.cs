@@ -15,8 +15,8 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
     public Task<IEnumerable<TeacherDto>> GetAllAccessibleTeachers(Guid relatedPersonGuid)
         => Base.GetAllAccessibleTeachers(relatedPersonGuid);
 
-    public Task<IEnumerable<StudentDto>> GetAllInactiveAccessibleStudents(Guid relatedPersonGuid)
-        => Base.GetAllInactiveAccessibleStudents(relatedPersonGuid);
+    public Task<IEnumerable<StudentDto>> GetAllInactiveAccessibleStudents(Guid schoolGuid)
+        => Base.GetAllInactiveAccessibleStudents(schoolGuid);
 
     public Task<ClassDto> GetClassByGuid(Guid guid)
         => Base.GetClassByGuid(guid);
@@ -49,26 +49,42 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
         => Base.GetTeacherByGuid(guid);
 
     public void BeginTransaction()
-    {
-        Base.BeginTransaction();
-    }
+        => Base.BeginTransaction();
 
     public void CommitTransaction()
-    {
-        Base.CommitTransaction();
-    }
+        => Base.CommitTransaction();
 
     public void RollbackTransaction()
-    {
-        Base.RollbackTransaction();
-    }
+        => Base.RollbackTransaction();
+
     public void SaveChanges()
-    {
-        Base.SaveChanges();
-    }
+        => Base.SaveChanges();
 
     public Task SaveChangesAsync()
-    {
-        return Base.SaveChangesAsync();
-    }
+        => Base.SaveChangesAsync();
+
+    public Task<SchoolDto> GetSchoolByGuid(Guid guid)
+        => Base.GetSchoolByGuid(guid);
+
+    public Task<IPagedList<StudentDto>> GetStudentsInSchool(Guid schoolGuid, Pager pager)
+        => Base.GetStudentsInSchool(schoolGuid, pager);
+
+    public Task<IPagedList<InvitationDto>> GetInvitationsToSchool(Guid schoolGuid, Pager pager)
+        => Base.GetInvitationsToSchool(schoolGuid, pager);
+
+    public Task<IPagedList<ClassDto>> GetClassesInSchool(Guid schoolGuid, Pager pager)
+        => Base.GetClassesInSchool(schoolGuid, pager);
+
+    public Task<IPagedList<StudentDto>> GetStudentsInClass(Guid schoolGuid, Pager pager)
+        => Base.GetStudentsInClass(schoolGuid, pager);
+
+    public Task<IPagedList<TeacherDto>> GetTeachersInClass(Guid schoolGuid, Pager pager)
+        => Base.GetTeachersInClass(schoolGuid, pager);
+
+    public Task<IPagedList<TeacherDto>> GetTeachersInSchool(Guid schoolGuid, Pager pager)
+        => Base.GetTeachersInSchool(schoolGuid, pager);
+
+
+    public Task<IPagedList<PersonDto>> GetPeopleInSchool(Guid schoolGuid, string schoolRole, string query, Pager pager)
+        => Base.GetPeopleInSchool(schoolGuid, schoolRole, query, pager);
 }

@@ -57,8 +57,6 @@ const RegisterAdministratorForm = (
   const { t } = useTranslation("registerAdministrator");
   const [person, setPerson] =
     useState<RegisterAdministratorPersonValues | null>(null);
-  const [school, setSchool] =
-    useState<RegisterAdministratorSchoolValues | null>(null);
   const [showNewSchoolComponent, setShowNewSchoolComponent] = useState(false);
 
   return (
@@ -90,7 +88,6 @@ const RegisterAdministratorForm = (
           <>
             <RegisterAdministratorSchool
               onSubmit={(values: RegisterAdministratorSchoolValues) => {
-                setSchool(values);
                 activateWithSchool(person, values);
               }}
               onContinueWithoutSchool={() => activateWithoutSchool(person)}

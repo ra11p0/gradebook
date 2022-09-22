@@ -17,16 +17,18 @@ export default (state: any = defaultState, action: any) => {
                 ...state,
                 isLoggedIn: true,
                 session: {
-                    token: action.token,
+                    token: action.access_token,
                     refreshToken: action.refreshToken,
                     username: action.username,
                     userId: action.userId,
+                    surname: action.surname,
+                    name: action.name,
                     personGuid: action.personGuid,
                     roles: action.roles
                 }
             };
         case LOG_OUT:
-            localStorage.removeItem('access_token');
+            localStorage.removeItem('access_token');  //should be in middleware
             localStorage.removeItem('refresh');
             return {
                 ...state,
@@ -36,7 +38,7 @@ export default (state: any = defaultState, action: any) => {
                 schoolsList: null
             };
         case REFRESH_TOKEN:
-            localStorage.setItem('access_token', action.token);
+            localStorage.setItem('access_token', action.token);  //should be in middleware
             localStorage.setItem('refresh', action.refreshToken);
             return {
                 ...state,
@@ -63,7 +65,8 @@ export default (state: any = defaultState, action: any) => {
                 ...state,
                 school: {
                     ...state.school,
-                    schoolGuid: action.schoolGuid
+                    schoolGuid: action.schoolGuid,
+                    schoolName: action.schoolName
                 }
             };
         case SET_SCHOOLS_LIST:

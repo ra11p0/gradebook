@@ -7,7 +7,7 @@ using Gradebook.Foundation.Common.Foundation.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Api.Controllers.Invitations;
+namespace Api.Controllers.Administrators;
 
 [Route("api/[controller]")]
 [ApiController]

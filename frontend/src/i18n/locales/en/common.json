@@ -1,1 +1,10 @@
-{}
+{
+  "yes": "Yes",
+  "no": "No",
+  "noResults": "No results",
+  "noMoreResults": "No more results",
+  "loading": "Loading",
+  "schoolIsNotSelected": "School is not selected",
+  "selectSchoolToManageStudents": "Select school to manage students",
+  "actions": "Actions"
+}

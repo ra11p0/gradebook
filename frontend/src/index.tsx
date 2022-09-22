@@ -4,6 +4,8 @@ import "animate.css/animate.min.css";
 import "react-datepicker/dist/react-datepicker-cssmodules.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "./Common/Styles/Style.css";
+import "tippy.js/dist/tippy.css";
+import "tippy.js/animations/scale.css";
 import "./i18n/config";
 import React from "react";
 import ReactDOM from "react-dom/client";

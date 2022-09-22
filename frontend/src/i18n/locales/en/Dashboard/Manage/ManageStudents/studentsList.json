@@ -5,5 +5,9 @@
   "name": "Name",
   "surname": "Surname",
   "isActive": "Is active",
-  "birthday": "Birthday"
+  "birthday": "Birthday",
+
+  "showPerson": "Show person",
+  "removePerson": "Remove person",
+  "youSureRemovePerson": "Are you sure you want to remove person?"
 }

@@ -1,0 +1,13 @@
+{
+  "managedSchools": "Zarządzane szkoły",
+  "addSchool": "Dodaj szkołę",
+  "name": "Nazwa",
+  "address": "Adres",
+  "postalCode": "Kod pocztowy",
+  "city": "Miasto",
+  "actions": "Akcje",
+  "showSchool": "Pokaż szkołę",
+  "removeSchool": "Usuń szkołę",
+  "youSureRemoveSchool": "Czy na pewno chcesz usunąć szkołę?",
+  "noSchoolsManaged": "Brak zarządzanych szkół"
+}

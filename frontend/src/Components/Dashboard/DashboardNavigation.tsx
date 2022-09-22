@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { logIn } from "../../Actions/Account/accountActions";
 import { Nav } from "react-bootstrap";
 import { withTranslation } from "react-i18next";
 import SuperAdminOnly from "../Shared/SuperAdminOnly";
@@ -162,6 +161,30 @@ class DashboardNavigation extends React.Component<
               }}
             >
               {t("manageTeachers")}
+            </Link>
+            <Link
+              to="manageClasses"
+              className={
+                "btn btn-outline-primary " +
+                (this.state.activeTab == "manageClasses" ? "active" : "")
+              }
+              onClick={() => {
+                this.setActiveTab("manageClasses");
+              }}
+            >
+              {t("manageClasses")}
+            </Link>
+            <Link
+              to="manageInvitations"
+              className={
+                "btn btn-outline-primary " +
+                (this.state.activeTab == "manageInvitations" ? "active" : "")
+              }
+              onClick={() => {
+                this.setActiveTab("manageInvitations");
+              }}
+            >
+              {t("manageInvitations")}
             </Link>
             <Link
               to="manageSchool"
