@@ -1,13 +1,17 @@
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { connect } from "react-redux";
-import {
-  setSchool,
-  setSchoolsList,
-} from "../../Actions/Account/accountActions";
 import GetAccessibleSchoolsResponse from "../../ApiClient/People/Definitions/GetAccessibleSchoolsResponse";
 import PeopleProxy from "../../ApiClient/People/PeopleProxy";
+import {
+  setSchoolsListAction,
+  setSchoolsListWrapper,
+} from "../../ReduxWrappers/setSchoolsListWrapper";
+import {
+  setSchoolAction,
+  setSchoolWrapper,
+} from "../../ReduxWrappers/setSchoolWrapper";
 const mapStateToProps = (state: any) => ({
   currentSchoolGuid: state.common.school?.schoolGuid,
   currentPersonGuid: state.common.session.personGuid,
@@ -15,32 +19,29 @@ const mapStateToProps = (state: any) => ({
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
-  setSchool: (schoolGuid: string | null, schoolName: string | null) => {
-    dispatch({ ...setSchool, schoolGuid, schoolName });
-  },
-  setSchoolsList: (schoolsList: GetAccessibleSchoolsResponse[]) => {
-    dispatch({ ...setSchoolsList, schoolsList });
-  },
+  setSchool: (action: setSchoolAction) => setSchoolWrapper(dispatch, action),
+  setSchoolsList: (action: setSchoolsListAction) =>
+    setSchoolsListWrapper(dispatch, action),
 });
 interface SchoolSelectProps {
   className?: string;
   currentSchoolGuid?: string;
   currentPersonGuid?: string;
   schoolsList?: GetAccessibleSchoolsResponse[];
-  setSchool?: (schoolGuid: string | null, schoolName: string | null) => void;
-  setSchoolsList?: (schoolsList: GetAccessibleSchoolsResponse[]) => void;
+  setSchool?: (action: setSchoolAction) => void;
+  setSchoolsList?: (action: setSchoolsListAction) => void;
 }
 const SchoolSelect = (props: SchoolSelectProps): ReactElement => {
   const { t } = useTranslation("schoolSelect");
   useEffect(() => {
     PeopleProxy.getAccessibleSchools(props.currentPersonGuid!).then(
       (schoolsArray) => {
-        props.setSchoolsList!(schoolsArray.data);
+        props.setSchoolsList!({ schoolsList: schoolsArray.data });
         if (schoolsArray.data.length != 0)
-          props.setSchool!(
-            schoolsArray.data[0].guid,
-            schoolsArray.data[0].name
-          );
+          props.setSchool!({
+            schoolGuid: schoolsArray.data[0].guid,
+            schoolName: schoolsArray.data[0].name,
+          });
       }
     );
   }, []);
@@ -61,10 +62,13 @@ const SchoolSelect = (props: SchoolSelectProps): ReactElement => {
               (school) => change.target.value == school.guid
             );
             if (!selectedSchool) {
-              props.setSchool!(null, null);
+              props.setSchool!({ schoolName: "", schoolGuid: "" });
               return;
             }
-            props.setSchool!(selectedSchool?.guid, selectedSchool?.name);
+            props.setSchool!({
+              schoolGuid: selectedSchool?.guid,
+              schoolName: selectedSchool?.name,
+            });
           }}
         >
           {props.schoolsList?.map((school) => (

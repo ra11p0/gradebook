@@ -5,7 +5,7 @@ import { Dropdown } from "react-bootstrap";
 import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { logOut } from "../../Actions/Account/accountActions";
+import { logOutWrapper } from "../../ReduxWrappers/logOutWrapper";
 import SchoolSelect from "./SchoolSelect";
 
 const mapStateToProps = (state: any) => {
@@ -19,7 +19,7 @@ const mapStateToProps = (state: any) => {
 };
 
 const mapDispatchToProps = (dispatch: any) => ({
-  logOutHandler: () => dispatch(logOut),
+  logOutHandler: () => logOutWrapper(dispatch),
 });
 
 interface HeaderProps {
@@ -52,10 +52,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     return (
       <header className="p-4 bg-grey-light bg-gradient">
         <div className="d-flex justify-content-between">
-          <Link
-            to="/"
-            className="text-dark display-6 text-decoration-none my-auto"
-          >
+          <Link to="/" className="text-dark display-6 text-decoration-none my-auto">
             Gradebook
           </Link>
           <div className="my-auto d-flex gap-2">
@@ -68,10 +65,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                     </div>
 
                     <div className="my-auto">
-                      <Link
-                        to="/account/profile"
-                        className="btn btn-outline-primary"
-                      >
+                      <Link to="/account/profile" className="btn btn-outline-primary">
                         {`${this.props.name} ${this.props.surname}`}
                       </Link>
                     </div>
@@ -83,10 +77,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                   </>
                 )}
                 <div className="my-auto">
-                  <a
-                    className="btn btn-outline-primary"
-                    onClick={() => this.logOut()}
-                  >
+                  <a className="btn btn-outline-primary" onClick={() => this.logOut()}>
                     {t("logout")}
                   </a>
                 </div>
@@ -98,12 +89,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                   <FontAwesomeIcon icon={faLanguage} />
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  <Dropdown.Item onClick={() => i18n.changeLanguage("pl")}>
-                    {t("polish")} (Polish)
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={() => i18n.changeLanguage("en")}>
-                    {t("english")} (English)
-                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => i18n.changeLanguage("pl")}>{t("polish")} (Polish)</Dropdown.Item>
+                  <Dropdown.Item onClick={() => i18n.changeLanguage("en")}>{t("english")} (English)</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </div>
@@ -114,6 +101,4 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   }
 }
 
-export default withTranslation("header")(
-  connect(mapStateToProps, mapDispatchToProps)(Header)
-);
+export default withTranslation("header")(connect(mapStateToProps, mapDispatchToProps)(Header));

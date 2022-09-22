@@ -1,11 +1,7 @@
-import { Box, Button, Grid, List, ListItem, Stack } from "@mui/material";
+import { Button, Grid, List, ListItem, Stack } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { connect } from "react-redux";
-import {
-  setSchool,
-  setSchoolsList,
-} from "../../../../Actions/Account/accountActions";
 import GetAccessibleSchoolsResponse from "../../../../ApiClient/People/Definitions/GetAccessibleSchoolsResponse";
 import PeopleProxy from "../../../../ApiClient/People/PeopleProxy";
 import { Link } from "react-router-dom";
@@ -17,14 +13,20 @@ import Swal from "sweetalert2";
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
 import Notifications from "../../../../Notifications/Notifications";
 import { Row } from "react-bootstrap";
+import {
+  setSchoolsListAction,
+  setSchoolsListWrapper,
+} from "../../../../ReduxWrappers/setSchoolsListWrapper";
+import {
+  setSchoolAction,
+  setSchoolWrapper,
+} from "../../../../ReduxWrappers/setSchoolWrapper";
 
 const mapDispatchToProps = (dispatch: any) => ({
-  setSchoolsList: (schoolsList: GetAccessibleSchoolsResponse[]) => {
-    dispatch({ ...setSchoolsList, schoolsList });
-  },
-  setCurrentSchool: (guid: string | null, name: string | null) => {
-    dispatch({ ...setSchool, schoolGuid: guid, schoolName: name });
-  },
+  setSchoolsList: (action: setSchoolsListAction) =>
+    setSchoolsListWrapper(dispatch, action),
+  setCurrentSchool: (action: setSchoolAction) =>
+    setSchoolWrapper(dispatch, action),
 });
 const mapStateToProps = (state: any) => ({
   personGuid: state.common.session?.personGuid,
@@ -36,8 +38,8 @@ interface SchoolsListProps {
   personGuid?: string;
   schoolsList?: GetAccessibleSchoolsResponse[];
   currentSchoolGuid?: string;
-  setSchoolsList?: (schoolsList: GetAccessibleSchoolsResponse[]) => void;
-  setCurrentSchool?: (guid: string | null, name: string | null) => void;
+  setSchoolsList?: (action: setSchoolsListAction) => void;
+  setCurrentSchool?: (action: setSchoolAction) => void;
 }
 
 function SchoolsList(props: SchoolsListProps) {
@@ -48,18 +50,18 @@ function SchoolsList(props: SchoolsListProps) {
   useEffect(() => {
     PeopleProxy.getAccessibleSchools(props.personGuid!).then(
       (schoolsResponse) => {
-        props.setSchoolsList!(schoolsResponse.data);
+        props.setSchoolsList!({ schoolsList: schoolsResponse.data });
         if (
           !schoolsResponse.data
             .map((e) => e.guid)
             .includes(props.currentSchoolGuid!)
         ) {
           if (schoolsResponse.data.length != 0)
-            props.setCurrentSchool!(
-              schoolsResponse.data[0].guid,
-              schoolsResponse.data[0].name
-            );
-          else props.setCurrentSchool!(null, null);
+            props.setCurrentSchool!({
+              schoolGuid: schoolsResponse.data[0].guid,
+              schoolName: schoolsResponse.data[0].name,
+            });
+          else props.setCurrentSchool!({ schoolName: "", schoolGuid: "" });
         }
       }
     );
@@ -181,13 +183,11 @@ function SchoolsList(props: SchoolsListProps) {
                 </Grid>
               </ListItem>
             ))}
-            {
-              props.schoolsList?.length == 0 && <Row className="text-center">
-                <div>
-                  {t('noSchoolsManaged')}
-                </div>
+            {props.schoolsList?.length == 0 && (
+              <Row className="text-center">
+                <div>{t("noSchoolsManaged")}</div>
               </Row>
-            }
+            )}
           </List>
         </Stack>
       </Stack>

@@ -9,7 +9,7 @@ import PeopleProxy from "../../ApiClient/People/PeopleProxy";
 import Notifications from "../../Notifications/Notifications";
 import AccountProxy from "../../ApiClient/Account/AccountProxy";
 import { store } from "../../store";
-import { refreshUser } from "../../Actions/Account/accountActions";
+import { refreshUserWrapper } from "../../ReduxWrappers/refreshUserWrapper";
 
 const mapStateToProps = (state: any) => ({});
 
@@ -47,17 +47,13 @@ const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
       PeopleProxy.activatePerson(values.accessCode)
         .then(() => {
           AccountProxy.getMe().then((meResponse) => {
-            store.dispatch({
-              ...refreshUser,
-              roles: meResponse.data.roles,
+            refreshUserWrapper(store.dispatch, {
+              ...meResponse.data,
               userId: meResponse.data.id,
-              personGuid: meResponse.data.personGuid,
             });
           });
         })
-        .catch((err) => {
-          Notifications.showCommonError();
-        });
+        .catch(Notifications.showCommonError);
     },
   });
 
@@ -99,32 +95,20 @@ const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
             onInput={handleAccessCodeChange}
           />
           {formik.errors.accessCode && formik.touched.accessCode ? (
-            <div className="invalid-feedback d-block">
-              {formik.errors.accessCode}
-            </div>
+            <div className="invalid-feedback d-block">{formik.errors.accessCode}</div>
           ) : null}
         </div>
         <Row>
           <Col>
             <div className="m-1 p-1">
               <label>{t("name")}</label>
-              <input
-                className="form-control"
-                type="text"
-                defaultValue={name}
-                disabled
-              />
+              <input className="form-control" type="text" defaultValue={name} disabled />
             </div>
           </Col>
           <Col>
             <div className="m-1 p-1">
               <label>{t("surname")}</label>
-              <input
-                className="form-control"
-                type="text"
-                defaultValue={surname}
-                disabled
-              />
+              <input className="form-control" type="text" defaultValue={surname} disabled />
             </div>
           </Col>
         </Row>
@@ -132,12 +116,7 @@ const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
           <Col>
             <div className="m-1 p-1">
               <label>{t("birthday")}</label>
-              <input
-                className="form-control"
-                type="text"
-                defaultValue={birthday}
-                disabled
-              />
+              <input className="form-control" type="text" defaultValue={birthday} disabled />
             </div>
           </Col>
         </Row>
@@ -150,7 +129,4 @@ const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
   );
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RegisterStudentForm);
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterStudentForm);
