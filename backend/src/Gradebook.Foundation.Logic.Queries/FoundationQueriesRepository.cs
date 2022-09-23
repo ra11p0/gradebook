@@ -14,9 +14,8 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
 
     public async Task<IEnumerable<StudentDto>> GetAllAccessibleStudents(Guid relatedPersonGuid)
     {
-        using (var cn = await GetOpenConnectionAsync())
-        {
-            return await cn.QueryAsync<StudentDto>(@"
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryAsync<StudentDto>(@"
                 SELECT Name, Surname, SchoolRole, Birthday CreatorGuid, Guid, UserGuid
                 FROM Person
                 LEFT JOIN PersonSchool AS PS
@@ -34,17 +33,15 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                             )
                     )
             ", new
-            {
-                relatedPersonGuid
-            });
-        }
+        {
+            relatedPersonGuid
+        });
     }
 
     public async Task<IEnumerable<TeacherDto>> GetAllAccessibleTeachers(Guid relatedPersonGuid)
     {
-        using (var cn = await GetOpenConnectionAsync())
-        {
-            return await cn.QueryAsync<TeacherDto>(@"
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryAsync<TeacherDto>(@"
                 SELECT Name, Surname, SchoolRole, Birthday, CreatorGuid, Guid
                 FROM Person
                 LEFT JOIN PersonSchool AS PS
@@ -62,10 +59,9 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                             )
                     )
             ", new
-            {
-                relatedPersonGuid
-            });
-        }
+        {
+            relatedPersonGuid
+        });
     }
 
     public async Task<IEnumerable<StudentDto>> GetAllInactiveAccessibleStudents(Guid schoolGuid)
@@ -88,18 +84,16 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
 
     public async Task<ClassDto> GetClassByGuid(Guid guid)
     {
-        using (var cn = await GetOpenConnectionAsync())
-        {
-            return await cn.QueryFirstOrDefaultAsync<ClassDto>(@"
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryFirstOrDefaultAsync<ClassDto>(@"
                 SELECT Name, CreatedDate, Description, Guid
                 FROM Classes
                 WHERE Guid like @guid
                     AND IsDeleted = 0
             ", new
-            {
-                guid
-            });
-        }
+        {
+            guid
+        });
     }
 
     public async Task<IPagedList<ClassDto>> GetClassesInSchool(Guid schoolGuid, Pager pager)
@@ -116,25 +110,22 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
 
     public async Task<GroupDto> GetGroupByGuid(Guid guid)
     {
-        using (var cn = await GetOpenConnectionAsync())
-        {
-            return await cn.QueryFirstOrDefaultAsync<GroupDto>(@"
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryFirstOrDefaultAsync<GroupDto>(@"
                 SELECT Name
                 FROM Groups
                 WHERE Guid like @guid
                     AND IsDeleted = 0
             ", new
-            {
-                guid
-            });
-        }
+        {
+            guid
+        });
     }
 
     public async Task<InvitationDto> GetInvitationByActivationCode(string activationCode)
     {
-        using (var cn = await GetOpenConnectionAsync())
-        {
-            return await cn.QueryFirstOrDefaultAsync<InvitationDto>(@"
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryFirstOrDefaultAsync<InvitationDto>(@"
                 SELECT SI.Guid, SI.CreatedDate, ExprationDate, InvitationCode, IsUsed,
                     SI.CreatorGuid, UsedDate, InvitedPersonGuid, SI.SchoolRole
                 FROM SystemInvitations AS SI
@@ -144,17 +135,15 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                     AND SI.IsDeleted = 0
                     AND P.IsDeleted = 0
             ", new
-            {
-                activationCode = activationCode.Normalize()
-            });
-        }
+        {
+            activationCode = activationCode.Normalize()
+        });
     }
 
     public async Task<IEnumerable<InvitationDto>> GetInvitations(Guid personGuid)
     {
-        using (var cn = await GetOpenConnectionAsync())
-        {
-            return await cn.QueryAsync<InvitationDto>(@"
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryAsync<InvitationDto>(@"
                 SELECT SI.Guid, SI.CreatedDate, ExprationDate, InvitationCode, IsUsed,
                     SI.CreatorGuid, UsedDate, InvitedPersonGuid, SI.SchoolRole
                 FROM SystemInvitations AS SI
@@ -164,10 +153,9 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                     AND SI.IsDeleted = 0
                     AND P.IsDeleted = 0
             ", new
-            {
-                personGuid
-            });
-        }
+        {
+            personGuid
+        });
     }
 
     public async Task<IPagedList<InvitationDto>> GetInvitationsToSchool(Guid schoolGuid, Pager pager)
@@ -249,61 +237,54 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
 
     public async Task<PersonDto> GetPersonByGuid(Guid guid)
     {
-        using (var cn = await GetOpenConnectionAsync())
-        {
-            return await cn.QueryFirstOrDefaultAsync<PersonDto>(@"
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryFirstOrDefaultAsync<PersonDto>(@"
                 SELECT Guid, Name, Surname, SchoolRole, Birthday, UserGuid
                 FROM Person
                 WHERE Guid = @guid
+                    AND IsDeleted = 0
+            ",
+    new
+    {
+        guid
+    });
+    }
+
+    public async Task<Guid?> GetPersonGuidForUser(string userId, Guid schoolGuid)
+    {
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryFirstOrDefaultAsync<Guid>(@"
+                SELECT Guid 
+                FROM Person
+                WHERE UserGuid = @userId
+                    AND IsDeleted = 0
+            ",
+        new
+        {
+
+            userId
+        });
+    }
+
+    public async Task<SchoolDto> GetSchoolByGuid(Guid guid)
+    {
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryFirstOrDefaultAsync<SchoolDto>(@"
+                SELECT Guid, Name, AddressLine1, AddressLine2, City, PostalCode
+                FROM Schools
+                WHERE Guid = @guid 
                     AND IsDeleted = 0
             ",
         new
         {
             guid
         });
-        }
-    }
-
-    public async Task<Guid?> GetPersonGuidForUser(string userId, Guid schoolGuid)
-    {
-        using (var cn = await GetOpenConnectionAsync())
-        {
-            return await cn.QueryFirstOrDefaultAsync<Guid>(@"
-                SELECT Guid 
-                FROM Person
-                WHERE UserGuid = @userId
-                    AND IsDeleted = 0
-            ",
-            new
-            {
-
-                userId
-            });
-        }
-    }
-
-    public async Task<SchoolDto> GetSchoolByGuid(Guid guid)
-    {
-        using (var cn = await GetOpenConnectionAsync())
-        {
-            return await cn.QueryFirstOrDefaultAsync<SchoolDto>(@"
-                SELECT Guid, Name, AddressLine1, AddressLine2, City, PostalCode
-                FROM Schools
-                WHERE Guid = @guid 
-                    AND IsDeleted = 0
-            ",
-            new
-            {
-                guid
-            });
-        }
     }
 
     public async Task<IEnumerable<SchoolDto>> GetSchoolsForUser(string userGuid)
     {
-        using (var cn = await GetOpenConnectionAsync())
-        {
-            return await cn.QueryAsync<SchoolDto>(@"
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryAsync<SchoolDto>(@"
                 SELECT Guid, Name, AddressLine1, AddressLine2, City, PostalCode
                 FROM Schools
                 JOIN PersonSchool AS PS
@@ -313,11 +294,10 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                 )
                     AND IsDeleted = 0
             ",
-            new
-            {
-                userGuid
-            });
-        }
+        new
+        {
+            userGuid
+        });
     }
 
     public async Task<StudentDto> GetStudentByGuid(Guid guid)
@@ -360,19 +340,17 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
 
     public async Task<TeacherDto> GetTeacherByGuid(Guid guid)
     {
-        using (var cn = await GetOpenConnectionAsync())
-        {
-            return await cn.QueryFirstOrDefaultAsync<TeacherDto>(@"
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryFirstOrDefaultAsync<TeacherDto>(@"
                 SELECT Name, Surname, SchoolRole, Birthday, CreatorGuid, Guid, UserGuid
                 FROM Person
                 WHERE Discriminator = 'Teacher'
                     AND Guid = @guid
                     AND IsDeleted = 0
             ", new
-            {
-                guid
-            });
-        }
+        {
+            guid
+        });
     }
 
     public Task<IPagedList<TeacherDto>> GetTeachersInClass(Guid schoolGuid, Pager pager)
@@ -382,19 +360,16 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
 
     public async Task<bool> IsUserActive(string userGuid)
     {
-        /**/
-        using (var cn = await GetOpenConnectionAsync())
-        {
-            return await cn.QueryFirstOrDefaultAsync<bool>(@"
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryFirstOrDefaultAsync<bool>(@"
                 SELECT EXISTS (
                     SELECT * 
                     FROM Person 
                     WHERE UserGuid = @userGuid
                 )
             ", new
-            {
-                userGuid
-            });
-        }
+        {
+            userGuid
+        });
     }
 }

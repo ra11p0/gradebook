@@ -7,9 +7,9 @@ public class StudentDto
     public Guid Guid { get; set; }
     public Guid CreatorGuid { get; set; }
     public string? UserGuid { get; set; }
-    public string Name { get; set; }
-    public string Surname { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Surname { get; set; } = string.Empty;
     public SchoolRoleEnum SchoolRole { get; set; }
     public DateTime? Birthday { get; set; }
-    public bool IsActive => !(UserGuid is null);
+    public bool IsActive => UserGuid is not null;
 }

@@ -76,7 +76,7 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         return resp;
     }
 
-    public async Task<StatusResponse> AddNewSchool(NewSchoolCommand newSchoolCommand)
+    public Task<StatusResponse> AddNewSchool(NewSchoolCommand newSchoolCommand)
     {
         throw new Exception("set new person before activating new school");
         /*Repository.BeginTransaction();
