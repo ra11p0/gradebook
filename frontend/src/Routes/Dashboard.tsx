@@ -14,6 +14,7 @@ import SchoolsList from "../Components/Dashboard/Manage/ManageSchool/SchoolsList
 import SchoolSelectedOnly from "../Components/Shared/SchoolSelectedOnly";
 import ManageClasses from "../Components/Dashboard/Manage/ManageClasses/ManageClasses";
 import { isLoggedInProxy } from "../ReduxProxy/isLoggedInProxy";
+import SettingsIndex from "../Components/Dashboard/Manage/Settings/SettingsIndex";
 
 const mapStateToProps = (state: any) => ({
   isLoggedIn: isLoggedInProxy(state),
@@ -72,6 +73,7 @@ class Dashboard extends React.Component<DashboardProps> {
               }
             ></Route>
             <Route path="manageSchool/*" element={<SchoolsList />}></Route>
+            <Route path="settings/*" element={<SettingsIndex />}></Route>
           </Routes>
         </div>
       </div>
