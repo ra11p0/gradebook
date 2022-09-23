@@ -28,7 +28,7 @@ class SchoolSelectedOnly extends React.Component<Props> {
                   <>{t("schoolIsNotSelected")} </>
                 </div>
                 <div>
-                  <>{t("selectSchoolToManageStudents")}</>{" "}
+                  <>{t("selectSchoolToManageStudents")}</>
                 </div>
               </>
             </div>

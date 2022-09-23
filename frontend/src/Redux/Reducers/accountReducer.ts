@@ -1,4 +1,4 @@
-import { APP_LOAD, LOG_IN, LOG_OUT, SET_PERSON, SET_SCHOOL, SET_SCHOOLS_LIST, SET_USER } from '../../../Constraints/actionTypes'
+import { APP_LOAD, LOG_IN, LOG_OUT, SET_PERSON, SET_SCHOOL, SET_SCHOOLS_LIST, SET_USER } from '../../Constraints/actionTypes'
 
 const defaultState = {
     appLoaded: false,
