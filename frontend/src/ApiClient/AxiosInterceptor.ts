@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { loginWrapper } from '../ReduxWrappers/loginWrapper';
+import { loginWrapper } from '../Redux/ReduxWrappers/loginWrapper';
 import { store } from '../store'
 import AccountProxy from './Account/AccountProxy';
 

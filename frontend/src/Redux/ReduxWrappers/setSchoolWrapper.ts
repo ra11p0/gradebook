@@ -1,4 +1,4 @@
-import { SET_SCHOOL } from "../Constraints/actionTypes";
+import { SET_SCHOOL } from "../../Constraints/actionTypes";
 
 export const setSchool = {
     type: SET_SCHOOL

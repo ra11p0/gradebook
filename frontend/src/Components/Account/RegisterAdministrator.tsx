@@ -7,8 +7,8 @@ import RegisterAdministratorSchool, { RegisterAdministratorSchoolValues } from "
 import AdministratorsProxy from "../../ApiClient/Administrators/AdministratorsProxy";
 import Notifications from "../../Notifications/Notifications";
 import AccountProxy from "../../ApiClient/Account/AccountProxy";
-import { setSchoolsListAction, setSchoolsListWrapper } from "../../ReduxWrappers/setSchoolsListWrapper";
-import { currentUserIdProxy } from "../../ReduxProxy/currentUserIdProxy";
+import { currentUserIdProxy } from "../../Redux/ReduxProxy/currentUserIdProxy";
+import { setSchoolsListAction, setSchoolsListWrapper } from "../../Redux/ReduxWrappers/setSchoolsListWrapper";
 
 const mapStateToProps = (state: any) => ({
   userId: currentUserIdProxy(state),

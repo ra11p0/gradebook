@@ -1,5 +1,5 @@
-import GetAccessibleSchoolsResponse from "../ApiClient/Account/Definitions/GetAccessibleSchoolsResponse";
-import { SET_SCHOOLS_LIST } from "../Constraints/actionTypes";
+import GetAccessibleSchoolsResponse from "../../ApiClient/Account/Definitions/GetAccessibleSchoolsResponse";
+import { SET_SCHOOLS_LIST } from "../../Constraints/actionTypes";
 
 const setSchoolsList = {
     type: SET_SCHOOLS_LIST

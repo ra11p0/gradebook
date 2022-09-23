@@ -11,12 +11,12 @@ import Swal from "sweetalert2";
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
 import Notifications from "../../../../Notifications/Notifications";
 import { Row } from "react-bootstrap";
-import { setSchoolsListAction, setSchoolsListWrapper } from "../../../../ReduxWrappers/setSchoolsListWrapper";
-import { setSchoolAction, setSchoolWrapper } from "../../../../ReduxWrappers/setSchoolWrapper";
 import AccountProxy from "../../../../ApiClient/Account/AccountProxy";
-import { currentUserIdProxy } from "../../../../ReduxProxy/currentUserIdProxy";
-import { schoolsListProxy } from "../../../../ReduxProxy/schoolsListProxy";
+import { currentUserIdProxy } from "../../../../Redux/ReduxProxy/currentUserIdProxy";
+import { schoolsListProxy } from "../../../../Redux/ReduxProxy/schoolsListProxy";
 import GetSchoolResponse from "../../../../ApiClient/Schools/Definitions/GetSchoolResponse";
+import { setSchoolsListAction, setSchoolsListWrapper } from "../../../../Redux/ReduxWrappers/setSchoolsListWrapper";
+import { setSchoolAction, setSchoolWrapper } from "../../../../Redux/ReduxWrappers/setSchoolWrapper";
 
 const mapDispatchToProps = (dispatch: any) => ({
   setSchoolsList: (action: setSchoolsListAction) => setSchoolsListWrapper(dispatch, action),

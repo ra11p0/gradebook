@@ -1,4 +1,4 @@
-import { SET_PERSON } from "../Constraints/actionTypes";
+import { SET_PERSON } from "../../Constraints/actionTypes";
 
 export const setPerson = {
     type: SET_PERSON

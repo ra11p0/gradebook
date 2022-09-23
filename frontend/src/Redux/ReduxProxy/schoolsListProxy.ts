@@ -1,4 +1,4 @@
-import GetSchoolResponse from "../ApiClient/Schools/Definitions/GetSchoolResponse"
+import GetSchoolResponse from "../../ApiClient/Schools/Definitions/GetSchoolResponse"
 
 export const schoolsListProxy = (state: any): GetSchoolResponse[] | null => {
     if (!state.common.schoolsList) return null;

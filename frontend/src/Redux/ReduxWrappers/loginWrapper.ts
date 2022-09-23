@@ -1,4 +1,4 @@
-import { LOG_IN } from "../Constraints/actionTypes";
+import { LOG_IN } from "../../Constraints/actionTypes";
 
 const logIn = {
     type: LOG_IN

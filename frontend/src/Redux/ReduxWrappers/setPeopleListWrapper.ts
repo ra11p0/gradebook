@@ -1,5 +1,5 @@
-import GetAccessiblePeopleResponse from "../ApiClient/Account/Definitions/GetAccessiblePeopleResponse";
-import { SET_PEOPLE_LIST } from "../Constraints/actionTypes";
+import GetAccessiblePeopleResponse from "../../ApiClient/Account/Definitions/GetAccessiblePeopleResponse";
+import { SET_PEOPLE_LIST } from "../../Constraints/actionTypes";
 
 const setPeopleList = {
     type: SET_PEOPLE_LIST

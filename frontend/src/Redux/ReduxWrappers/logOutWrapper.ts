@@ -1,4 +1,4 @@
-import { LOG_OUT } from "../Constraints/actionTypes";
+import { LOG_OUT } from "../../Constraints/actionTypes";
 
 const logOut = {
     type: LOG_OUT,

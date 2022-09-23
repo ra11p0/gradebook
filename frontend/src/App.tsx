@@ -12,9 +12,9 @@ import School from "./Routes/School";
 import Student from "./Routes/Student";
 import Person from "./Routes/Person";
 import Class from "./Routes/Class";
-import { appLoadWrapper } from "./ReduxWrappers/appLoadWrapper";
-import { isLoggedInProxy } from "./ReduxProxy/isLoggedInProxy";
-import { isUserActivatedProxy } from "./ReduxProxy/isUserAcrivatedProxy";
+import { isLoggedInProxy } from "./Redux/ReduxProxy/isLoggedInProxy";
+import { isUserActivatedProxy } from "./Redux/ReduxProxy/isUserAcrivatedProxy";
+import { appLoadWrapper } from "./Redux/ReduxWrappers/appLoadWrapper";
 
 const mapStateToProps = (state: any) => {
   return {

@@ -1,4 +1,4 @@
-import { APP_LOAD } from "../Constraints/actionTypes";
+import { APP_LOAD } from "../../Constraints/actionTypes";
 
 const appLoad = {
     type: APP_LOAD,

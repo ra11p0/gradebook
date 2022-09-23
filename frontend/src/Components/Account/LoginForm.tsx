@@ -4,11 +4,11 @@ import { connect } from "react-redux";
 import AccountProxy from "../../ApiClient/Account/AccountProxy";
 import { withTranslation } from "react-i18next";
 import { Button } from "react-bootstrap";
-import { logInAction, loginWrapper } from "../../ReduxWrappers/loginWrapper";
-import { isLoggedInProxy } from "../../ReduxProxy/isLoggedInProxy";
-import { currentSchoolProxy } from "../../ReduxProxy/currentSchoolProxy";
-import { setSchoolsListAction, setSchoolsListWrapper } from "../../ReduxWrappers/setSchoolsListWrapper";
-import { setUserAction, setUserWrapper } from "../../ReduxWrappers/setUserWrapper";
+import { isLoggedInProxy } from "../../Redux/ReduxProxy/isLoggedInProxy";
+import { currentSchoolProxy } from "../../Redux/ReduxProxy/currentSchoolProxy";
+import { logInAction, loginWrapper } from "../../Redux/ReduxWrappers/loginWrapper";
+import { setSchoolsListAction, setSchoolsListWrapper } from "../../Redux/ReduxWrappers/setSchoolsListWrapper";
+import { setUserAction, setUserWrapper } from "../../Redux/ReduxWrappers/setUserWrapper";
 
 const mapStateToProps = (state: any) => ({
   isLoggedIn: isLoggedInProxy(state),

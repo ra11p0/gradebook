@@ -9,8 +9,8 @@ import PeopleProxy from "../../ApiClient/People/PeopleProxy";
 import Notifications from "../../Notifications/Notifications";
 import AccountProxy from "../../ApiClient/Account/AccountProxy";
 import GetAccessibleSchoolsResponse from "../../ApiClient/Account/Definitions/GetAccessibleSchoolsResponse";
-import { setSchoolsListWrapper } from "../../ReduxWrappers/setSchoolsListWrapper";
-import { currentUserIdProxy } from "../../ReduxProxy/currentUserIdProxy";
+import { currentUserIdProxy } from "../../Redux/ReduxProxy/currentUserIdProxy";
+import { setSchoolsListWrapper } from "../../Redux/ReduxWrappers/setSchoolsListWrapper";
 
 const mapStateToProps = (state: any) => ({
   userId: currentUserIdProxy(state),
