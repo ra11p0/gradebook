@@ -51,8 +51,6 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
     var refresh = localStorage.getItem("refresh_token");
     if (access && refresh) {
       AccountProxy.refreshAccessToken(access, refresh).then((refreshAccessTokenResponse) => {
-        localStorage.setItem("access_token", refreshAccessTokenResponse.data.access_token);
-        localStorage.setItem("refresh_token", refreshAccessTokenResponse.data.refresh_token);
         this.props.logIn!({
           accessToken: refreshAccessTokenResponse.data.access_token,
           refreshToken: refreshAccessTokenResponse.data.refresh_token,
@@ -68,8 +66,6 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
   onLogIn() {
     AccountProxy.logIn({ username: this.state.username!, password: this.state.password! })
       .then((loginResponse) => {
-        localStorage.setItem("access_token", loginResponse.data.access_token);
-        localStorage.setItem("refresh_token", loginResponse.data.refresh_token);
         this.props.logIn!({ refreshToken: loginResponse.data.refresh_token, accessToken: loginResponse.data.access_token });
         AccountProxy.getMe().then((getMeResponse) => {
           this.props.setUser!({ userId: getMeResponse.data.userId });

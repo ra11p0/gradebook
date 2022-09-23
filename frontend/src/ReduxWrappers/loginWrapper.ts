@@ -10,5 +10,7 @@ export interface logInAction {
 }
 
 export const loginWrapper = (dispatch: any, action: logInAction) => {
+    localStorage.setItem("access_token", action.accessToken);
+    localStorage.setItem("refresh_token", action.refreshToken);
     dispatch({ ...logIn, ...action });
 };
