@@ -168,6 +168,7 @@ public class AccountController : ControllerBase
     [Route("{userGuid}/schools")]
     [ProducesResponseType(typeof(IEnumerable<SchoolResponseModel>), 200)]
     [ProducesResponseType(typeof(string), statusCode: 400)]
+    [Authorize]
     public async Task<IActionResult> GetSchools([FromRoute] string userGuid)
     {
         var resp = await _foundationQueries.Service.GetSchoolsForUser(userGuid);
