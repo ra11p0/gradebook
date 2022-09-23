@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { refreshTokenWrapper } from '../ReduxWrappers/refreshTokenWrapper';
+import { loginWrapper } from '../ReduxWrappers/loginWrapper';
 import { store } from '../store'
 import AccountProxy from './Account/AccountProxy';
 
@@ -35,18 +35,18 @@ axiosApiAuthorized.interceptors.response.use((response) => {
 });
 
 async function refreshAccessToken(): Promise<string> {
-  const accessToken: string = store.getState().common.session.token;
+  const accessToken: string = store.getState().common.session.accessToken;
   const refreshToken: string = store.getState().common.session.refreshToken;
   const refreshResponse = await AccountProxy.refreshAccessToken(accessToken, refreshToken);
-  refreshTokenWrapper(store.dispatch, {
-    token: refreshResponse.data.accessToken,
-    refreshToken: refreshResponse.data.refreshToken
+  loginWrapper(store.dispatch, {
+    accessToken: refreshResponse.data.access_token,
+    refreshToken: refreshResponse.data.refresh_token
   });
-  return refreshResponse.data.accessToken;
+  return refreshResponse.data.access_token;
 }
 
 function getAccessToken(): string {
-  return store.getState().common.session.token;
+  return store.getState().common.session.accessToken;
 }
 
 export {

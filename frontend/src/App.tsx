@@ -13,12 +13,14 @@ import Student from "./Routes/Student";
 import Person from "./Routes/Person";
 import Class from "./Routes/Class";
 import { appLoadWrapper } from "./ReduxWrappers/appLoadWrapper";
+import { isLoggedInProxy } from "./ReduxProxy/isLoggedInProxy";
+import { isUserActivatedProxy } from "./ReduxProxy/isUserAcrivatedProxy";
 
 const mapStateToProps = (state: any) => {
   return {
     appLoaded: state.common.appLoaded,
-    isLoggedIn: state.common.isLoggedIn,
-    isUserActivated: state.common.session?.roles.length != 0,
+    isLoggedIn: isLoggedInProxy(state),
+    isUserActivated: isUserActivatedProxy(state),
   };
 };
 

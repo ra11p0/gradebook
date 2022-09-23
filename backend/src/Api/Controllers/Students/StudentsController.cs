@@ -21,22 +21,4 @@ public class StudentsController : ControllerBase
         //_foundationCommands = serviceProvider.GetResolver<IFoundationCommands>();
         _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
     }
-    [HttpGet]
-    [Route("")]
-    [ProducesResponseType(typeof(IEnumerable<StudentDto>), 200)]
-    [ProducesResponseType(typeof(string), 400)]
-    public async Task<IActionResult> GetAccessibleStudents()
-    {
-        var students = await _foundationQueries.Service.GetAllAccessibleStudents();
-        return students.Status ? Ok(students.Response) : BadRequest(students.Message);
-    }
-    [HttpGet]
-    [Route("Inactive")]
-    [ProducesResponseType(typeof(IEnumerable<StudentDto>), 200)]
-    [ProducesResponseType(typeof(string), 400)]
-    public async Task<IActionResult> GetInactiveStudents(Guid schoolGuid)
-    {
-        var resp = await _foundationQueries.Service.GetInactiveStudents(schoolGuid);
-        return resp.Status ? Ok(resp.Response) : BadRequest();
-    }
 }

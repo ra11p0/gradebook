@@ -5,12 +5,13 @@ import { TFunction, withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import AccountProxy from "../../ApiClient/Account/AccountProxy";
 import MeResponse from "../../ApiClient/Account/Definitions/MeResponse";
+import { isLoggedInProxy } from "../../ReduxProxy/isLoggedInProxy";
 import { logOutWrapper } from "../../ReduxWrappers/logOutWrapper";
 
 const mapStateToProps = (state: any) => {
   return {
-    isLoggedIn: state.common.isLoggedIn,
-    username: state.common.session?.username,
+    isLoggedIn: isLoggedInProxy(state),
+    currentSchoolGuid: state.common.school?.schoolGuid,
   };
 };
 
@@ -21,8 +22,8 @@ const mapDispatchToProps = (dispatch: any) => ({
 interface ProfileProps {
   isLoggedIn?: boolean;
   logOutHandler?: () => void;
-  username: string;
   t: TFunction<"translation", any>;
+  currentSchoolGuid?: string;
 }
 
 interface ProfileState {
@@ -48,7 +49,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
     return (
       <div>
         <TableContainer>
-          <Table>
+          {/* <Table>
             <TableBody>
               <TableRow>
                 <TableCell>{t("id")}</TableCell>
@@ -89,7 +90,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                 <TableCell>{me?.schoolRole}</TableCell>
               </TableRow>
             </TableBody>
-          </Table>
+          </Table> */}
         </TableContainer>
       </div>
     );

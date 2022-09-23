@@ -1,19 +1,14 @@
 import { LOG_IN } from "../Constraints/actionTypes";
 
 const logIn = {
-    type: LOG_IN,
-    isLoggedIn: true
+    type: LOG_IN
 }
 
 export interface logInAction {
-    access_token: string;
+    accessToken: string;
     refreshToken: string;
-    username: string;
-    userId: string;
-    personGuid: string;
-    name: string;
-    surname: string;
-    roles: string[]
 }
 
-export const loginWrapper = (dispatch: any, action: logInAction) => dispatch({ ...logIn, ...action });
+export const loginWrapper = (dispatch: any, action: logInAction) => {
+    dispatch({ ...logIn, ...action });
+};

@@ -1,64 +1,60 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { withTranslation } from 'react-i18next'
-import { Button, Card, Col, Row } from 'react-bootstrap'
-import { Navigate } from 'react-router-dom'
-import RegisterStudent from './RegisterStudent'
-import RegisterTeacher from './RegisterTeacher'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleLeft } from '@fortawesome/free-solid-svg-icons'
-import RegisterAdministrator from './RegisterAdministrator'
+import React from "react";
+import { connect } from "react-redux";
+import { withTranslation } from "react-i18next";
+import { Button, Card, Col, Row } from "react-bootstrap";
+import RegisterStudent from "./RegisterStudent";
+import RegisterTeacher from "./RegisterTeacher";
+import RegisterAdministrator from "./RegisterAdministrator";
+import { isUserActivatedProxy } from "../../ReduxProxy/isUserAcrivatedProxy";
+import { isLoggedInProxy } from "../../ReduxProxy/isLoggedInProxy";
 
 const mapStateToProps = (state: any) => ({
-  isUserLoggedIn: state.common.isLoggedIn,
-  isUserActivated: state.common.session?.roles.length != 0,
-})
+  isUserLoggedIn: isLoggedInProxy(state),
+  isUserActivated: isUserActivatedProxy(state),
+});
 
-const mapDispatchToProps = (dispatch: any) => ({})
+const mapDispatchToProps = (dispatch: any) => ({});
 
 interface ActivateAccountProps {
-  t: any
-  isUserLoggedIn: boolean
-  isUserActivated: boolean
+  t: any;
+  isUserLoggedIn: boolean;
+  isUserActivated: boolean;
 }
 
 interface ActivateAccountState {
-  role?: string
+  role?: string;
 }
 
-class ActivateAccount extends React.Component<
-  ActivateAccountProps,
-  ActivateAccountState
-> {
+class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAccountState> {
   constructor(props: ActivateAccountProps) {
-    super(props)
+    super(props);
     this.state = {
       role: undefined,
-    }
+    };
   }
   render(): React.ReactNode {
-    const { t } = this.props
+    const { t } = this.props;
 
     const defaultOnBackHandler = () => {
       this.setState({
         ...this.state,
         role: undefined,
-      })
-    }
+      });
+    };
 
     return (
       <>
         <Card className="m-3">
           <Card.Body>
             <div>
-              <div className="display-6">{t('activateToUseGradebook')}</div>
+              <div className="display-6">{t("activateToUseGradebook")}</div>
               <Row className="m-3 p-3">
                 <Col xs={3} />
                 <Col className="text-center">
                   {!this.state.role && (
                     <>
                       <Row className="text-center">
-                        <div>{t('iAmA...')}</div>
+                        <div>{t("iAmA...")}</div>
                       </Row>
                       <Row>
                         <Col>
@@ -68,11 +64,11 @@ class ActivateAccount extends React.Component<
                             onClick={() =>
                               this.setState({
                                 ...this.state,
-                                role: 'student',
+                                role: "student",
                               })
                             }
                           >
-                            {t('student')}
+                            {t("student")}
                           </Button>
                           <Button
                             className="fs-3 m-3 p-3"
@@ -80,11 +76,11 @@ class ActivateAccount extends React.Component<
                             onClick={() =>
                               this.setState({
                                 ...this.state,
-                                role: 'teacher',
+                                role: "teacher",
                               })
                             }
                           >
-                            {t('teacher')}
+                            {t("teacher")}
                           </Button>
                           <Button
                             className="fs-3 m-3 p-3"
@@ -92,31 +88,19 @@ class ActivateAccount extends React.Component<
                             onClick={() =>
                               this.setState({
                                 ...this.state,
-                                role: 'administrator',
+                                role: "administrator",
                               })
                             }
                           >
-                            {t('administrator')}
+                            {t("administrator")}
                           </Button>
                         </Col>
                       </Row>
                     </>
                   )}
-                  {this.state.role === 'teacher' && (
-                    <RegisterTeacher
-                      defaultOnBackHandler={defaultOnBackHandler}
-                    />
-                  )}
-                  {this.state.role === 'administrator' && (
-                    <RegisterAdministrator
-                      defaultOnBackHandler={defaultOnBackHandler}
-                    />
-                  )}
-                  {this.state.role === 'student' && (
-                    <RegisterStudent
-                      defaultOnBackHandler={defaultOnBackHandler}
-                    />
-                  )}
+                  {this.state.role === "teacher" && <RegisterTeacher defaultOnBackHandler={defaultOnBackHandler} />}
+                  {this.state.role === "administrator" && <RegisterAdministrator defaultOnBackHandler={defaultOnBackHandler} />}
+                  {this.state.role === "student" && <RegisterStudent defaultOnBackHandler={defaultOnBackHandler} />}
                 </Col>
                 <Col xs={3} />
               </Row>
@@ -124,10 +108,8 @@ class ActivateAccount extends React.Component<
           </Card.Body>
         </Card>
       </>
-    )
+    );
   }
 }
 
-export default withTranslation('activateAccount')(
-  connect(mapStateToProps, mapDispatchToProps)(ActivateAccount),
-)
+export default withTranslation("activateAccount")(connect(mapStateToProps, mapDispatchToProps)(ActivateAccount));

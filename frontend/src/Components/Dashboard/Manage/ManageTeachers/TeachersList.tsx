@@ -7,24 +7,20 @@ import AddNewTeacherModal from "./AddNewTeacherModal";
 import InfiniteScrollWrapper from "../../../Shared/InfiniteScrollWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Tippy from "@tippyjs/react";
-import {
-  faCheck,
-  faTimes,
-  faTrash,
-  faWindowMaximize,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faTimes, faTrash, faWindowMaximize } from "@fortawesome/free-solid-svg-icons";
 import PeopleProxy from "../../../../ApiClient/People/PeopleProxy";
 import Notifications from "../../../../Notifications/Notifications";
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
 import TeacherInSchoolResponse from "../../../../ApiClient/Schools/Definitions/TeacherInSchoolResponse";
 import moment from "moment";
 import { Link } from "react-router-dom";
+import { currentSchoolProxy } from "../../../../ReduxProxy/currentSchoolProxy";
 const mapStateToProps = (state: any) => ({
-  currentSchoolGuid: state.common.school?.schoolGuid,
+  currentSchool: currentSchoolProxy(state),
 });
 const mapDispatchToProps = (dispatch: any) => ({});
 interface ManageTeachersProps {
-  currentSchoolGuid?: string;
+  currentSchool: any;
 }
 const TeachersList = (props: ManageTeachersProps): ReactElement => {
   const { t } = useTranslation("teachersList");
@@ -44,10 +40,7 @@ const TeachersList = (props: ManageTeachersProps): ReactElement => {
       if (result.isConfirmed) {
         PeopleProxy.removePerson(personGuid)
           .then((response) => {
-            Notifications.showSuccessNotification(
-              "personRemovedNotificationTitle",
-              "personRemovedNotificationText"
-            );
+            Notifications.showSuccessNotification("personRemovedNotificationTitle", "personRemovedNotificationText");
             setRefreshEffectKey((k) => k + 1);
           })
           .catch(Notifications.showApiError);
@@ -67,10 +60,7 @@ const TeachersList = (props: ManageTeachersProps): ReactElement => {
                 setShowAddTeacherModal(false);
               }}
             />
-            <Button
-              onClick={() => setShowAddTeacherModal(true)}
-              variant="outlined"
-            >
+            <Button onClick={() => setShowAddTeacherModal(true)} variant="outlined">
               {t("addTeacher")}
             </Button>
           </div>
@@ -111,36 +101,20 @@ const TeachersList = (props: ManageTeachersProps): ReactElement => {
                     </Grid>
                     <Grid item xs className="my-auto">
                       <div>
-                        <FontAwesomeIcon
-                          icon={element.isActive ? faCheck : faTimes}
-                        />
+                        <FontAwesomeIcon icon={element.isActive ? faCheck : faTimes} />
                       </div>
                     </Grid>
                     <Grid item xs={1} className="my-auto">
                       <div className="d-flex gap-1 flex-wrap">
                         <Link to={`/person/show/${element.guid}`}>
-                          <Tippy
-                            content={t("showPerson")}
-                            arrow={true}
-                            animation={"scale"}
-                          >
+                          <Tippy content={t("showPerson")} arrow={true} animation={"scale"}>
                             <Button variant="outlined">
                               <FontAwesomeIcon icon={faWindowMaximize} />
                             </Button>
                           </Tippy>
                         </Link>
-                        <Tippy
-                          content={t("removePerson")}
-                          arrow={true}
-                          animation={"scale"}
-                        >
-                          <Button
-                            variant="outlined"
-                            color="error"
-                            onClick={() =>
-                              removePersonClickHandler(element.guid)
-                            }
-                          >
+                        <Tippy content={t("removePerson")} arrow={true} animation={"scale"}>
+                          <Button variant="outlined" color="error" onClick={() => removePersonClickHandler(element.guid)}>
                             <FontAwesomeIcon icon={faTrash} />
                           </Button>
                         </Tippy>
@@ -150,18 +124,11 @@ const TeachersList = (props: ManageTeachersProps): ReactElement => {
                 </ListItem>
               )}
               fetch={async (page: number) => {
-                if (!props.currentSchoolGuid) return [];
-                let resp = await SchoolsProxy.getTeachersInSchool(
-                  props.currentSchoolGuid!,
-                  page
-                );
+                if (!props.currentSchool.schoolGuid) return [];
+                let resp = await SchoolsProxy.getTeachersInSchool(props.currentSchool.schoolGuid!, page);
                 return resp.data as [];
               }}
-              effect={[
-                props.currentSchoolGuid,
-                showAddTeacherModal,
-                refreshEffectKey,
-              ]}
+              effect={[props.currentSchool.schoolGuid, showAddTeacherModal, refreshEffectKey]}
             />
           </List>
         </Stack>

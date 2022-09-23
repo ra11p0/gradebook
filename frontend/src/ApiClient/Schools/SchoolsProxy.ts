@@ -5,6 +5,7 @@ import StudentResponse from "../Students/Definitions/StudentResponse";
 import ClassResponse from "./Definitions/ClassResponse";
 import GetSchoolResponse from "./Definitions/GetSchoolResponse";
 import InviteMultiplePeopleRequest from "./Definitions/InviteMultiplePeopleRequest";
+import MeResponse from "../Account/Definitions/MeResponse";
 import NewClassRequest from "./Definitions/NewClassRequest";
 import NewSchoolRequest from "./Definitions/NewSchoolRequest";
 import NewStudentRequest from "./Definitions/NewStudentRequest";
@@ -78,6 +79,8 @@ const searchPeople = (schoolGuid: string, discriminator: string, query: string, 
         }
     });
 }
+
+
 
 
 export default {

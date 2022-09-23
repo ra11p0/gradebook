@@ -1,10 +1,10 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Api.Controllers.Account.Responses;
 using Api.Models.Account;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Foundation.Queries;
+using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 using Gradebook.Foundation.Identity.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -60,27 +60,16 @@ public class AccountController : ControllerBase
 
             await _userManager.Service.UpdateAsync(user);
 
-            var roles = await _userManager.Service.GetRolesAsync(user);
-            var personGuid = await _foundationQueries.Service.GetPersonGuidForUser(user.Id);
-            var person = await _foundationQueries.Service.GetPersonByGuid(personGuid.Response);
-
             return Ok(new
             {
                 access_token = new JwtSecurityTokenHandler().WriteToken(token),
-                RefreshToken = refreshToken,
                 refresh_token = refreshToken,
-                Expiration = token.ValidTo,
                 expires_in = int.Parse(_configuration.Service["JWT:TokenValidityInMinutes"]) * 60,
-                Username = user.UserName,
-                UserId = user.Id,
-                PersonGuid = personGuid.Response,
-                person.Response.Name,
-                person.Response.Surname,
-                Roles = roles
             });
         }
         return Unauthorized();
     }
+
     [HttpPost]
     [Route("register")]
     public async Task<IActionResult> Register([FromBody] RegisterModel model)
@@ -101,6 +90,7 @@ public class AccountController : ControllerBase
 
         return Ok(new LoginRegisterResponse { Status = "Success", Message = "User created successfully!" });
     }
+
     [HttpPost]
     [Route("refresh-token")]
     public async Task<IActionResult> RefreshToken(TokenModel tokenModel)
@@ -132,10 +122,11 @@ public class AccountController : ControllerBase
 
         return new ObjectResult(new
         {
-            accessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
-            refreshToken = newRefreshToken
+            access_token = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
+            refresh_token = newRefreshToken,
         });
     }
+
     [Authorize(Roles = "SuperAdmin")]
     [HttpPost]
     [Route("{userGuid}/roles")]
@@ -144,28 +135,7 @@ public class AccountController : ControllerBase
         await _identityLogic.Service.EditUserRoles(roles, userGuid);
         return Ok();
     }
-    [HttpGet]
-    [Route("me")]
-    [Authorize]
-    [ProducesResponseType(typeof(MeResponse), 200)]
-    public async Task<IActionResult> Me()
-    {
-        var user = await _userManager.Service.FindByNameAsync(User.Identity!.Name);
-        var roles = await _identityLogic.Service.GetUserRoles(user.Id);
-        var personGuid = await _foundationQueries.Service.GetCurrentPersonGuid();
-        var person = await _foundationQueries.Service.GetPersonByGuid(personGuid.Response);
-        return Ok(new MeResponse
-        {
-            Id = user.Id,
-            Username = user.UserName,
-            PersonGuid = personGuid.Response,
-            Roles = roles.Response,
-            Name = person.Response?.Name,
-            Surname = person.Response?.Surname,
-            Birthday = person.Response?.Birthday,
-            SchoolRole = person.Response?.SchoolRole,
-        });
-    }
+
     [Authorize]
     [HttpPost]
     [Route("revoke/{username}")]
@@ -192,5 +162,36 @@ public class AccountController : ControllerBase
         }
 
         return NoContent();
+    }
+
+    [HttpGet]
+    [Route("{userGuid}/schools")]
+    [ProducesResponseType(typeof(IEnumerable<SchoolResponseModel>), 200)]
+    [ProducesResponseType(typeof(string), statusCode: 400)]
+    public async Task<IActionResult> GetSchools([FromRoute] string userGuid)
+    {
+        var resp = await _foundationQueries.Service.GetSchoolsForUser(userGuid);
+        var mappedResponse = resp.Response?.Select(response => new SchoolResponseModel()
+        {
+            School = response.School,
+            Person = response.Person
+        });
+        return resp.Status ? Ok(mappedResponse) : BadRequest();
+    }
+
+    [HttpGet]
+    [Route("Me")]
+    [ProducesResponseType(typeof(IEnumerable<PersonDto>), statusCode: 200)]
+    [ProducesResponseType(typeof(string), statusCode: 400)]
+    [Authorize]
+    public async Task<IActionResult> GetMe()
+    {
+        var user = await _userManager.Service.FindByNameAsync(User.Identity!.Name);
+        var accessibleSchools = await _foundationQueries.Service.GetSchoolsForUser(user.Id);
+        return Ok(new MeResponseModel
+        {
+            UserId = user.Id,
+            Schools = accessibleSchools.Response ?? Enumerable.Empty<SchoolWithRelatedPersonDto>()
+        });
     }
 }

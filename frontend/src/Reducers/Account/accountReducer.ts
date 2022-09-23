@@ -1,8 +1,7 @@
-import { APP_LOAD, LOG_IN, LOG_OUT, REFRESH_TOKEN, REFRESH_USER, SET_SCHOOL, SET_SCHOOLS_LIST } from '../../Constraints/actionTypes'
+import { APP_LOAD, LOG_IN, LOG_OUT, SET_PERSON, SET_SCHOOL, SET_SCHOOLS_LIST, SET_USER } from '../../Constraints/actionTypes'
 
 const defaultState = {
     appLoaded: false,
-    isLoggedIn: false
 };
 
 export default (state: any = defaultState, action: any) => {
@@ -12,19 +11,26 @@ export default (state: any = defaultState, action: any) => {
                 ...state,
                 appLoaded: action.isAppLoaded,
             };
+        case SET_USER:
+            return {
+                ...state,
+                user: {
+                    userId: action.userId,
+                }
+            }
+        case SET_PERSON:
+            return {
+                ...state,
+                person: {
+                    personGuid: action.personGuid,
+                }
+            }
         case LOG_IN:
             return {
                 ...state,
-                isLoggedIn: true,
                 session: {
-                    token: action.access_token,
+                    accessToken: action.accessToken,
                     refreshToken: action.refreshToken,
-                    username: action.username,
-                    userId: action.userId,
-                    surname: action.surname,
-                    name: action.name,
-                    personGuid: action.personGuid,
-                    roles: action.roles
                 }
             };
         case LOG_OUT:
@@ -32,33 +38,10 @@ export default (state: any = defaultState, action: any) => {
             localStorage.removeItem('refresh');
             return {
                 ...state,
-                isLoggedIn: false,
                 session: null,
                 school: null,
-                schoolsList: null
-            };
-        case REFRESH_TOKEN:
-            localStorage.setItem('access_token', action.token);  //should be in middleware
-            localStorage.setItem('refresh', action.refreshToken);
-            return {
-                ...state,
-                isLoggedIn: true,
-                session: {
-                    ...state.session,
-                    token: action.token,
-                    refreshToken: action.refreshToken
-                }
-            };
-        case REFRESH_USER:
-            return {
-                ...state,
-                isLoggedIn: true,
-                session: {
-                    ...state.session,
-                    roles: action.roles,
-                    userId: action.userId,
-                    personGuid: action.personGuid,
-                }
+                schoolsList: null,
+                user: null
             };
         case SET_SCHOOL:
             return {

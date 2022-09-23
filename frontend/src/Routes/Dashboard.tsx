@@ -13,17 +13,16 @@ import StudentsList from "../Components/Dashboard/Manage/ManageStudents/Students
 import SchoolsList from "../Components/Dashboard/Manage/ManageSchool/SchoolsList";
 import SchoolSelectedOnly from "../Components/Shared/SchoolSelectedOnly";
 import ManageClasses from "../Components/Dashboard/Manage/ManageClasses/ManageClasses";
+import { isLoggedInProxy } from "../ReduxProxy/isLoggedInProxy";
 
 const mapStateToProps = (state: any) => ({
-  isLoggedIn: state.common.isLoggedIn,
-  isSuperAdmin: state.common.session.roles.includes("SuperAdmin"),
+  isLoggedIn: isLoggedInProxy(state),
 });
 
 const mapDispatchToProps = (dispatch: any) => ({});
 
 interface DashboardProps {
   isLoggedIn?: boolean;
-  isSuperAdmin: boolean;
 }
 
 class Dashboard extends React.Component<DashboardProps> {
@@ -40,43 +39,39 @@ class Dashboard extends React.Component<DashboardProps> {
             <Route path="grades" element={<Grades />}></Route>
             <Route path="subject" element={<Subject />}></Route>
             <Route path="timetable" element={<Timetable />}></Route>
-            {this.props.isSuperAdmin && (
-              <>
-                <Route
-                  path="manageStudents/*"
-                  element={
-                    <SchoolSelectedOnly>
-                      <StudentsList />
-                    </SchoolSelectedOnly>
-                  }
-                ></Route>
-                <Route
-                  path="manageTeachers/*"
-                  element={
-                    <SchoolSelectedOnly>
-                      <TeachersList />
-                    </SchoolSelectedOnly>
-                  }
-                ></Route>
-                <Route
-                  path="manageInvitations/*"
-                  element={
-                    <SchoolSelectedOnly>
-                      <Invitations />
-                    </SchoolSelectedOnly>
-                  }
-                ></Route>
-                <Route
-                  path="manageClasses/*"
-                  element={
-                    <SchoolSelectedOnly>
-                      <ManageClasses />
-                    </SchoolSelectedOnly>
-                  }
-                ></Route>
-                <Route path="manageSchool/*" element={<SchoolsList />}></Route>
-              </>
-            )}
+            <Route
+              path="manageStudents/*"
+              element={
+                <SchoolSelectedOnly>
+                  <StudentsList />
+                </SchoolSelectedOnly>
+              }
+            ></Route>
+            <Route
+              path="manageTeachers/*"
+              element={
+                <SchoolSelectedOnly>
+                  <TeachersList />
+                </SchoolSelectedOnly>
+              }
+            ></Route>
+            <Route
+              path="manageInvitations/*"
+              element={
+                <SchoolSelectedOnly>
+                  <Invitations />
+                </SchoolSelectedOnly>
+              }
+            ></Route>
+            <Route
+              path="manageClasses/*"
+              element={
+                <SchoolSelectedOnly>
+                  <ManageClasses />
+                </SchoolSelectedOnly>
+              }
+            ></Route>
+            <Route path="manageSchool/*" element={<SchoolsList />}></Route>
           </Routes>
         </div>
       </div>

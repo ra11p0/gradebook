@@ -16,11 +16,4 @@ public class TeachersController : ControllerBase
     {
         _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
     }
-    [HttpGet]
-    [Route("")]
-    public async Task<IActionResult> GetAllAccessibleTeachers()
-    {
-        var response = await _foundationQueries.Service.GetAllAccessibleTeachers();
-        return response.Status ? Ok(response.Response) : BadRequest(response.Message);
-    }
 }

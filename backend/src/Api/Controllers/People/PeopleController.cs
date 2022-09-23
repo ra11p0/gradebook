@@ -23,15 +23,6 @@ public class PeopleController : ControllerBase
         //_mapper = serviceProvider.GetResolver<IMapper>();
         _foundationCommands = serviceProvider.GetResolver<IFoundationCommands>();
     }
-    [HttpGet]
-    [Route("{personGuid}/schools")]
-    [ProducesResponseType(typeof(IEnumerable<SchoolDto>), 200)]
-    [ProducesResponseType(typeof(string), statusCode: 400)]
-    public async Task<IActionResult> GetSchools([FromRoute] Guid personGuid)
-    {
-        var resp = await _foundationQueries.Service.GetSchoolsForPerson(personGuid);
-        return resp.Status ? Ok(resp.Response) : BadRequest();
-    }
     [HttpDelete]
     [Route("{personGuid}")]
     [ProducesResponseType(typeof(string), statusCode: 400)]

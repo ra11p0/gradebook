@@ -5,16 +5,17 @@ import { Dropdown } from "react-bootstrap";
 import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { currentPersonProxy } from "../../ReduxProxy/currentPersonProxy";
+import { isLoggedInProxy } from "../../ReduxProxy/isLoggedInProxy";
+import { isUserActivatedProxy } from "../../ReduxProxy/isUserAcrivatedProxy";
 import { logOutWrapper } from "../../ReduxWrappers/logOutWrapper";
 import SchoolSelect from "./SchoolSelect";
 
 const mapStateToProps = (state: any) => {
   return {
-    isLoggedIn: state.common.isLoggedIn,
-    username: state.common.session?.username,
-    name: state.common.session?.name,
-    surname: state.common.session?.surname,
-    isActive: state.common.session?.roles.length != 0,
+    isLoggedIn: isLoggedInProxy(state),
+    currentPerson: currentPersonProxy(state),
+    isActive: isUserActivatedProxy(state),
   };
 };
 
@@ -25,9 +26,7 @@ const mapDispatchToProps = (dispatch: any) => ({
 interface HeaderProps {
   isLoggedIn?: boolean;
   logOutHandler?: () => void;
-  username: string;
-  name: string;
-  surname: string;
+  currentPerson: any;
   isActive: boolean;
   i18n: any;
   t: any;
@@ -66,7 +65,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
                     <div className="my-auto">
                       <Link to="/account/profile" className="btn btn-outline-primary">
-                        {`${this.props.name} ${this.props.surname}`}
+                        {`${this.props.currentPerson?.name} ${this.props.currentPerson?.surname}`}
                       </Link>
                     </div>
                     <div className="my-auto">

@@ -203,7 +203,7 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
     }
 
     public async Task<IPagedList<TeacherDto>> GetTeachersInSchool(Guid schoolGuid, Pager pager)
-    {        
+    {
         using var cn = await GetOpenConnectionAsync();
         return await cn.QueryPagedAsync<TeacherDto>(@"
                 SELECT Name, Surname, SchoolRole, Birthday, CreatorGuid, Guid, UserGuid
@@ -264,7 +264,7 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
         }
     }
 
-    public async Task<Guid?> GetPersonGuidForUser(string userId)
+    public async Task<Guid?> GetPersonGuidForUser(string userId, Guid schoolGuid)
     {
         using (var cn = await GetOpenConnectionAsync())
         {
@@ -299,7 +299,7 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
         }
     }
 
-    public async Task<IEnumerable<SchoolDto>> GetSchoolsForPerson(Guid personGuid)
+    public async Task<IEnumerable<SchoolDto>> GetSchoolsForUser(string userGuid)
     {
         using (var cn = await GetOpenConnectionAsync())
         {
@@ -308,12 +308,14 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                 FROM Schools
                 JOIN PersonSchool AS PS
                     ON PS.SchoolsGuid = Guid
-                WHERE PS.PeopleGuid = @personGuid 
+                WHERE PS.PeopleGuid IN (
+                    SELECT Guid FROM Person WHERE UserGuid = @userGuid 
+                )
                     AND IsDeleted = 0
             ",
             new
             {
-                personGuid
+                userGuid
             });
         }
     }
@@ -376,5 +378,23 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
     public Task<IPagedList<TeacherDto>> GetTeachersInClass(Guid schoolGuid, Pager pager)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<bool> IsUserActive(string userGuid)
+    {
+        /**/
+        using (var cn = await GetOpenConnectionAsync())
+        {
+            return await cn.QueryFirstOrDefaultAsync<bool>(@"
+                SELECT EXISTS (
+                    SELECT * 
+                    FROM Person 
+                    WHERE UserGuid = @userGuid
+                )
+            ", new
+            {
+                userGuid
+            });
+        }
     }
 }

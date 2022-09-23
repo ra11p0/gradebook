@@ -1,4 +1,4 @@
-import GetAccessibleSchoolsResponse from "../ApiClient/People/Definitions/GetAccessibleSchoolsResponse";
+import GetAccessibleSchoolsResponse from "../ApiClient/Account/Definitions/GetAccessibleSchoolsResponse";
 import { SET_SCHOOLS_LIST } from "../Constraints/actionTypes";
 
 const setSchoolsList = {
@@ -9,4 +9,6 @@ export interface setSchoolsListAction {
     schoolsList: GetAccessibleSchoolsResponse[]
 }
 
-export const setSchoolsListWrapper = (dispatch: any, action: setSchoolsListAction) => dispatch({ ...setSchoolsList, ...action });
+export const setSchoolsListWrapper = (dispatch: any, action: setSchoolsListAction) => {
+    dispatch({ ...setSchoolsList, ...action })
+};

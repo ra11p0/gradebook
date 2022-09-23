@@ -2,14 +2,7 @@ import React, { ReactElement, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { Modal } from "react-bootstrap";
-import {
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Stack,
-} from "@mui/material";
+import { Button, FormControl, InputLabel, MenuItem, Select, Stack } from "@mui/material";
 import StudentResponse from "../../../../ApiClient/Students/Definitions/StudentResponse";
 import Person from "../../../Shared/Person";
 import PersonSmall from "../../../Shared/PersonSmall";
@@ -17,26 +10,23 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import SchoolRolesEnum from "../../../../Common/Enums/SchoolRolesEnum";
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
+import { currentSchoolProxy } from "../../../../ReduxProxy/currentSchoolProxy";
 const mapStateToProps = (state: any) => ({
-  currentSchoolGuid: state.common.school?.schoolGuid,
+  currentSchool: currentSchoolProxy(state),
 });
 const mapDispatchToProps = (dispatch: any) => ({});
 interface AddInvitationModalProps {
   show: boolean;
   onHide: () => void;
-  currentSchoolGuid?: string;
+  currentSchool: any;
 }
 const AddInvitationModal = (props: AddInvitationModalProps): ReactElement => {
   const { t } = useTranslation("addInvitationModal");
-  const [inactiveStudents, setInactiveStudents] = useState(
-    [] as StudentResponse[]
-  );
+  const [inactiveStudents, setInactiveStudents] = useState([] as StudentResponse[]);
   const [selectedStudents, setSelectedStudents] = useState<string[]>([]);
 
   useEffect(() => {
-    SchoolsProxy.getInactiveAccessibleStudentsInSchool(
-      props.currentSchoolGuid!
-    ).then((response) => {
+    SchoolsProxy.getInactiveAccessibleStudentsInSchool(props.currentSchool.schoolGuid!).then((response) => {
       setInactiveStudents(response.data);
     });
   }, []);
@@ -46,7 +36,7 @@ const AddInvitationModal = (props: AddInvitationModalProps): ReactElement => {
         invitedPersonGuidArray: selectedStudents,
         role: SchoolRolesEnum.Student,
       },
-      props.currentSchoolGuid!
+      props.currentSchool.schoolGuid!
     ).then((response) => {
       props.onHide();
     });
@@ -68,26 +58,14 @@ const AddInvitationModal = (props: AddInvitationModalProps): ReactElement => {
                   const {
                     target: { value },
                   } = event;
-                  setSelectedStudents(
-                    typeof value === "string" ? value.split(",") : value
-                  );
+                  setSelectedStudents(typeof value === "string" ? value.split(",") : value);
                 }}
                 renderValue={(selected) => selected.length}
                 label={t("selectPeopleToInvite")}
               >
                 {inactiveStudents.map((student) => (
-                  <MenuItem
-                    key={student.guid}
-                    value={student.guid}
-                    className="row"
-                  >
-                    <Person
-                      guid={student.guid}
-                      name={student.name}
-                      surname={student.surname}
-                      birthday={student.birthday}
-                      noLink={true}
-                    />
+                  <MenuItem key={student.guid} value={student.guid} className="row">
+                    <Person guid={student.guid} name={student.name} surname={student.surname} birthday={student.birthday} noLink={true} />
                   </MenuItem>
                 ))}
               </Select>
@@ -100,21 +78,12 @@ const AddInvitationModal = (props: AddInvitationModalProps): ReactElement => {
                   .filter((student) => selectedStudents.includes(student.guid))
                   .map((student) => (
                     <div className="border rounded-3 p-0" key={student.guid}>
-                      <PersonSmall
-                        name={student.name}
-                        surname={student.surname}
-                      />
+                      <PersonSmall name={student.name} surname={student.surname} />
                       <div className="d-inline mx-2">
                         <FontAwesomeIcon
                           icon={faTimes}
                           className="my-auto text-danger cursor-pointer"
-                          onClick={() =>
-                            setSelectedStudents(
-                              selectedStudents.filter(
-                                (guid) => guid != student.guid
-                              )
-                            )
-                          }
+                          onClick={() => setSelectedStudents(selectedStudents.filter((guid) => guid != student.guid))}
                         />
                       </div>
                     </div>

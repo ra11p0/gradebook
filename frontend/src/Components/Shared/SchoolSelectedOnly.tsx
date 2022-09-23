@@ -1,13 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import { t } from "i18next";
+import { isSchoolSelectedProxy } from "../../ReduxProxy/isSchoolSelectedProxy";
 
 const mapStateToProps = (state: any) => ({
-  isSchoolSelected: (() => {
-    if (!state.common.school) return false;
-    if (!state.common.school.schoolGuid) return false;
-    return true;
-  })(),
+  isSchoolSelected: isSchoolSelectedProxy(state),
 });
 
 const mapDispatchToProps = (dispatch: any) => ({});
