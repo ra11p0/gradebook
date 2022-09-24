@@ -26,7 +26,8 @@ i18n.use(initReactI18next).init({
       schoolSelect: require('./locales/en/Shared/schoolSelect.json'),
       schoolsList: require('./locales/en/Dashboard/Manage/ManageSchool/schoolsList.json'),
       classes: require('./locales/en/Dashboard/Manage/Classes/classes.json'),
-      addNewClassModal: require('./locales/en/Dashboard/Manage/Classes/addNewClassModal')
+      addNewClassModal: require('./locales/en/Dashboard/Manage/Classes/addNewClassModal'),
+      settings: require('./locales/en/Dashboard/Manage/Settings/settings'),
     },
     pl: {
       common: require('./locales/pl/common.json'),
@@ -48,13 +49,14 @@ i18n.use(initReactI18next).init({
       schoolSelect: require('./locales/pl/Shared/schoolSelect.json'),
       schoolsList: require('./locales/pl/Dashboard/Manage/ManageSchool/schoolsList.json'),
       classes: require('./locales/pl/Dashboard/Manage/Classes/classes.json'),
-      addNewClassModal: require('./locales/pl/Dashboard/Manage/Classes/addNewClassModal')
+      addNewClassModal: require('./locales/pl/Dashboard/Manage/Classes/addNewClassModal'),
+      settings: require('./locales/pl/Dashboard/Manage/Settings/settings'),
     }
   },
   ns: ['common', 'loginForm', 'registerForm', 'activateAccount', 'registerStudent', 'header', 'notifications',
     'dashboardNavigation', 'addNewStudentModal', 'studentsList', 'profile', 'invitations',
     'addInvitationModal', 'registerAdministrator', 'registerAdministratorPerson', 'registerAdministratorSchool', 'schoolSelect',
-    'schoolsList', "classes", "addNewClassModal"],
+    'schoolsList', "classes", "addNewClassModal", "settings"],
   defaultNS: 'common'
 });
 

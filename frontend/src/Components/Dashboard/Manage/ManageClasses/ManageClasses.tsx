@@ -15,12 +15,13 @@ import { faTrash, faWindowMaximize } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import Notifications from "../../../../Notifications/Notifications";
 import ClassesProxy from "../../../../ApiClient/Classes/ClassesProxy";
+import { currentSchoolProxy } from "../../../../Redux/ReduxProxy/currentSchoolProxy";
 
 const mapStateToProps = (state: any) => ({
-  currentSchoolGuid: state.common.school?.schoolGuid,
+  currentSchool: currentSchoolProxy(state),
 });
 type Props = {
-  currentSchoolGuid?: string;
+  currentSchool: any;
 };
 
 function ManageClasses(props: Props) {
@@ -40,10 +41,7 @@ function ManageClasses(props: Props) {
       if (result.isConfirmed) {
         ClassesProxy.removeClass(classGuid)
           .then(() => {
-            Notifications.showSuccessNotification(
-              "classRemovedNotificationTitle",
-              "classRemovedNotificationText"
-            );
+            Notifications.showSuccessNotification("classRemovedNotificationTitle", "classRemovedNotificationText");
             setRefreshKey((k) => k + 1);
           })
           .catch(Notifications.showApiError);
@@ -56,16 +54,10 @@ function ManageClasses(props: Props) {
         <div className="d-flex justify-content-between">
           <div className="my-auto">{t("classes")}</div>
           <div>
-            <Button
-              onClick={() => setShowAddClassModal(true)}
-              variant="outlined"
-            >
+            <Button onClick={() => setShowAddClassModal(true)} variant="outlined">
               {t("addClasses")}
             </Button>
-            <AddClassModal
-              show={showAddClassModal}
-              onHide={() => setShowAddClassModal(false)}
-            />
+            <AddClassModal show={showAddClassModal} onHide={() => setShowAddClassModal(false)} />
           </div>
         </div>
         <Stack className={"border rounded-3 my-1 p-3 bg-light"}>
@@ -97,35 +89,19 @@ function ManageClasses(props: Props) {
                       <div>{element.description}</div>
                     </Grid>
                     <Grid item xs className="my-auto">
-                      <div>
-                        {moment(element.createdDate).format("YYYY-MM-DD")}
-                      </div>
+                      <div>{moment(element.createdDate).format("YYYY-MM-DD")}</div>
                     </Grid>
                     <Grid item xs={1} className="my-auto">
                       <div className="d-flex gap-1 flex-wrap">
                         <Link to={`/class/show/${element.guid}`}>
-                          <Tippy
-                            content={t("showClass")}
-                            arrow={true}
-                            animation={"scale"}
-                          >
+                          <Tippy content={t("showClass")} arrow={true} animation={"scale"}>
                             <Button variant="outlined">
                               <FontAwesomeIcon icon={faWindowMaximize} />
                             </Button>
                           </Tippy>
                         </Link>
-                        <Tippy
-                          content={t("removeClass")}
-                          arrow={true}
-                          animation={"scale"}
-                        >
-                          <Button
-                            variant="outlined"
-                            color="error"
-                            onClick={() =>
-                              removeClassClickHandler(element.guid)
-                            }
-                          >
+                        <Tippy content={t("removeClass")} arrow={true} animation={"scale"}>
+                          <Button variant="outlined" color="error" onClick={() => removeClassClickHandler(element.guid)}>
                             <FontAwesomeIcon icon={faTrash} />
                           </Button>
                         </Tippy>
@@ -135,14 +111,11 @@ function ManageClasses(props: Props) {
                 </ListItem>
               )}
               fetch={async (page: number) => {
-                if (!props.currentSchoolGuid) return [];
-                let resp = await SchoolsProxy.getClassesInSchool(
-                  props.currentSchoolGuid!,
-                  page
-                );
+                if (!props.currentSchool.schoolGuid) return [];
+                let resp = await SchoolsProxy.getClassesInSchool(props.currentSchool.schoolGuid!, page);
                 return resp.data as [];
               }}
-              effect={[props.currentSchoolGuid, showAddClassModal, refreshKey]}
+              effect={[props.currentSchool.schoolGuid, showAddClassModal, refreshKey]}
             />
           </List>
         </Stack>
