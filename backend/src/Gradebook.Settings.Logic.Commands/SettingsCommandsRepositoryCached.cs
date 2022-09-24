@@ -24,4 +24,10 @@ public class SettingsCommandsRepositoryCached : BaseRepositoryCached<SettingsCom
 
     public Task SetSettingForPersonAsync<T>(Guid personGuid, SettingEnum settingType, T value)
         => Base.SetSettingForPersonAsync(personGuid, settingType, value);
+
+    public void SetSettingForUser<T>(string userGuid, SettingEnum settingType, T value)
+        => Base.SetSettingForUser(userGuid, settingType, value);
+
+    public Task SetSettingForUserAsync<T>(string userGuid, SettingEnum settingType, T value)
+        => Base.SetSettingForUserAsync(userGuid, settingType, value);
 }

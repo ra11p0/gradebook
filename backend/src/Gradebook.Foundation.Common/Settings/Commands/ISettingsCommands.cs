@@ -2,5 +2,5 @@ namespace Gradebook.Foundation.Common.Settings.Commands;
 
 public interface ISettingsCommands
 {
-    Task SetDefaultPersonGuid(Guid personGuid, Guid defaultPersonGuid);
+    Task SetDefaultPersonGuid(string userGuid, Guid defaultPersonGuid);
 }

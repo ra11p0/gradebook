@@ -10,6 +10,6 @@ public class SettingsQueries : BaseLogic<ISettingsQueriesRepository>, ISettingsQ
     {
     }
 
-    public Task<Guid> GetDefaultPersonGuid(Guid personGuid)
-        => Repository.GetSettingForPersonAsync<Guid>(personGuid, SettingEnum.DefaultPersonGuid);
+    public Task<Guid> GetDefaultPersonGuid(string userGuid)
+        => Repository.GetSettingForUserAsync<Guid>(userGuid, SettingEnum.DefaultPersonGuid);
 }

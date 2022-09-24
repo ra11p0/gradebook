@@ -7,6 +7,7 @@ namespace Gradebook.Settings.Database;
 public class SettingsDatabaseContext : DbContext
 {
     public DbSet<Setting>? Settings { get; set; }
+    public DbSet<AccountSetting>? AccountSettings { get; set; }
     public SettingsDatabaseContext()
     {
 

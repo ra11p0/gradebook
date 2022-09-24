@@ -32,4 +32,26 @@ public class SettingsCommandsRepository : BaseRepository<SettingsDatabaseContext
             setting.JsonValue = JsonConvert.SerializeObject(value);
         }
     }
+
+    public void SetSettingForUser<T>(string userGuid, SettingEnum settingType, T value)
+        => SetSettingForUserAsync(userGuid, settingType, value).GetAwaiter().GetResult();
+
+    public async Task SetSettingForUserAsync<T>(string userGuid, SettingEnum settingType, T value)
+    {
+        var setting = Context.AccountSettings!.FirstOrDefault(setting => setting.UserGuid == userGuid && setting.SettingType == settingType);
+        if (setting is null)
+        {
+            setting = new()
+            {
+                UserGuid = userGuid,
+                SettingType = settingType,
+                JsonValue = JsonConvert.SerializeObject(value)
+            };
+            await Context.AccountSettings!.AddAsync(setting);
+        }
+        else
+        {
+            setting.JsonValue = JsonConvert.SerializeObject(value);
+        }
+    }
 }

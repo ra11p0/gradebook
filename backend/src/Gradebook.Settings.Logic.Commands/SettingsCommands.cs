@@ -10,9 +10,9 @@ public class SettingsCommands : BaseLogic<ISettingsCommandsRepository>, ISetting
     {
     }
 
-    public async Task SetDefaultPersonGuid(Guid personGuid, Guid defaultPersonGuid)
+    public async Task SetDefaultPersonGuid(string userGuid, Guid defaultPersonGuid)
     {
-        await Repository.SetSettingForPersonAsync(personGuid, SettingEnum.DefaultPersonGuid, defaultPersonGuid);
+        await Repository.SetSettingForUserAsync(userGuid, SettingEnum.DefaultPersonGuid, defaultPersonGuid);
         await Repository.SaveChangesAsync();
     }
 }

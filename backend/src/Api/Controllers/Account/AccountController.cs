@@ -1,15 +1,19 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text.Json;
 using Api.Models.Account;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
+using Gradebook.Foundation.Common.Settings.Commands;
+using Gradebook.Foundation.Common.Settings.Enums;
 using Gradebook.Foundation.Identity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Api.Controllers.Account;
 
@@ -21,12 +25,16 @@ public class AccountController : ControllerBase
     private readonly ServiceResolver<IConfiguration> _configuration;
     private readonly ServiceResolver<IIdentityLogic> _identityLogic;
     private readonly ServiceResolver<IFoundationQueries> _foundationQueries;
+    private readonly ServiceResolver<ISettingsQueries> _settingsQueries;
+    private readonly ServiceResolver<ISettingsCommands> _settingsCommands;
     public AccountController(IServiceProvider serviceProvider)
     {
         _userManager = serviceProvider.GetResolver<UserManager<ApplicationUser>>();
         _configuration = serviceProvider.GetResolver<IConfiguration>();
         _identityLogic = serviceProvider.GetResolver<IIdentityLogic>();
         _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
+        _settingsCommands = serviceProvider.GetResolver<ISettingsCommands>();
+        _settingsQueries = serviceProvider.GetResolver<ISettingsQueries>();
     }
     [HttpPost]
     [Route("login")]
@@ -192,5 +200,38 @@ public class AccountController : ControllerBase
             UserId = user.Id,
             Schools = accessibleSchools.Response ?? Enumerable.Empty<SchoolWithRelatedPersonDto>()
         });
+    }
+
+    [HttpGet]
+    [Route("{userGuid}/Settings/{settingEnum}")]
+    [Authorize]
+    public async Task<IActionResult> GetSetting([FromRoute] string userGuid, [FromRoute] SettingEnum settingEnum)
+    {
+        object? setting;
+        switch (settingEnum)
+        {
+            case SettingEnum.DefaultPersonGuid:
+                setting = await _settingsQueries.Service.GetDefaultPersonGuid(userGuid);
+                break;
+            default:
+                return BadRequest();
+        }
+
+        return setting is null ? NoContent() : Ok(setting);
+    }
+    [HttpPost]
+    [Route("{userGuid}/Settings/{settingEnum}")]
+    [Authorize]
+    public async Task<IActionResult> SetSetting([FromRoute] string userGuid, [FromRoute] SettingEnum settingEnum, [FromBody] string jsonString)
+    {
+        switch (settingEnum)
+        {
+            case SettingEnum.DefaultPersonGuid:
+                await _settingsCommands.Service.SetDefaultPersonGuid(userGuid, JsonConvert.DeserializeObject<Guid>($"\"{jsonString}\""));
+                break;
+            default:
+                return BadRequest();
+        }
+        return Ok();
     }
 }

@@ -19,10 +19,24 @@ public class SettingsQueriesRepository : BaseRepository<SettingsDatabaseContext>
     {
         using var cn = await GetOpenConnectionAsync();
         var jsonString = await cn.QuerySingleOrDefaultAsync<string>(@"
-            SELECT Value 
+            SELECT JsonValue 
             FROM Settings
-            WHERE PersonGuid = @personGuid AND settingType = @settingType
+            WHERE PersonGuid = @personGuid AND SettingType = @settingType
         ", new { personGuid, settingType = (int)settingType });
-        return JsonConvert.DeserializeObject<T>(jsonString);
+        return jsonString is null ? default : JsonConvert.DeserializeObject<T?>(jsonString);
+    }
+
+    public T? GetSettingForUser<T>(string userGuid, SettingEnum settingType)
+        => GetSettingForUserAsync<T>(userGuid, settingType).Result;
+
+    public async Task<T?> GetSettingForUserAsync<T>(string userGuid, SettingEnum settingType)
+    {
+        using var cn = await GetOpenConnectionAsync();
+        var jsonString = await cn.QuerySingleOrDefaultAsync<string>(@"
+            SELECT JsonValue 
+            FROM AccountSettings
+            WHERE UserGuid = @userGuid AND SettingType = @settingType
+        ", new { userGuid, settingType = (int)settingType });
+        return jsonString is null ? default : JsonConvert.DeserializeObject<T?>(jsonString);
     }
 }
