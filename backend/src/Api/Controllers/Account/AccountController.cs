@@ -18,14 +18,12 @@ namespace Api.Controllers.Account;
 public class AccountController : ControllerBase
 {
     private readonly ServiceResolver<UserManager<ApplicationUser>> _userManager;
-    //private readonly ServiceResolver<RoleManager<IdentityRole>> _roleManager;
     private readonly ServiceResolver<IConfiguration> _configuration;
     private readonly ServiceResolver<IIdentityLogic> _identityLogic;
     private readonly ServiceResolver<IFoundationQueries> _foundationQueries;
     public AccountController(IServiceProvider serviceProvider)
     {
         _userManager = serviceProvider.GetResolver<UserManager<ApplicationUser>>();
-        //_roleManager = serviceProvider.GetResolver<RoleManager<IdentityRole>>();
         _configuration = serviceProvider.GetResolver<IConfiguration>();
         _identityLogic = serviceProvider.GetResolver<IIdentityLogic>();
         _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
