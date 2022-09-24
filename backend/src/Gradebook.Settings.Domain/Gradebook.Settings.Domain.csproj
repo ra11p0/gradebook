@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <ProjectReference Include="..\Gradebook.Foundation.Common\Gradebook.Foundation.Common.csproj" />
+    <ProjectReference Include="..\Gradebook.Foundation.Domain\Gradebook.Foundation.Domain.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>

@@ -1,3 +1,4 @@
+using Gradebook.Settings.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -5,6 +6,7 @@ namespace Gradebook.Settings.Database;
 
 public class SettingsDatabaseContext : DbContext
 {
+    public DbSet<Setting>? Settings { get; set; }
     public SettingsDatabaseContext()
     {
 
