@@ -1,15 +1,19 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Api.Controllers.Account.Responses;
+using System.Text.Json;
 using Api.Models.Account;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Foundation.Queries;
+using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
+using Gradebook.Foundation.Common.Settings.Commands;
+using Gradebook.Foundation.Common.Settings.Enums;
 using Gradebook.Foundation.Identity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Api.Controllers.Account;
 
@@ -18,18 +22,65 @@ namespace Api.Controllers.Account;
 public class AccountController : ControllerBase
 {
     private readonly ServiceResolver<UserManager<ApplicationUser>> _userManager;
-    //private readonly ServiceResolver<RoleManager<IdentityRole>> _roleManager;
     private readonly ServiceResolver<IConfiguration> _configuration;
     private readonly ServiceResolver<IIdentityLogic> _identityLogic;
     private readonly ServiceResolver<IFoundationQueries> _foundationQueries;
+    private readonly ServiceResolver<ISettingsQueries> _settingsQueries;
+    private readonly ServiceResolver<ISettingsCommands> _settingsCommands;
     public AccountController(IServiceProvider serviceProvider)
     {
         _userManager = serviceProvider.GetResolver<UserManager<ApplicationUser>>();
-        //_roleManager = serviceProvider.GetResolver<RoleManager<IdentityRole>>();
         _configuration = serviceProvider.GetResolver<IConfiguration>();
         _identityLogic = serviceProvider.GetResolver<IIdentityLogic>();
         _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
+        _settingsCommands = serviceProvider.GetResolver<ISettingsCommands>();
+        _settingsQueries = serviceProvider.GetResolver<ISettingsQueries>();
     }
+
+    #region authorization authentication
+    [HttpGet]
+    [Route("Me")]
+    [ProducesResponseType(typeof(IEnumerable<PersonDto>), statusCode: 200)]
+    [ProducesResponseType(typeof(string), statusCode: 400)]
+    [Authorize]
+    public async Task<IActionResult> GetMe()
+    {
+        var user = await _userManager.Service.FindByNameAsync(User.Identity!.Name);
+        var accessibleSchools = await _foundationQueries.Service.GetSchoolsForUser(user.Id);
+        return Ok(new MeResponseModel
+        {
+            UserId = user.Id,
+            Schools = accessibleSchools.Response ?? Enumerable.Empty<SchoolWithRelatedPersonDto>()
+        });
+    }
+    [Authorize]
+    [HttpPost]
+    [Route("revoke/{username}")]
+    public async Task<IActionResult> Revoke(string username)
+    {
+        var user = await _userManager.Service.FindByNameAsync(username);
+        if (user == null) return BadRequest("Invalid user name");
+
+        user.RefreshToken = null;
+        await _userManager.Service.UpdateAsync(user);
+
+        return NoContent();
+    }
+    [Authorize]
+    [HttpPost]
+    [Route("revoke-all")]
+    public async Task<IActionResult> RevokeAll()
+    {
+        var users = _userManager.Service.Users.ToList();
+        foreach (var user in users)
+        {
+            user.RefreshToken = null;
+            await _userManager.Service.UpdateAsync(user);
+        }
+
+        return NoContent();
+    }
+
     [HttpPost]
     [Route("login")]
     public async Task<IActionResult> Login([FromForm] LoginModel model)
@@ -60,27 +111,16 @@ public class AccountController : ControllerBase
 
             await _userManager.Service.UpdateAsync(user);
 
-            var roles = await _userManager.Service.GetRolesAsync(user);
-            var personGuid = await _foundationQueries.Service.GetPersonGuidForUser(user.Id);
-            var person = await _foundationQueries.Service.GetPersonByGuid(personGuid.Response);
-
             return Ok(new
             {
                 access_token = new JwtSecurityTokenHandler().WriteToken(token),
-                RefreshToken = refreshToken,
                 refresh_token = refreshToken,
-                Expiration = token.ValidTo,
                 expires_in = int.Parse(_configuration.Service["JWT:TokenValidityInMinutes"]) * 60,
-                Username = user.UserName,
-                UserId = user.Id,
-                PersonGuid = personGuid.Response,
-                person.Response.Name,
-                person.Response.Surname,
-                Roles = roles
             });
         }
         return Unauthorized();
     }
+
     [HttpPost]
     [Route("register")]
     public async Task<IActionResult> Register([FromBody] RegisterModel model)
@@ -101,6 +141,7 @@ public class AccountController : ControllerBase
 
         return Ok(new LoginRegisterResponse { Status = "Success", Message = "User created successfully!" });
     }
+
     [HttpPost]
     [Route("refresh-token")]
     public async Task<IActionResult> RefreshToken(TokenModel tokenModel)
@@ -132,11 +173,14 @@ public class AccountController : ControllerBase
 
         return new ObjectResult(new
         {
-            accessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
-            refreshToken = newRefreshToken
+            access_token = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
+            refresh_token = newRefreshToken,
         });
     }
-    [Authorize(Roles = "SuperAdmin")]
+
+    #endregion
+
+    #region roles
     [HttpPost]
     [Route("{userGuid}/roles")]
     public async Task<IActionResult> PostRoles([FromRoute] string userGuid, [FromBody] string[] roles)
@@ -144,53 +188,75 @@ public class AccountController : ControllerBase
         await _identityLogic.Service.EditUserRoles(roles, userGuid);
         return Ok();
     }
+    #endregion
+
+    #region schools
     [HttpGet]
-    [Route("me")]
+    [Route("{userGuid}/schools")]
+    [ProducesResponseType(typeof(IEnumerable<SchoolResponseModel>), 200)]
+    [ProducesResponseType(typeof(string), statusCode: 400)]
     [Authorize]
-    [ProducesResponseType(typeof(MeResponse), 200)]
-    public async Task<IActionResult> Me()
+    public async Task<IActionResult> GetSchools([FromRoute] string userGuid)
     {
-        var user = await _userManager.Service.FindByNameAsync(User.Identity!.Name);
-        var roles = await _identityLogic.Service.GetUserRoles(user.Id);
-        var personGuid = await _foundationQueries.Service.GetCurrentPersonGuid();
-        var person = await _foundationQueries.Service.GetPersonByGuid(personGuid.Response);
-        return Ok(new MeResponse
+        var resp = await _foundationQueries.Service.GetSchoolsForUser(userGuid);
+        var mappedResponse = resp.Response?.Select(response => new SchoolResponseModel()
         {
-            Id = user.Id,
-            Username = user.UserName,
-            PersonGuid = personGuid.Response,
-            Roles = roles.Response,
-            Name = person.Response?.Name,
-            Surname = person.Response?.Surname,
-            Birthday = person.Response?.Birthday,
-            SchoolRole = person.Response?.SchoolRole,
+            School = response.School,
+            Person = response.Person
         });
+        return resp.Status ? Ok(mappedResponse) : BadRequest();
     }
-    [Authorize]
-    [HttpPost]
-    [Route("revoke/{username}")]
-    public async Task<IActionResult> Revoke(string username)
-    {
-        var user = await _userManager.Service.FindByNameAsync(username);
-        if (user == null) return BadRequest("Invalid user name");
 
-        user.RefreshToken = null;
-        await _userManager.Service.UpdateAsync(user);
+    #endregion
 
-        return NoContent();
-    }
+    #region settings
+    [HttpGet]
+    [Route("{userGuid}/Settings/{settingEnum}")]
     [Authorize]
-    [HttpPost]
-    [Route("revoke-all")]
-    public async Task<IActionResult> RevokeAll()
+    public async Task<IActionResult> GetSetting([FromRoute] string userGuid, [FromRoute] SettingEnum settingEnum)
     {
-        var users = _userManager.Service.Users.ToList();
-        foreach (var user in users)
+        object? setting;
+        switch (settingEnum)
         {
-            user.RefreshToken = null;
-            await _userManager.Service.UpdateAsync(user);
+            case SettingEnum.DefaultPersonGuid:
+                setting = await _settingsQueries.Service.GetDefaultPersonGuid(userGuid);
+                break;
+            default:
+                return BadRequest();
         }
 
-        return NoContent();
+        return setting is null ? NoContent() : Ok(setting);
     }
+    [HttpPost]
+    [Route("{userGuid}/Settings/{settingEnum}")]
+    [Authorize]
+    public async Task<IActionResult> SetSetting([FromRoute] string userGuid, [FromRoute] SettingEnum settingEnum, [FromBody] string jsonString)
+    {
+        switch (settingEnum)
+        {
+            case SettingEnum.DefaultPersonGuid:
+                await _settingsCommands.Service.SetDefaultPersonGuid(userGuid, JsonConvert.DeserializeObject<Guid>($"\"{jsonString}\""));
+                break;
+            default:
+                return BadRequest();
+        }
+        return Ok();
+    }
+    [HttpGet]
+    [Route("{userGuid}/Settings/DefaultPerson")]
+    [ProducesResponseType(typeof(PersonDto), statusCode: 200)]
+    [ProducesResponseType(typeof(string), statusCode: 400)]
+    [Authorize]
+    public async Task<IActionResult> GetDefaultPerson([FromRoute] string userGuid)
+    {
+        var defaultPersonGuid = await _settingsQueries.Service.GetDefaultPersonGuid(userGuid);
+        if (defaultPersonGuid == Guid.Empty)
+        {
+            var relatedPeople = await _foundationQueries.Service.GetSchoolsForUser(userGuid);
+            return relatedPeople.Status ? Ok(relatedPeople.Response?.FirstOrDefault()?.Person) : BadRequest(relatedPeople.Message);
+        }
+        var personResponse = await _foundationQueries.Service.GetPersonByGuid(defaultPersonGuid);
+        return personResponse.Status ? Ok(personResponse.Response) : BadRequest(personResponse.Message);
+    }
+    #endregion
 }

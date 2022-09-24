@@ -1,5 +1,3 @@
-using System.Text;
-
 namespace Gradebook.Foundation.Common.Extensions;
 
 public static class GenericExtensions

@@ -1,15 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
 
-const mapStateToProps = (state: any) => ({
-  isLoggedIn: state.common.isLoggedIn,
-});
+const mapStateToProps = (state: any) => ({});
 
 const mapDispatchToProps = (dispatch: any) => ({});
 
-interface AbsenceProps {
-  isLoggedIn: boolean;
-}
+interface AbsenceProps {}
 
 class Absence extends React.Component<AbsenceProps> {
   render(): React.ReactNode {

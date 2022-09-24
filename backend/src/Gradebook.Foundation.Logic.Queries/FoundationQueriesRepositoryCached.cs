@@ -36,11 +36,11 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
     public Task<PersonDto> GetPersonByGuid(Guid guid)
         => Base.GetPersonByGuid(guid);
 
-    public Task<Guid?> GetPersonGuidForUser(string userId)
-        => Base.GetPersonGuidForUser(userId);
+    public Task<Guid?> GetPersonGuidForUser(string userId, Guid schoolGuid)
+        => Base.GetPersonGuidForUser(userId, schoolGuid);
 
-    public Task<IEnumerable<SchoolDto>> GetSchoolsForPerson(Guid personGuid)
-        => Base.GetSchoolsForPerson(personGuid);
+    public Task<IEnumerable<SchoolDto>> GetSchoolsForUser(string userGuid)
+        => Base.GetSchoolsForUser(userGuid);
 
     public Task<StudentDto> GetStudentByGuid(Guid guid)
         => Base.GetStudentByGuid(guid);
@@ -87,4 +87,7 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
 
     public Task<IPagedList<PersonDto>> GetPeopleInSchool(Guid schoolGuid, string schoolRole, string query, Pager pager)
         => Base.GetPeopleInSchool(schoolGuid, schoolRole, query, pager);
+
+    public Task<bool> IsUserActive(string userGuid)
+        => Base.IsUserActive(userGuid);
 }

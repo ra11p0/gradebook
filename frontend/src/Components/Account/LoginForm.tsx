@@ -4,27 +4,30 @@ import { connect } from "react-redux";
 import AccountProxy from "../../ApiClient/Account/AccountProxy";
 import { withTranslation } from "react-i18next";
 import { Button } from "react-bootstrap";
-import { logInAction, loginWrapper } from "../../ReduxWrappers/loginWrapper";
-import {
-  refreshTokenAction,
-  refreshTokenWrapper,
-} from "../../ReduxWrappers/refreshTokenWrapper";
+import { isLoggedInProxy } from "../../Redux/ReduxProxy/isLoggedInProxy";
+import { currentSchoolProxy } from "../../Redux/ReduxProxy/currentSchoolProxy";
+import { logInAction, loginWrapper } from "../../Redux/ReduxWrappers/loginWrapper";
+import { setSchoolsListAction, setSchoolsListWrapper } from "../../Redux/ReduxWrappers/setSchoolsListWrapper";
+import { setUserAction, setUserWrapper } from "../../Redux/ReduxWrappers/setUserWrapper";
 
 const mapStateToProps = (state: any) => ({
-  isLoggedIn: state.common.isLoggedIn,
+  isLoggedIn: isLoggedInProxy(state),
+  currentSchool: currentSchoolProxy(state),
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
-  onLogIn: (action: logInAction) => loginWrapper(dispatch, action),
-  refreshToken: (action: refreshTokenAction) =>
-    refreshTokenWrapper(dispatch, action),
+  logIn: (action: logInAction) => loginWrapper(dispatch, action),
+  setSchools: (action: setSchoolsListAction) => setSchoolsListWrapper(dispatch, action),
+  setUser: (action: setUserAction) => setUserWrapper(dispatch, action),
 });
 
 interface LogInProps {
-  onLogIn?: (action: logInAction) => void;
-  refreshToken: (action: refreshTokenAction) => void;
+  logIn?: (action: logInAction) => void;
+  setSchools?: (action: setSchoolsListAction) => void;
+  setUser?: (action: setUserAction) => void;
   isLoggedIn: boolean;
   t: any;
+  currentSchool?: any;
 }
 
 interface LogInState {
@@ -45,39 +48,31 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
 
   componentDidMount() {
     var access = localStorage.getItem("access_token");
-    var refresh = localStorage.getItem("refresh");
+    var refresh = localStorage.getItem("refresh_token");
     if (access && refresh) {
-      AccountProxy.refreshAccessToken(access, refresh).then(
-        (refreshAccessTokenResponse) => {
-          const { accessToken, refreshToken } = refreshAccessTokenResponse.data;
-          this.props.refreshToken({ token: accessToken, refreshToken });
-          AccountProxy.getMe().then((getMeResponse) => {
-            this.props.onLogIn!({
-              ...refreshAccessTokenResponse.data,
-              ...getMeResponse.data,
-              access_token: accessToken,
-              refreshToken,
-              userId: getMeResponse.data.id,
-            });
-            localStorage.setItem("access_token", accessToken);
-            localStorage.setItem("refresh", refreshToken);
-          });
-        }
-      );
+      AccountProxy.refreshAccessToken(access, refresh).then((refreshAccessTokenResponse) => {
+        this.props.logIn!({
+          accessToken: refreshAccessTokenResponse.data.access_token,
+          refreshToken: refreshAccessTokenResponse.data.refresh_token,
+        });
+        AccountProxy.getMe().then((getMeResponse) => {
+          this.props.setUser!({ userId: getMeResponse.data.userId });
+          this.props.setSchools!({ schoolsList: getMeResponse.data.schools });
+        });
+      });
     }
   }
 
   onLogIn() {
-    AccountProxy.logIn({
-      username: this.state.username!,
-      password: this.state.password!,
-    })
-      .then((r) => {
-        this.props.onLogIn!({ ...r.data });
-        localStorage.setItem("access_token", r.data.access_token);
-        localStorage.setItem("refresh", r.data.refreshToken);
+    AccountProxy.logIn({ username: this.state.username!, password: this.state.password! })
+      .then((loginResponse) => {
+        this.props.logIn!({ refreshToken: loginResponse.data.refresh_token, accessToken: loginResponse.data.access_token });
+        AccountProxy.getMe().then((getMeResponse) => {
+          this.props.setUser!({ userId: getMeResponse.data.userId });
+          this.props.setSchools!({ schoolsList: getMeResponse.data.schools });
+        });
       })
-      .catch((r) => {
+      .catch(() => {
         this.setState({
           ...this.state,
           loginFailed: true,
@@ -93,9 +88,7 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
           <div className="m-1 p-1 display-6">
             <label>{t("loging")}</label>
           </div>
-          {this.state.loginFailed && (
-            <div className="m-1 p-1 alert alert-danger">{t("loginFailed")}</div>
-          )}
+          {this.state.loginFailed && <div className="m-1 p-1 alert alert-danger">{t("loginFailed")}</div>}
           <div className="m-1 p-1">
             <label>{t("email")}</label>
             <input
@@ -129,11 +122,7 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
               <Link to={""}>{t("changePassword")}</Link>
               <Link to={""}>{t("recoverAccess")}</Link>
             </div>
-            <Button
-              variant="outline-primary"
-              onClick={() => this.onLogIn!()}
-              type="submit"
-            >
+            <Button variant="outline-primary" onClick={() => this.onLogIn!()} type="submit">
               {t("logIn")}
             </Button>
           </div>
@@ -143,6 +132,4 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
   }
 }
 
-export default withTranslation("loginForm")(
-  connect(mapStateToProps, mapDispatchToProps)(LoginForm)
-);
+export default withTranslation("loginForm")(connect(mapStateToProps, mapDispatchToProps)(LoginForm));

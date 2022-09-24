@@ -7,15 +7,16 @@ import * as Yup from "yup";
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
 import { connect } from "react-redux";
 import Notifications from "../../../../Notifications/Notifications";
+import { currentSchoolProxy } from "../../../../Redux/ReduxProxy/currentSchoolProxy";
 const mapStateToProps = (state: any) => ({
-  currentSchoolGuid: state.common.school?.schoolGuid,
+  currentSchool: currentSchoolProxy(state),
 });
 const mapDispatchToProps = (dispatch: any) => ({});
 
 type Props = {
   show: boolean;
   onHide: () => void;
-  currentSchoolGuid?: string;
+  currentSchool: any;
 };
 interface FormValues {
   name: string;
@@ -25,10 +26,7 @@ interface FormValues {
 function AddClassModal(props: Props) {
   const { t } = useTranslation("addNewClassModal");
   const formValuesSchema = Yup.object().shape({
-    name: Yup.string()
-      .required(t("nameIsRequired"))
-      .min(2, t("nameTooShort"))
-      .max(50, t("nameTooLong")),
+    name: Yup.string().required(t("nameIsRequired")).min(2, t("nameTooShort")).max(50, t("nameTooLong")),
     description: Yup.string().optional(),
   });
   return (
@@ -43,7 +41,7 @@ function AddClassModal(props: Props) {
         }}
         validationSchema={formValuesSchema}
         onSubmit={(values: FormValues) => {
-          SchoolsProxy.addNewClass(values, props.currentSchoolGuid!)
+          SchoolsProxy.addNewClass(values, props.currentSchool.schoolGuid!)
             .then(() => {
               props.onHide();
             })
@@ -56,22 +54,12 @@ function AddClassModal(props: Props) {
               <div className="m-1 p-1">
                 <label htmlFor="name">{t("name")}</label>
                 <Field id="name" name="name" className="form-control" />
-                {errors.name && touched.name && (
-                  <div className="invalid-feedback d-block">{errors.name}</div>
-                )}
+                {errors.name && touched.name && <div className="invalid-feedback d-block">{errors.name}</div>}
               </div>
               <div className="m-1 p-1">
                 <label htmlFor="description">{t("description")}</label>
-                <Field
-                  id="description"
-                  name="description"
-                  className="form-control"
-                />
-                {errors.description && touched.description && (
-                  <div className="invalid-feedback d-block">
-                    {errors.description}
-                  </div>
-                )}
+                <Field id="description" name="description" className="form-control" />
+                {errors.description && touched.description && <div className="invalid-feedback d-block">{errors.description}</div>}
               </div>
             </Modal.Body>
             <Modal.Footer>

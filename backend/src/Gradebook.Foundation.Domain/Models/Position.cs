@@ -4,5 +4,5 @@ namespace Gradebook.Foundation.Domain.Models;
 
 public class Position : BaseDomainModel
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 }

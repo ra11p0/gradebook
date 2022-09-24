@@ -8,15 +8,22 @@ import moment from "moment";
 import PeopleProxy from "../../ApiClient/People/PeopleProxy";
 import Notifications from "../../Notifications/Notifications";
 import AccountProxy from "../../ApiClient/Account/AccountProxy";
-import { store } from "../../store";
-import { refreshUserWrapper } from "../../ReduxWrappers/refreshUserWrapper";
+import GetAccessibleSchoolsResponse from "../../ApiClient/Account/Definitions/GetAccessibleSchoolsResponse";
+import { currentUserIdProxy } from "../../Redux/ReduxProxy/currentUserIdProxy";
+import { setSchoolsListWrapper } from "../../Redux/ReduxWrappers/setSchoolsListWrapper";
 
-const mapStateToProps = (state: any) => ({});
+const mapStateToProps = (state: any) => ({
+  userId: currentUserIdProxy(state),
+});
 
-const mapDispatchToProps = (dispatch: any) => ({});
+const mapDispatchToProps = (dispatch: any) => ({
+  setSchoolsList: (schoolsList: GetAccessibleSchoolsResponse[]) => setSchoolsListWrapper(dispatch, { schoolsList }),
+});
 
 interface RegisterStudentFormProps {
   defaultOnBackHandler: () => void;
+  setSchoolsList?: (schoolsList: GetAccessibleSchoolsResponse[]) => void;
+  userId?: string;
 }
 
 interface RegisterStudentFormValues {
@@ -46,11 +53,8 @@ const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
     onSubmit: (values: RegisterStudentFormValues) => {
       PeopleProxy.activatePerson(values.accessCode)
         .then(() => {
-          AccountProxy.getMe().then((meResponse) => {
-            refreshUserWrapper(store.dispatch, {
-              ...meResponse.data,
-              userId: meResponse.data.id,
-            });
+          AccountProxy.getAccessibleSchools(props.userId!).then((schoolsResponse) => {
+            props.setSchoolsList!(schoolsResponse.data);
           });
         })
         .catch(Notifications.showCommonError);

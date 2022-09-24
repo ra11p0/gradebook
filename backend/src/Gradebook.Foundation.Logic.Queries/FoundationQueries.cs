@@ -48,17 +48,17 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<ActivationCodeInfoDto>(response, true);
     }
 
-    public async Task<ResponseWithStatus<IEnumerable<StudentDto>, bool>> GetAllAccessibleStudents()
+    public async Task<ResponseWithStatus<IEnumerable<StudentDto>, bool>> GetAllAccessibleStudents(Guid schoolGuid)
     {
-        var relatedPersonGuid = await GetCurrentPersonGuid();
+        var relatedPersonGuid = await GetCurrentPersonGuid(schoolGuid);
         if (!relatedPersonGuid.Status) return new ResponseWithStatus<IEnumerable<StudentDto>, bool>(null, false, "Cannot recognise current person");
         var students = await Repository.GetAllAccessibleStudents(relatedPersonGuid.Response);
         return new ResponseWithStatus<IEnumerable<StudentDto>, bool>(students, true);
     }
 
-    public async Task<ResponseWithStatus<IEnumerable<TeacherDto>, bool>> GetAllAccessibleTeachers()
+    public async Task<ResponseWithStatus<IEnumerable<TeacherDto>, bool>> GetAllAccessibleTeachers(Guid schoolGuid)
     {
-        var relatedPersonGuid = await GetCurrentPersonGuid();
+        var relatedPersonGuid = await GetCurrentPersonGuid(schoolGuid);
         if (!relatedPersonGuid.Status) return new ResponseWithStatus<IEnumerable<TeacherDto>, bool>(null, false, "Cannot recognise current person");
         var teachers = await Repository.GetAllAccessibleTeachers(relatedPersonGuid.Response);
         return new ResponseWithStatus<IEnumerable<TeacherDto>, bool>(teachers, true);
@@ -79,11 +79,11 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<IPagedList<ClassDto>>(resp, true);
     }
 
-    public async Task<ResponseWithStatus<Guid, bool>> GetCurrentPersonGuid()
+    public async Task<ResponseWithStatus<Guid, bool>> GetCurrentPersonGuid(Guid schoolGuid)
     {
         var userGuid = await _identityLogic.Service.CurrentUserId();
         if (!userGuid.Status) return new ResponseWithStatus<Guid, bool>(Guid.Empty, false, "Can't get current user guid");
-        var personGuid = await GetPersonGuidForUser(userGuid.Response!);
+        var personGuid = await GetPersonGuidForUser(userGuid.Response!, schoolGuid);
         return personGuid;
     }
 
@@ -116,25 +116,6 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
     {
         var resp = await Repository.GetInvitations(personGuid);
         return new ResponseWithStatus<IEnumerable<InvitationDto>, bool>(resp, true);
-    }
-
-    public async Task<ResponseWithStatus<IEnumerable<InvitationDto>, bool>> GetInvitations()
-    {
-        var currentPersonGuid = await GetCurrentPersonGuid();
-        if (!currentPersonGuid.Status) return new ResponseWithStatus<IEnumerable<InvitationDto>, bool>(default, false, currentPersonGuid.Message);
-        var invitationsResponse = await GetInvitations(currentPersonGuid.Response);
-        if (!invitationsResponse.Status) return new ResponseWithStatus<IEnumerable<InvitationDto>, bool>(invitationsResponse.Message);
-        var invitationsWithPeople = await Task.WhenAll(invitationsResponse.Response!.Select(async invitation =>
-        {
-            if (invitation.InvitedPersonGuid.HasValue)
-            {
-                var personResponse = await GetPersonByGuid(invitation.InvitedPersonGuid.Value);
-                if (personResponse.Status)
-                    invitation.InvitedPerson = personResponse.Response;
-            }
-            return invitation;
-        }));
-        return new ResponseWithStatus<IEnumerable<InvitationDto>, bool>(invitationsWithPeople, true);
     }
 
     public async Task<ResponseWithStatus<IPagedList<InvitationDto>, bool>> GetInvitationsToSchool(Guid schoolGuid, int page)
@@ -176,9 +157,9 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<PersonDto, bool>(resp, true);
     }
 
-    public async Task<ResponseWithStatus<Guid, bool>> GetPersonGuidForUser(string userId)
+    public async Task<ResponseWithStatus<Guid, bool>> GetPersonGuidForUser(string userId, Guid schoolGuid)
     {
-        var resp = await Repository.GetPersonGuidForUser(userId);
+        var resp = await Repository.GetPersonGuidForUser(userId, schoolGuid);
         return new ResponseWithStatus<Guid, bool>(resp.Value, resp != Guid.Empty);
     }
 
@@ -190,10 +171,19 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<SchoolDto>(school, true);
     }
 
-    public async Task<ResponseWithStatus<IEnumerable<SchoolDto>, bool>> GetSchoolsForPerson(Guid personGuid)
+    public async Task<ResponseWithStatus<IEnumerable<SchoolWithRelatedPersonDto>, bool>> GetSchoolsForUser(string userGuid)
     {
-        var resp = await Repository.GetSchoolsForPerson(personGuid);
-        return new ResponseWithStatus<IEnumerable<SchoolDto>, bool>(resp, true);
+        var resp = await Repository.GetSchoolsForUser(userGuid);
+        var schoolsWithRelatedPeople = resp.Select(school =>
+        {
+            return new SchoolWithRelatedPersonDto()
+            {
+                School = school,
+                Person = GetPersonByGuid(GetCurrentPersonGuid(school.Guid).Result.Response).Result.Response ?? new()
+            };
+        });
+
+        return new ResponseWithStatus<IEnumerable<SchoolWithRelatedPersonDto>, bool>(schoolsWithRelatedPeople, true);
     }
 
     public async Task<ResponseWithStatus<StudentDto, bool>> GetStudentByGuid(Guid guid)
@@ -233,8 +223,13 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
 
     public async Task<ResponseWithStatus<IPagedList<TeacherDto>>> GetTeachersInSchool(Guid schoolGuid, int page)
     {
-        var pager = new Pager(page);        
+        var pager = new Pager(page);
         var response = await Repository.GetTeachersInSchool(schoolGuid, pager);
         return new ResponseWithStatus<IPagedList<TeacherDto>>(response, true);
+    }
+
+    public async Task<ResponseWithStatus<bool>> IsUserActive(string userGuid)
+    {
+        return new ResponseWithStatus<bool>(await Repository.IsUserActive(userGuid), true);
     }
 }

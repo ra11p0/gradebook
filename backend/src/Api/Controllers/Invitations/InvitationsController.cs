@@ -20,16 +20,6 @@ public class InvitationsController : ControllerBase
         _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
     }
     [HttpGet]
-    [Route("")]
-    [Authorize(Roles = "SuperAdmin")]
-    [ProducesResponseType(typeof(IEnumerable<InvitationDto>), 200)]
-    [ProducesResponseType(typeof(string), 400)]
-    public async Task<IActionResult> GetMyInvitations()
-    {
-        var resp = await _foundationQueries.Service.GetInvitations();
-        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
-    }
-    [HttpGet]
     [Route("Activation/Code")]
     public async Task<IActionResult> GetActivationCodeInfo([FromQuery] string activationCode, [FromQuery] string method)
     {

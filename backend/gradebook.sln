@@ -33,6 +33,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gradebook.Permissions.Logic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gradebook.Permissions.Logic.Queries", "src\Gradebook.Permissions.Logic.Queries\Gradebook.Permissions.Logic.Queries.csproj", "{B6362F02-2EA1-421E-941B-5A56FCC6A507}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Settings", "Settings", "{7D662388-C065-4C10-AFEC-51406A692A36}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gradebook.Settings.Database", "src\Gradebook.Settings.Database\Gradebook.Settings.Database.csproj", "{98497095-F973-4D80-8FC0-30A92E338766}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gradebook.Settings.Domain", "src\Gradebook.Settings.Domain\Gradebook.Settings.Domain.csproj", "{A67C1111-E31C-46BC-BCB4-11168CDC793D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gradebook.Settings.Logic.Commands", "src\Gradebook.Settings.Logic.Commands\Gradebook.Settings.Logic.Commands.csproj", "{FC3E43B4-DD3C-4CE3-8201-1FF66B10D7E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gradebook.Settings.Logic.Queries", "src\Gradebook.Settings.Logic.Queries\Gradebook.Settings.Logic.Queries.csproj", "{1E5C89C7-3C93-4229-9022-A6F63369A0C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -90,6 +100,22 @@ Global
 		{B6362F02-2EA1-421E-941B-5A56FCC6A507}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6362F02-2EA1-421E-941B-5A56FCC6A507}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6362F02-2EA1-421E-941B-5A56FCC6A507}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98497095-F973-4D80-8FC0-30A92E338766}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98497095-F973-4D80-8FC0-30A92E338766}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98497095-F973-4D80-8FC0-30A92E338766}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98497095-F973-4D80-8FC0-30A92E338766}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A67C1111-E31C-46BC-BCB4-11168CDC793D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A67C1111-E31C-46BC-BCB4-11168CDC793D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A67C1111-E31C-46BC-BCB4-11168CDC793D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A67C1111-E31C-46BC-BCB4-11168CDC793D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC3E43B4-DD3C-4CE3-8201-1FF66B10D7E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC3E43B4-DD3C-4CE3-8201-1FF66B10D7E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC3E43B4-DD3C-4CE3-8201-1FF66B10D7E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC3E43B4-DD3C-4CE3-8201-1FF66B10D7E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E5C89C7-3C93-4229-9022-A6F63369A0C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E5C89C7-3C93-4229-9022-A6F63369A0C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E5C89C7-3C93-4229-9022-A6F63369A0C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E5C89C7-3C93-4229-9022-A6F63369A0C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3AEC9D8E-3D59-4F9B-935C-0A17D98834CA} = {0F7D0750-1A63-11ED-97BF-BBD44EE559C1}
@@ -104,5 +130,9 @@ Global
 		{BA02E909-384B-46B5-B241-50A7163BF267} = {CEA1C1E0-23DF-11ED-8ACE-9DE6B97B5DBB}
 		{2400CC65-E6E6-47DE-BE42-BDB7699805F1} = {CEA1C1E0-23DF-11ED-8ACE-9DE6B97B5DBB}
 		{B6362F02-2EA1-421E-941B-5A56FCC6A507} = {CEA1C1E0-23DF-11ED-8ACE-9DE6B97B5DBB}
+		{98497095-F973-4D80-8FC0-30A92E338766} = {7D662388-C065-4C10-AFEC-51406A692A36}
+		{A67C1111-E31C-46BC-BCB4-11168CDC793D} = {7D662388-C065-4C10-AFEC-51406A692A36}
+		{FC3E43B4-DD3C-4CE3-8201-1FF66B10D7E8} = {7D662388-C065-4C10-AFEC-51406A692A36}
+		{1E5C89C7-3C93-4229-9022-A6F63369A0C3} = {7D662388-C065-4C10-AFEC-51406A692A36}
 	EndGlobalSection
 EndGlobal

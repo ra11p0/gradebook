@@ -5,10 +5,10 @@ namespace Gradebook.Foundation.Logic.Queries;
 
 public interface IFoundationQueriesRepository : IBaseRepository
 {
-    Task<Guid?> GetPersonGuidForUser(string userId);
-    Task<IEnumerable<SchoolDto>> GetSchoolsForPerson(Guid personGuid);
+    Task<Guid?> GetPersonGuidForUser(string userId, Guid schoolGuid);
+    Task<IEnumerable<SchoolDto>> GetSchoolsForUser(string userGuid);
     Task<IEnumerable<PersonDto>> GetPeopleInSchool(Guid schoolGuid);
-    Task<IEnumerable<StudentDto>> GetAllAccessibleStudents(Guid relatedPersonGuid);
+    Task<IEnumerable<StudentDto>> GetAllAccessibleStudents(Guid schoolGuid);
     Task<IEnumerable<StudentDto>> GetAllInactiveAccessibleStudents(Guid schoolGuid);
     Task<IEnumerable<TeacherDto>> GetAllAccessibleTeachers(Guid relatedPersonGuid);
     Task<IEnumerable<InvitationDto>> GetInvitations(Guid personGuid);
@@ -26,4 +26,5 @@ public interface IFoundationQueriesRepository : IBaseRepository
     Task<IPagedList<TeacherDto>> GetTeachersInClass(Guid schoolGuid, Pager pager);
     Task<IPagedList<TeacherDto>> GetTeachersInSchool(Guid schoolGuid, Pager pager);
     Task<IPagedList<PersonDto>> GetPeopleInSchool(Guid schoolGuid, string discriminator, string query, Pager pager);
+    Task<bool> IsUserActive(string userGuid);
 }

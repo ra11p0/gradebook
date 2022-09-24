@@ -23,9 +23,9 @@ public class SystemInvitation : BaseDomainModel
     //**********
 
     [ForeignKey("CreatorGuid")]
-    public virtual Person Creator { get; set; }
+    public virtual Person? Creator { get; set; }
     [ForeignKey("InvitedPersonGuid")]
     public virtual Person? InvitedPerson { get; set; }
     [ForeignKey("SchoolGuid")]
-    public virtual School School { get; set; }
+    public virtual School? School { get; set; }
 }
