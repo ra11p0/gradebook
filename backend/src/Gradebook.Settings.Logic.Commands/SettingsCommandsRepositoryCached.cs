@@ -1,4 +1,5 @@
 using Gradebook.Foundation.Common;
+using Gradebook.Foundation.Common.Settings.Enums;
 
 namespace Gradebook.Settings.Logic.Commands;
 
@@ -17,4 +18,10 @@ public class SettingsCommandsRepositoryCached : BaseRepositoryCached<SettingsCom
     public void SaveChanges() => Base.SaveChanges();
 
     public Task SaveChangesAsync() => Base.SaveChangesAsync();
+
+    public void SetSettingForPerson<T>(Guid personGuid, SettingEnum settingType, T value)
+        => Base.SetSettingForPerson(personGuid, settingType, value);
+
+    public Task SetSettingForPersonAsync<T>(Guid personGuid, SettingEnum settingType, T value)
+        => Base.SetSettingForPersonAsync(personGuid, settingType, value);
 }
