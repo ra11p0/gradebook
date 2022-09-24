@@ -36,6 +36,51 @@ public class AccountController : ControllerBase
         _settingsCommands = serviceProvider.GetResolver<ISettingsCommands>();
         _settingsQueries = serviceProvider.GetResolver<ISettingsQueries>();
     }
+
+    #region authorization authentication
+    [HttpGet]
+    [Route("Me")]
+    [ProducesResponseType(typeof(IEnumerable<PersonDto>), statusCode: 200)]
+    [ProducesResponseType(typeof(string), statusCode: 400)]
+    [Authorize]
+    public async Task<IActionResult> GetMe()
+    {
+        var user = await _userManager.Service.FindByNameAsync(User.Identity!.Name);
+        var accessibleSchools = await _foundationQueries.Service.GetSchoolsForUser(user.Id);
+        return Ok(new MeResponseModel
+        {
+            UserId = user.Id,
+            Schools = accessibleSchools.Response ?? Enumerable.Empty<SchoolWithRelatedPersonDto>()
+        });
+    }
+    [Authorize]
+    [HttpPost]
+    [Route("revoke/{username}")]
+    public async Task<IActionResult> Revoke(string username)
+    {
+        var user = await _userManager.Service.FindByNameAsync(username);
+        if (user == null) return BadRequest("Invalid user name");
+
+        user.RefreshToken = null;
+        await _userManager.Service.UpdateAsync(user);
+
+        return NoContent();
+    }
+    [Authorize]
+    [HttpPost]
+    [Route("revoke-all")]
+    public async Task<IActionResult> RevokeAll()
+    {
+        var users = _userManager.Service.Users.ToList();
+        foreach (var user in users)
+        {
+            user.RefreshToken = null;
+            await _userManager.Service.UpdateAsync(user);
+        }
+
+        return NoContent();
+    }
+
     [HttpPost]
     [Route("login")]
     public async Task<IActionResult> Login([FromForm] LoginModel model)
@@ -133,7 +178,9 @@ public class AccountController : ControllerBase
         });
     }
 
-    [Authorize(Roles = "SuperAdmin")]
+    #endregion
+
+    #region roles
     [HttpPost]
     [Route("{userGuid}/roles")]
     public async Task<IActionResult> PostRoles([FromRoute] string userGuid, [FromBody] string[] roles)
@@ -141,35 +188,9 @@ public class AccountController : ControllerBase
         await _identityLogic.Service.EditUserRoles(roles, userGuid);
         return Ok();
     }
+    #endregion
 
-    [Authorize]
-    [HttpPost]
-    [Route("revoke/{username}")]
-    public async Task<IActionResult> Revoke(string username)
-    {
-        var user = await _userManager.Service.FindByNameAsync(username);
-        if (user == null) return BadRequest("Invalid user name");
-
-        user.RefreshToken = null;
-        await _userManager.Service.UpdateAsync(user);
-
-        return NoContent();
-    }
-    [Authorize]
-    [HttpPost]
-    [Route("revoke-all")]
-    public async Task<IActionResult> RevokeAll()
-    {
-        var users = _userManager.Service.Users.ToList();
-        foreach (var user in users)
-        {
-            user.RefreshToken = null;
-            await _userManager.Service.UpdateAsync(user);
-        }
-
-        return NoContent();
-    }
-
+    #region schools
     [HttpGet]
     [Route("{userGuid}/schools")]
     [ProducesResponseType(typeof(IEnumerable<SchoolResponseModel>), 200)]
@@ -186,22 +207,9 @@ public class AccountController : ControllerBase
         return resp.Status ? Ok(mappedResponse) : BadRequest();
     }
 
-    [HttpGet]
-    [Route("Me")]
-    [ProducesResponseType(typeof(IEnumerable<PersonDto>), statusCode: 200)]
-    [ProducesResponseType(typeof(string), statusCode: 400)]
-    [Authorize]
-    public async Task<IActionResult> GetMe()
-    {
-        var user = await _userManager.Service.FindByNameAsync(User.Identity!.Name);
-        var accessibleSchools = await _foundationQueries.Service.GetSchoolsForUser(user.Id);
-        return Ok(new MeResponseModel
-        {
-            UserId = user.Id,
-            Schools = accessibleSchools.Response ?? Enumerable.Empty<SchoolWithRelatedPersonDto>()
-        });
-    }
+    #endregion
 
+    #region settings
     [HttpGet]
     [Route("{userGuid}/Settings/{settingEnum}")]
     [Authorize]
@@ -234,4 +242,21 @@ public class AccountController : ControllerBase
         }
         return Ok();
     }
+    [HttpGet]
+    [Route("{userGuid}/Settings/DefaultPerson")]
+    [ProducesResponseType(typeof(PersonDto), statusCode: 200)]
+    [ProducesResponseType(typeof(string), statusCode: 400)]
+    [Authorize]
+    public async Task<IActionResult> GetDefaultPerson([FromRoute] string userGuid)
+    {
+        var defaultPersonGuid = await _settingsQueries.Service.GetDefaultPersonGuid(userGuid);
+        if (defaultPersonGuid == Guid.Empty)
+        {
+            var relatedPeople = await _foundationQueries.Service.GetSchoolsForUser(userGuid);
+            return relatedPeople.Status ? Ok(relatedPeople.Response?.FirstOrDefault()?.Person) : BadRequest(relatedPeople.Message);
+        }
+        var personResponse = await _foundationQueries.Service.GetPersonByGuid(defaultPersonGuid);
+        return personResponse.Status ? Ok(personResponse.Response) : BadRequest(personResponse.Message);
+    }
+    #endregion
 }
