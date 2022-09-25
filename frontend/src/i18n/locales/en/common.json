@@ -6,5 +6,6 @@
   "loading": "Loading",
   "schoolIsNotSelected": "School is not selected",
   "selectSchoolToManageStudents": "Select school to manage students",
-  "actions": "Actions"
+  "actions": "Actions",
+  "save": "Save"
 }

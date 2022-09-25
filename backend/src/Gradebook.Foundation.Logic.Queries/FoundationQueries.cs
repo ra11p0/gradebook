@@ -137,6 +137,14 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<IPagedList<InvitationDto>, bool>(invitationsWithPeople.ToPagedList(invitationsResponse.Page, invitationsResponse.Total, invitationsResponse.TotalPages), true);
     }
 
+    public async Task<ResponseWithStatus<IEnumerable<PersonDto>>> GetPeopleByUserGuid(string userGuid)
+    {
+        var resp = await GetSchoolsForUser(userGuid);
+        if (!resp.Status) return new ResponseWithStatus<IEnumerable<PersonDto>>(resp.Message);
+        var people = resp.Response!.Select(e => e.Person);
+        return new ResponseWithStatus<IEnumerable<PersonDto>>(people, true);
+    }
+
     public async Task<ResponseWithStatus<IEnumerable<PersonDto>, bool>> GetPeopleInSchool(Guid schoolGuid)
     {
         var resp = await Repository.GetPeopleInSchool(schoolGuid);
