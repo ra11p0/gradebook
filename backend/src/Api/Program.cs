@@ -39,7 +39,8 @@ builder.Services.AddCors(e =>
 {
     e.AddDefaultPolicy(p =>
     {
-        p.WithOrigins("http://development.gradebook.com")
+        //TODO: move to appsettings.json
+        p.WithOrigins("http://development.gradebook.com", "http://api-tests.gradebook.com")
         .AllowAnyHeader()
         .AllowAnyMethod();
     });
