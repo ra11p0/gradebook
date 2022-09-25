@@ -5,7 +5,7 @@ namespace Gradebook.Tests.Selenium.Tests.Students;
 [Order(2)]
 public class StudentsAndInvitations
 {
-    private Dictionary<string, string> _storage = new();
+    private readonly Dictionary<string, string> _storage = new();
     private IWebDriver? _driver;
     [SetUp]
     public void Setup()

@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import AddNewSchoolModal from "./AddNewSchoolModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faWindowMaximize } from "@fortawesome/free-solid-svg-icons";
 import Tippy from "@tippyjs/react";
@@ -17,6 +16,7 @@ import { schoolsListProxy } from "../../../../Redux/ReduxProxy/schoolsListProxy"
 import GetSchoolResponse from "../../../../ApiClient/Schools/Definitions/GetSchoolResponse";
 import { setSchoolsListAction, setSchoolsListWrapper } from "../../../../Redux/ReduxWrappers/setSchoolsListWrapper";
 import { setSchoolAction, setSchoolWrapper } from "../../../../Redux/ReduxWrappers/setSchoolWrapper";
+import JoinSchoolModal from "./JoinSchoolModal";
 
 const mapDispatchToProps = (dispatch: any) => ({
   setSchoolsList: (action: setSchoolsListAction) => setSchoolsListWrapper(dispatch, action),
@@ -38,7 +38,7 @@ interface SchoolsListProps {
 
 function SchoolsList(props: SchoolsListProps) {
   const { t } = useTranslation("schoolsList");
-  const [showAddSchoolModal, setShowAddSchoolModal] = useState(false);
+  const [showJoinSchoolModal, setShowJoinSchoolModal] = useState(false);
   const [refreshEffectKey, setRefreshEffectKey] = useState(0);
 
   useEffect(() => {
@@ -52,7 +52,7 @@ function SchoolsList(props: SchoolsListProps) {
         else props.setCurrentSchool!({ schoolName: "", schoolGuid: "" });
       }
     });
-  }, [showAddSchoolModal, refreshEffectKey]);
+  }, [showJoinSchoolModal, refreshEffectKey]);
 
   function removeSchoolClickHandler(schoolGuid: string) {
     Swal.fire({
@@ -82,14 +82,14 @@ function SchoolsList(props: SchoolsListProps) {
       <Stack>
         <div className="d-flex justify-content-between">
           <div className="my-auto">{t("managedSchools")}</div>
-          <div>
-            <AddNewSchoolModal
-              show={showAddSchoolModal}
+          <div className="d-flex gap-2">
+            <JoinSchoolModal
+              show={showJoinSchoolModal}
               onHide={() => {
-                setShowAddSchoolModal(false);
+                setShowJoinSchoolModal(false);
               }}
             />
-            <Button onClick={() => setShowAddSchoolModal(true)} variant={"outlined"}>
+            <Button className="addSchoolButton" onClick={() => setShowJoinSchoolModal(true)} variant={"outlined"}>
               {t("addSchool")}
             </Button>
           </div>

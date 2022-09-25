@@ -258,10 +258,15 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                 FROM Person
                 WHERE UserGuid = @userId
                     AND IsDeleted = 0
+                    AND Guid IN (
+                        SELECT PeopleGuid
+                        FROM PersonSchool
+                        WHERE SchoolsGuid = @schoolGuid
+                    )
             ",
         new
         {
-
+            schoolGuid,
             userId
         });
     }

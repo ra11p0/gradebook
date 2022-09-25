@@ -22,6 +22,7 @@ interface RegisterAdministratorFormProps {
   defaultOnBackHandler: () => void;
   userId: string;
   setSchoolsList: (action: setSchoolsListAction) => void;
+  onSubmit?: () => void;
 }
 
 const RegisterAdministratorForm = (props: RegisterAdministratorFormProps): ReactElement => {
@@ -34,6 +35,7 @@ const RegisterAdministratorForm = (props: RegisterAdministratorFormProps): React
       AccountProxy.getAccessibleSchools(props.userId!)
         .then((schoolsResponse) => {
           props.setSchoolsList!({ schoolsList: schoolsResponse.data });
+          if (props.onSubmit) props.onSubmit();
         })
         .catch(Notifications.showApiError);
     });

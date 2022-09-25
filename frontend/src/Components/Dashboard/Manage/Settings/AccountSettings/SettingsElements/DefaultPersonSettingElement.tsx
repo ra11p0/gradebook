@@ -44,7 +44,7 @@ function DefaultPersonSettingElement(props: Props) {
         <Col>
           <Select
             className="setDefaultPersonGuidSelect form-control"
-            value={defaultPersonGuid}
+            value={people.map((e) => e.guid).includes(defaultPersonGuid) ? defaultPersonGuid : ""}
             onChange={(e) => {
               setDefaultPersonGuid(e.target.value);
               props.onChange(e.target.value);
