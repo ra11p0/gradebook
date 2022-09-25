@@ -8,6 +8,7 @@ public static class GradebookQuickActionsExtensions
         driver.FindElement(By.CssSelector("input[name='email']")).SendKeys(email);
         driver.FindElement(By.CssSelector("input[name='password']")).SendKeys(password);
         driver.FindElement(By.CssSelector("button[type='submit']")).Click();
+        Thread.Sleep(1000);
         return driver;
     }
     public static IWebDriver Register(this IWebDriver driver, string email, string password)
@@ -46,7 +47,7 @@ public static class GradebookQuickActionsExtensions
     }
     public static IWebDriver GoToSchoolsTab(this IWebDriver driver)
     {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
         driver.GoToGradebookHomepage();
         wait.Until(d => d.FindElement(By.CssSelector("a[href='/manageSchool']"))).Click();
         return driver;

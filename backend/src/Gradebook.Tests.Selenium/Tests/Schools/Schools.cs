@@ -15,7 +15,7 @@ public class Schools
         _driver = WebDriverBuilder.BuildWebDriver();
         _driver.Login(CommonResources.GetValue("email")!, CommonResources.GetValue(key: "password")!);
 
-        _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+        _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(5));
         _actions = new(_driver);
         // Set up storage
         _storage["studentName"] = "Mateusz";
