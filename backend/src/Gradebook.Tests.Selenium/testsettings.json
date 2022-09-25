@@ -1,6 +1,6 @@
 {
   "Browser": {
-    "RunHeadless": false
+    "RunHeadless": true
   },
   "Urls": {
     "ApplicationUrl": "http://development.gradebook.com/"
