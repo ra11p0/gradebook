@@ -14,7 +14,8 @@ public static class GradebookQuickActionsExtensions
     public static IWebDriver Logout(this IWebDriver driver)
     {
         driver.GoToGradebookHomepage();
-        driver.FindElement(By.CssSelector(".logoutButton")).Click();
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
+        wait.Until(drv => drv.FindElement(By.CssSelector(".logoutButton"))).Click();
         Thread.Sleep(1000);
         return driver;
     }
