@@ -12,9 +12,11 @@ public class Register
     }
 
     [Test]
-    public void Test1()
+    public void LogoExists()
     {
         _driver!.Navigate().GoToUrl(ConfigurationManager.GetValue("Urls:ApplicationUrl"));
+        var logos = _driver.FindElements(By.CssSelector(".text-dark.display-6.text-decoration-none.my-auto"));
+        Assert.That(logos.Any());
     }
     [TearDown]
     public void End()
