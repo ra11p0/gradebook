@@ -76,7 +76,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                   </>
                 )}
                 <div className="my-auto">
-                  <a className="btn btn-outline-primary" onClick={() => this.logOut()}>
+                  <a className="btn btn-outline-primary logoutButton" onClick={() => this.logOut()}>
                     {t("logout")}
                   </a>
                 </div>

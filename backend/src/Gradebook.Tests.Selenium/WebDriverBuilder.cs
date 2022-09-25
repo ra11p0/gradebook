@@ -14,6 +14,7 @@ public static class WebDriverBuilder
         options.AddArgument("--proxy-bypass-list=*");
         options.AddArgument("--start-maximized");
         options.AddArgument("--disable-gpu");
+        options.AddArgument("--incognito");
         options.AddArguments("no-sandbox", "--disable-infobars", "--disable-dev-shm-usage", "--disable-browser-side-navigation", "--ignore-certificate-errors");
 
         if (bool.Parse(ConfigurationManager.GetValue("Browser:RunHeadless")))

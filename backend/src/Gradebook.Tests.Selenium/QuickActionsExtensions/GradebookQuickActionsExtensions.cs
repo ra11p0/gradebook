@@ -11,9 +11,17 @@ public static class GradebookQuickActionsExtensions
         Thread.Sleep(1000);
         return driver;
     }
+    public static IWebDriver Logout(this IWebDriver driver)
+    {
+        driver.GoToGradebookHomepage();
+        driver.FindElement(By.CssSelector(".logoutButton")).Click();
+        Thread.Sleep(1000);
+        return driver;
+    }
     public static IWebDriver Register(this IWebDriver driver, string email, string password)
     {
         driver.GoToGradebookHomepage();
+
         //  Login form view
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
         var registerButton = driver.FindElement(By.CssSelector("a[href='/register']"));

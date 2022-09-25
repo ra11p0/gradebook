@@ -16,7 +16,7 @@ public class StudentsAndInvitations
         _storage["studentName"] = "Mateusz";
         _storage["studentSurname"] = "Kowalczyk";
         _storage["studentBirthday"] = "09032005";
-        _storage["studentEmail"] = "mateusz@szkola.pl";
+        _storage["studentEmail"] = "mateuszoio@szkola.pl";
         _storage["studentPassword"] = "!QAZ2wsx";
     }
     [Test]
@@ -58,7 +58,7 @@ public class StudentsAndInvitations
     {
         var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(5));
 
-
+        _driver!.Logout();
         _driver!.Register(_storage["studentEmail"], _storage["studentPassword"]);
         _driver!.Login(_storage["studentEmail"], _storage["studentPassword"]);
 
