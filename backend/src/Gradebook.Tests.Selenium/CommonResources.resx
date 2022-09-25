@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <data name="email" xml:space="preserve">
+        <value>macello.golczynski@school.pl</value>
+    </data>
+    <data name="password" xml:space="preserve">
+        <value>hEll0worldpl112!A</value>
+    </data>
+    <data name="name" xml:space="preserve">
+        <value>Marcel</value>
+    </data>
+    <data name="surname" xml:space="preserve">
+        <value>Gołczyński</value>
+    </data>
+    <data name="birthday" xml:space="preserve">
+        <value>02221994</value>
+    </data>
+    <data name="schoolName" xml:space="preserve">
+        <value>ZS nr 3</value>
+    </data>
+    <data name="schoolAddress" xml:space="preserve">
+        <value>ul. Sandomierska 2</value>
+    </data>
+    <data name="postalCode" xml:space="preserve">
+        <value>27-400</value>
+    </data>
+    <data name="city" xml:space="preserve">
+        <value>Ostrowiec Świętokrzyski</value>
+    </data>
+</root>

@@ -52,6 +52,7 @@ const AddInvitationModal = (props: AddInvitationModalProps): ReactElement => {
             <FormControl>
               <InputLabel>{t("selectPeopleToInvite")}</InputLabel>
               <Select
+                className="selectPeopleToInvite"
                 multiple
                 value={selectedStudents}
                 onChange={(event) => {

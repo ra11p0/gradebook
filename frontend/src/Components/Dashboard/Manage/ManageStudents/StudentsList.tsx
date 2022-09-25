@@ -39,7 +39,7 @@ const StudentsList = (props: StudentsListProps): ReactElement => {
     }).then((result) => {
       if (result.isConfirmed) {
         PeopleProxy.removePerson(personGuid)
-          .then((response) => {
+          .then(() => {
             Notifications.showSuccessNotification("personRemovedNotificationTitle", "personRemovedNotificationText");
             setRefreshEffectKey((k) => k + 1);
           })
@@ -60,7 +60,7 @@ const StudentsList = (props: StudentsListProps): ReactElement => {
                 setShowAddStudentModal(false);
               }}
             />
-            <Button onClick={() => setShowAddStudentModal(true)} variant="outlined">
+            <Button onClick={() => setShowAddStudentModal(true)} variant="outlined" className="addNewStudentButton">
               {t("addStudent")}
             </Button>
           </div>
