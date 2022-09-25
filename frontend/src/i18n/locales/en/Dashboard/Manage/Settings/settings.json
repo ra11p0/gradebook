@@ -1,5 +1,6 @@
 {
   "accountSettings": "Account",
   "permissionsSettings": "Permissions",
-  "systemSettings": "System"
+  "systemSettings": "System",
+  "defaultPerson": "Default personal data"
 }

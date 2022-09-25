@@ -6,5 +6,6 @@
   "loading": "Ładowanie",
   "schoolIsNotSelected": "Szkoła nie została wybrana",
   "selectSchoolToManageStudents": "Wybierz szkołę by zarządzać uczniami ",
-  "actions": "Akcje"
+  "actions": "Akcje",
+  "save": "Zapisz"
 }
