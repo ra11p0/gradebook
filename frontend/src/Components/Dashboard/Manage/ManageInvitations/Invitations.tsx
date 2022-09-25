@@ -28,7 +28,9 @@ const Invitations = (props: InvitationsProps): ReactElement => {
         <div className="d-flex justify-content-between">
           <div className="my-auto">{t("invitations")}</div>
           <div>
-            <Button onClick={() => setShowInvitationModal(true)}>{t("inviteStudent")}</Button>
+            <Button className="addInvitationButton" onClick={() => setShowInvitationModal(true)}>
+              {t("inviteStudent")}
+            </Button>
             <AddInvitationModal show={showInvitationModal} onHide={() => setShowInvitationModal(false)} />
           </div>
         </div>

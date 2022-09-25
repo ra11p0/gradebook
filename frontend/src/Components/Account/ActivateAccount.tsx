@@ -59,7 +59,7 @@ class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAcco
                       <Row>
                         <Col>
                           <Button
-                            className="fs-3 m-3 p-3"
+                            className="fs-3 m-3 p-3 activateStudent"
                             variant="outline-secondary"
                             onClick={() =>
                               this.setState({
@@ -71,7 +71,7 @@ class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAcco
                             {t("student")}
                           </Button>
                           <Button
-                            className="fs-3 m-3 p-3"
+                            className="fs-3 m-3 p-3 activateTeacher"
                             variant="outline-secondary"
                             onClick={() =>
                               this.setState({
@@ -83,7 +83,7 @@ class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAcco
                             {t("teacher")}
                           </Button>
                           <Button
-                            className="fs-3 m-3 p-3"
+                            className="fs-3 m-3 p-3 activateAdministrator"
                             variant="outline-secondary"
                             onClick={() =>
                               this.setState({

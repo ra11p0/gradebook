@@ -93,6 +93,7 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
             <label>{t("email")}</label>
             <input
               className="form-control"
+              name="email"
               value={this.state.username}
               onChange={(e) =>
                 this.setState({
@@ -106,6 +107,7 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
             <label>{t("password")}</label>
             <input
               className="form-control"
+              name="password"
               type="password"
               value={this.state.password}
               onChange={(e) =>
