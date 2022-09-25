@@ -24,6 +24,7 @@ interface RegisterStudentFormProps {
   defaultOnBackHandler: () => void;
   setSchoolsList?: (schoolsList: GetAccessibleSchoolsResponse[]) => void;
   userId?: string;
+  onSubmit?: () => void;
 }
 
 interface RegisterStudentFormValues {
@@ -55,6 +56,7 @@ const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
         .then(() => {
           AccountProxy.getAccessibleSchools(props.userId!).then((schoolsResponse) => {
             props.setSchoolsList!(schoolsResponse.data);
+            if (props.onSubmit) props.onSubmit();
           });
         })
         .catch(Notifications.showCommonError);

@@ -10,6 +10,7 @@ const mapDispatchToProps = (dispatch: any) => ({});
 
 interface RegisterTeacherFormProps {
   defaultOnBackHandler: () => void;
+  onSubmit?: () => void;
 }
 
 interface RegisterTeacherFormValues {}
@@ -25,7 +26,9 @@ const RegisterTeacherForm = (props: RegisterTeacherFormProps): ReactElement => {
   const formik = useFormik({
     initialValues: {},
     validate,
-    onSubmit: (values: RegisterTeacherFormValues) => {},
+    onSubmit: (values: RegisterTeacherFormValues) => {
+      if (props.onSubmit) props.onSubmit();
+    },
   });
 
   return (
@@ -36,12 +39,11 @@ const RegisterTeacherForm = (props: RegisterTeacherFormProps): ReactElement => {
       <Row className="text-center">
         <div>Register teacher</div>
       </Row>
-      <form onSubmit={formik.handleSubmit}></form>
+      <form onSubmit={formik.handleSubmit}>
+        <Button type="submit">{t("submit")}</Button>
+      </form>
     </div>
   );
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RegisterTeacherForm);
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterTeacherForm);

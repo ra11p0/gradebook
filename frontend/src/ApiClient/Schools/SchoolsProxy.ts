@@ -5,9 +5,7 @@ import StudentResponse from "../Students/Definitions/StudentResponse";
 import ClassResponse from "./Definitions/ClassResponse";
 import GetSchoolResponse from "./Definitions/GetSchoolResponse";
 import InviteMultiplePeopleRequest from "./Definitions/InviteMultiplePeopleRequest";
-import MeResponse from "../Account/Definitions/MeResponse";
 import NewClassRequest from "./Definitions/NewClassRequest";
-import NewSchoolRequest from "./Definitions/NewSchoolRequest";
 import NewStudentRequest from "./Definitions/NewStudentRequest";
 import NewTeacherRequest from "./Definitions/NewTeacherRequest";
 import PersonResponse from "./Definitions/PersonResponse";
@@ -16,9 +14,6 @@ import TeacherInSchoolResponse from "./Definitions/TeacherInSchoolResponse";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-const addNewSchool = (school: NewSchoolRequest): Promise<AxiosResponse> => {
-    return axiosApiAuthorized.post(API_URL + '/schools', school);
-};
 
 const removeSchool = (schoolGuid: string): Promise<AxiosResponse> => {
     return axiosApiAuthorized.delete(API_URL + `/schools/${schoolGuid}`);
@@ -84,7 +79,7 @@ const searchPeople = (schoolGuid: string, discriminator: string, query: string, 
 
 
 export default {
-    addNewSchool,
+
     removeSchool,
     getSchool,
     getStudentsInSchool,

@@ -39,7 +39,7 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
             UserGuid = userGuid.Response!
         });
         if (!useInvitationResult.Status) return new StatusResponse<bool>(false, useInvitationResult.Message);
-        if (!invitation.InvitedPersonGuid.HasValue) return new StatusResponse<bool>(false, "Invitation is not binded to any person. Functionality is not yet avalible");
+        if (!invitation.InvitedPersonGuid.HasValue) return new StatusResponse<bool>(false, "Invitation not bound to any person.");
 
         StatusResponse<bool> assigningResult;
         string userRoleToAdd;
@@ -74,23 +74,6 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         if (!resp.Status) return new StatusResponse(false, resp.Message);
         await Repository.SaveChangesAsync();
         return resp;
-    }
-
-    public Task<StatusResponse> AddNewSchool(NewSchoolCommand newSchoolCommand)
-    {
-        throw new Exception("set new person before activating new school");
-        /*Repository.BeginTransaction();
-        var currentPerson = await _foundationQueries.Service.GetCurrentPersonGuid();
-        if (!currentPerson.Status) return new StatusResponse(currentPerson.Message);
-        var respSchool = await Repository.AddNewSchool(newSchoolCommand);
-        if (!respSchool.Status) return new StatusResponse(respSchool.Message);
-        await Repository.SaveChangesAsync();
-        var respAddAdminToSchool = await Repository.AddAdministratorToSchool(currentPerson.Response, respSchool.Response);
-        if (!respAddAdminToSchool.Status) return new StatusResponse(respAddAdminToSchool.Message);
-        await Repository.SaveChangesAsync();
-        Repository.CommitTransaction();
-        return new StatusResponse(true);*/
-
     }
 
     public async Task<StatusResponse<bool>> AddNewStudent(NewStudentCommand command, Guid schoolGuid)

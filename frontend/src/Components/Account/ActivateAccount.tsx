@@ -19,6 +19,7 @@ interface ActivateAccountProps {
   t: any;
   isUserLoggedIn: boolean;
   isUserActivated: boolean;
+  onSubmit?: () => void;
 }
 
 interface ActivateAccountState {
@@ -49,7 +50,7 @@ class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAcco
             <div>
               <div className="display-6">{t("activateToUseGradebook")}</div>
               <Row className="m-3 p-3">
-                <Col xs={3} />
+                <Col lg={1} md={3} />
                 <Col className="text-center">
                   {!this.state.role && (
                     <>
@@ -98,11 +99,17 @@ class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAcco
                       </Row>
                     </>
                   )}
-                  {this.state.role === "teacher" && <RegisterTeacher defaultOnBackHandler={defaultOnBackHandler} />}
-                  {this.state.role === "administrator" && <RegisterAdministrator defaultOnBackHandler={defaultOnBackHandler} />}
-                  {this.state.role === "student" && <RegisterStudent defaultOnBackHandler={defaultOnBackHandler} />}
+                  {this.state.role === "teacher" && (
+                    <RegisterTeacher defaultOnBackHandler={defaultOnBackHandler} onSubmit={this.props.onSubmit} />
+                  )}
+                  {this.state.role === "administrator" && (
+                    <RegisterAdministrator defaultOnBackHandler={defaultOnBackHandler} onSubmit={this.props.onSubmit} />
+                  )}
+                  {this.state.role === "student" && (
+                    <RegisterStudent defaultOnBackHandler={defaultOnBackHandler} onSubmit={this.props.onSubmit} />
+                  )}
                 </Col>
-                <Col xs={3} />
+                <Col lg={1} md={3} />
               </Row>
             </div>
           </Card.Body>

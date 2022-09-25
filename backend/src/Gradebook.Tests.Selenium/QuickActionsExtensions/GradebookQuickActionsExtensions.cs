@@ -38,4 +38,17 @@ public static class GradebookQuickActionsExtensions
         driver.Navigate().GoToUrl(ConfigurationManager.GetValue("Urls:ApplicationUrl"));
         return driver;
     }
+    public static IWebDriver GoToInvitationsTab(this IWebDriver driver)
+    {
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
+        wait.Until(d => d.GoToGradebookHomepage().FindElement(By.CssSelector("a[href='/manageInvitations']"))).Click();
+        return driver;
+    }
+    public static IWebDriver GoToSchoolsTab(this IWebDriver driver)
+    {
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
+        driver.GoToGradebookHomepage();
+        wait.Until(d => d.FindElement(By.CssSelector("a[href='/manageSchool']"))).Click();
+        return driver;
+    }
 }
