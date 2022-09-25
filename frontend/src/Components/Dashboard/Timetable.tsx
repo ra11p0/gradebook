@@ -1,15 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
+import { isLoggedInProxy } from "../../Redux/ReduxProxy/isLoggedInProxy";
 
-const mapStateToProps = (state: any) => ({
-  isLoggedIn: state.common.isLoggedIn,
-});
+const mapStateToProps = (state: any) => ({});
 
 const mapDispatchToProps = (dispatch: any) => ({});
 
-interface TimetableProps {
-  isLoggedIn: boolean;
-}
+interface TimetableProps {}
 
 class Timetable extends React.Component<TimetableProps> {
   render(): React.ReactNode {

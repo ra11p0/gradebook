@@ -31,7 +31,7 @@ public class IdentityLogic : IIdentityLogic
     public JwtSecurityToken CreateToken(List<Claim> authClaims)
     {
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.Service["JWT:Secret"]));
-        _ = int.TryParse(_configuration.Service["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes);
+        var _ = int.TryParse(_configuration.Service["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes);
 
         var token = new JwtSecurityToken(
             issuer: _configuration.Service["JWT:ValidIssuer"],

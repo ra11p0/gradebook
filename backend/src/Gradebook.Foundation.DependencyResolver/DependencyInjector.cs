@@ -12,6 +12,7 @@ public class DependencyInjector
         IdentityService.Inject(services, configuration);
         FoundationService.Inject(services, configuration);
         PermissionsService.Inject(services, configuration);
+        SettingsService.Inject(services, configuration);
     }
 }
 

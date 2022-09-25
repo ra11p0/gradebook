@@ -8,15 +8,22 @@ import moment from "moment";
 import PeopleProxy from "../../ApiClient/People/PeopleProxy";
 import Notifications from "../../Notifications/Notifications";
 import AccountProxy from "../../ApiClient/Account/AccountProxy";
-import { store } from "../../store";
-import { refreshUser } from "../../Actions/Account/accountActions";
+import GetAccessibleSchoolsResponse from "../../ApiClient/Account/Definitions/GetAccessibleSchoolsResponse";
+import { currentUserIdProxy } from "../../Redux/ReduxProxy/currentUserIdProxy";
+import { setSchoolsListWrapper } from "../../Redux/ReduxWrappers/setSchoolsListWrapper";
 
-const mapStateToProps = (state: any) => ({});
+const mapStateToProps = (state: any) => ({
+  userId: currentUserIdProxy(state),
+});
 
-const mapDispatchToProps = (dispatch: any) => ({});
+const mapDispatchToProps = (dispatch: any) => ({
+  setSchoolsList: (schoolsList: GetAccessibleSchoolsResponse[]) => setSchoolsListWrapper(dispatch, { schoolsList }),
+});
 
 interface RegisterStudentFormProps {
   defaultOnBackHandler: () => void;
+  setSchoolsList?: (schoolsList: GetAccessibleSchoolsResponse[]) => void;
+  userId?: string;
 }
 
 interface RegisterStudentFormValues {
@@ -46,18 +53,11 @@ const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
     onSubmit: (values: RegisterStudentFormValues) => {
       PeopleProxy.activatePerson(values.accessCode)
         .then(() => {
-          AccountProxy.getMe().then((meResponse) => {
-            store.dispatch({
-              ...refreshUser,
-              roles: meResponse.data.roles,
-              userId: meResponse.data.id,
-              personGuid: meResponse.data.personGuid,
-            });
+          AccountProxy.getAccessibleSchools(props.userId!).then((schoolsResponse) => {
+            props.setSchoolsList!(schoolsResponse.data);
           });
         })
-        .catch((err) => {
-          Notifications.showCommonError();
-        });
+        .catch(Notifications.showCommonError);
     },
   });
 
@@ -99,32 +99,20 @@ const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
             onInput={handleAccessCodeChange}
           />
           {formik.errors.accessCode && formik.touched.accessCode ? (
-            <div className="invalid-feedback d-block">
-              {formik.errors.accessCode}
-            </div>
+            <div className="invalid-feedback d-block">{formik.errors.accessCode}</div>
           ) : null}
         </div>
         <Row>
           <Col>
             <div className="m-1 p-1">
               <label>{t("name")}</label>
-              <input
-                className="form-control"
-                type="text"
-                defaultValue={name}
-                disabled
-              />
+              <input className="form-control" type="text" defaultValue={name} disabled />
             </div>
           </Col>
           <Col>
             <div className="m-1 p-1">
               <label>{t("surname")}</label>
-              <input
-                className="form-control"
-                type="text"
-                defaultValue={surname}
-                disabled
-              />
+              <input className="form-control" type="text" defaultValue={surname} disabled />
             </div>
           </Col>
         </Row>
@@ -132,12 +120,7 @@ const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
           <Col>
             <div className="m-1 p-1">
               <label>{t("birthday")}</label>
-              <input
-                className="form-control"
-                type="text"
-                defaultValue={birthday}
-                disabled
-              />
+              <input className="form-control" type="text" defaultValue={birthday} disabled />
             </div>
           </Col>
         </Row>
@@ -150,7 +133,4 @@ const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
   );
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RegisterStudentForm);
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterStudentForm);

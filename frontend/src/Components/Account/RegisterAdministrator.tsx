@@ -1,63 +1,43 @@
 import React, { ReactElement, useState } from "react";
 import { connect } from "react-redux";
-import { useFormik } from "formik";
 import { useTranslation } from "react-i18next";
 import { Button, Row } from "react-bootstrap";
-import RegisterAdministratorPerson, {
-  RegisterAdministratorPersonValues,
-} from "./RegisterAdministratorPerson";
-import RegisterAdministratorSchool, {
-  RegisterAdministratorSchoolValues,
-} from "./RegisterAdministratorSchool";
+import RegisterAdministratorPerson, { RegisterAdministratorPersonValues } from "./RegisterAdministratorPerson";
+import RegisterAdministratorSchool, { RegisterAdministratorSchoolValues } from "./RegisterAdministratorSchool";
 import AdministratorsProxy from "../../ApiClient/Administrators/AdministratorsProxy";
+import Notifications from "../../Notifications/Notifications";
 import AccountProxy from "../../ApiClient/Account/AccountProxy";
-import { refreshUser } from "../../Actions/Account/accountActions";
-import { store } from "../../store";
+import { currentUserIdProxy } from "../../Redux/ReduxProxy/currentUserIdProxy";
+import { setSchoolsListAction, setSchoolsListWrapper } from "../../Redux/ReduxWrappers/setSchoolsListWrapper";
 
-const mapStateToProps = (state: any) => ({});
+const mapStateToProps = (state: any) => ({
+  userId: currentUserIdProxy(state),
+});
 
-const mapDispatchToProps = (dispatch: any) => ({});
+const mapDispatchToProps = (dispatch: any) => ({
+  setSchoolsList: (action: setSchoolsListAction) => setSchoolsListWrapper(dispatch, action),
+});
 
 interface RegisterAdministratorFormProps {
   defaultOnBackHandler: () => void;
+  userId: string;
+  setSchoolsList: (action: setSchoolsListAction) => void;
 }
 
-const activateWithoutSchool = (person: RegisterAdministratorPersonValues) => {
-  AdministratorsProxy.newAdministrator(person).then((response) => {
-    AccountProxy.getMe().then((meResponse) => {
-      store.dispatch({
-        ...refreshUser,
-        roles: meResponse.data.roles,
-        userId: meResponse.data.id,
-        personGuid: meResponse.data.personGuid,
-      });
-    });
-  });
-};
-
-const activateWithSchool = (
-  person: RegisterAdministratorPersonValues,
-  school: RegisterAdministratorSchoolValues
-) => {
-  AdministratorsProxy.newAdministratorWithSchool(person, school).then((e) => {
-    AccountProxy.getMe().then((meResponse) => {
-      store.dispatch({
-        ...refreshUser,
-        roles: meResponse.data.roles,
-        userId: meResponse.data.id,
-        personGuid: meResponse.data.personGuid,
-      });
-    });
-  });
-};
-
-const RegisterAdministratorForm = (
-  props: RegisterAdministratorFormProps
-): ReactElement => {
+const RegisterAdministratorForm = (props: RegisterAdministratorFormProps): ReactElement => {
   const { t } = useTranslation("registerAdministrator");
-  const [person, setPerson] =
-    useState<RegisterAdministratorPersonValues | null>(null);
+  const [person, setPerson] = useState<RegisterAdministratorPersonValues | null>(null);
   const [showNewSchoolComponent, setShowNewSchoolComponent] = useState(false);
+
+  const activateWithSchool = (person: RegisterAdministratorPersonValues, school: RegisterAdministratorSchoolValues) => {
+    AdministratorsProxy.newAdministratorWithSchool(person, school).then((response) => {
+      AccountProxy.getAccessibleSchools(props.userId!)
+        .then((schoolsResponse) => {
+          props.setSchoolsList!({ schoolsList: schoolsResponse.data });
+        })
+        .catch(Notifications.showApiError);
+    });
+  };
 
   return (
     <div className="card m-3 p-3">
@@ -90,7 +70,6 @@ const RegisterAdministratorForm = (
               onSubmit={(values: RegisterAdministratorSchoolValues) => {
                 activateWithSchool(person, values);
               }}
-              onContinueWithoutSchool={() => activateWithoutSchool(person)}
             />
           </>
         )}
@@ -99,7 +78,4 @@ const RegisterAdministratorForm = (
   );
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RegisterAdministratorForm);
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterAdministratorForm);

@@ -5,29 +5,28 @@ import { Dropdown } from "react-bootstrap";
 import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { logOut } from "../../Actions/Account/accountActions";
+import { currentPersonProxy } from "../../Redux/ReduxProxy/currentPersonProxy";
+import { isLoggedInProxy } from "../../Redux/ReduxProxy/isLoggedInProxy";
+import { isUserActivatedProxy } from "../../Redux/ReduxProxy/isUserAcrivatedProxy";
+import { logOutWrapper } from "../../Redux/ReduxWrappers/logOutWrapper";
 import SchoolSelect from "./SchoolSelect";
 
 const mapStateToProps = (state: any) => {
   return {
-    isLoggedIn: state.common.isLoggedIn,
-    username: state.common.session?.username,
-    name: state.common.session?.name,
-    surname: state.common.session?.surname,
-    isActive: state.common.session?.roles.length != 0,
+    isLoggedIn: isLoggedInProxy(state),
+    currentPerson: currentPersonProxy(state),
+    isActive: isUserActivatedProxy(state),
   };
 };
 
 const mapDispatchToProps = (dispatch: any) => ({
-  logOutHandler: () => dispatch(logOut),
+  logOutHandler: () => logOutWrapper(dispatch),
 });
 
 interface HeaderProps {
   isLoggedIn?: boolean;
   logOutHandler?: () => void;
-  username: string;
-  name: string;
-  surname: string;
+  currentPerson: any;
   isActive: boolean;
   i18n: any;
   t: any;
@@ -52,10 +51,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     return (
       <header className="p-4 bg-grey-light bg-gradient">
         <div className="d-flex justify-content-between">
-          <Link
-            to="/"
-            className="text-dark display-6 text-decoration-none my-auto"
-          >
+          <Link to="/" className="text-dark display-6 text-decoration-none my-auto">
             Gradebook
           </Link>
           <div className="my-auto d-flex gap-2">
@@ -68,11 +64,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                     </div>
 
                     <div className="my-auto">
-                      <Link
-                        to="/account/profile"
-                        className="btn btn-outline-primary"
-                      >
-                        {`${this.props.name} ${this.props.surname}`}
+                      <Link to="/account/profile" className="btn btn-outline-primary">
+                        {`${this.props.currentPerson?.name} ${this.props.currentPerson?.surname}`}
                       </Link>
                     </div>
                     <div className="my-auto">
@@ -83,10 +76,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                   </>
                 )}
                 <div className="my-auto">
-                  <a
-                    className="btn btn-outline-primary"
-                    onClick={() => this.logOut()}
-                  >
+                  <a className="btn btn-outline-primary" onClick={() => this.logOut()}>
                     {t("logout")}
                   </a>
                 </div>
@@ -98,12 +88,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                   <FontAwesomeIcon icon={faLanguage} />
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  <Dropdown.Item onClick={() => i18n.changeLanguage("pl")}>
-                    {t("polish")} (Polish)
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={() => i18n.changeLanguage("en")}>
-                    {t("english")} (English)
-                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => i18n.changeLanguage("pl")}>{t("polish")} (Polish)</Dropdown.Item>
+                  <Dropdown.Item onClick={() => i18n.changeLanguage("en")}>{t("english")} (English)</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </div>
@@ -114,6 +100,4 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   }
 }
 
-export default withTranslation("header")(
-  connect(mapStateToProps, mapDispatchToProps)(Header)
-);
+export default withTranslation("header")(connect(mapStateToProps, mapDispatchToProps)(Header));

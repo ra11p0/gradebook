@@ -9,7 +9,7 @@ namespace Gradebook.Foundation.DependencyResolver.Services;
 
 public class AutoMapperService
 {
-    public static void Inject(IServiceCollection services, IConfigurationRoot configuration)
+    public static void Inject(IServiceCollection services, IConfigurationRoot _)
     {
         services.AddAutoMapper(o =>
         {

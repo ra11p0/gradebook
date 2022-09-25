@@ -5,12 +5,7 @@ import AddNewStudentModal from "./AddNewStudentModal";
 import { Grid, List, ListItem, Stack, Button } from "@mui/material";
 import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCheck,
-  faTimes,
-  faTrash,
-  faWindowMaximize,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faTimes, faTrash, faWindowMaximize } from "@fortawesome/free-solid-svg-icons";
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
 import StudentInSchoolResponse from "../../../../ApiClient/Schools/Definitions/StudentInSchoolResponse";
 import InfiniteScrollWrapper from "../../../Shared/InfiniteScrollWrapper";
@@ -19,12 +14,13 @@ import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import Notifications from "../../../../Notifications/Notifications";
 import PeopleProxy from "../../../../ApiClient/People/PeopleProxy";
+import { currentSchoolProxy } from "../../../../Redux/ReduxProxy/currentSchoolProxy";
 const mapStateToProps = (state: any) => ({
-  currentSchoolGuid: state.common.school?.schoolGuid,
+  currentSchoolGuid: currentSchoolProxy(state)?.schoolGuid,
 });
 const mapDispatchToProps = (dispatch: any) => ({});
 interface StudentsListProps {
-  currentSchoolGuid?: string;
+  currentSchoolGuid: string | undefined;
 }
 const StudentsList = (props: StudentsListProps): ReactElement => {
   const { t } = useTranslation("studentsList");
@@ -44,10 +40,7 @@ const StudentsList = (props: StudentsListProps): ReactElement => {
       if (result.isConfirmed) {
         PeopleProxy.removePerson(personGuid)
           .then((response) => {
-            Notifications.showSuccessNotification(
-              "personRemovedNotificationTitle",
-              "personRemovedNotificationText"
-            );
+            Notifications.showSuccessNotification("personRemovedNotificationTitle", "personRemovedNotificationText");
             setRefreshEffectKey((k) => k + 1);
           })
           .catch(Notifications.showApiError);
@@ -67,10 +60,7 @@ const StudentsList = (props: StudentsListProps): ReactElement => {
                 setShowAddStudentModal(false);
               }}
             />
-            <Button
-              onClick={() => setShowAddStudentModal(true)}
-              variant="outlined"
-            >
+            <Button onClick={() => setShowAddStudentModal(true)} variant="outlined">
               {t("addStudent")}
             </Button>
           </div>
@@ -111,36 +101,20 @@ const StudentsList = (props: StudentsListProps): ReactElement => {
                     </Grid>
                     <Grid item xs className="my-auto">
                       <div>
-                        <FontAwesomeIcon
-                          icon={element.isActive ? faCheck : faTimes}
-                        />
+                        <FontAwesomeIcon icon={element.isActive ? faCheck : faTimes} />
                       </div>
                     </Grid>
                     <Grid item xs={1} className="my-auto">
                       <div className="d-flex gap-1 flex-wrap">
                         <Link to={`/person/show/${element.guid}`}>
-                          <Tippy
-                            content={t("showPerson")}
-                            arrow={true}
-                            animation={"scale"}
-                          >
+                          <Tippy content={t("showPerson")} arrow={true} animation={"scale"}>
                             <Button variant="outlined">
                               <FontAwesomeIcon icon={faWindowMaximize} />
                             </Button>
                           </Tippy>
                         </Link>
-                        <Tippy
-                          content={t("removePerson")}
-                          arrow={true}
-                          animation={"scale"}
-                        >
-                          <Button
-                            variant="outlined"
-                            color="error"
-                            onClick={() =>
-                              removePersonClickHandler(element.guid)
-                            }
-                          >
+                        <Tippy content={t("removePerson")} arrow={true} animation={"scale"}>
+                          <Button variant="outlined" color="error" onClick={() => removePersonClickHandler(element.guid)}>
                             <FontAwesomeIcon icon={faTrash} />
                           </Button>
                         </Tippy>
@@ -151,17 +125,10 @@ const StudentsList = (props: StudentsListProps): ReactElement => {
               )}
               fetch={async (page: number) => {
                 if (!props.currentSchoolGuid) return [];
-                let resp = await SchoolsProxy.getStudentsInSchool(
-                  props.currentSchoolGuid!,
-                  page
-                );
+                let resp = await SchoolsProxy.getStudentsInSchool(props.currentSchoolGuid!, page);
                 return resp.data as [];
               }}
-              effect={[
-                props.currentSchoolGuid,
-                showAddStudentModal,
-                refreshEffectKey,
-              ]}
+              effect={[props.currentSchoolGuid, showAddStudentModal, refreshEffectKey]}
             />
           </List>
         </Stack>

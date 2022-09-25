@@ -25,9 +25,6 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         var userGuid = await _identityLogic.Service.CurrentUserId();
         if (!userGuid.Status) return new StatusResponse<bool>(false, userGuid.Message);
 
-        var person = await _foundationQueries.Service.GetCurrentPersonGuid();
-        if (person.Status) return new StatusResponse<bool>(false, "Person already exists");
-
         var invitationResult = await _foundationQueries.Service.GetInvitationByActivationCode(activationCode);
         if (!invitationResult.Status) return new StatusResponse<bool>(false, invitationResult.Message);
 
@@ -79,9 +76,10 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         return resp;
     }
 
-    public async Task<StatusResponse> AddNewSchool(NewSchoolCommand newSchoolCommand)
+    public Task<StatusResponse> AddNewSchool(NewSchoolCommand newSchoolCommand)
     {
-        Repository.BeginTransaction();
+        throw new Exception("set new person before activating new school");
+        /*Repository.BeginTransaction();
         var currentPerson = await _foundationQueries.Service.GetCurrentPersonGuid();
         if (!currentPerson.Status) return new StatusResponse(currentPerson.Message);
         var respSchool = await Repository.AddNewSchool(newSchoolCommand);
@@ -91,14 +89,14 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         if (!respAddAdminToSchool.Status) return new StatusResponse(respAddAdminToSchool.Message);
         await Repository.SaveChangesAsync();
         Repository.CommitTransaction();
-        return new StatusResponse(true);
+        return new StatusResponse(true);*/
 
     }
 
     public async Task<StatusResponse<bool>> AddNewStudent(NewStudentCommand command, Guid schoolGuid)
     {
         Repository.BeginTransaction();
-        command.CreatorGuid = (await _foundationQueries.Service.GetCurrentPersonGuid()).Response;
+        command.CreatorGuid = (await _foundationQueries.Service.GetCurrentPersonGuid(schoolGuid)).Response;
         var resp = await Repository.AddNewStudent(command);
         if (resp.Status is not true) return new StatusResponse<bool>(false);
         await Repository.SaveChangesAsync();
@@ -112,7 +110,7 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
     public async Task<StatusResponse<bool>> AddNewTeacher(NewTeacherCommand command, Guid schoolGuid)
     {
         Repository.BeginTransaction();
-        command.CreatorGuid = (await _foundationQueries.Service.GetCurrentPersonGuid()).Response;
+        command.CreatorGuid = (await _foundationQueries.Service.GetCurrentPersonGuid(schoolGuid)).Response;
         var resp = await Repository.AddNewTeacher(command);
         if (!resp.Status) return new StatusResponse<bool>(false, resp.Message);
         await Repository.SaveChangesAsync();
@@ -127,7 +125,7 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
     {
         if (personGuid is null)
         {
-            var person = await _foundationQueries.Service.GetCurrentPersonGuid();
+            var person = await _foundationQueries.Service.GetCurrentPersonGuid(schoolGuid);
             if (!person.Status) return new StatusResponse<bool>(false, "Person does not exist");
             personGuid = person.Response;
         }
@@ -194,7 +192,7 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
 
     public async Task<ResponseWithStatus<string[], bool>> GenerateMultipleSystemInvitation(Guid[] peopleGuid, SchoolRoleEnum role, Guid schoolGuid)
     {
-        var currentPersonGuid = await _foundationQueries.Service.GetCurrentPersonGuid();
+        var currentPersonGuid = await _foundationQueries.Service.GetCurrentPersonGuid(schoolGuid);
         if (!currentPersonGuid.Status) return new ResponseWithStatus<string[], bool>(default, false, "Could not find current person");
 
         var response = await Task.WhenAll(peopleGuid.Select(async personGuid => await Repository.GenerateSystemInvitation(personGuid, currentPersonGuid.Response, role, schoolGuid)));
@@ -204,7 +202,7 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
 
     public async Task<ResponseWithStatus<string, bool>> GenerateSystemInvitation(Guid personGuid, SchoolRoleEnum role, Guid schoolGuid)
     {
-        var currentPersonGuid = await _foundationQueries.Service.GetCurrentPersonGuid();
+        var currentPersonGuid = await _foundationQueries.Service.GetCurrentPersonGuid(schoolGuid);
         if (!currentPersonGuid.Status) return new ResponseWithStatus<string, bool>(default, false, "Could not find current person");
         var response = await Repository.GenerateSystemInvitation(personGuid, currentPersonGuid.Response, role, schoolGuid);
         await Repository.SaveChangesAsync();

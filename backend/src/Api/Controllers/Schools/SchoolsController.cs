@@ -7,7 +7,10 @@ using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
 using Gradebook.Foundation.Common.Foundation.Models;
 using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
+using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
+using Gradebook.Foundation.Identity.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers.Schools;
@@ -19,11 +22,15 @@ public class SchoolsController : ControllerBase
 {
     private readonly ServiceResolver<IFoundationQueries> _foundationQueries;
     private readonly ServiceResolver<IFoundationCommands> _foundationCommands;
+    private readonly ServiceResolver<UserManager<ApplicationUser>> _userManager;
+    private readonly ServiceResolver<IIdentityLogic> _identityLogic;
     private readonly ServiceResolver<IMapper> _mapper;
     public SchoolsController(IServiceProvider serviceProvider)
     {
         _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
         _foundationCommands = serviceProvider.GetResolver<IFoundationCommands>();
+        _userManager = serviceProvider.GetResolver<UserManager<ApplicationUser>>();
+        _identityLogic = serviceProvider.GetResolver<IIdentityLogic>();
         _mapper = serviceProvider.GetResolver<IMapper>();
     }
 
@@ -61,6 +68,7 @@ public class SchoolsController : ControllerBase
     #endregion
 
     #region people
+
     [HttpGet]
     [Route("{schoolGuid}/People")]
     [ProducesResponseType(typeof(IEnumerable<PersonDto>), statusCode: 200)]

@@ -7,9 +7,10 @@ import { Button } from "react-bootstrap";
 import AccountProxy from "../../ApiClient/Account/AccountProxy";
 import Swal from "sweetalert2";
 import CommonNotifications from "../../Notifications/Notifications";
+import { isLoggedInProxy } from "../../Redux/ReduxProxy/isLoggedInProxy";
 
 const mapStateToProps = (state: any) => ({
-  isLoggedIn: state.common.isLoggedIn,
+  isLoggedIn: isLoggedInProxy(state),
 });
 
 const mapDispatchToProps = (dispatch: any) => ({});
@@ -82,11 +83,7 @@ const RegisterForm = (props: RegisterFormProps): ReactElement => {
               onChange={formik.handleChange}
               value={formik.values.email}
             />
-            {formik.errors.email && formik.touched.email ? (
-              <div className="invalid-feedback d-block">
-                {formik.errors.email}
-              </div>
-            ) : null}
+            {formik.errors.email && formik.touched.email ? <div className="invalid-feedback d-block">{formik.errors.email}</div> : null}
           </div>
           <div className="m-1 p-1">
             <label htmlFor="password">{t("password")}</label>
@@ -99,9 +96,7 @@ const RegisterForm = (props: RegisterFormProps): ReactElement => {
               value={formik.values.password}
             />
             {formik.errors.password && formik.touched.password ? (
-              <div className="invalid-feedback d-block">
-                {formik.errors.password}
-              </div>
+              <div className="invalid-feedback d-block">{formik.errors.password}</div>
             ) : null}
           </div>
           <div className="m-1 p-1">
@@ -115,9 +110,7 @@ const RegisterForm = (props: RegisterFormProps): ReactElement => {
               value={formik.values.password2}
             />
             {formik.errors.password2 && formik.touched.password2 ? (
-              <div className="invalid-feedback d-block">
-                {formik.errors.password2}
-              </div>
+              <div className="invalid-feedback d-block">{formik.errors.password2}</div>
             ) : null}
           </div>
           <div className="m-1 p-1 d-flex justify-content-between">

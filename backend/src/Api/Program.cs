@@ -29,7 +29,7 @@ builder.Services.AddSwaggerGen(o =>
                     Id="Bearer"
                 }
             },
-            new string[]{}
+            Array.Empty<string>()
         }
     });
 });
@@ -39,10 +39,8 @@ builder.Services.AddCors(e =>
 {
     e.AddDefaultPolicy(p =>
     {
-        p.WithOrigins("https://127.0.0.1:3005", "http://127.0.0.1:3005",
-                      "https://localhost:3005", "http://localhost:3005",
-                      "https://127.0.0.1:7059", "http://127.0.0.1:7059",
-                      "https://localhost:7059", "http://localhost:7059")
+        //TODO: move to appsettings.json
+        p.WithOrigins("http://development.gradebook.com", "http://api-tests.gradebook.com")
         .AllowAnyHeader()
         .AllowAnyMethod();
     });

@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Header from "./Components/Shared/Header";
 import Index from "./Routes/Index";
 import Dashboard from "./Routes/Dashboard";
-import { appLoad } from "./Actions/Account/accountActions";
 import { connect } from "react-redux";
 import Account from "./Routes/Account";
 import ActivateAccount from "./Components/Account/ActivateAccount";
@@ -13,17 +12,20 @@ import School from "./Routes/School";
 import Student from "./Routes/Student";
 import Person from "./Routes/Person";
 import Class from "./Routes/Class";
+import { isLoggedInProxy } from "./Redux/ReduxProxy/isLoggedInProxy";
+import { isUserActivatedProxy } from "./Redux/ReduxProxy/isUserAcrivatedProxy";
+import { appLoadWrapper } from "./Redux/ReduxWrappers/appLoadWrapper";
 
 const mapStateToProps = (state: any) => {
   return {
     appLoaded: state.common.appLoaded,
-    isLoggedIn: state.common.isLoggedIn,
-    isUserActivated: state.common.session?.roles.length != 0,
+    isLoggedIn: isLoggedInProxy(state),
+    isUserActivated: isUserActivatedProxy(state),
   };
 };
 
 const mapDispatchToProps = (dispatch: any) => ({
-  onLoad: () => dispatch(appLoad),
+  onLoad: () => appLoadWrapper(dispatch),
 });
 interface AppProps {
   onLoad: () => {};
@@ -60,9 +62,7 @@ class App extends React.Component<AppProps> {
             }
             {
               //Only for logged in and inactive
-              this.props.isLoggedIn && !this.props.isUserActivated && (
-                <Route path="*" element={<ActivateAccount />} />
-              )
+              this.props.isLoggedIn && !this.props.isUserActivated && <Route path="*" element={<ActivateAccount />} />
             }
             {
               //Public

@@ -10,5 +10,5 @@ public class StudentsAbsence : BaseDomainModel
 
     public Guid StudentGuid { get; set; }
     [ForeignKey("StudentGuid")]
-    public virtual Student Student { get; set; }
+    public virtual Student? Student { get; set; }
 }

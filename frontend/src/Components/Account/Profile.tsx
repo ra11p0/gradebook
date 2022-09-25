@@ -1,36 +1,29 @@
-import {
-  List,
-  ListItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
-} from "@mui/material";
+import { List, ListItem, Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material";
 import moment from "moment";
 import React from "react";
 import { TFunction, withTranslation } from "react-i18next";
 import { connect } from "react-redux";
-import { logOut } from "../../Actions/Account/accountActions";
 import AccountProxy from "../../ApiClient/Account/AccountProxy";
 import MeResponse from "../../ApiClient/Account/Definitions/MeResponse";
+import { isLoggedInProxy } from "../../Redux/ReduxProxy/isLoggedInProxy";
+import { logOutWrapper } from "../../Redux/ReduxWrappers/logOutWrapper";
 
 const mapStateToProps = (state: any) => {
   return {
-    isLoggedIn: state.common.isLoggedIn,
-    username: state.common.session?.username,
+    isLoggedIn: isLoggedInProxy(state),
+    currentSchoolGuid: state.common.school?.schoolGuid,
   };
 };
 
 const mapDispatchToProps = (dispatch: any) => ({
-  logOutHandler: () => dispatch(logOut),
+  logOutHandler: () => logOutWrapper(dispatch),
 });
 
 interface ProfileProps {
   isLoggedIn?: boolean;
   logOutHandler?: () => void;
-  username: string;
   t: TFunction<"translation", any>;
+  currentSchoolGuid?: string;
 }
 
 interface ProfileState {
@@ -48,9 +41,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
     };
   }
   async componentDidMount() {
-    AccountProxy.getMe().then((response) =>
-      this.setState({ ...this.state, me: response.data })
-    );
+    AccountProxy.getMe().then((response) => this.setState({ ...this.state, me: response.data }));
   }
   render(): React.ReactNode {
     const t = this.props.t;
@@ -58,7 +49,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
     return (
       <div>
         <TableContainer>
-          <Table>
+          {/* <Table>
             <TableBody>
               <TableRow>
                 <TableCell>{t("id")}</TableCell>
@@ -78,9 +69,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
               </TableRow>
               <TableRow>
                 <TableCell>{t("birthday")}</TableCell>
-                <TableCell>
-                  {moment(me?.birthday).format("YYYY-MM-DD")}
-                </TableCell>
+                <TableCell>{moment(me?.birthday).format("YYYY-MM-DD")}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>{t("personGuid")}</TableCell>
@@ -101,13 +90,11 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                 <TableCell>{me?.schoolRole}</TableCell>
               </TableRow>
             </TableBody>
-          </Table>
+          </Table> */}
         </TableContainer>
       </div>
     );
   }
 }
 
-export default withTranslation("profile")(
-  connect(mapStateToProps, mapDispatchToProps)(Profile)
-);
+export default withTranslation("profile")(connect(mapStateToProps, mapDispatchToProps)(Profile));

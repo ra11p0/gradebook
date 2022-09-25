@@ -7,7 +7,7 @@ public class InvitationDto
     public Guid Guid { get; set; }
     public DateTime CreatedDate { get; set; }
     public DateTime ExprationDate { get; set; }
-    public string InvitationCode { get; set; }
+    public string InvitationCode { get; set; } = string.Empty;
     public bool IsUsed { get; set; } = false;
     public Guid CreatorGuid { get; set; }
     public DateTime? UsedDate { get; set; }

@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { axiosApiAuthorized } from "../AxiosInterceptor";
+import GetAccessibleSchoolsResponse from "./Definitions/GetAccessibleSchoolsResponse";
 import LoginRequest from "./Definitions/LoginRequest";
 import LoginResponse from "./Definitions/LoginResponse";
 import MeResponse from "./Definitions/MeResponse";
@@ -26,14 +27,19 @@ function refreshAccessToken(accessToken: string, refreshToken: string): Promise<
     });
 }
 
-function getMe(): Promise<AxiosResponse<MeResponse>> {
-    return axiosApiAuthorized.get(API_URL + '/Account/Me');
+const getAccessibleSchools = (userGuid: string): Promise<AxiosResponse<GetAccessibleSchoolsResponse[]>> => {
+    return axiosApiAuthorized.get(API_URL + `/account/${userGuid}/schools`);
+};
+
+const getMe = (): Promise<AxiosResponse<MeResponse>> => {
+    return axiosApiAuthorized.get(API_URL + `/account/Me`);
 }
 
 
 export default {
+    getMe,
+    getAccessibleSchools,
     logIn,
     refreshAccessToken,
-    register,
-    getMe
+    register
 }
