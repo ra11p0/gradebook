@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { loginWrapper } from '../Redux/ReduxWrappers/loginWrapper';
 import { store } from '../store'
-import AccountProxy from './Account/AccountProxy';
+import AccountProxy from './Accounts/AccountsProxy';
 
 const axiosApiAuthorized = axios.create();
 

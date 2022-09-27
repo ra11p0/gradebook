@@ -3,7 +3,7 @@ import { Stack } from "@mui/system";
 import moment from "moment";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import ClassResponse from "../../../../ApiClient/Schools/Definitions/ClassResponse";
+import ClassResponse from "../../../../ApiClient/Schools/Definitions/Responses/ClassResponse";
 import InfiniteScrollWrapper from "../../../Shared/InfiniteScrollWrapper";
 import AddClassModal from "./AddClassModal";
 import { connect } from "react-redux";

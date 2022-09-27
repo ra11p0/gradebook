@@ -7,8 +7,8 @@ import InvitationsProxy from "../../ApiClient/Invitations/InvitationsProxy";
 import moment from "moment";
 import PeopleProxy from "../../ApiClient/People/PeopleProxy";
 import Notifications from "../../Notifications/Notifications";
-import AccountProxy from "../../ApiClient/Account/AccountProxy";
-import GetAccessibleSchoolsResponse from "../../ApiClient/Account/Definitions/GetAccessibleSchoolsResponse";
+import AccountProxy from "../../ApiClient/Accounts/AccountsProxy";
+import GetAccessibleSchoolsResponse from "../../ApiClient/Accounts/Definitions/Responses/GetAccessibleSchoolsResponse";
 import { currentUserIdProxy } from "../../Redux/ReduxProxy/currentUserIdProxy";
 import { setSchoolsListWrapper } from "../../Redux/ReduxWrappers/setSchoolsListWrapper";
 

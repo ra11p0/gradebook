@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { axiosApiAuthorized } from "../AxiosInterceptor";
-import ClassResponse from "./Definitions/ClassResponse";
+import ClassResponse from "./Definitions/Responses/ClassResponse";
 
 const API_URL = process.env.REACT_APP_API_URL;
 

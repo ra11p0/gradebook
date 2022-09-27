@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { useFormik } from "formik";
 import { useTranslation } from "react-i18next";
 import { Button } from "react-bootstrap";
-import AccountProxy from "../../ApiClient/Account/AccountProxy";
+import AccountProxy from "../../ApiClient/Accounts/AccountsProxy";
 import Swal from "sweetalert2";
 import CommonNotifications from "../../Notifications/Notifications";
 import { isLoggedInProxy } from "../../Redux/ReduxProxy/isLoggedInProxy";

@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 import { axiosApiAuthorized } from "../AxiosInterceptor";
-import NewAdministratorRequest from "./Definitions/NewAdministratorRequest";
-import NewSchoolRequest from "./Definitions/NewSchoolRequest";
+import NewAdministratorRequest from "./Definitions/Requests/NewAdministratorRequest";
+import NewSchoolRequest from "./Definitions/Requests/NewSchoolRequest";
 
 const API_URL = process.env.REACT_APP_API_URL;
 

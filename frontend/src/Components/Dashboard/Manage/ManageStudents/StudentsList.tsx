@@ -7,7 +7,7 @@ import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faTimes, faTrash, faWindowMaximize } from "@fortawesome/free-solid-svg-icons";
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
-import StudentInSchoolResponse from "../../../../ApiClient/Schools/Definitions/StudentInSchoolResponse";
+import StudentInSchoolResponse from "../../../../ApiClient/Schools/Definitions/Responses/StudentInSchoolResponse";
 import InfiniteScrollWrapper from "../../../Shared/InfiniteScrollWrapper";
 import Tippy from "@tippyjs/react";
 import { Link } from "react-router-dom";

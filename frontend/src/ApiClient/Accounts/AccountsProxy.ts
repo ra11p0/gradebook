@@ -1,14 +1,14 @@
 import axios, { AxiosResponse } from "axios";
 import SettingsEnum from "../../Common/Enums/SettingsEnum";
 import { axiosApiAuthorized } from "../AxiosInterceptor";
-import GetAccessibleSchoolsResponse from "./Definitions/GetAccessibleSchoolsResponse";
-import LoginRequest from "./Definitions/LoginRequest";
-import LoginResponse from "./Definitions/LoginResponse";
-import MeResponse from "./Definitions/MeResponse";
-import RefreshTokenResponse from "./Definitions/RefreshTokenResponse";
-import RegisterRequest from "./Definitions/RegisterRequest";
-import RelatedPersonResponse from "./Definitions/RelatedPersonResponse";
-import SettingsRequest from "./Definitions/SettingsRequest";
+import GetAccessibleSchoolsResponse from "./Definitions/Responses/GetAccessibleSchoolsResponse";
+import LoginRequest from "./Definitions/Requests/LoginRequest";
+import LoginResponse from "./Definitions/Responses/LoginResponse";
+import MeResponse from "./Definitions/Responses/MeResponse";
+import RefreshTokenResponse from "./Definitions/Responses/RefreshTokenResponse";
+import RegisterRequest from "./Definitions/Requests/RegisterRequest";
+import RelatedPersonResponse from "./Definitions/Responses/RelatedPersonResponse";
+import SettingsRequest from "./Definitions/Requests/SettingsRequest";
 
 const API_URL = process.env.REACT_APP_API_URL;
 

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { Button, Modal } from "react-bootstrap";
 import { useFormik } from "formik";
-import NewStudentRequest from "../../../../ApiClient/Schools/Definitions/NewStudentRequest";
+import NewStudentRequest from "../../../../ApiClient/Schools/Definitions/Requests/NewStudentRequest";
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
 import { currentSchoolProxy } from "../../../../Redux/ReduxProxy/currentSchoolProxy";
 const mapStateToProps = (state: any) => ({

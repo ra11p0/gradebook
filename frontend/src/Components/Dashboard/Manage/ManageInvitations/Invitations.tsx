@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { Button } from "react-bootstrap";
 import AddInvitationModal from "./AddInvitationModal";
-import InvitationResponse from "../../../../ApiClient/Invitations/Definitions/InvitationResponse";
+import InvitationResponse from "../../../../ApiClient/Invitations/Definitions/Responses/InvitationResponse";
 import { Stack, Grid, List, ListItem } from "@mui/material";
 import InfiniteScrollWrapper from "../../../Shared/InfiniteScrollWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

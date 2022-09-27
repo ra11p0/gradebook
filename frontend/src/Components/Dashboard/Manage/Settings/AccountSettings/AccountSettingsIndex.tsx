@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import React from "react";
 import { ListGroup } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import AccountProxy from "../../../../../ApiClient/Account/AccountProxy";
+import AccountProxy from "../../../../../ApiClient/Accounts/AccountsProxy";
 import DefaultPersonSettingElement from "./SettingsElements/DefaultPersonSettingElement";
 import { connect } from "react-redux";
 import { currentUserIdProxy } from "../../../../../Redux/ReduxProxy/currentUserIdProxy";

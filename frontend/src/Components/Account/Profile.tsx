@@ -3,8 +3,8 @@ import moment from "moment";
 import React from "react";
 import { TFunction, withTranslation } from "react-i18next";
 import { connect } from "react-redux";
-import AccountProxy from "../../ApiClient/Account/AccountProxy";
-import MeResponse from "../../ApiClient/Account/Definitions/MeResponse";
+import AccountProxy from "../../ApiClient/Accounts/AccountsProxy";
+import MeResponse from "../../ApiClient/Accounts/Definitions/Responses/MeResponse";
 import { isLoggedInProxy } from "../../Redux/ReduxProxy/isLoggedInProxy";
 import { logOutWrapper } from "../../Redux/ReduxWrappers/logOutWrapper";
 

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { Modal } from "react-bootstrap";
 import { Button, FormControl, InputLabel, MenuItem, Select, Stack } from "@mui/material";
-import StudentResponse from "../../../../ApiClient/Students/Definitions/StudentResponse";
+import StudentResponse from "../../../../ApiClient/Students/Definitions/Responses/StudentResponse";
 import Person from "../../../Shared/Person";
 import PersonSmall from "../../../Shared/PersonSmall";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

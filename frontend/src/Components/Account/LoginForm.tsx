@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import AccountProxy from "../../ApiClient/Account/AccountProxy";
+import AccountProxy from "../../ApiClient/Accounts/AccountsProxy";
 import { withTranslation } from "react-i18next";
 import { Button } from "react-bootstrap";
 import { isLoggedInProxy } from "../../Redux/ReduxProxy/isLoggedInProxy";

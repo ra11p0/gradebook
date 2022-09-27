@@ -2,7 +2,7 @@ import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { connect } from "react-redux";
-import GetSchoolResponse from "../../ApiClient/Schools/Definitions/GetSchoolResponse";
+import GetSchoolResponse from "../../ApiClient/Schools/Definitions/Responses/GetSchoolResponse";
 import { currentSchoolProxy } from "../../Redux/ReduxProxy/currentSchoolProxy";
 import { schoolsListProxy } from "../../Redux/ReduxProxy/schoolsListProxy";
 import { setSchoolsListAction, setSchoolsListWrapper } from "../../Redux/ReduxWrappers/setSchoolsListWrapper";

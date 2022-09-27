@@ -1,4 +1,4 @@
-import GetAccessiblePeopleResponse from "../../ApiClient/Account/Definitions/GetAccessiblePeopleResponse";
+import GetAccessiblePeopleResponse from "../../ApiClient/Accounts/Definitions/Responses/GetAccessiblePeopleResponse";
 import { SET_PEOPLE_LIST } from "../../Constraints/actionTypes";
 
 const setPeopleList = {

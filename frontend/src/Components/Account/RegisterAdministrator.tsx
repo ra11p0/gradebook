@@ -6,7 +6,7 @@ import RegisterAdministratorPerson, { RegisterAdministratorPersonValues } from "
 import RegisterAdministratorSchool, { RegisterAdministratorSchoolValues } from "./RegisterAdministratorSchool";
 import AdministratorsProxy from "../../ApiClient/Administrators/AdministratorsProxy";
 import Notifications from "../../Notifications/Notifications";
-import AccountProxy from "../../ApiClient/Account/AccountProxy";
+import AccountProxy from "../../ApiClient/Accounts/AccountsProxy";
 import { currentUserIdProxy } from "../../Redux/ReduxProxy/currentUserIdProxy";
 import { setSchoolsListAction, setSchoolsListWrapper } from "../../Redux/ReduxWrappers/setSchoolsListWrapper";
 
