@@ -1,6 +1,6 @@
 import assert from "assert";
-import { waitForDebugger } from "inspector";
 import AccountsProxy from "../../../src/ApiClient/Accounts/AccountsProxy";
+require('dotenv').config();
 
 describe('Accounts', () => {
     describe('Register', () => {
@@ -14,7 +14,9 @@ describe('Accounts', () => {
             return AccountsProxy.register({
                 email: "testtest.pl",
                 password: "!QAZ2wsx"
-            }).then(registerResponse => assert.equal(registerResponse.status, 400));
+            })
+                .then(registerResponse => assert.equal(registerResponse.status, 400))
+                .catch(error => assert.equal(error.response.status, 400));
         })
     })
 
@@ -24,9 +26,8 @@ describe('Accounts', () => {
                 username: "test@test.pl",
                 password: "!QAZ2wsx",
             }).then(registerResponse => {
-                console.log(registerResponse.data);
                 assert.equal(registerResponse.status, 200)
-            });
+            })
         })
     })
 

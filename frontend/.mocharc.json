@@ -1,0 +1,13 @@
+{
+  "diff": true,
+  "extension": ["js"],
+  "package": "./package.json",
+  "reporter": "nyan",
+  "slow": 75,
+  "timeout": 5000,
+  "ui": "bdd",
+  "recursive": true,
+  "exit": true,
+  "env": "dotenv_config_path=.env",
+  "require": "dotenv/config"
+}

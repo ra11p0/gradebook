@@ -128,7 +128,7 @@ public class AccountController : ControllerBase
     {
         var userExists = await _userManager.Service.FindByNameAsync(model.Email);
         if (userExists != null)
-            return StatusCode(StatusCodes.Status500InternalServerError, new LoginRegisterResponse { Status = "Error", Message = "User already exists!" });
+            return StatusCode(400, new LoginRegisterResponse { Status = "Error", Message = "User already exists!" });
 
         ApplicationUser user = new()
         {
@@ -138,7 +138,7 @@ public class AccountController : ControllerBase
         };
         var result = await _userManager.Service.CreateAsync(user, model.Password);
         if (!result.Succeeded)
-            return StatusCode(StatusCodes.Status500InternalServerError, new LoginRegisterResponse { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+            return StatusCode(400, new LoginRegisterResponse { Status = "Error", Message = "User creation failed! Please check user details and try again." });
 
         return Ok(new LoginRegisterResponse { Status = "Success", Message = "User created successfully!" });
     }

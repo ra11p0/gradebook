@@ -44,7 +44,7 @@
     "start": "react-scripts start",
     "build": "CI=false react-scripts build",
     "test": "react-scripts test",
-    "testApi": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'tests/**/*.ts'",
+    "testApi": "mocha -r ts-node/register 'tests/**/*.ts'",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -72,6 +72,7 @@
     "@types/react-datepicker": "^4.4.2",
     "@types/react-swipeable-views": "^0.13.1",
     "chai": "^4.3.6",
+    "cross-env": "^7.0.3",
     "mocha": "^10.0.0",
     "ts-node": "^10.9.1"
   }
