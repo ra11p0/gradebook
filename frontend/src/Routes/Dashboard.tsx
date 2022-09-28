@@ -13,7 +13,7 @@ import StudentsList from "../Components/Dashboard/Manage/ManageStudents/Students
 import SchoolsList from "../Components/Dashboard/Manage/ManageSchool/SchoolsList";
 import SchoolSelectedOnly from "../Components/Shared/SchoolSelectedOnly";
 import ManageClasses from "../Components/Dashboard/Manage/ManageClasses/ManageClasses";
-import { isLoggedInProxy } from "../Redux/ReduxProxy/isLoggedInProxy";
+import { isLoggedInProxy } from "../Redux/ReduxProxy/getIsLoggedInReduxProxy";
 import SettingsIndex from "../Components/Dashboard/Manage/Settings/SettingsIndex";
 
 const mapStateToProps = (state: any) => ({

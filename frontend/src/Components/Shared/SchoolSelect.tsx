@@ -3,10 +3,10 @@ import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import GetSchoolResponse from "../../ApiClient/Schools/Definitions/Responses/GetSchoolResponse";
-import { currentSchoolProxy } from "../../Redux/ReduxProxy/currentSchoolProxy";
-import { schoolsListProxy } from "../../Redux/ReduxProxy/schoolsListProxy";
-import { setSchoolsListAction, setSchoolsListWrapper } from "../../Redux/ReduxWrappers/setSchoolsListWrapper";
-import { setSchoolAction, setSchoolWrapper } from "../../Redux/ReduxWrappers/setSchoolWrapper";
+import { currentSchoolProxy } from "../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
+import { schoolsListProxy } from "../../Redux/ReduxProxy/getSchoolsListReduxProxy";
+import { setSchoolsListAction, setSchoolsListWrapper } from "../../Redux/ReduxWrappers/setSchoolsListReduxWrapper";
+import { setSchoolAction, setSchoolWrapper } from "../../Redux/ReduxWrappers/setSchoolReduxWrapper";
 const mapStateToProps = (state: any) => ({
   currentSchool: currentSchoolProxy(state),
   currentUserId: state.common.session.userId,

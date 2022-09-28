@@ -15,7 +15,7 @@ import { faTrash, faWindowMaximize } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import Notifications from "../../../../Notifications/Notifications";
 import ClassesProxy from "../../../../ApiClient/Classes/ClassesProxy";
-import { currentSchoolProxy } from "../../../../Redux/ReduxProxy/currentSchoolProxy";
+import { currentSchoolProxy } from "../../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
 
 const mapStateToProps = (state: any) => ({
   currentSchool: currentSchoolProxy(state),

@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import Notifications from "../../../../Notifications/Notifications";
 import PeopleProxy from "../../../../ApiClient/People/PeopleProxy";
-import { currentSchoolProxy } from "../../../../Redux/ReduxProxy/currentSchoolProxy";
+import { currentSchoolProxy } from "../../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
 const mapStateToProps = (state: any) => ({
   currentSchoolGuid: currentSchoolProxy(state)?.schoolGuid,
 });

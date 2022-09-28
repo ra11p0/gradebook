@@ -5,8 +5,8 @@ import { TFunction, withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import AccountProxy from "../../ApiClient/Accounts/AccountsProxy";
 import MeResponse from "../../ApiClient/Accounts/Definitions/Responses/MeResponse";
-import { isLoggedInProxy } from "../../Redux/ReduxProxy/isLoggedInProxy";
-import { logOutWrapper } from "../../Redux/ReduxWrappers/logOutWrapper";
+import { isLoggedInProxy } from "../../Redux/ReduxProxy/getIsLoggedInReduxProxy";
+import { logOutWrapper } from "../../Redux/ReduxWrappers/setLogOutReduxWrapper";
 
 const mapStateToProps = (state: any) => {
   return {

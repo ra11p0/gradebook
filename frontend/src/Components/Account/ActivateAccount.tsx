@@ -5,8 +5,8 @@ import { Button, Card, Col, Row } from "react-bootstrap";
 import RegisterStudent from "./RegisterStudent";
 import RegisterTeacher from "./RegisterTeacher";
 import RegisterAdministrator from "./RegisterAdministrator";
-import { isUserActivatedProxy } from "../../Redux/ReduxProxy/isUserAcrivatedProxy";
-import { isLoggedInProxy } from "../../Redux/ReduxProxy/isLoggedInProxy";
+import { isUserActivatedProxy } from "../../Redux/ReduxProxy/getIsUserActivatedReduxProxy";
+import { isLoggedInProxy } from "../../Redux/ReduxProxy/getIsLoggedInReduxProxy";
 
 const mapStateToProps = (state: any) => ({
   isUserLoggedIn: isLoggedInProxy(state),

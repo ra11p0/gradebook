@@ -5,10 +5,10 @@ import { Dropdown } from "react-bootstrap";
 import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { currentPersonProxy } from "../../Redux/ReduxProxy/currentPersonProxy";
-import { isLoggedInProxy } from "../../Redux/ReduxProxy/isLoggedInProxy";
-import { isUserActivatedProxy } from "../../Redux/ReduxProxy/isUserAcrivatedProxy";
-import { logOutWrapper } from "../../Redux/ReduxWrappers/logOutWrapper";
+import { currentPersonProxy } from "../../Redux/ReduxProxy/getCurrentPersonReduxProxy";
+import { isLoggedInProxy } from "../../Redux/ReduxProxy/getIsLoggedInReduxProxy";
+import { isUserActivatedProxy } from "../../Redux/ReduxProxy/getIsUserActivatedReduxProxy";
+import { logOutWrapper } from "../../Redux/ReduxWrappers/setLogOutReduxWrapper";
 import SchoolSelect from "./SchoolSelect";
 
 const mapStateToProps = (state: any) => {

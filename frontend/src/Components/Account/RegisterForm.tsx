@@ -7,7 +7,7 @@ import { Button } from "react-bootstrap";
 import AccountProxy from "../../ApiClient/Accounts/AccountsProxy";
 import Swal from "sweetalert2";
 import CommonNotifications from "../../Notifications/Notifications";
-import { isLoggedInProxy } from "../../Redux/ReduxProxy/isLoggedInProxy";
+import { isLoggedInProxy } from "../../Redux/ReduxProxy/getIsLoggedInReduxProxy";
 
 const mapStateToProps = (state: any) => ({
   isLoggedIn: isLoggedInProxy(state),

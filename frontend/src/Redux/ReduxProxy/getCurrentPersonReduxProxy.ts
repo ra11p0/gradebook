@@ -1,4 +1,4 @@
-import { currentSchoolProxy } from "./currentSchoolProxy"
+import { currentSchoolProxy } from "./getCurrentSchoolReduxProxy"
 
 export const currentPersonProxy = (state: any): CurrentPersonProxyResult | null => {
 
