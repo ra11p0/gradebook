@@ -44,7 +44,7 @@
     "start": "react-scripts start",
     "build": "CI=false react-scripts build",
     "test": "react-scripts test",
-    "testApi": "mocha -r ts-node/register 'tests/**/*.ts'",
+    "testApi": "mocha -r ts-node/register 'tests/**/*.test.ts' 'src/**/*.test.ts'",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
