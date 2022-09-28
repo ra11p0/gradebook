@@ -13,7 +13,7 @@ const logIn = (email: string, password: string) => {
 
 }
 
-const logOut = () => setLogOutReduxWrapper(store.getState());
+const logOut = () => setLogOutReduxWrapper(store.dispatch);
 
 export default {
     logIn, logOut

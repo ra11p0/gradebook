@@ -1,3 +1,5 @@
+using Gradebook.Tests.Selenium.QuickActionsExtensions;
+
 namespace Gradebook.Tests.Selenium.Tests.Account;
 
 [Order(1)]
@@ -62,6 +64,31 @@ public class RegisterAndLogin
         submitButton.Click();
         var profileButton = wait.Until(d => d.FindElement(By.CssSelector("a[href='/account/profile']")));
         Assert.That(profileButton.Displayed);
+    }
+    [Test]
+    [Order(3)]
+    public void ShouldShowNameAndSurnameOnProfileButton()
+    {
+        //  Login form view
+        var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(5));
+
+        _driver!.Login(CommonResources.GetValue("email")!, CommonResources.GetValue("password")!);
+        var profileButton = wait.Until(d => d.FindElement(By.CssSelector("a[href='/account/profile']")));
+
+        Assert.That($"{CommonResources.GetValue(key: "name")} {CommonResources.GetValue("surname")}", Is.EqualTo(profileButton.Text));
+    }
+    [Test]
+    [Order(3)]
+    public void ShouldShowNameAndSurnameOnProfileButtonAfterReload()
+    {
+        //  Login form view
+        var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(5));
+
+        _driver!.Login(CommonResources.GetValue("email")!, CommonResources.GetValue("password")!);
+        _driver!.Navigate().Refresh();
+        var profileButton = wait.Until(d => d.FindElement(By.CssSelector("a[href='/account/profile']")));
+
+        Assert.That($"{CommonResources.GetValue(key: "name")} {CommonResources.GetValue("surname")}", Is.EqualTo(profileButton.Text));
     }
     [TearDown]
     public void End()
