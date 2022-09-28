@@ -9,6 +9,6 @@ export interface setPeopleListAction {
     peopleList: GetAccessiblePeopleResponse[]
 }
 
-export const setPeopleListWrapper = (dispatch: any, action: setPeopleListAction) => {
+export default (dispatch: any, action: setPeopleListAction) => {
     dispatch({ ...setPeopleList, ...action })
 };

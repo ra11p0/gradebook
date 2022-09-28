@@ -3,19 +3,19 @@ import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import GetSchoolResponse from "../../ApiClient/Schools/Definitions/Responses/GetSchoolResponse";
-import { currentSchoolProxy } from "../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
-import { schoolsListProxy } from "../../Redux/ReduxProxy/getSchoolsListReduxProxy";
-import { setSchoolsListAction, setSchoolsListWrapper } from "../../Redux/ReduxWrappers/setSchoolsListReduxWrapper";
-import { setSchoolAction, setSchoolWrapper } from "../../Redux/ReduxWrappers/setSchoolReduxWrapper";
+import getCurrentSchoolReduxProxy from "../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
+import getSchoolsListReduxProxy from "../../Redux/ReduxProxy/getSchoolsListReduxProxy";
+import setSchoolsListReduxWrapper, { setSchoolsListAction } from "../../Redux/ReduxWrappers/setSchoolsListReduxWrapper";
+import setSchoolReduxWrapper, { setSchoolAction } from "../../Redux/ReduxWrappers/setSchoolReduxWrapper";
 const mapStateToProps = (state: any) => ({
-  currentSchool: currentSchoolProxy(state),
+  currentSchool: getCurrentSchoolReduxProxy(state),
   currentUserId: state.common.session.userId,
-  schoolsList: schoolsListProxy(state),
+  schoolsList: getSchoolsListReduxProxy(state),
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
-  setSchool: (action: setSchoolAction) => setSchoolWrapper(dispatch, action),
-  setSchoolsList: (action: setSchoolsListAction) => setSchoolsListWrapper(dispatch, action),
+  setSchool: (action: setSchoolAction) => setSchoolReduxWrapper(dispatch, action),
+  setSchoolsList: (action: setSchoolsListAction) => setSchoolsListReduxWrapper(dispatch, action),
 });
 interface SchoolSelectProps {
   className?: string;

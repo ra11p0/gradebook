@@ -1,21 +1,28 @@
 import React from "react";
 import { Modal } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import ActivateAccount from "../../../Account/ActivateAccount";
+import getCurrentPersonReduxProxy, { CurrentPersonProxyResult } from "../../../../Redux/ReduxProxy/getCurrentPersonReduxProxy";
+import ActivateAccount from "../../../Account/Activation/ActivateAccount";
+import { connect } from "react-redux";
+import moment from "moment";
 
 interface JoinSchoolModalProps {
   show: boolean;
   onHide: () => void;
+  person?: CurrentPersonProxyResult;
 }
 function JoinSchoolModal(props: JoinSchoolModalProps) {
-  const { t } = useTranslation("registerAdministratorSchool");
+  const { t } = useTranslation("ActivateAdministratorSchool");
   return (
     <Modal show={props.show} onHide={props.onHide} size="lg">
       <Modal.Header closeButton>
         <Modal.Title>{t("joinSchool")}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <ActivateAccount onSubmit={props.onHide} />
+        <ActivateAccount
+          onSubmit={props.onHide}
+          person={props.person ? { ...props.person, birthday: moment(props.person?.birthday).format("YYYY-MM-DD") } : undefined}
+        />
       </Modal.Body>
     </Modal>
   );

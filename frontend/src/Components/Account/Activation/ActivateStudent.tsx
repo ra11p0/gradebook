@@ -3,42 +3,42 @@ import { connect } from "react-redux";
 import { useFormik } from "formik";
 import { useTranslation } from "react-i18next";
 import { Button, Col, Row } from "react-bootstrap";
-import InvitationsProxy from "../../ApiClient/Invitations/InvitationsProxy";
+import InvitationsProxy from "../../../ApiClient/Invitations/InvitationsProxy";
 import moment from "moment";
-import PeopleProxy from "../../ApiClient/People/PeopleProxy";
-import Notifications from "../../Notifications/Notifications";
-import AccountProxy from "../../ApiClient/Accounts/AccountsProxy";
-import GetAccessibleSchoolsResponse from "../../ApiClient/Accounts/Definitions/Responses/GetAccessibleSchoolsResponse";
-import { currentUserIdProxy } from "../../Redux/ReduxProxy/getCurrentUserIdReduxProxy";
-import { setSchoolsListWrapper } from "../../Redux/ReduxWrappers/setSchoolsListReduxWrapper";
+import PeopleProxy from "../../../ApiClient/People/PeopleProxy";
+import Notifications from "../../../Notifications/Notifications";
+import AccountProxy from "../../../ApiClient/Accounts/AccountsProxy";
+import GetAccessibleSchoolsResponse from "../../../ApiClient/Accounts/Definitions/Responses/GetAccessibleSchoolsResponse";
+import getCurrentUserIdReduxProxy from "../../../Redux/ReduxProxy/getCurrentUserIdReduxProxy";
+import setSchoolsListReduxWrapper from "../../../Redux/ReduxWrappers/setSchoolsListReduxWrapper";
 
 const mapStateToProps = (state: any) => ({
-  userId: currentUserIdProxy(state),
+  userId: getCurrentUserIdReduxProxy(state),
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
-  setSchoolsList: (schoolsList: GetAccessibleSchoolsResponse[]) => setSchoolsListWrapper(dispatch, { schoolsList }),
+  setSchoolsList: (schoolsList: GetAccessibleSchoolsResponse[]) => setSchoolsListReduxWrapper(dispatch, { schoolsList }),
 });
 
-interface RegisterStudentFormProps {
+interface ActivateStudentFormProps {
   defaultOnBackHandler: () => void;
   setSchoolsList?: (schoolsList: GetAccessibleSchoolsResponse[]) => void;
   userId?: string;
   onSubmit?: () => void;
 }
 
-interface RegisterStudentFormValues {
+interface ActivateStudentFormValues {
   accessCode: string;
 }
 
-const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
-  const { t } = useTranslation("registerStudent");
+const ActivateStudentForm = (props: ActivateStudentFormProps): ReactElement => {
+  const { t } = useTranslation("ActivateStudent");
 
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [birthday, setBirthday] = useState("");
 
-  const validate = (values: RegisterStudentFormValues) => {
+  const validate = (values: ActivateStudentFormValues) => {
     const errors: any = {};
     if (values.accessCode.length != 6) {
       errors.accessCode = t("wrongAccessCodeLength");
@@ -51,7 +51,7 @@ const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
       accessCode: "",
     },
     validate,
-    onSubmit: (values: RegisterStudentFormValues) => {
+    onSubmit: (values: ActivateStudentFormValues) => {
       PeopleProxy.activatePerson(values.accessCode)
         .then(() => {
           AccountProxy.getAccessibleSchools(props.userId!).then((schoolsResponse) => {
@@ -86,7 +86,7 @@ const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
         {t("back")}
       </Button>
       <Row className="text-center">
-        <div className="h4">{t("registerStudent")}</div>
+        <div className="h4">{t("ActivateStudent")}</div>
       </Row>
       <form onSubmit={formik.handleSubmit}>
         <div className="m-1 p-1">
@@ -135,4 +135,4 @@ const RegisterStudentForm = (props: RegisterStudentFormProps): ReactElement => {
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(RegisterStudentForm);
+export default connect(mapStateToProps, mapDispatchToProps)(ActivateStudentForm);

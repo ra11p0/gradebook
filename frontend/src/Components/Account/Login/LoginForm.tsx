@@ -1,24 +1,24 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import AccountProxy from "../../ApiClient/Accounts/AccountsProxy";
+import AccountProxy from "../../../ApiClient/Accounts/AccountsProxy";
 import { withTranslation } from "react-i18next";
 import { Button } from "react-bootstrap";
-import { isLoggedInProxy } from "../../Redux/ReduxProxy/getIsLoggedInReduxProxy";
-import { currentSchoolProxy } from "../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
-import { logInAction, loginWrapper } from "../../Redux/ReduxWrappers/setLoginReduxWrapper";
-import { setSchoolsListAction, setSchoolsListWrapper } from "../../Redux/ReduxWrappers/setSchoolsListReduxWrapper";
-import { setUserAction, setUserWrapper } from "../../Redux/ReduxWrappers/setUserReduxWrapper";
+import getIsLoggedInReduxProxy from "../../../Redux/ReduxProxy/getIsLoggedInReduxProxy";
+import getCurrentSchoolReduxProxy from "../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
+import setLoginReduxWrapper, { logInAction } from "../../../Redux/ReduxWrappers/setLoginReduxWrapper";
+import setSchoolsListReduxWrapper, { setSchoolsListAction } from "../../../Redux/ReduxWrappers/setSchoolsListReduxWrapper";
+import setUserReduxWrapper, { setUserAction } from "../../../Redux/ReduxWrappers/setUserReduxWrapper";
 
 const mapStateToProps = (state: any) => ({
-  isLoggedIn: isLoggedInProxy(state),
-  currentSchool: currentSchoolProxy(state),
+  isLoggedIn: getIsLoggedInReduxProxy(state),
+  currentSchool: getCurrentSchoolReduxProxy(state),
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
-  logIn: (action: logInAction) => loginWrapper(dispatch, action),
-  setSchools: (action: setSchoolsListAction) => setSchoolsListWrapper(dispatch, action),
-  setUser: (action: setUserAction) => setUserWrapper(dispatch, action),
+  logIn: (action: logInAction) => setLoginReduxWrapper(dispatch, action),
+  setSchools: (action: setSchoolsListAction) => setSchoolsListReduxWrapper(dispatch, action),
+  setUser: (action: setUserAction) => setUserReduxWrapper(dispatch, action),
 });
 
 interface LogInProps {
@@ -31,7 +31,7 @@ interface LogInProps {
 }
 
 interface LogInState {
-  username?: string;
+  email?: string;
   password?: string;
   loginFailed?: boolean;
 }
@@ -40,7 +40,7 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
   constructor(props: LogInProps) {
     super(props);
     this.state = {
-      username: "",
+      email: "",
       password: "",
       loginFailed: false,
     };
@@ -64,7 +64,7 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
   }
 
   onLogIn() {
-    AccountProxy.logIn({ username: this.state.username!, password: this.state.password! })
+    AccountProxy.logIn({ email: this.state.email!, password: this.state.password! })
       .then((loginResponse) => {
         this.props.logIn!({ refreshToken: loginResponse.data.refresh_token, accessToken: loginResponse.data.access_token });
         AccountProxy.getMe().then((getMeResponse) => {
@@ -94,11 +94,11 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
             <input
               className="form-control"
               name="email"
-              value={this.state.username}
+              value={this.state.email}
               onChange={(e) =>
                 this.setState({
                   ...this.state,
-                  username: e.target.value,
+                  email: e.target.value,
                 })
               }
             ></input>

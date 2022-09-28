@@ -5,22 +5,22 @@ import { Dropdown } from "react-bootstrap";
 import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { currentPersonProxy } from "../../Redux/ReduxProxy/getCurrentPersonReduxProxy";
-import { isLoggedInProxy } from "../../Redux/ReduxProxy/getIsLoggedInReduxProxy";
-import { isUserActivatedProxy } from "../../Redux/ReduxProxy/getIsUserActivatedReduxProxy";
-import { logOutWrapper } from "../../Redux/ReduxWrappers/setLogOutReduxWrapper";
+import getCurrentPersonReduxProxy from "../../Redux/ReduxProxy/getCurrentPersonReduxProxy";
+import getIsLoggedInReduxProxy from "../../Redux/ReduxProxy/getIsLoggedInReduxProxy";
+import getIsUserActivatedReduxProxy from "../../Redux/ReduxProxy/getIsUserActivatedReduxProxy";
+import setLogOutReduxWrapper from "../../Redux/ReduxWrappers/setLogOutReduxWrapper";
 import SchoolSelect from "./SchoolSelect";
 
 const mapStateToProps = (state: any) => {
   return {
-    isLoggedIn: isLoggedInProxy(state),
-    currentPerson: currentPersonProxy(state),
-    isActive: isUserActivatedProxy(state),
+    isLoggedIn: getIsLoggedInReduxProxy(state),
+    currentPerson: getCurrentPersonReduxProxy(state),
+    isActive: getIsUserActivatedReduxProxy(state),
   };
 };
 
 const mapDispatchToProps = (dispatch: any) => ({
-  logOutHandler: () => logOutWrapper(dispatch),
+  logOutHandler: () => setLogOutReduxWrapper(dispatch),
 });
 
 interface HeaderProps {

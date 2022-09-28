@@ -34,8 +34,6 @@ export default (state: any = defaultState, action: any) => {
                 }
             };
         case LOG_OUT:
-            localStorage.removeItem('access_token');  //should be in middleware
-            localStorage.removeItem('refresh');
             return {
                 ...state,
                 session: null,

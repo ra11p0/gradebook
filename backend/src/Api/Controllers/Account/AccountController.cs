@@ -41,17 +41,20 @@ public class AccountController : ControllerBase
     #region authorization authentication
     [HttpGet]
     [Route("Me")]
-    [ProducesResponseType(typeof(IEnumerable<PersonDto>), statusCode: 200)]
+    [ProducesResponseType(typeof(MeResponseModel), statusCode: 200)]
     [ProducesResponseType(typeof(string), statusCode: 400)]
     [Authorize]
     public async Task<IActionResult> GetMe()
     {
         var user = await _userManager.Service.FindByNameAsync(User.Identity!.Name);
         var accessibleSchools = await _foundationQueries.Service.GetSchoolsForUser(user.Id);
+        if (!accessibleSchools.Status) return BadRequest();
+        var schools = accessibleSchools.Response ?? Enumerable.Empty<SchoolWithRelatedPersonDto>();
         return Ok(new MeResponseModel
         {
             UserId = user.Id,
-            Schools = accessibleSchools.Response ?? Enumerable.Empty<SchoolWithRelatedPersonDto>()
+            IsActive = schools.Any(),
+            Schools = schools
         });
     }
     [Authorize]
@@ -86,7 +89,7 @@ public class AccountController : ControllerBase
     [Route("login")]
     public async Task<IActionResult> Login([FromForm] LoginModel model)
     {
-        var user = await _userManager.Service.FindByNameAsync(model.Username);
+        var user = await _userManager.Service.FindByNameAsync(model.Email);
         if (user != null && await _userManager.Service.CheckPasswordAsync(user, model.Password))
         {
             var userRoles = await _userManager.Service.GetRolesAsync(user);

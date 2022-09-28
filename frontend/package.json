@@ -44,7 +44,7 @@
     "start": "react-scripts start",
     "build": "CI=false react-scripts build",
     "test": "react-scripts test",
-    "testApi": "mocha -r ts-node/register 'tests/**/*.test.ts' 'src/**/*.test.ts'",
+    "testApi": "mocha -r ts-node/register -r mock-local-storage 'src/**/*.test.ts'",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -74,6 +74,7 @@
     "chai": "^4.3.6",
     "cross-env": "^7.0.3",
     "mocha": "^10.0.0",
+    "mock-local-storage": "^1.1.23",
     "ts-node": "^10.9.1"
   }
 }

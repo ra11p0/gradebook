@@ -2,24 +2,19 @@ import React from "react";
 import { connect } from "react-redux";
 import { withTranslation } from "react-i18next";
 import { Button, Card, Col, Row } from "react-bootstrap";
-import RegisterStudent from "./RegisterStudent";
-import RegisterTeacher from "./RegisterTeacher";
-import RegisterAdministrator from "./RegisterAdministrator";
-import { isUserActivatedProxy } from "../../Redux/ReduxProxy/getIsUserActivatedReduxProxy";
-import { isLoggedInProxy } from "../../Redux/ReduxProxy/getIsLoggedInReduxProxy";
-
-const mapStateToProps = (state: any) => ({
-  isUserLoggedIn: isLoggedInProxy(state),
-  isUserActivated: isUserActivatedProxy(state),
-});
-
-const mapDispatchToProps = (dispatch: any) => ({});
+import ActivateStudent from "./ActivateStudent";
+import ActivateTeacher from "./ActivateTeacher";
+import ActivateAdministrator from "./ActivateAdministrator";
+import getIsUserActivatedReduxProxy from "../../../Redux/ReduxProxy/getIsUserActivatedReduxProxy";
+import getIsLoggedInReduxProxy from "../../../Redux/ReduxProxy/getIsLoggedInReduxProxy";
+import { ActivateAdministratorPersonValues } from "./ActivateAdministratorPerson";
 
 interface ActivateAccountProps {
   t: any;
   isUserLoggedIn: boolean;
   isUserActivated: boolean;
   onSubmit?: () => void;
+  person?: ActivateAdministratorPersonValues;
 }
 
 interface ActivateAccountState {
@@ -100,13 +95,17 @@ class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAcco
                     </>
                   )}
                   {this.state.role === "teacher" && (
-                    <RegisterTeacher defaultOnBackHandler={defaultOnBackHandler} onSubmit={this.props.onSubmit} />
+                    <ActivateTeacher defaultOnBackHandler={defaultOnBackHandler} onSubmit={this.props.onSubmit} />
                   )}
                   {this.state.role === "administrator" && (
-                    <RegisterAdministrator defaultOnBackHandler={defaultOnBackHandler} onSubmit={this.props.onSubmit} />
+                    <ActivateAdministrator
+                      defaultOnBackHandler={defaultOnBackHandler}
+                      onSubmit={this.props.onSubmit}
+                      person={this.props.person}
+                    />
                   )}
                   {this.state.role === "student" && (
-                    <RegisterStudent defaultOnBackHandler={defaultOnBackHandler} onSubmit={this.props.onSubmit} />
+                    <ActivateStudent defaultOnBackHandler={defaultOnBackHandler} onSubmit={this.props.onSubmit} />
                   )}
                 </Col>
                 <Col lg={1} md={3} />
@@ -119,4 +118,12 @@ class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAcco
   }
 }
 
-export default withTranslation("activateAccount")(connect(mapStateToProps, mapDispatchToProps)(ActivateAccount));
+export default withTranslation("activateAccount")(
+  connect(
+    (state: any) => ({
+      isUserLoggedIn: getIsLoggedInReduxProxy(state),
+      isUserActivated: getIsUserActivatedReduxProxy(state),
+    }),
+    (dispatch: any) => ({})
+  )(ActivateAccount)
+);

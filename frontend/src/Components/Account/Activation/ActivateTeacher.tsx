@@ -8,17 +8,17 @@ const mapStateToProps = (state: any) => ({});
 
 const mapDispatchToProps = (dispatch: any) => ({});
 
-interface RegisterTeacherFormProps {
+interface ActivateTeacherFormProps {
   defaultOnBackHandler: () => void;
   onSubmit?: () => void;
 }
 
-interface RegisterTeacherFormValues {}
+interface ActivateTeacherFormValues {}
 
-const RegisterTeacherForm = (props: RegisterTeacherFormProps): ReactElement => {
+const ActivateTeacherForm = (props: ActivateTeacherFormProps): ReactElement => {
   const { t } = useTranslation();
 
-  const validate = (values: RegisterTeacherFormValues) => {
+  const validate = (values: ActivateTeacherFormValues) => {
     const errors: any = {};
     return errors;
   };
@@ -26,7 +26,7 @@ const RegisterTeacherForm = (props: RegisterTeacherFormProps): ReactElement => {
   const formik = useFormik({
     initialValues: {},
     validate,
-    onSubmit: (values: RegisterTeacherFormValues) => {
+    onSubmit: (values: ActivateTeacherFormValues) => {
       if (props.onSubmit) props.onSubmit();
     },
   });
@@ -46,4 +46,4 @@ const RegisterTeacherForm = (props: RegisterTeacherFormProps): ReactElement => {
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(RegisterTeacherForm);
+export default connect(mapStateToProps, mapDispatchToProps)(ActivateTeacherForm);

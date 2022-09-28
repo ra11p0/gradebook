@@ -5,10 +5,10 @@ import { useTranslation } from "react-i18next";
 import AccountProxy from "../../../../../ApiClient/Accounts/AccountsProxy";
 import DefaultPersonSettingElement from "./SettingsElements/DefaultPersonSettingElement";
 import { connect } from "react-redux";
-import { currentUserIdProxy } from "../../../../../Redux/ReduxProxy/getCurrentUserIdReduxProxy";
+import getCurrentUserIdReduxProxy from "../../../../../Redux/ReduxProxy/getCurrentUserIdReduxProxy";
 
 const mapStateToProps = (state: any) => ({
-  currentUserGuid: currentUserIdProxy(state),
+  currentUserGuid: getCurrentUserIdReduxProxy(state),
 });
 
 type Props = { currentUserGuid?: string };

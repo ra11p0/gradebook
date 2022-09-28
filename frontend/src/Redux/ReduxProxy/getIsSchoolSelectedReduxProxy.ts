@@ -1,3 +1,3 @@
-import { currentSchoolProxy } from "./getCurrentSchoolReduxProxy";
+import getCurrentSchoolReduxProxy from "./getCurrentSchoolReduxProxy";
 
-export const isSchoolSelectedProxy = (state: any): boolean => currentSchoolProxy(state) != null;
+export default (state: any): boolean => getCurrentSchoolReduxProxy(state) != null;

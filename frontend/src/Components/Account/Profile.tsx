@@ -5,18 +5,18 @@ import { TFunction, withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import AccountProxy from "../../ApiClient/Accounts/AccountsProxy";
 import MeResponse from "../../ApiClient/Accounts/Definitions/Responses/MeResponse";
-import { isLoggedInProxy } from "../../Redux/ReduxProxy/getIsLoggedInReduxProxy";
-import { logOutWrapper } from "../../Redux/ReduxWrappers/setLogOutReduxWrapper";
+import getIsLoggedInReduxProxy from "../../Redux/ReduxProxy/getIsLoggedInReduxProxy";
+import setLogOutReduxWrapper from "../../Redux/ReduxWrappers/setLogOutReduxWrapper";
 
 const mapStateToProps = (state: any) => {
   return {
-    isLoggedIn: isLoggedInProxy(state),
+    isLoggedIn: getIsLoggedInReduxProxy(state),
     currentSchoolGuid: state.common.school?.schoolGuid,
   };
 };
 
 const mapDispatchToProps = (dispatch: any) => ({
-  logOutHandler: () => logOutWrapper(dispatch),
+  logOutHandler: () => setLogOutReduxWrapper(dispatch),
 });
 
 interface ProfileProps {
@@ -56,8 +56,8 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                 <TableCell>{me?.id}</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>{t("userName")}</TableCell>
-                <TableCell>{me?.username}</TableCell>
+                <TableCell>{t("email")}</TableCell>
+                <TableCell>{me?.email}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>{t("name")}</TableCell>

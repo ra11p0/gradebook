@@ -1,15 +1,15 @@
-import { currentSchoolProxy } from "./getCurrentSchoolReduxProxy"
+import getCurrentSchoolReduxProxy from "./getCurrentSchoolReduxProxy"
 
-export const currentPersonProxy = (state: any): CurrentPersonProxyResult | null => {
+export default (state: any): CurrentPersonProxyResult | null => {
 
-    let currentSchool = currentSchoolProxy(state);
+    let currentSchool = getCurrentSchoolReduxProxy(state);
     if (!currentSchool) return null;
     let peopleArr = state.common.schoolsList.filter((schoolPerson: any) => schoolPerson.school.guid == currentSchool?.schoolGuid);
     if (peopleArr.length == 0) return null
     return peopleArr[0].person;
 }
 
-interface CurrentPersonProxyResult {
+export interface CurrentPersonProxyResult {
     guid: string;
     name: string;
     surname: string;

@@ -11,9 +11,9 @@ import moment from "moment";
 import Person from "../../../Shared/Person";
 import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
-import { currentSchoolProxy } from "../../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
+import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
 const mapStateToProps = (state: any) => ({
-  currentSchool: currentSchoolProxy(state),
+  currentSchool: getCurrentSchoolReduxProxy(state),
 });
 const mapDispatchToProps = (dispatch: any) => ({});
 interface InvitationsProps {

@@ -5,9 +5,9 @@ import { Button, Modal } from "react-bootstrap";
 import { useFormik } from "formik";
 import NewStudentRequest from "../../../../ApiClient/Schools/Definitions/Requests/NewStudentRequest";
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
-import { currentSchoolProxy } from "../../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
+import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
 const mapStateToProps = (state: any) => ({
-  currentSchool: currentSchoolProxy(state),
+  currentSchool: getCurrentSchoolReduxProxy(state),
 });
 const mapDispatchToProps = (dispatch: any) => ({});
 interface formValues {

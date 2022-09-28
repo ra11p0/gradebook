@@ -1,6 +1,6 @@
 import assert from "assert";
 import AccountsProxy from "./AccountsProxy";
-import testConstraints from '../../../tests/Constraints'
+import testConstraints from '../../tests/Constraints'
 require('dotenv').config();
 
 const isTestEnvironment = process.env.ENVIRONMENT === 'TEST';
@@ -12,11 +12,13 @@ describe('AccountsProxy', () => {
                 email: testConstraints.email,
                 password: testConstraints.password
             }).then(registerResponse => {
+
+                assert.equal(registerResponse.status, 200)
+            }).catch(err => {
                 if (!isTestEnvironment) {
                     assert.ok(true);
                     return;
                 }
-                assert.equal(registerResponse.status, 200)
             });
         })
         it('Should not register - wrong email', () => {
@@ -32,8 +34,8 @@ describe('AccountsProxy', () => {
     describe('Login', () => {
         it('Should login', () => {
             return AccountsProxy.logIn({
-                username: "test@test.pl",
-                password: "!QAZ2wsx",
+                email: testConstraints.email,
+                password: testConstraints.password,
             }).then(registerResponse => {
                 assert.equal(registerResponse.status, 200)
             })

@@ -5,28 +5,17 @@ import Index from "./Routes/Index";
 import Dashboard from "./Routes/Dashboard";
 import { connect } from "react-redux";
 import Account from "./Routes/Account";
-import ActivateAccount from "./Components/Account/ActivateAccount";
-import RegisterForm from "./Components/Account/RegisterForm";
+import ActivateAccount from "./Components/Account/Activation/ActivateAccount";
+import RegisterForm from "./Components/Account/Register/RegisterForm";
 import { ReactNotifications } from "react-notifications-component";
 import School from "./Routes/School";
 import Student from "./Routes/Student";
 import Person from "./Routes/Person";
 import Class from "./Routes/Class";
-import { isLoggedInProxy } from "./Redux/ReduxProxy/getIsLoggedInReduxProxy";
-import { isUserActivatedProxy } from "./Redux/ReduxProxy/getIsUserActivatedReduxProxy";
-import { appLoadWrapper } from "./Redux/ReduxWrappers/setAppLoadReduxWrapper";
+import getIsLoggedInReduxProxy from "./Redux/ReduxProxy/getIsLoggedInReduxProxy";
+import getIsUserActivatedReduxProxy from "./Redux/ReduxProxy/getIsUserActivatedReduxProxy";
+import setAppLoadReduxWrapper from "./Redux/ReduxWrappers/setAppLoadReduxWrapper";
 
-const mapStateToProps = (state: any) => {
-  return {
-    appLoaded: state.common.appLoaded,
-    isLoggedIn: isLoggedInProxy(state),
-    isUserActivated: isUserActivatedProxy(state),
-  };
-};
-
-const mapDispatchToProps = (dispatch: any) => ({
-  onLoad: () => appLoadWrapper(dispatch),
-});
 interface AppProps {
   onLoad: () => {};
   appLoaded: boolean;
@@ -80,4 +69,13 @@ class App extends React.Component<AppProps> {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(
+  (state: any) => ({
+    appLoaded: state.common.appLoaded,
+    isLoggedIn: getIsLoggedInReduxProxy(state),
+    isUserActivated: getIsUserActivatedReduxProxy(state),
+  }),
+  (dispatch: any) => ({
+    onLoad: () => setAppLoadReduxWrapper(dispatch),
+  })
+)(App);

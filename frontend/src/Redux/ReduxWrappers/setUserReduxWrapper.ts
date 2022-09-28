@@ -9,4 +9,4 @@ export interface setUserAction {
     userId: string;
 }
 
-export const setUserWrapper = (dispatch: any, action: setUserAction) => dispatch({ ...setUser, ...action });
+export default (dispatch: any, action: setUserAction) => dispatch({ ...setUser, ...action });

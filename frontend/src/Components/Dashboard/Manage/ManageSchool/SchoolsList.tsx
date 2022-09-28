@@ -11,22 +11,14 @@ import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
 import Notifications from "../../../../Notifications/Notifications";
 import { Row } from "react-bootstrap";
 import AccountProxy from "../../../../ApiClient/Accounts/AccountsProxy";
-import { currentUserIdProxy } from "../../../../Redux/ReduxProxy/getCurrentUserIdReduxProxy";
-import { schoolsListProxy } from "../../../../Redux/ReduxProxy/getSchoolsListReduxProxy";
+import getCurrentUserIdReduxProxy from "../../../../Redux/ReduxProxy/getCurrentUserIdReduxProxy";
+import getSchoolsListReduxProxy from "../../../../Redux/ReduxProxy/getSchoolsListReduxProxy";
 import GetSchoolResponse from "../../../../ApiClient/Schools/Definitions/Responses/GetSchoolResponse";
-import { setSchoolsListAction, setSchoolsListWrapper } from "../../../../Redux/ReduxWrappers/setSchoolsListReduxWrapper";
-import { setSchoolAction, setSchoolWrapper } from "../../../../Redux/ReduxWrappers/setSchoolReduxWrapper";
+import setSchoolsListReduxWrapper, { setSchoolsListAction } from "../../../../Redux/ReduxWrappers/setSchoolsListReduxWrapper";
+import setSchoolReduxWrapper, { setSchoolAction } from "../../../../Redux/ReduxWrappers/setSchoolReduxWrapper";
 import JoinSchoolModal from "./JoinSchoolModal";
-
-const mapDispatchToProps = (dispatch: any) => ({
-  setSchoolsList: (action: setSchoolsListAction) => setSchoolsListWrapper(dispatch, action),
-  setCurrentSchool: (action: setSchoolAction) => setSchoolWrapper(dispatch, action),
-});
-const mapStateToProps = (state: any) => ({
-  userId: currentUserIdProxy(state),
-  schoolsList: schoolsListProxy(state),
-  currentSchoolGuid: state.common.school?.schoolGuid,
-});
+import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
+import getCurrentPersonReduxProxy, { CurrentPersonProxyResult } from "../../../../Redux/ReduxProxy/getCurrentPersonReduxProxy";
 
 interface SchoolsListProps {
   userId?: string;
@@ -34,6 +26,7 @@ interface SchoolsListProps {
   currentSchoolGuid?: string;
   setSchoolsList?: (action: setSchoolsListAction) => void;
   setCurrentSchool?: (action: setSchoolAction) => void;
+  currentPerson?: CurrentPersonProxyResult;
 }
 
 function SchoolsList(props: SchoolsListProps) {
@@ -88,6 +81,7 @@ function SchoolsList(props: SchoolsListProps) {
               onHide={() => {
                 setShowJoinSchoolModal(false);
               }}
+              person={props.currentPerson}
             />
             <Button className="addSchoolButton" onClick={() => setShowJoinSchoolModal(true)} variant={"outlined"}>
               {t("addSchool")}
@@ -164,4 +158,15 @@ function SchoolsList(props: SchoolsListProps) {
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SchoolsList);
+export default connect(
+  (state: any) => ({
+    userId: getCurrentUserIdReduxProxy(state),
+    schoolsList: getSchoolsListReduxProxy(state),
+    currentSchoolGuid: getCurrentSchoolReduxProxy(state)?.schoolGuid,
+    currentPerson: getCurrentPersonReduxProxy(state) ?? undefined,
+  }),
+  (dispatch: any) => ({
+    setSchoolsList: (action: setSchoolsListAction) => setSchoolsListReduxWrapper(dispatch, action),
+    setCurrentSchool: (action: setSchoolAction) => setSchoolReduxWrapper(dispatch, action),
+  })
+)(SchoolsList);

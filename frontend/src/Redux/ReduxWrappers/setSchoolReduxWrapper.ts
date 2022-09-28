@@ -8,6 +8,6 @@ export interface setSchoolAction {
     schoolName: string;
 }
 
-export const setSchoolWrapper = (dispatch: any, action: setSchoolAction) => {
+export default (dispatch: any, action: setSchoolAction) => {
     dispatch({ ...setSchool, ...action })
 };

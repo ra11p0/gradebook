@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { isLoggedInProxy } from "../../Redux/ReduxProxy/getIsLoggedInReduxProxy";
+import getIsLoggedInReduxProxy from "../../Redux/ReduxProxy/getIsLoggedInReduxProxy";
 
 const mapStateToProps = (state: any) => ({});
 

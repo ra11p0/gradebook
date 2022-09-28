@@ -9,6 +9,6 @@ export interface setSchoolsListAction {
     schoolsList: GetAccessibleSchoolsResponse[]
 }
 
-export const setSchoolsListWrapper = (dispatch: any, action: setSchoolsListAction) => {
+export default (dispatch: any, action: setSchoolsListAction) => {
     dispatch({ ...setSchoolsList, ...action })
 };

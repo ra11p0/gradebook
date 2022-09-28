@@ -1,3 +1,3 @@
-import { schoolsListProxy } from "./getSchoolsListReduxProxy";
+import getSchoolsListReduxProxy from "./getSchoolsListReduxProxy";
 
-export const isUserActivatedProxy = (state: any): boolean => schoolsListProxy(state)?.length != 0;
+export default (state: any): boolean => getSchoolsListReduxProxy(state)?.length != 0;

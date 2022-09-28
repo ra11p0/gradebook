@@ -7,9 +7,9 @@ import * as Yup from "yup";
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
 import { connect } from "react-redux";
 import Notifications from "../../../../Notifications/Notifications";
-import { currentSchoolProxy } from "../../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
+import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
 const mapStateToProps = (state: any) => ({
-  currentSchool: currentSchoolProxy(state),
+  currentSchool: getCurrentSchoolReduxProxy(state),
 });
 const mapDispatchToProps = (dispatch: any) => ({});
 

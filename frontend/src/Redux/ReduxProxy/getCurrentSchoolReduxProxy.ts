@@ -1,4 +1,4 @@
-export const currentSchoolProxy = (state: any): CurrentSchoolProxyResult | null => {
+export default (state: any): getCurrentSchoolReduxProxyResult | null => {
     if (state.common?.school == null) {
         if (state.common?.schoolsList && state.common?.schoolsList?.length != 0) {
             return {
@@ -11,7 +11,7 @@ export const currentSchoolProxy = (state: any): CurrentSchoolProxyResult | null 
     return state.common?.school;
 };
 
-interface CurrentSchoolProxyResult {
+interface getCurrentSchoolReduxProxyResult {
     schoolName: string;
     schoolGuid: string;
 }

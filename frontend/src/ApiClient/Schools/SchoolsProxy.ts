@@ -79,7 +79,6 @@ const searchPeople = (schoolGuid: string, discriminator: string, query: string, 
 
 
 export default {
-
     removeSchool,
     getSchool,
     getStudentsInSchool,

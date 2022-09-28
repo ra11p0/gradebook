@@ -8,11 +8,11 @@ const mapStateToProps = (state: any) => ({});
 
 const mapDispatchToProps = (dispatch: any) => ({});
 
-interface RegisterAdministratorSchoolProps {
-  onSubmit: (values: RegisterAdministratorSchoolValues) => void;
+interface ActivateAdministratorSchoolProps {
+  onSubmit: (values: ActivateAdministratorSchoolValues) => void;
 }
 
-interface RegisterAdministratorSchoolValues {
+interface ActivateAdministratorSchoolValues {
   name: string;
   addressLine1: string;
   addressLine2: string;
@@ -20,10 +20,10 @@ interface RegisterAdministratorSchoolValues {
   postalCode: string;
 }
 
-const RegisterAdministratorSchool = (props: RegisterAdministratorSchoolProps): ReactElement => {
-  const { t } = useTranslation("registerAdministratorSchool");
+const ActivateAdministratorSchool = (props: ActivateAdministratorSchoolProps): ReactElement => {
+  const { t } = useTranslation("ActivateAdministratorSchool");
 
-  const validate = (values: RegisterAdministratorSchoolValues) => {
+  const validate = (values: ActivateAdministratorSchoolValues) => {
     const errors: any = {};
     if (values.addressLine1.length < 5) errors.addressLine1 = t("addressTooShort");
     if (values.name.length < 2) errors.name = t("nameTooShort");
@@ -108,5 +108,5 @@ const RegisterAdministratorSchool = (props: RegisterAdministratorSchoolProps): R
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(RegisterAdministratorSchool);
-export type { RegisterAdministratorSchoolValues };
+export default connect(mapStateToProps, mapDispatchToProps)(ActivateAdministratorSchool);
+export type { ActivateAdministratorSchoolValues };

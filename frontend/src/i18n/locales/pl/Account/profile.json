@@ -1,6 +1,6 @@
 {
   "id": "Identyfikator",
-  "userName": "Nazwa uzytkownika",
+  "email": "Nazwa uzytkownika",
   "name": "Imię",
   "surname": "Nazwisko",
   "birthday": "Data urodzenia",

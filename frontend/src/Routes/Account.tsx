@@ -2,10 +2,10 @@ import { connect } from "react-redux";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Profile from "../Components/Account/Profile";
-import { isLoggedInProxy } from "../Redux/ReduxProxy/getIsLoggedInReduxProxy";
+import getIsLoggedInReduxProxy from "../Redux/ReduxProxy/getIsLoggedInReduxProxy";
 
 const mapStateToProps = (state: any) => ({
-  isLoggedIn: isLoggedInProxy(state),
+  isLoggedIn: getIsLoggedInReduxProxy(state),
 });
 
 const mapDispatchToProps = (dispatch: any) => ({});

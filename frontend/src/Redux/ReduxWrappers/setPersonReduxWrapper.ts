@@ -9,4 +9,4 @@ export interface setPersonAction {
     fullName: string;
 }
 
-export const setPersonWrapper = (dispatch: any, action: setPersonAction) => dispatch({ ...setPerson, ...action });
+export default (dispatch: any, action: setPersonAction) => dispatch({ ...setPerson, ...action });

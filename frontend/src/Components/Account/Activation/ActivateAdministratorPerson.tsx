@@ -5,22 +5,20 @@ import { useFormik } from "formik";
 import { Button } from "react-bootstrap";
 const mapStateToProps = (state: any) => ({});
 const mapDispatchToProps = (dispatch: any) => ({});
-interface RegisterAdministratorPersonProps {
-  onSubmit: (values: RegisterAdministratorPersonValues) => void;
+interface ActivateAdministratorPersonProps {
+  onSubmit: (values: ActivateAdministratorPersonValues) => void;
   name?: string;
   surname?: string;
   birthday?: string;
 }
-interface RegisterAdministratorPersonValues {
+interface ActivateAdministratorPersonValues {
   name: string;
   surname: string;
   birthday: string;
 }
-const RegisterAdministratorPerson = (
-  props: RegisterAdministratorPersonProps
-): ReactElement => {
-  const { t } = useTranslation("registerAdministratorPerson");
-  const validate = (values: RegisterAdministratorPersonValues) => {
+const ActivateAdministratorPerson = (props: ActivateAdministratorPersonProps): ReactElement => {
+  const { t } = useTranslation("ActivateAdministratorPerson");
+  const validate = (values: ActivateAdministratorPersonValues) => {
     const errors: any = {};
     if (values.name.length < 3) {
       errors.name = t("invalidName");
@@ -43,17 +41,8 @@ const RegisterAdministratorPerson = (
     <form onSubmit={formik.handleSubmit}>
       <div className="m-1 p-1">
         <label htmlFor="name">{t("name")}</label>
-        <input
-          className="form-control"
-          id="name"
-          name="name"
-          type="text"
-          onChange={formik.handleChange}
-          value={formik.values.name}
-        />
-        {formik.errors.name && formik.touched.name ? (
-          <div className="invalid-feedback d-block">{formik.errors.name}</div>
-        ) : null}
+        <input className="form-control" id="name" name="name" type="text" onChange={formik.handleChange} value={formik.values.name} />
+        {formik.errors.name && formik.touched.name ? <div className="invalid-feedback d-block">{formik.errors.name}</div> : null}
       </div>
       <div className="m-1 p-1">
         <label htmlFor="surname">{t("surname")}</label>
@@ -65,11 +54,7 @@ const RegisterAdministratorPerson = (
           onChange={formik.handleChange}
           value={formik.values.surname}
         />
-        {formik.errors.surname && formik.touched.surname ? (
-          <div className="invalid-feedback d-block">
-            {formik.errors.surname}
-          </div>
-        ) : null}
+        {formik.errors.surname && formik.touched.surname ? <div className="invalid-feedback d-block">{formik.errors.surname}</div> : null}
       </div>
       <div className="m-1 p-1">
         <label htmlFor="birthday">{t("birthday")}</label>
@@ -82,9 +67,7 @@ const RegisterAdministratorPerson = (
           value={formik.values.birthday}
         />
         {formik.errors.birthday && formik.touched.birthday ? (
-          <div className="invalid-feedback d-block">
-            {formik.errors.birthday}
-          </div>
+          <div className="invalid-feedback d-block">{formik.errors.birthday}</div>
         ) : null}
       </div>
       <div className="m-1 p-1 d-flex justify-content-end">
@@ -95,8 +78,5 @@ const RegisterAdministratorPerson = (
     </form>
   );
 };
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RegisterAdministratorPerson);
-export type { RegisterAdministratorPersonValues };
+export default connect(mapStateToProps, mapDispatchToProps)(ActivateAdministratorPerson);
+export type { ActivateAdministratorPersonValues };
