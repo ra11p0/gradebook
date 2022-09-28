@@ -1,4 +1,5 @@
 using Gradebook.Foundation.Common;
+using Gradebook.Foundation.Common.Permissions.Enums;
 
 namespace Gradebook.Permissions.Logic.Queries;
 
@@ -17,6 +18,9 @@ public class PermissionsQueriesRepositoryCached : BaseRepositoryCached<Permissio
     {
         Base.CommitTransaction();
     }
+
+    public IEnumerable<Tuple<PermissionEnum, PermissionLevelEnum>> GetPermissionsForPerson(Guid personGuid)
+        => Base.GetPermissionsForPerson(personGuid);
 
     public void RollbackTransaction()
     {
