@@ -22,17 +22,13 @@ public class Schools
     }
     [Test]
     [Order(1)]
-    public void CanAddFreshNewSchool()
+    public void CanAddNewSchool()
     {
         _driver!.GoToSchoolsTab();
         _wait!.Until(d => d.FindElement(By.CssSelector(".addSchoolButton"))).Click();
         _wait.Until(d => d.FindElement(By.CssSelector(".activateAdministrator"))).Click();
-        _wait.Until(d => d.FindElement(By.CssSelector("input[name='name']"))).SendKeys(CommonResources.GetValue("nameInSecondSchool"));
-        _driver!.FindElement(By.CssSelector("input[name='surname']")).SendKeys(CommonResources.GetValue("secondSchoolSurname"));
-        _driver.FindElement(By.CssSelector("input[name='birthday']")).SendKeys(CommonResources.GetValue("secondSchoolBirthday"));
-        _driver.FindElement(By.CssSelector("button[type='submit']")).Click();
         _wait.Until(d => d.FindElement(By.CssSelector("input[name='city']"))).SendKeys(CommonResources.GetValue("secondSchoolCity"));
-        _driver.FindElement(By.CssSelector("input[name='postalCode']")).SendKeys(CommonResources.GetValue("secondSchoolPostalCode"));
+        _driver!.FindElement(By.CssSelector("input[name='postalCode']")).SendKeys(CommonResources.GetValue("secondSchoolPostalCode"));
         _driver.FindElement(By.CssSelector("input[name='addressLine1']")).SendKeys(CommonResources.GetValue("secondSchoolAddress"));
         _driver.FindElement(By.CssSelector("input[name='name']")).SendKeys(CommonResources.GetValue("secondSchoolName"));
         var submitButton = _driver.FindElement(By.CssSelector("button[type='submit']"));
