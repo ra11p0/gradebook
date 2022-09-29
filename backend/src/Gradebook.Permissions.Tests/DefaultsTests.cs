@@ -11,28 +11,25 @@ namespace Gradebook.Permissions.Tests;
 
 public class Tests
 {
+    readonly Mock<IPermissionsQueriesRepository> permissionsQueriesRepository = new();
+    readonly Mock<IFoundationQueriesRepository> foundationQueriesRepository = new();
+    readonly ServiceCollection serviceCollection = new();
+    private IPermissionsQueries? permissionsQueries;
     [SetUp]
     public void Setup()
     {
-
+        serviceCollection.AddScoped((e) => foundationQueriesRepository.Object);
+        serviceCollection.AddScoped((e) => permissionsQueriesRepository.Object);
+        serviceCollection.AddScoped<IFoundationQueries>((e) => new FoundationQueries(foundationQueriesRepository.Object, e));
+        permissionsQueries = new PermissionsQueries(permissionsQueriesRepository.Object, serviceCollection.BuildServiceProvider());
     }
 
     [Test]
     public async Task ShouldThrowCouldNotGetPerson()
     {
-        Mock<IPermissionsQueriesRepository> permissionsQueriesRepository = new();
-        Mock<IFoundationQueriesRepository> foundationQueriesRepository = new();
-        var serviceCollection = new ServiceCollection();
-
         foundationQueriesRepository
         .Setup(e => e.GetPersonByGuid(It.IsAny<Guid>()))
         .Returns(Task.FromResult<PersonDto>(null));
-
-        serviceCollection.AddScoped((e) => foundationQueriesRepository.Object);
-        serviceCollection.AddScoped((e) => permissionsQueriesRepository.Object);
-        serviceCollection.AddScoped<IFoundationQueries>((e) => new FoundationQueries(foundationQueriesRepository.Object, e));
-
-        IPermissionsQueries permissionsQueries = new PermissionsQueries(permissionsQueriesRepository.Object, serviceCollection.BuildServiceProvider());
 
         try
         {
@@ -48,10 +45,6 @@ public class Tests
     [Test]
     public async Task ShouldReturnDefaultPermissionsStudent()
     {
-        Mock<IPermissionsQueriesRepository> permissionsQueriesRepository = new();
-        Mock<IFoundationQueriesRepository> foundationQueriesRepository = new();
-        var serviceCollection = new ServiceCollection();
-
         foundationQueriesRepository
         .Setup(e => e.GetPersonByGuid(It.IsAny<Guid>()))
         .Returns(Task.FromResult(new PersonDto() { SchoolRole = Foundation.Common.Foundation.Enums.SchoolRoleEnum.Student }));
@@ -59,12 +52,6 @@ public class Tests
         permissionsQueriesRepository
         .Setup(e => e.GetPermissionsForPerson(It.IsAny<Guid>()))
         .Returns(Task.FromResult(Enumerable.Empty<Tuple<PermissionEnum, PermissionLevelEnum>>()));
-
-        serviceCollection.AddScoped((e) => foundationQueriesRepository.Object);
-        serviceCollection.AddScoped((e) => permissionsQueriesRepository.Object);
-        serviceCollection.AddScoped<IFoundationQueries>((e) => new FoundationQueries(foundationQueriesRepository.Object, e));
-
-        IPermissionsQueries permissionsQueries = new PermissionsQueries(permissionsQueriesRepository.Object, serviceCollection.BuildServiceProvider());
 
         var permissions = await permissionsQueries.GetPermissionsForPerson(new Guid());
 
@@ -73,10 +60,6 @@ public class Tests
     [Test]
     public async Task ShouldNotReturnDefaultPermissionsStudent()
     {
-        Mock<IPermissionsQueriesRepository> permissionsQueriesRepository = new();
-        Mock<IFoundationQueriesRepository> foundationQueriesRepository = new();
-        var serviceCollection = new ServiceCollection();
-
         foundationQueriesRepository
         .Setup(e => e.GetPersonByGuid(It.IsAny<Guid>()))
         .Returns(Task.FromResult(new PersonDto() { SchoolRole = Foundation.Common.Foundation.Enums.SchoolRoleEnum.Student }));
@@ -85,12 +68,6 @@ public class Tests
         .Setup(e => e.GetPermissionsForPerson(It.IsAny<Guid>()))
         .Returns(Task.FromResult((new Tuple<PermissionEnum, PermissionLevelEnum>[] { new Tuple<PermissionEnum, PermissionLevelEnum>(PermissionEnum.Invitations, PermissionLevelEnum.Invitations_CanInvite) }).AsEnumerable()));
 
-        serviceCollection.AddScoped((e) => foundationQueriesRepository.Object);
-        serviceCollection.AddScoped((e) => permissionsQueriesRepository.Object);
-        serviceCollection.AddScoped<IFoundationQueries>((e) => new FoundationQueries(foundationQueriesRepository.Object, e));
-
-        IPermissionsQueries permissionsQueries = new PermissionsQueries(permissionsQueriesRepository.Object, serviceCollection.BuildServiceProvider());
-
         var permissions = await permissionsQueries.GetPermissionsForPerson(new Guid());
 
         Assert.That(permissions, Is.Not.EqualTo(DefaultPermissionLevels.GetDefaultPermissionLevels(Foundation.Common.Foundation.Enums.SchoolRoleEnum.Student)));
@@ -98,10 +75,6 @@ public class Tests
     [Test]
     public async Task ShouldReturnDefaultPermissionsAdmin()
     {
-        Mock<IPermissionsQueriesRepository> permissionsQueriesRepository = new();
-        Mock<IFoundationQueriesRepository> foundationQueriesRepository = new();
-        var serviceCollection = new ServiceCollection();
-
         foundationQueriesRepository
         .Setup(e => e.GetPersonByGuid(It.IsAny<Guid>()))
         .Returns(Task.FromResult(new PersonDto() { SchoolRole = Foundation.Common.Foundation.Enums.SchoolRoleEnum.Admin }));
@@ -109,12 +82,6 @@ public class Tests
         permissionsQueriesRepository
         .Setup(e => e.GetPermissionsForPerson(It.IsAny<Guid>()))
         .Returns(Task.FromResult(Enumerable.Empty<Tuple<PermissionEnum, PermissionLevelEnum>>()));
-
-        serviceCollection.AddScoped((e) => foundationQueriesRepository.Object);
-        serviceCollection.AddScoped((e) => permissionsQueriesRepository.Object);
-        serviceCollection.AddScoped<IFoundationQueries>((e) => new FoundationQueries(foundationQueriesRepository.Object, e));
-
-        IPermissionsQueries permissionsQueries = new PermissionsQueries(permissionsQueriesRepository.Object, serviceCollection.BuildServiceProvider());
 
         var permissions = await permissionsQueries.GetPermissionsForPerson(new Guid());
 
