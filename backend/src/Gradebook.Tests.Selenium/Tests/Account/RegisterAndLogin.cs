@@ -73,9 +73,9 @@ public class RegisterAndLogin
         var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(5));
 
         _driver!.Login(CommonResources.GetValue("email")!, CommonResources.GetValue("password")!);
-        var profileButton = wait.Until(d => d.FindElement(By.CssSelector("a[href='/account/profile']")));
+        var profileButton = wait.Until(d => d.FindElement(By.CssSelector("a[href='/account/profile']")).Text == $"{CommonResources.GetValue(key: "name")} {CommonResources.GetValue("surname")}");
 
-        Assert.That($"{CommonResources.GetValue(key: "name")} {CommonResources.GetValue("surname")}", Is.EqualTo(profileButton.Text));
+        Assert.That(profileButton);
     }
     [Test]
     [Order(4)]
@@ -86,25 +86,27 @@ public class RegisterAndLogin
 
         _driver!.Login(CommonResources.GetValue("email")!, CommonResources.GetValue("password")!);
         _driver!.Navigate().Refresh();
-        var profileButton = wait.Until(d => d.FindElement(By.CssSelector("a[href='/account/profile']")));
+        var profileButton = wait.Until(d => d.FindElement(By.CssSelector("a[href='/account/profile']")).Text == $"{CommonResources.GetValue(key: "name")} {CommonResources.GetValue("surname")}");
 
-        Assert.That($"{CommonResources.GetValue(key: "name")} {CommonResources.GetValue("surname")}", Is.EqualTo(profileButton.Text));
+        Assert.That(profileButton);
     }
     [Test]
     [Order(5)]
     public void ShouldShowNameAndSurnameOnProfileButtonAfterReloadAndSomeActions()
     {
         //  Login form view
-        var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(5));
+        var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
 
         _driver!.Login(CommonResources.GetValue("email")!, CommonResources.GetValue("password")!);
+        wait.Until(d => d.FindElement(By.CssSelector("a[href='/account/profile']")).Text == $"{CommonResources.GetValue(key: "name")} {CommonResources.GetValue("surname")}");
         _driver!.Navigate().Refresh();
-        _driver!.GoToInvitationsTab();
+        wait.Until(d => d.FindElement(By.CssSelector("a[href='/account/profile']")).Text == $"{CommonResources.GetValue(key: "name")} {CommonResources.GetValue("surname")}");
         _driver!.Navigate().Refresh();
+        wait.Until(d => d.FindElement(By.CssSelector("a[href='/account/profile']")).Text == $"{CommonResources.GetValue(key: "name")} {CommonResources.GetValue("surname")}");
         _driver!.GoToGradebookHomepage();
-        var profileButton = wait.Until(d => d.FindElement(By.CssSelector("a[href='/account/profile']")));
+        var profileButton = wait.Until(d => d.FindElement(By.CssSelector("a[href='/account/profile']")).Text == $"{CommonResources.GetValue(key: "name")} {CommonResources.GetValue("surname")}");
 
-        Assert.That($"{CommonResources.GetValue(key: "name")} {CommonResources.GetValue("surname")}", Is.EqualTo(profileButton.Text));
+        Assert.That(profileButton);
     }
     [TearDown]
     public void End()

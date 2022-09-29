@@ -6,9 +6,9 @@ const logOut = {
 }
 
 export default (dispatch: any) => {
-    if (!isTestEnvironment) {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh');
-    }
+
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh');
+
     dispatch({ ...logOut })
 };
