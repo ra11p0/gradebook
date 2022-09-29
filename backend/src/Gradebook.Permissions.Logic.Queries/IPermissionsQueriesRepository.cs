@@ -5,5 +5,5 @@ namespace Gradebook.Permissions.Logic.Queries;
 
 public interface IPermissionsQueriesRepository : IBaseRepository
 {
-    Task<IEnumerable<Tuple<PermissionEnum, PermissionLevelEnum>>> GetPermissionsForPerson(Guid personGuid);
+    Task<Dictionary<PermissionEnum, PermissionLevelEnum>> GetPermissionsForPerson(Guid personGuid);
 }

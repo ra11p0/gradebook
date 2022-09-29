@@ -19,7 +19,7 @@ public class PermissionsQueriesRepositoryCached : BaseRepositoryCached<Permissio
         Base.CommitTransaction();
     }
 
-    public Task<IEnumerable<Tuple<PermissionEnum, PermissionLevelEnum>>> GetPermissionsForPerson(Guid personGuid)
+    public Task<Dictionary<PermissionEnum, PermissionLevelEnum>> GetPermissionsForPerson(Guid personGuid)
         => Base.GetPermissionsForPerson(personGuid);
 
     public void RollbackTransaction()

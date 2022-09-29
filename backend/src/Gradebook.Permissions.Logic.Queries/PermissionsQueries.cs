@@ -14,14 +14,14 @@ public class PermissionsQueries : BaseLogic<IPermissionsQueriesRepository>, IPer
         _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
     }
 
-    public async Task<IEnumerable<Tuple<PermissionEnum, PermissionLevelEnum>>> GetPermissionsForPerson(Guid personGuid)
+    public async Task<Dictionary<PermissionEnum, PermissionLevelEnum>> GetPermissionsForPerson(Guid personGuid)
     {
         var personResponse = await _foundationQueries.Service.GetPersonByGuid(personGuid);
         if (!personResponse.Status) throw new Exception("Could not get person!");
         var permissions = await Repository.GetPermissionsForPerson(personGuid);
-        List<Tuple<PermissionEnum, PermissionLevelEnum>> permissionsWithDefaults = new();
+        Dictionary<PermissionEnum, PermissionLevelEnum> permissionsWithDefaults = new();
         foreach (var permission in DefaultPermissionLevels.GetDefaultPermissionLevels(personResponse.Response!.SchoolRole))
-            permissionsWithDefaults.Add(permissions.FirstOrDefault(p => p.Item1 == permission.Item1) ?? permission);
+            permissionsWithDefaults[permission.Key] = permissions.ContainsKey(permission.Key) ? permissions[permission.Key] : permission.Value;
         return permissionsWithDefaults;
     }
 }

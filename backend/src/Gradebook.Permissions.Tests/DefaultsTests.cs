@@ -29,11 +29,11 @@ public class Tests
     {
         foundationQueriesRepository
         .Setup(e => e.GetPersonByGuid(It.IsAny<Guid>()))
-        .Returns(Task.FromResult<PersonDto>(null));
+        .Returns(Task.FromResult<PersonDto?>(null)!);
 
         try
         {
-            var permissions = await permissionsQueries.GetPermissionsForPerson(new Guid());
+            var permissions = await permissionsQueries!.GetPermissionsForPerson(new Guid());
         }
         catch (Exception ex)
         {
@@ -51,9 +51,9 @@ public class Tests
 
         permissionsQueriesRepository
         .Setup(e => e.GetPermissionsForPerson(It.IsAny<Guid>()))
-        .Returns(Task.FromResult(Enumerable.Empty<Tuple<PermissionEnum, PermissionLevelEnum>>()));
+        .Returns(Task.FromResult(new Dictionary<PermissionEnum, PermissionLevelEnum>()));
 
-        var permissions = await permissionsQueries.GetPermissionsForPerson(new Guid());
+        var permissions = await permissionsQueries!.GetPermissionsForPerson(new Guid());
 
         Assert.That(permissions, Is.EqualTo(DefaultPermissionLevels.GetDefaultPermissionLevels(Foundation.Common.Foundation.Enums.SchoolRoleEnum.Student)));
     }
@@ -66,9 +66,9 @@ public class Tests
 
         permissionsQueriesRepository
         .Setup(e => e.GetPermissionsForPerson(It.IsAny<Guid>()))
-        .Returns(Task.FromResult((new Tuple<PermissionEnum, PermissionLevelEnum>[] { new Tuple<PermissionEnum, PermissionLevelEnum>(PermissionEnum.Invitations, PermissionLevelEnum.Invitations_CanInvite) }).AsEnumerable()));
+        .Returns(Task.FromResult((new KeyValuePair<PermissionEnum, PermissionLevelEnum>[] { new KeyValuePair<PermissionEnum, PermissionLevelEnum>(PermissionEnum.Invitations, PermissionLevelEnum.Invitations_CanInvite) }).ToDictionary(e => e.Key, e => e.Value)));
 
-        var permissions = await permissionsQueries.GetPermissionsForPerson(new Guid());
+        var permissions = await permissionsQueries!.GetPermissionsForPerson(new Guid());
 
         Assert.That(permissions, Is.Not.EqualTo(DefaultPermissionLevels.GetDefaultPermissionLevels(Foundation.Common.Foundation.Enums.SchoolRoleEnum.Student)));
     }
@@ -81,9 +81,9 @@ public class Tests
 
         permissionsQueriesRepository
         .Setup(e => e.GetPermissionsForPerson(It.IsAny<Guid>()))
-        .Returns(Task.FromResult(Enumerable.Empty<Tuple<PermissionEnum, PermissionLevelEnum>>()));
+        .Returns(Task.FromResult(new Dictionary<PermissionEnum, PermissionLevelEnum>()));
 
-        var permissions = await permissionsQueries.GetPermissionsForPerson(new Guid());
+        var permissions = await permissionsQueries!.GetPermissionsForPerson(new Guid());
 
         Assert.That(permissions, Is.EqualTo(DefaultPermissionLevels.GetDefaultPermissionLevels(Foundation.Common.Foundation.Enums.SchoolRoleEnum.Admin)));
     }

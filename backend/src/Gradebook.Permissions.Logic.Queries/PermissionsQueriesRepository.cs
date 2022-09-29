@@ -11,13 +11,13 @@ public class PermissionsQueriesRepository : BaseRepository<PermissionsDatabaseCo
     {
     }
 
-    public async Task<IEnumerable<Tuple<PermissionEnum, PermissionLevelEnum>>> GetPermissionsForPerson(Guid personGuid)
+    public async Task<Dictionary<PermissionEnum, PermissionLevelEnum>> GetPermissionsForPerson(Guid personGuid)
     {
         using var cn = await GetOpenConnectionAsync();
-        return await cn.QueryAsync<Tuple<PermissionEnum, PermissionLevelEnum>>(@"
+        return (await cn.QueryAsync<Tuple<PermissionEnum, PermissionLevelEnum>>(@"
             SELECT PermissionId AS Item1, PermissionLevel AS Item2
             FROM Permissions
             WHERE PersonGuid = @personGuid
-        ", new { personGuid });
+        ", new { personGuid })).ToDictionary(e => e.Item1, e => e.Item2);
     }
 }

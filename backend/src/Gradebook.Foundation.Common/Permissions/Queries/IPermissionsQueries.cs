@@ -4,5 +4,5 @@ namespace Gradebook.Foundation.Common.Permissions.Queries;
 
 public interface IPermissionsQueries
 {
-    Task<IEnumerable<Tuple<PermissionEnum, PermissionLevelEnum>>> GetPermissionsForPerson(Guid personGuid);
+    Task<Dictionary<PermissionEnum, PermissionLevelEnum>> GetPermissionsForPerson(Guid personGuid);
 }

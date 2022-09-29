@@ -4,9 +4,9 @@ namespace Gradebook.Foundation.Common.Permissions.Enums;
 
 public static class DefaultPermissionLevels
 {
-    public static IEnumerable<Tuple<PermissionEnum, PermissionLevelEnum>> GetDefaultPermissionLevels(SchoolRoleEnum schoolRole)
+    public static Dictionary<PermissionEnum, PermissionLevelEnum> GetDefaultPermissionLevels(SchoolRoleEnum schoolRole)
     {
-        return ((PermissionEnum[])Enum.GetValues(typeof(PermissionEnum))).Select(permission => new Tuple<PermissionEnum, PermissionLevelEnum>(permission, GetDefaultPermissionLevel(permission, schoolRole)));
+        return ((PermissionEnum[])Enum.GetValues(typeof(PermissionEnum))).ToDictionary(e => e, e => GetDefaultPermissionLevel(e, schoolRole));
     }
     public static PermissionLevelEnum GetDefaultPermissionLevel(PermissionEnum permission, SchoolRoleEnum schoolRole)
     {
