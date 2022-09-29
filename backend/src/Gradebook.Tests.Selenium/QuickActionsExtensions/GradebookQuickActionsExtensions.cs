@@ -9,7 +9,7 @@ public static class GradebookQuickActionsExtensions
         driver.FindElement(By.CssSelector("input[name='email']")).SendKeys(email);
         driver.FindElement(By.CssSelector("input[name='password']")).SendKeys(password);
         driver.FindElement(By.CssSelector("button[type='submit']")).Click();
-        wait.Until(d => d.FindElement(By.CssSelector("a[href='/account/profile']")));
+        wait.Until(d => d.FindElement(By.CssSelector("a.logoutButton")));
         return driver;
     }
     public static IWebDriver Logout(this IWebDriver driver)
