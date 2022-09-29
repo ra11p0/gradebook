@@ -1,6 +1,8 @@
 import assert from "assert";
 import AccountsProxy from "./AccountsProxy";
 import testConstraints from '../../tests/Constraints'
+import accountsQuickActions from "../../tests/QuickActions/accountsQuickActions";
+import AdministratorsProxy from "../Administrators/AdministratorsProxy";
 require('dotenv').config();
 
 const isTestEnvironment = process.env.ENVIRONMENT === 'TEST';
@@ -39,6 +41,25 @@ describe('AccountsProxy', () => {
             }).then(registerResponse => {
                 assert.equal(registerResponse.status, 200)
             })
+        })
+    })
+
+    describe('Activate', () => {
+        it('Should activate as administrator with new school', async () => {
+            //  login to account
+            await accountsQuickActions.logIn(testConstraints.email, testConstraints.password);
+            //  create new student
+            await AdministratorsProxy.newAdministratorWithSchool({
+                name: "Mateusz",
+                surname: "Szwagierczak",
+                birthday: new Date(1991, 12, 12)
+            }, {
+                name: "ZS3",
+                addressLine1: "Polna 12",
+                addressLine2: "",
+                city: "Wygwizdów",
+                postalCode: "27-270"
+            });
         })
     })
 

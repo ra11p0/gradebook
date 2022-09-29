@@ -9,22 +9,6 @@ import accountsQuickActions from "../QuickActions/accountsQuickActions";
 
 describe('Integration', () => {
     describe('Account', () => {
-        it('Should activate as administrator with new school', async () => {
-            //  login to account
-            await accountsQuickActions.logIn(testConstraints.email, testConstraints.password);
-            //  create new student
-            await AdministratorsProxy.newAdministratorWithSchool({
-                name: "Mateusz",
-                surname: "Szwagierczak",
-                birthday: new Date(1991, 12, 12)
-            }, {
-                name: "ZS3",
-                addressLine1: "Polna 12",
-                addressLine2: "",
-                city: "Wygwizdów",
-                postalCode: "27-270"
-            });
-        })
         it('Should invite and activate new student', async () => {
             //  set up
             const newStudentName = "Maria";
