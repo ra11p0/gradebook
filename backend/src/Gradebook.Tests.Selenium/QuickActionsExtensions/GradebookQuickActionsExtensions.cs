@@ -52,7 +52,8 @@ public static class GradebookQuickActionsExtensions
     public static IWebDriver GoToInvitationsTab(this IWebDriver driver)
     {
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-        wait.Until(d => d.GoToGradebookHomepage().FindElement(By.CssSelector("a[href='/manageInvitations']"))).Click();
+        driver.GoToGradebookHomepage();
+        wait.Until(d => d.FindElement(By.CssSelector("a[href='/manageInvitations']"))).Click();
         return driver;
     }
     public static IWebDriver GoToSchoolsTab(this IWebDriver driver)
