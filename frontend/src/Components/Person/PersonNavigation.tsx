@@ -33,7 +33,7 @@ function PersonNavigation(props: Props) {
             </Link>
             <Link
               to="permissions"
-              className={"btn btn-outline-primary " + (activeTab == "permissions" ? "active" : "")}
+              className={" permissions btn btn-outline-primary " + (activeTab == "permissions" ? "active" : "")}
               onClick={() => {
                 setActiveTab("permissions");
               }}

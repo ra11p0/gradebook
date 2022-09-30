@@ -26,7 +26,7 @@ function PersonIndex(props: Props) {
         <PersonNavigation personName={personName} personSurname={personSurname} />
       </div>
       <Routes>
-        <Route path="permissions" element={<PersonPermissions />} />
+        <Route path="permissions" element={<PersonPermissions personGuid={personGuid ?? ""} />} />
         <Route path="/" element={<Overview />} />
       </Routes>
     </div>

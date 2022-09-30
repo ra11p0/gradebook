@@ -108,7 +108,7 @@ const StudentsList = (props: StudentsListProps): ReactElement => {
                       <div className="d-flex gap-1 flex-wrap">
                         <Link to={`/person/show/${element.guid}`}>
                           <Tippy content={t("showPerson")} arrow={true} animation={"scale"}>
-                            <Button variant="outlined">
+                            <Button variant="outlined" className="showProfileButton">
                               <FontAwesomeIcon icon={faWindowMaximize} />
                             </Button>
                           </Tippy>

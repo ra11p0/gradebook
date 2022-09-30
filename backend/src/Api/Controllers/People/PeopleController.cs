@@ -53,6 +53,8 @@ public class PeopleController : ControllerBase
     }
     [HttpGet]
     [Route("{personGuid}/Permissions")]
+
+    [ProducesResponseType(typeof(GetPermissionsResponseModel[]), statusCode: 200)]
     [ProducesResponseType(typeof(string), statusCode: 400)]
     public async Task<IActionResult> Permissions([FromRoute] Guid personGuid)
     {
@@ -60,7 +62,9 @@ public class PeopleController : ControllerBase
         return resp is not null ? Ok(resp.Select(e => new GetPermissionsResponseModel()
         {
             PermissionId = e.Key,
-            PermissionLevel = e.Value
+            PermissionLevel = e.Value,
+            PermissionGroup = _permissionsQueries.Service.GetPermissionGroupForPermission(e.Key),
+            PermissionLevels = _permissionsQueries.Service.GetPermissionLevelsForPermission(e.Key)
         })) : BadRequest();
     }
     [HttpPost]

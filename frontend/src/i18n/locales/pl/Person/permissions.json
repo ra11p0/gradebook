@@ -1,0 +1,12 @@
+{
+  "system": "Systemowe",
+  "administration": "Administracyjne",
+
+  "permission_1": "Zaproszenia",
+  "permission_2": "Uprawnienia",
+
+  "permissionLevel_1": "Nie może tworzyć zaproszeń",
+  "permissionLevel_2": "Może tworzyć zaproszenia",
+  "permissionLevel_3": "Nie może zarządzać uprawnieniami",
+  "permissionLevel_4": "Może zarządzać uprawnieniami"
+}
