@@ -13,12 +13,12 @@ type Props = {
   personGuid: string;
 };
 
+const permissionsToSave = new Map<PermissionEnum, PermissionLevelEnum>();
+
 function PersonPermissions(props: Props) {
   const [tab, setTab] = useState(0);
   const [permissions, setPermissions] = useState<GetPermissionsResponse[]>([]);
   const { t } = useTranslation("permissions");
-
-  let permissionsToSave = new Map<PermissionEnum, PermissionLevelEnum>();
 
   const handleTabChange = (event: React.SyntheticEvent, newTab: number) => {
     setTab(newTab);
