@@ -1,4 +1,5 @@
 using Gradebook.Foundation.Common;
+using Gradebook.Foundation.Common.Permissions.Enums;
 
 namespace Gradebook.Permissions.Logic.Commands;
 
@@ -32,4 +33,7 @@ public class PermissionsCommandsRepositoryCached : BaseRepositoryCached<Permissi
     {
         return Base.SaveChangesAsync();
     }
+
+    public Task SetPermissionsForPerson(Guid personGuid, Dictionary<PermissionEnum, PermissionLevelEnum> permissions)
+        => Base.SetPermissionsForPerson(personGuid, permissions);
 }

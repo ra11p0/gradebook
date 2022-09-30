@@ -4,11 +4,12 @@ public static class GradebookQuickActionsExtensions
 {
     public static IWebDriver Login(this IWebDriver driver, string email, string password)
     {
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
         driver.GoToGradebookHomepage();
         driver.FindElement(By.CssSelector("input[name='email']")).SendKeys(email);
         driver.FindElement(By.CssSelector("input[name='password']")).SendKeys(password);
         driver.FindElement(By.CssSelector("button[type='submit']")).Click();
-        Thread.Sleep(1000);
+        wait.Until(d => d.FindElement(By.CssSelector("a.logoutButton")));
         return driver;
     }
     public static IWebDriver Logout(this IWebDriver driver)
@@ -50,8 +51,9 @@ public static class GradebookQuickActionsExtensions
     }
     public static IWebDriver GoToInvitationsTab(this IWebDriver driver)
     {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
-        wait.Until(d => d.GoToGradebookHomepage().FindElement(By.CssSelector("a[href='/manageInvitations']"))).Click();
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+        driver.GoToGradebookHomepage();
+        wait.Until(d => d.FindElement(By.CssSelector("a[href='/manageInvitations']"))).Click();
         return driver;
     }
     public static IWebDriver GoToSchoolsTab(this IWebDriver driver)

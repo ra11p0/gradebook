@@ -1,0 +1,12 @@
+{
+  "system": "System",
+  "administration": "Administration",
+
+  "permission_1": "Invitations",
+  "permission_2": "Permissions",
+
+  "permissionLevel_1": "Cannot create invitations",
+  "permissionLevel_2": "Can create invitations",
+  "permissionLevel_3": "Cannot manage permissions",
+  "permissionLevel_4": "Can manage permissions"
+}

@@ -13,7 +13,7 @@ class Person extends React.Component<DashboardProps> {
   render() {
     return (
       <Routes>
-        <Route path="/show/:personGuid" element={<PersonIndex />}></Route>
+        <Route path="/show/:personGuid/*" element={<PersonIndex />}></Route>
       </Routes>
     );
   }
