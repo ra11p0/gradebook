@@ -13,20 +13,23 @@ function PersonIndex(props: Props) {
   const personGuid = useParams().personGuid ?? props.personGuid;
   const [personName, setPersonName] = useState<string>("");
   const [personSurname, setPersonSurname] = useState<string>("");
+  const [personGuidHooked, setPersonGuidHooked] = useState<string>(personGuid ?? "");
   useEffect(() => {
-    if (personGuid)
+    if (personGuid) {
+      setPersonGuidHooked(personGuid);
       PeopleProxy.getPerson(personGuid).then((personResponse) => {
         setPersonName(personResponse.data.name);
         setPersonSurname(personResponse.data.surname);
       });
-  }, [personGuid]);
+    }
+  }, [props.personGuid]);
   return (
     <div>
       <div className="p-3 bg-light">
         <PersonNavigation personName={personName} personSurname={personSurname} />
       </div>
       <Routes>
-        <Route path="permissions" element={<PersonPermissions personGuid={personGuid ?? ""} />} />
+        <Route path="permissions" element={<PersonPermissions personGuid={personGuidHooked ?? ""} />} />
         <Route path="/" element={<Overview />} />
       </Routes>
     </div>

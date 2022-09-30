@@ -19,7 +19,7 @@ function PermissionField(props: Props) {
   const [selectedPermissionLevel, setSelectedPermissionLevel] = useState<PermissionLevelEnum>(props.permission.permissionLevel);
   useEffect(() => {
     setSelectedPermissionLevel(props.permission.permissionLevel);
-  }, [props.permission.permissionId]);
+  }, [props.permission.permissionLevel]);
   return (
     <>
       <Row className={`permission_${props.permission.permissionId}`}>
