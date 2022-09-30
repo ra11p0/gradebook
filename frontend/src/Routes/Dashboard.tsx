@@ -29,7 +29,7 @@ interface DashboardProps {
 class Dashboard extends React.Component<DashboardProps> {
   render() {
     return (
-      <div className="">
+      <div>
         <div className="p-3 bg-light">
           <DashboardNavigation />
         </div>

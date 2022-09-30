@@ -2,6 +2,8 @@ using Api.Models.People;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Foundation.Commands;
+using Gradebook.Foundation.Common.Foundation.Queries;
+using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Common.Permissions.Commands;
 using Gradebook.Foundation.Common.Permissions.Enums;
 using Gradebook.Foundation.Common.Permissions.Queries;
@@ -19,6 +21,7 @@ public class PeopleController : ControllerBase
     private readonly ServiceResolver<IFoundationCommands> _foundationCommands;
     private readonly ServiceResolver<IPermissionsCommands> _permissionsCommands;
     private readonly ServiceResolver<IPermissionsQueries> _permissionsQueries;
+    private readonly ServiceResolver<IFoundationQueries> _foundationQueries;
     /*     private readonly ServiceResolver<ISettingsQueries> _settingsQueries;
         private readonly ServiceResolver<ISettingsCommands> _settingsCommands; */
     public PeopleController(IServiceProvider serviceProvider)
@@ -26,9 +29,20 @@ public class PeopleController : ControllerBase
         _foundationCommands = serviceProvider.GetResolver<IFoundationCommands>();
         _permissionsCommands = serviceProvider.GetResolver<IPermissionsCommands>();
         _permissionsQueries = serviceProvider.GetResolver<IPermissionsQueries>();
+        _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
         /*         _settingsQueries = serviceProvider.GetResolver<ISettingsQueries>();
                 _settingsCommands = serviceProvider.GetResolver<ISettingsCommands>(); */
     }
+
+    [HttpGet, Route("{personGuid}")]
+    [ProducesResponseType(typeof(PersonDto), statusCode: 200)]
+    public async Task<IActionResult> GetPerson([FromRoute] Guid personGuid)
+    {
+        var personResponse = await _foundationQueries.Service.GetPersonByGuid(personGuid);
+        return personResponse.Status ? Ok(personResponse.Response) : BadRequest(personResponse.Message);
+    }
+
+
     [HttpDelete]
     [Route("{personGuid}")]
     [ProducesResponseType(typeof(string), statusCode: 400)]
@@ -39,6 +53,8 @@ public class PeopleController : ControllerBase
     }
     [HttpGet]
     [Route("{personGuid}/Permissions")]
+
+    [ProducesResponseType(typeof(GetPermissionsResponseModel[]), statusCode: 200)]
     [ProducesResponseType(typeof(string), statusCode: 400)]
     public async Task<IActionResult> Permissions([FromRoute] Guid personGuid)
     {
@@ -46,7 +62,9 @@ public class PeopleController : ControllerBase
         return resp is not null ? Ok(resp.Select(e => new GetPermissionsResponseModel()
         {
             PermissionId = e.Key,
-            PermissionLevel = e.Value
+            PermissionLevel = e.Value,
+            PermissionGroup = _permissionsQueries.Service.GetPermissionGroupForPermission(e.Key),
+            PermissionLevels = _permissionsQueries.Service.GetPermissionLevelsForPermission(e.Key)
         })) : BadRequest();
     }
     [HttpPost]
