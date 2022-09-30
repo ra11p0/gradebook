@@ -19,6 +19,13 @@ public static class DefaultPermissionLevels
                 SchoolRoleEnum.Admin => PermissionLevelEnum.Invitations_CanInvite,
                 _ => 0,
             },
+            PermissionEnum.Permissions => schoolRole switch
+            {
+                SchoolRoleEnum.Student => PermissionLevelEnum.Permissions_CannotManagePermissions,
+                SchoolRoleEnum.Teacher => PermissionLevelEnum.Permissions_CannotManagePermissions,
+                SchoolRoleEnum.Admin => PermissionLevelEnum.Permissions_CanManagePermissions,
+                _ => 0,
+            },
             _ => 0,
         };
     }
