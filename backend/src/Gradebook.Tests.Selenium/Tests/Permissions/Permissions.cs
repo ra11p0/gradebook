@@ -21,6 +21,7 @@ public class Permissions
     [Order(1)]
     public void CanSetOwnPermission()
     {
+        _driver!.AddNewStudent("Mikołaj", "Lubuszczyk", "10222004");
         _wait!.Until(d => d.FindElement(By.CssSelector("a[href='/account/profile']"))).Click();
         _wait.Until(d => d.FindElement(By.CssSelector("a.permissions"))).Click();
         _wait.Until(d => d.FindElement(By.CssSelector("button.administrationPermissions"))).Click();
@@ -46,6 +47,7 @@ public class Permissions
     [Order(2)]
     public void CanSetOthersPermission()
     {
+        _driver!.AddNewStudent("Mikołaj", "Lubuszczyk", "10222004");
         _wait!.Until(d => d.FindElement(By.CssSelector("a[href='/manageStudents']"))).Click();
         _wait!.Until(d => d.FindElement(By.CssSelector("button.showProfileButton"))).Click();
         _wait.Until(d => d.FindElement(By.CssSelector("a.permissions"))).Click();

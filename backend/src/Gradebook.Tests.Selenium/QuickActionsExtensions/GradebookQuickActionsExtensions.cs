@@ -63,4 +63,19 @@ public static class GradebookQuickActionsExtensions
         wait.Until(d => d.FindElement(By.CssSelector("a[href='/manageSchool']"))).Click();
         return driver;
     }
+    public static IWebDriver AddNewStudent(this IWebDriver driver, string studentName, string studentSurname, string studentBirthday)
+    {
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
+        driver.GoToGradebookHomepage();
+        wait.Until(d => d.FindElement(By.CssSelector("a[href='/manageStudents']"))).Click();
+        wait.Until(d => d.FindElement(By.CssSelector("button.addNewStudentButton"))).Click();
+        wait.Until(d => d.FindElement(By.CssSelector("input[name='name']"))).SendKeys(studentName);
+        driver!.FindElement(By.CssSelector("input[name='surname']")).SendKeys(studentSurname);
+        driver!.FindElement(By.CssSelector("input[name='birthday']")).SendKeys(studentBirthday);
+        driver.FindElement(By.CssSelector("button[type='submit']")).Click();
+        wait.Until(d => d.FindElement(By.XPath($"//div[text()='{studentName}']")));
+        wait.Until(d => d.FindElement(By.XPath($"//div[text()='{studentSurname}']")));
+        driver.GoToGradebookHomepage();
+        return driver;
+    }
 }
