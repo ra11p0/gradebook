@@ -1,9 +1,9 @@
 {
   "Browser": {
-    "RunHeadless": true,
+    "RunHeadless": false,
     "Platform": "linux"
   },
   "Urls": {
-    "ApplicationUrl": "http://api-tests.gradebook.com/"
+    "ApplicationUrl": "http://development.gradebook.com/"
   }
 }

@@ -15,7 +15,12 @@ public static class WebDriverBuilder
         options.AddArgument("--start-maximized");
         options.AddArgument("--disable-gpu");
         options.AddArgument("--incognito");
-        options.AddArguments("no-sandbox", "--disable-infobars", "--disable-dev-shm-usage", "--disable-browser-side-navigation", "--ignore-certificate-errors");
+        options.AddArguments("no-sandbox",
+            "--disable-infobars",
+            "--disable-dev-shm-usage",
+            "--disable-browser-side-navigation",
+            "--ignore-certificate-errors",
+            "--disable-blink-features=AutomationControlled");
 
         if (bool.Parse(ConfigurationManager.GetValue("Browser:RunHeadless")))
         {
