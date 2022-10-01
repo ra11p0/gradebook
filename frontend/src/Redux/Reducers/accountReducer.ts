@@ -1,4 +1,4 @@
-import { APP_LOAD, LOG_IN, LOG_OUT, SET_PERSON, SET_SCHOOL, SET_SCHOOLS_LIST, SET_USER } from '../../Constraints/actionTypes'
+import { APP_LOAD, LOG_IN, LOG_OUT, SET_PERMISSIONS, SET_PERSON, SET_SCHOOL, SET_SCHOOLS_LIST, SET_USER } from '../../Constraints/actionTypes'
 
 const defaultState = {
     appLoaded: false,
@@ -54,6 +54,11 @@ export default (state: any = defaultState, action: any) => {
             return {
                 ...state,
                 schoolsList: action.schoolsList
+            };
+        case SET_PERMISSIONS:
+            return {
+                ...state,
+                permissions: action.permissions
             };
         default:
             return state;

@@ -12,6 +12,8 @@ import Person from "../../../Shared/Person";
 import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
 import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
+import PermissionsBlocker from "../../../Shared/PermissionsBlocker"
+import PermissionLevelEnum from '../../../../Common/Enums/Permissions/PermissionLevelEnum';
 const mapStateToProps = (state: any) => ({
   currentSchool: getCurrentSchoolReduxProxy(state),
 });
@@ -28,10 +30,12 @@ const Invitations = (props: InvitationsProps): ReactElement => {
         <div className="d-flex justify-content-between">
           <div className="my-auto">{t("invitations")}</div>
           <div>
-            <Button className="addInvitationButton" onClick={() => setShowInvitationModal(true)}>
-              {t("inviteStudent")}
-            </Button>
-            <AddInvitationModal show={showInvitationModal} onHide={() => setShowInvitationModal(false)} />
+            <PermissionsBlocker permissions={[PermissionLevelEnum.Invitations_CanInvite]}>
+              <Button className="addInvitationButton" onClick={() => setShowInvitationModal(true)}>
+                {t("inviteStudent")}
+              </Button>
+              <AddInvitationModal show={showInvitationModal} onHide={() => setShowInvitationModal(false)} />
+            </PermissionsBlocker>
           </div>
         </div>
         <Stack className={"border rounded-3 my-1 p-3 bg-light"}>

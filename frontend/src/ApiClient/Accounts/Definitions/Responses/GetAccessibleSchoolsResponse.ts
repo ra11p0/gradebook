@@ -15,8 +15,6 @@ interface School {
 interface Person {
     guid: string;
     name: string;
-    addressLine1: string;
-    addressLine2: string;
-    postalCode: string;
-    city: string;
+    surname: string;
+    birthday: Date;
 }

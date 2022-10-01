@@ -19,7 +19,7 @@ const getPerson = (personGuid: string): Promise<AxiosResponse<PersonResponse>> =
 const getPermissions = (personGuid: string): Promise<AxiosResponse<GetPermissionsResponse[]>> => {
     return axiosApiAuthorized.get(API_URL + `/people/${personGuid}/permissions`);
 }
-const setPermissions = (personGuid: string, permissions: SetPermissionsRequest[]) => {
+const setPermissions = (personGuid: string, permissions: SetPermissionsRequest[]): Promise<AxiosResponse<GetPermissionsResponse[]>> => {
     return axiosApiAuthorized.post(API_URL + `/people/${personGuid}/permissions`, permissions);
 }
 

@@ -6,6 +6,8 @@ import PeopleProxy from "../../ApiClient/People/PeopleProxy";
 import PermissionEnum from "../../Common/Enums/Permissions/PermissionEnum";
 import PermissionLevelEnum from "../../Common/Enums/Permissions/PermissionLevelEnum";
 import Notifications from "../../Notifications/Notifications";
+import setPermissionsReduxWrapper from "../../Redux/ReduxWrappers/setPermissionsReduxWrapper";
+import { store } from "../../store";
 import TabPanel, { a11yProps } from "../Shared/TabPanel";
 import PermissionGroup from "./Permissions/PermissionGroup";
 
@@ -27,7 +29,7 @@ function PersonPermissions(props: Props) {
   useEffect(() => {
     PeopleProxy.permissions.getPermissions(props.personGuid).then((permissionsResponse) => {
       setPermissions(permissionsResponse.data);
-    });
+    }).catch(Notifications.showApiError);
   }, [props.personGuid]);
 
   const onPermissionChanged = (permissionId: PermissionEnum, permissionLevel: PermissionLevelEnum) => {
@@ -59,8 +61,13 @@ function PersonPermissions(props: Props) {
                 props.personGuid,
                 Array.from(permissionsToSave).map((permission) => ({ permissionId: permission[0], permissionLevel: permission[1] }))
               )
-              .then(() => Notifications.showSuccessNotification("success", "permissionsSaved"))
-              .catch(Notifications.showApiError);
+              .then((resp) => {
+                Notifications.showSuccessNotification("success", "permissionsSaved");
+                setPermissionsReduxWrapper(store.dispatch, {
+                  permissions: resp.data.map(e => e.permissionLevel)
+                });
+              }
+              ).catch(Notifications.showApiError);
           }}
         >
           {t("save")}
