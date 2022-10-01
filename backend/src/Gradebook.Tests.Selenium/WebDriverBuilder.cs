@@ -22,7 +22,7 @@ public static class WebDriverBuilder
             options.AddArgument("--headless");
         }
         string? path = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.FullName;
-        var driver = new ChromeDriver(path + @"/Drivers/", options);
+        var driver = new ChromeDriver(path + @$"/Drivers/{ConfigurationManager.GetValue("Browser:Platform")}/", options);
         driver.Manage().Window.Maximize();
         return driver;
     }

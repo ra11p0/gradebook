@@ -1,9 +1,11 @@
 using Api.Models.People;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
+using Gradebook.Foundation.Common.Foundation;
 using Gradebook.Foundation.Common.Foundation.Commands;
 using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
+using Gradebook.Foundation.Common.Permissions;
 using Gradebook.Foundation.Common.Permissions.Commands;
 using Gradebook.Foundation.Common.Permissions.Enums;
 using Gradebook.Foundation.Common.Permissions.Queries;
@@ -22,6 +24,8 @@ public class PeopleController : ControllerBase
     private readonly ServiceResolver<IPermissionsCommands> _permissionsCommands;
     private readonly ServiceResolver<IPermissionsQueries> _permissionsQueries;
     private readonly ServiceResolver<IFoundationQueries> _foundationQueries;
+    private readonly ServiceResolver<IFoundationPermissionsLogic> _foundationPermissionsLogic;
+    private readonly ServiceResolver<IPermissionsPermissionsLogic> _permissionsPermissionsLogic;
     /*     private readonly ServiceResolver<ISettingsQueries> _settingsQueries;
         private readonly ServiceResolver<ISettingsCommands> _settingsCommands; */
     public PeopleController(IServiceProvider serviceProvider)
@@ -30,6 +34,8 @@ public class PeopleController : ControllerBase
         _permissionsCommands = serviceProvider.GetResolver<IPermissionsCommands>();
         _permissionsQueries = serviceProvider.GetResolver<IPermissionsQueries>();
         _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
+        _foundationPermissionsLogic = serviceProvider.GetResolver<IFoundationPermissionsLogic>();
+        _permissionsPermissionsLogic = serviceProvider.GetResolver<IPermissionsPermissionsLogic>();
         /*         _settingsQueries = serviceProvider.GetResolver<ISettingsQueries>();
                 _settingsCommands = serviceProvider.GetResolver<ISettingsCommands>(); */
     }
@@ -72,6 +78,9 @@ public class PeopleController : ControllerBase
     [ProducesResponseType(typeof(string), statusCode: 400)]
     public async Task<IActionResult> Permissions([FromRoute] Guid personGuid, [FromBody] SetPermissionsRequestModel[] permissions)
     {
+        var currentPersonGuid = await _foundationQueries.Service.RecogniseCurrentPersonByRelatedPerson(personGuid);
+        if (!currentPersonGuid.Status) return BadRequest(currentPersonGuid.Message);
+        if (!await _permissionsPermissionsLogic.Service.CanManagePermissions(currentPersonGuid.Response)) return Forbid();
         await _permissionsCommands.Service.SetPermissionsForPerson(personGuid, permissions.ToDictionary(e => e.PermissionId, e => e.PermissionLevel));
         return Ok();
     }

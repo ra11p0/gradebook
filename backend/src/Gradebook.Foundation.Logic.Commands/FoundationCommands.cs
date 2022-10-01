@@ -1,5 +1,6 @@
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
+using Gradebook.Foundation.Common.Foundation;
 using Gradebook.Foundation.Common.Foundation.Commands;
 using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
 using Gradebook.Foundation.Common.Foundation.Enums;
@@ -13,11 +14,13 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
 {
     private readonly ServiceResolver<IIdentityLogic> _identityLogic;
     private readonly ServiceResolver<IFoundationQueries> _foundationQueries;
+    private readonly ServiceResolver<IFoundationPermissionsLogic> _foundationPermissions;
     public FoundationCommands(IFoundationCommandsRepository repository,
         IServiceProvider serviceProvider) : base(repository)
     {
         _identityLogic = serviceProvider.GetResolver<IIdentityLogic>();
         _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
+        _foundationPermissions = serviceProvider.GetResolver<IFoundationPermissionsLogic>();
     }
 
     public async Task<StatusResponse<bool>> ActivatePerson(string activationCode)
@@ -173,8 +176,8 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
     public async Task<ResponseWithStatus<string[], bool>> GenerateMultipleSystemInvitation(Guid[] peopleGuid, SchoolRoleEnum role, Guid schoolGuid)
     {
         var currentPersonGuid = await _foundationQueries.Service.GetCurrentPersonGuid(schoolGuid);
-        if (!currentPersonGuid.Status) return new ResponseWithStatus<string[], bool>(default, false, "Could not find current person");
-
+        if (!currentPersonGuid.Status) return new ResponseWithStatus<string[], bool>(currentPersonGuid.Message);
+        if (!await _foundationPermissions.Service.CanInviteToSchool(currentPersonGuid.Response!)) return new ResponseWithStatus<string[], bool>("Forbidden");
         var response = await Task.WhenAll(peopleGuid.Select(async personGuid => await Repository.GenerateSystemInvitation(personGuid, currentPersonGuid.Response, role, schoolGuid)));
         await Repository.SaveChangesAsync();
         return new ResponseWithStatus<string[], bool>(response!, response is not null);
@@ -183,7 +186,8 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
     public async Task<ResponseWithStatus<string, bool>> GenerateSystemInvitation(Guid personGuid, SchoolRoleEnum role, Guid schoolGuid)
     {
         var currentPersonGuid = await _foundationQueries.Service.GetCurrentPersonGuid(schoolGuid);
-        if (!currentPersonGuid.Status) return new ResponseWithStatus<string, bool>(default, false, "Could not find current person");
+        if (!currentPersonGuid.Status) return new ResponseWithStatus<string, bool>(currentPersonGuid.Message);
+        if (!await _foundationPermissions.Service.CanInviteToSchool(currentPersonGuid.Response!)) return new ResponseWithStatus<string, bool>("Forbidden");
         var response = await Repository.GenerateSystemInvitation(personGuid, currentPersonGuid.Response, role, schoolGuid);
         await Repository.SaveChangesAsync();
         return new ResponseWithStatus<string, bool>(response, response is not null);

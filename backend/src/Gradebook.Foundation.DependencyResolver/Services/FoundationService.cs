@@ -1,3 +1,4 @@
+using Gradebook.Foundation.Common.Foundation;
 using Gradebook.Foundation.Common.Foundation.Commands;
 using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Database;
@@ -15,7 +16,7 @@ public class FoundationService
     {
         services.AddDbContext<FoundationDatabaseContext>
             (options => options.UseMySql(configuration.GetConnectionString("DefaultAppDatabase"), new MySqlServerVersion(new Version(8, 30, 0))));
-        
+
         //  Theres no cache implemented yet, but IBaseRepositoryCached exists, and is implemented. There is type 'object' used as a placeholder of 
         //  cache machine class, so there is need to add type 'object' to dependency injection
         //  TODO: Remove when cache implemented
@@ -27,5 +28,7 @@ public class FoundationService
         services.AddScoped<IFoundationCommands, FoundationCommands>();
         services.AddScoped<IFoundationCommandsRepository, FoundationCommandsRepositoryCached>();
         services.AddScoped<FoundationCommandsRepository>();
+
+        services.AddScoped<IFoundationPermissionsLogic, FoundationPermissionsLogic>();
     }
 }

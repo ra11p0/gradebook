@@ -240,4 +240,17 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
     {
         return new ResponseWithStatus<bool>(await Repository.IsUserActive(userGuid), true);
     }
+
+    public async Task<ResponseWithStatus<Guid>> RecogniseCurrentPersonByRelatedPerson(Guid requestedPersonGuid)
+    {
+        var uid = await _identityLogic.Service.CurrentUserId();
+        if (!uid.Status) return new ResponseWithStatus<Guid>(uid.Message);
+        var people = await GetPeopleByUserGuid(uid.Response!);
+        if (!people.Status) return new ResponseWithStatus<Guid>(people.Message);
+        var requestedPerson = await GetPersonByGuid(requestedPersonGuid);
+        if (!requestedPerson.Status) return new ResponseWithStatus<Guid>(requestedPerson.Message);
+        var schoolGuidOfRequested = requestedPerson.Response!.SchoolGuid;
+        var searchedPerson = people.Response!.FirstOrDefault(e => e.SchoolGuid == schoolGuidOfRequested);
+        return searchedPerson is null ? new ResponseWithStatus<Guid>("Could not find person") : new ResponseWithStatus<Guid>(searchedPerson.Guid, true);
+    }
 }

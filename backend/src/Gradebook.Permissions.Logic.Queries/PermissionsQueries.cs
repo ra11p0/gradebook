@@ -42,6 +42,11 @@ public class PermissionsQueries : BaseLogic<IPermissionsQueriesRepository>, IPer
         return ((PermissionEnum[])Enum.GetValues(typeof(PermissionEnum))).ToDictionary(e => e, e => GetDefaultPermissionLevel(e, schoolRole));
     }
 
+    public async Task<PermissionLevelEnum> GetPermissionForPerson(Guid personGuid, PermissionEnum permissionId)
+    {
+        return (await GetPermissionsForPerson(personGuid))[permissionId];
+    }
+
     public PermissionGroupEnum GetPermissionGroupForPermission(PermissionEnum permission)
     {
         return permission switch
