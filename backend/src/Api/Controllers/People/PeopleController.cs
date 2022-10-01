@@ -75,6 +75,7 @@ public class PeopleController : ControllerBase
     }
     [HttpPost]
     [Route("{personGuid}/Permissions")]
+    [ProducesResponseType(typeof(GetPermissionsResponseModel[]), statusCode: 200)]
     [ProducesResponseType(typeof(string), statusCode: 400)]
     public async Task<IActionResult> Permissions([FromRoute] Guid personGuid, [FromBody] SetPermissionsRequestModel[] permissions)
     {
@@ -82,7 +83,14 @@ public class PeopleController : ControllerBase
         if (!currentPersonGuid.Status) return BadRequest(currentPersonGuid.Message);
         if (!await _permissionsPermissionsLogic.Service.CanManagePermissions(currentPersonGuid.Response)) return Forbid();
         await _permissionsCommands.Service.SetPermissionsForPerson(personGuid, permissions.ToDictionary(e => e.PermissionId, e => e.PermissionLevel));
-        return Ok();
+        var resp = await _permissionsQueries.Service.GetPermissionsForPerson(personGuid);
+        return resp is not null ? Ok(resp.Select(e => new GetPermissionsResponseModel()
+        {
+            PermissionId = e.Key,
+            PermissionLevel = e.Value,
+            PermissionGroup = _permissionsQueries.Service.GetPermissionGroupForPermission(e.Key),
+            PermissionLevels = _permissionsQueries.Service.GetPermissionLevelsForPermission(e.Key)
+        })) : BadRequest();
     }
     [HttpGet]
     [Route("{personGuid}/Settings/{settingEnum}")]

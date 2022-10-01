@@ -55,10 +55,6 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
           accessToken: refreshAccessTokenResponse.data.access_token,
           refreshToken: refreshAccessTokenResponse.data.refresh_token,
         });
-        AccountProxy.getMe().then((getMeResponse) => {
-          this.props.setUser!({ userId: getMeResponse.data.userId });
-          this.props.setSchools!({ schoolsList: getMeResponse.data.schools });
-        });
       });
     }
   }
@@ -66,11 +62,11 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
   onLogIn() {
     AccountProxy.logIn({ email: this.state.email!, password: this.state.password! })
       .then((loginResponse) => {
-        this.props.logIn!({ refreshToken: loginResponse.data.refresh_token, accessToken: loginResponse.data.access_token });
-        AccountProxy.getMe().then((getMeResponse) => {
-          this.props.setUser!({ userId: getMeResponse.data.userId });
-          this.props.setSchools!({ schoolsList: getMeResponse.data.schools });
+        this.props.logIn!({
+          refreshToken: loginResponse.data.refresh_token,
+          accessToken: loginResponse.data.access_token
         });
+
       })
       .catch(() => {
         this.setState({

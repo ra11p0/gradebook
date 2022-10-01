@@ -31,7 +31,7 @@ const showError = (message: string) => {
     });
 };
 const showApiError = (err: { response: any, message?: string }) => {
-    let message = err.response.data.title ?? err.response.data ?? err.message;
+    let message = err.response.data?.title ?? err.response.data ?? err.message;
     NorificationsStore.addNotification({
         title: t('error', { ns: 'notifications' }).toString(),
         message: t(message, { ns: 'notifications' }).toString(),
