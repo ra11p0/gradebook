@@ -29,7 +29,7 @@ public class Permissions
         var permissionText = _wait.Until(d => d.FindElement(By.CssSelector("li[data-value='1']"))).Text;
         _wait.Until(d => d.FindElement(By.CssSelector("li[data-value='1']"))).Click();
         _wait.Until(d => d.FindElement(By.CssSelector(".savePermissionsButton"))).Click();
-        _wait.Until(d => d.FindElement(By.CssSelector(".rnc__notification-item--success")));
+        _wait.Until(d => d.FindElement(By.CssSelector(".rnc__notification-item--success")).Displayed);
         _driver!.Navigate().Refresh();
         _wait.Until(d => d.FindElement(By.CssSelector("button.administrationPermissions"))).Click();
         _wait.Until(d => d.FindElement(By.CssSelector("div.permission_1.row .MuiSelect-select")).Text == permissionText);
@@ -55,7 +55,7 @@ public class Permissions
         var permissionText = _wait.Until(d => d.FindElement(By.CssSelector("li[data-value='1']"))).Text;
         _wait.Until(d => d.FindElement(By.CssSelector("li[data-value='1']"))).Click();
         _wait.Until(d => d.FindElement(By.CssSelector(".savePermissionsButton"))).Click();
-        _wait.Until(d => d.FindElement(By.CssSelector(".rnc__notification-item--success")));
+        _wait.Until(d => d.FindElement(By.CssSelector(".rnc__notification-item--success")).Displayed);
         _driver!.Navigate().Refresh();
         _wait.Until(d => d.FindElement(By.CssSelector("button.administrationPermissions"))).Click();
         _wait.Until(d => d.FindElement(By.CssSelector("div.permission_1.row .MuiSelect-select")).Text == permissionText);

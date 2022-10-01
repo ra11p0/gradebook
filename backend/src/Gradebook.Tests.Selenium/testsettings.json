@@ -1,6 +1,6 @@
 {
   "Browser": {
-    "RunHeadless": false,
+    "RunHeadless": true,
     "Platform": "macos"
   },
   "Urls": {
