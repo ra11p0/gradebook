@@ -16,7 +16,7 @@ public class StudentsAndInvitations
         _storage["studentName"] = "Mateusz";
         _storage["studentSurname"] = "Kowalczyk";
         _storage["studentBirthday"] = "09032005";
-        _storage["studentEmail"] = "mati.kow90al@szkola.pl";
+        _storage["studentEmail"] = "dsa222dsad2323.kow90al@szkola.pl";
         _storage["studentPassword"] = "!QAZ2wsx";
     }
     [Test]

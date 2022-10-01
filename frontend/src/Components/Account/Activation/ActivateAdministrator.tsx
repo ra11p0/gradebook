@@ -9,6 +9,8 @@ import getCurrentUserIdReduxProxy from "../../../Redux/ReduxProxy/getCurrentUser
 import setSchoolsListReduxWrapper, { setSchoolsListAction } from "../../../Redux/ReduxWrappers/setSchoolsListReduxWrapper";
 import ActivateAdministratorPerson, { ActivateAdministratorPersonValues } from "./ActivateAdministratorPerson";
 import ActivateAdministratorSchool, { ActivateAdministratorSchoolValues } from "./ActivateAdministratorSchool";
+import setLoginReduxWrapper from "../../../Redux/ReduxWrappers/setLoginReduxWrapper";
+import { store } from "../../../store";
 
 const mapStateToProps = (state: any) => ({
   userId: getCurrentUserIdReduxProxy(state),
@@ -39,14 +41,15 @@ const ActivateAdministratorForm = (props: ActivateAdministratorFormProps): React
   }, []);
 
   const activateWithSchool = (person: ActivateAdministratorPersonValues, school: ActivateAdministratorSchoolValues) => {
-    AdministratorsProxy.newAdministratorWithSchool({ ...person, birthday: new Date(person.birthday) }, school).then((response) => {
-      AccountProxy.getAccessibleSchools(props.userId!)
-        .then((schoolsResponse) => {
-          props.setSchoolsList!({ schoolsList: schoolsResponse.data });
-          if (props.onSubmit) props.onSubmit();
-        })
-        .catch(Notifications.showApiError);
-    }).catch(Notifications.showApiError);
+    AdministratorsProxy.newAdministratorWithSchool({ ...person, birthday: new Date(person.birthday) }, school)
+      .then((response) => {
+        setLoginReduxWrapper(store.dispatch, {
+          accessToken: store.getState().common.session.accessToken,
+          refreshToken: store.getState().common.session.refreshToken,
+        });
+        if (props.onSubmit) props.onSubmit();
+      })
+      .catch(Notifications.showApiError);
   };
 
   return (
