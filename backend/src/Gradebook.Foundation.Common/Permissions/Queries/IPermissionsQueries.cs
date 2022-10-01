@@ -11,4 +11,5 @@ public interface IPermissionsQueries
     PermissionEnum[] GetPermissionsInGroup(PermissionGroupEnum permissionGroup);
     Dictionary<PermissionEnum, PermissionLevelEnum> GetDefaultPermissionLevels(SchoolRoleEnum schoolRole);
     Task<Dictionary<PermissionEnum, PermissionLevelEnum>> GetPermissionsForPerson(Guid personGuid);
+    Task<PermissionLevelEnum> GetPermissionForPerson(Guid personGuid, PermissionEnum permissionId);
 }

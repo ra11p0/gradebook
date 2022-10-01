@@ -1,3 +1,4 @@
+using Gradebook.Foundation.Common.Permissions;
 using Gradebook.Foundation.Common.Permissions.Commands;
 using Gradebook.Foundation.Common.Permissions.Queries;
 using Gradebook.Permissions.Database;
@@ -23,5 +24,7 @@ public class PermissionsService
         services.AddScoped<IPermissionsCommands, PermissionsCommands>();
         services.AddScoped<IPermissionsCommandsRepository, PermissionsCommandsRepositoryCached>();
         services.AddScoped<PermissionsCommandsRepository>();
+
+        services.AddScoped<IPermissionsPermissionsLogic, PermissionsPermissionsLogic>();
     }
 }

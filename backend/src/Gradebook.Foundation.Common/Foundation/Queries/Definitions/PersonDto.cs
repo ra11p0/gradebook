@@ -8,5 +8,6 @@ public class PersonDto
     public string Name { get; set; } = string.Empty;
     public string Surname { get; set; } = string.Empty;
     public SchoolRoleEnum SchoolRole { get; set; }
+    public Guid? SchoolGuid { get; set; }
     public DateTime? Birthday { get; set; }
 }

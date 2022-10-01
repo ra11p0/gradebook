@@ -46,7 +46,7 @@ const ActivateAdministratorForm = (props: ActivateAdministratorFormProps): React
           if (props.onSubmit) props.onSubmit();
         })
         .catch(Notifications.showApiError);
-    });
+    }).catch(Notifications.showApiError);
   };
 
   return (

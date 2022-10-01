@@ -19,6 +19,9 @@ public class PermissionsQueriesRepositoryCached : BaseRepositoryCached<Permissio
         Base.CommitTransaction();
     }
 
+    public Task<PermissionLevelEnum> GetPermissionForPerson(Guid personGuid, PermissionEnum permissionId)
+        => Base.GetPermissionForPerson(personGuid, permissionId);
+
     public Task<Dictionary<PermissionEnum, PermissionLevelEnum>> GetPermissionsForPerson(Guid personGuid)
         => Base.GetPermissionsForPerson(personGuid);
 

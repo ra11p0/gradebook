@@ -20,4 +20,13 @@ public class PermissionsQueriesRepository : BaseRepository<PermissionsDatabaseCo
             WHERE PersonGuid = @personGuid
         ", new { personGuid })).ToDictionary(e => e.Item1, e => e.Item2);
     }
+    public async Task<PermissionLevelEnum> GetPermissionForPerson(Guid personGuid, PermissionEnum permissionId)
+    {
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryFirstOrDefaultAsync<PermissionLevelEnum>(@"
+            SELECT PermissionLevel
+            FROM Permissions
+            WHERE PersonGuid = @personGuid AND PermissionId = @permissionId
+        ", new { personGuid, permissionId });
+    }
 }

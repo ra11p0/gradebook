@@ -60,7 +60,7 @@ public class RegisterAndLogin
         _driver.FindElement(By.CssSelector("input[name='addressLine1']")).SendKeys(CommonResources.GetValue("schoolAddress"));
         _driver.FindElement(By.CssSelector("input[name='name']")).SendKeys(CommonResources.GetValue("schoolName"));
         var submitButton = _driver.FindElement(By.CssSelector("button[type='submit']"));
-        actions.MoveToElement(submitButton).Perform();
+        _driver.ScrollTo(submitButton);
         submitButton.Click();
         var profileButton = wait.Until(d => d.FindElement(By.CssSelector("a[href='/account/profile']")));
         Assert.That(profileButton.Displayed);
