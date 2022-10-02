@@ -9,6 +9,8 @@ import getCurrentSchoolReduxProxy from "../../../Redux/ReduxProxy/getCurrentScho
 import setLoginReduxWrapper, { logInAction } from "../../../Redux/ReduxWrappers/setLoginReduxWrapper";
 import setSchoolsListReduxWrapper, { setSchoolsListAction } from "../../../Redux/ReduxWrappers/setSchoolsListReduxWrapper";
 import setUserReduxWrapper, { setUserAction } from "../../../Redux/ReduxWrappers/setUserReduxWrapper";
+import setAppLoadReduxWrapper from "../../../Redux/ReduxWrappers/setAppLoadReduxWrapper";
+import { store } from "../../../store";
 
 const mapStateToProps = (state: any) => ({
   isLoggedIn: getIsLoggedInReduxProxy(state),
@@ -46,26 +48,16 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
     };
   }
 
-  componentDidMount() {
-    var access = localStorage.getItem("access_token");
-    var refresh = localStorage.getItem("refresh_token");
-    if (access && refresh) {
-      AccountProxy.refreshAccessToken(access, refresh).then((refreshAccessTokenResponse) => {
-        this.props.logIn!({
-          accessToken: refreshAccessTokenResponse.data.access_token,
-          refreshToken: refreshAccessTokenResponse.data.refresh_token,
-        });
-      });
-    }
-  }
 
   onLogIn() {
     AccountProxy.logIn({ email: this.state.email!, password: this.state.password! })
-      .then((loginResponse) => {
-        this.props.logIn!({
+      .then(async (loginResponse) => {
+        setAppLoadReduxWrapper(store.dispatch, false);
+        await this.props.logIn!({
           refreshToken: loginResponse.data.refresh_token,
           accessToken: loginResponse.data.access_token
         });
+        setAppLoadReduxWrapper(store.dispatch, true);
 
       })
       .catch(() => {

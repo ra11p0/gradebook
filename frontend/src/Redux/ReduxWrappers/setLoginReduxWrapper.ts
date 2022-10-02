@@ -15,20 +15,21 @@ export interface logInAction {
     refreshToken: string;
 }
 
-export default (dispatch: any, action: logInAction) => {
+export default (dispatch: any, action: logInAction): Promise<void> => {
+    return new Promise((resolve) => {
+        localStorage.setItem("access_token", action.accessToken);
+        localStorage.setItem("refresh_token", action.refreshToken);
 
-    localStorage.setItem("access_token", action.accessToken);
-    localStorage.setItem("refresh_token", action.refreshToken);
+        dispatch({ ...logIn, ...action });
+        AccountsProxy.getMe().then((getMeResponse) => {
 
-    dispatch({ ...logIn, ...action });
-    AccountsProxy.getMe().then((getMeResponse) => {
-        setUserReduxWrapper(dispatch, { userId: getMeResponse.data.userId });
-        setSchoolsListReduxWrapper(dispatch, { schoolsList: getMeResponse.data.schools });
-        let defaultSchool = getMeResponse.data.schools.find(() => true);
-        setSchoolReduxWrapper(dispatch, {
-            schoolGuid: defaultSchool?.school.guid ?? "",
-            schoolName: defaultSchool?.school.name ?? ""
-        });
-
-    });
+            setUserReduxWrapper(dispatch, { userId: getMeResponse.data.userId });
+            setSchoolsListReduxWrapper(dispatch, { schoolsList: getMeResponse.data.schools });
+            let defaultSchool = getMeResponse.data.schools.find(() => true);
+            setSchoolReduxWrapper(dispatch, {
+                schoolGuid: defaultSchool?.school.guid ?? "",
+                schoolName: defaultSchool?.school.name ?? ""
+            });
+        }).then(resolve);
+    })
 };

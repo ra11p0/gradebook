@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Route, Routes, useParams } from "react-router-dom";
 import PeopleProxy from "../../ApiClient/People/PeopleProxy";
+import LoadingScreen from "../Shared/LoadingScreen";
 import Overview from "./Overview";
 import PersonNavigation from "./PersonNavigation";
 import PersonPermissions from "./PersonPermissions";
@@ -24,15 +25,17 @@ function PersonIndex(props: Props) {
     }
   }, [props.personGuid]);
   return (
-    <div>
-      <div className="p-3 bg-light">
-        <PersonNavigation personName={personName} personSurname={personSurname} />
-      </div>
-      <Routes>
-        <Route path="permissions" element={<PersonPermissions personGuid={personGuidHooked ?? ""} />} />
-        <Route path="/" element={<Overview />} />
-      </Routes>
-    </div>
+    <LoadingScreen isReady={personName != "" && personSurname != ""}>
+      <>
+        <div className="p-3 bg-light">
+          <PersonNavigation personName={personName} personSurname={personSurname} />
+        </div>
+        <Routes>
+          <Route path="permissions" element={<PersonPermissions personGuid={personGuidHooked ?? ""} />} />
+          <Route path="/" element={<Overview />} />
+        </Routes>
+      </>
+    </LoadingScreen>
   );
 }
 
