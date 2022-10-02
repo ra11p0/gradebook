@@ -173,6 +173,52 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         return new StatusResponse(true);
     }
 
+    public async Task<StatusResponse> EditStudentsInClass(Guid classGuid, IEnumerable<Guid> studentsGuids)
+    {
+        Repository.BeginTransaction();
+        var currentStudentsInClass = await _foundationQueries.Service.GetAllStudentsInClass(classGuid);
+        if (!currentStudentsInClass.Status) return new StatusResponse(currentStudentsInClass.Message);
+        var currentStudentsInClassGuids = currentStudentsInClass.Response!.Select(s => s.Guid);
+        var studentsToRemove = currentStudentsInClassGuids.Where(s => !studentsGuids.Contains(s));
+        var studentsToAdd = studentsGuids.Where(s => !currentStudentsInClassGuids.Contains(s));
+        var addResp = await AddStudentsToClass(classGuid, studentsToAdd);
+        var removeResp = await DeleteStudentsFromClass(classGuid, studentsToRemove);
+        if (addResp.Status && removeResp.Status)
+        {
+            await Repository.SaveChangesAsync();
+            Repository.CommitTransaction();
+            return new StatusResponse();
+        }
+        else
+        {
+            Repository.RollbackTransaction();
+            return new StatusResponse($"{addResp.Message} {removeResp.Status}");
+        }
+    }
+
+    public async Task<StatusResponse> EditTeachersInClass(Guid classGuid, IEnumerable<Guid> teachersGuids)
+    {
+        Repository.BeginTransaction();
+        var currentTeachersInClass = await _foundationQueries.Service.GetAllTeachersInClass(classGuid);
+        if (!currentTeachersInClass.Status) return new StatusResponse(currentTeachersInClass.Message);
+        var currentTeachersInClassGuids = currentTeachersInClass.Response!.Select(s => s.Guid);
+        var teachersToRemove = currentTeachersInClassGuids.Where(s => !teachersGuids.Contains(s));
+        var teachersToAdd = teachersGuids.Where(s => !currentTeachersInClassGuids.Contains(s));
+        var addResp = await AddTeachersToClass(classGuid, teachersToAdd);
+        var removeResp = await DeleteTeachersFromClass(classGuid, teachersToRemove);
+        if (addResp.Status && removeResp.Status)
+        {
+            await Repository.SaveChangesAsync();
+            Repository.CommitTransaction();
+            return new StatusResponse();
+        }
+        else
+        {
+            Repository.RollbackTransaction();
+            return new StatusResponse($"{addResp.Message} {removeResp.Status}");
+        }
+    }
+
     public async Task<ResponseWithStatus<string[], bool>> GenerateMultipleSystemInvitation(Guid[] peopleGuid, SchoolRoleEnum role, Guid schoolGuid)
     {
         var currentPersonGuid = await _foundationQueries.Service.GetCurrentPersonGuid(schoolGuid);

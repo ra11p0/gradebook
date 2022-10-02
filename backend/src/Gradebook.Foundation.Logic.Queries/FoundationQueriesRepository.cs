@@ -1,4 +1,5 @@
 using Dapper;
+using DbExtensions;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
@@ -200,24 +201,18 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
 
     public async Task<IPagedList<PersonDto>> GetPeopleInSchool(Guid schoolGuid, string discriminator, string query, Pager pager)
     {
-        var discriminatorQuery = String.IsNullOrEmpty(discriminator) ? null : @"
-            Discriminator = @discriminator
-        ";
-
-        var queryQuery = String.IsNullOrEmpty(query) ? null : @"
-            (CONCAT(Name, ' ', Surname) like @query) AND SchoolGuid = @schoolGuid
-        ";
-        var dataQuery = $@"
-            SELECT Name, Surname, SchoolRole, Birthday, Guid, SchoolGuid
-            FROM Person
-            {(discriminatorQuery != null || queryQuery != null ? "WHERE" : null)}
-            {discriminatorQuery}
-            {(discriminatorQuery != null && queryQuery != null ? "AND" : null)}
-            {queryQuery}
-            ORDER BY Name, Surname
-        ";
+        var builder = new SqlBuilder();
+        builder.SELECT("Name, Surname, SchoolRole, Birthday, Guid, SchoolGuid");
+        builder.FROM("Person");
+        builder.WHERE("SchoolGuid = @schoolGuid");
+        if (!string.IsNullOrEmpty(query))
+            builder.WHERE("CONCAT(Name, ' ', Surname) like @query");
+        if (!string.IsNullOrEmpty(discriminator))
+            builder.WHERE("Discriminator = @discriminator");
+        builder.ORDER_BY("Name, Surname");
         using var cn = await GetOpenConnectionAsync();
-        return await cn.QueryPagedAsync<PersonDto>(dataQuery, new
+        var q = builder.ToString();
+        return await cn.QueryPagedAsync<PersonDto>(builder.ToString(), new
         {
             schoolGuid,
             discriminator,
@@ -379,6 +374,38 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
             ", new
         {
             userGuid
+        });
+    }
+
+    public async Task<IEnumerable<StudentDto>> GetAllStudentsInClass(Guid classGuid)
+    {
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryAsync<StudentDto>(@"
+            SELECT Name, Surname, SchoolRole, Birthday, CreatorGuid, Guid, UserGuid, SchoolGuid
+            FROM Person 
+            WHERE Discriminator = 'Student'
+                AND Guid IN (
+                SELECT StudentsGuid FROM ClassStudent WHERE ClassesGuid = @classGuid
+            )
+        ", new
+        {
+            classGuid
+        });
+    }
+
+    public async Task<IEnumerable<TeacherDto>> GetAllTeachersInClass(Guid classGuid)
+    {
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryAsync<TeacherDto>(@"
+            SELECT Name, Surname, SchoolRole, Birthday, CreatorGuid, Guid, UserGuid, SchoolGuid
+            FROM Person 
+            WHERE Discriminator = 'Teacher'
+                AND Guid IN (
+                SELECT OwnersTeachersGuid FROM ClassTeacher WHERE OwnedClassesGuid = @classGuid
+            )
+        ", new
+        {
+            classGuid
         });
     }
 }

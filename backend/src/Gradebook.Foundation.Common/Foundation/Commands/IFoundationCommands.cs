@@ -21,4 +21,6 @@ public interface IFoundationCommands
     Task<StatusResponse> AddTeachersToClass(Guid classGuid, IEnumerable<Guid> teachersGuids);
     Task<StatusResponse> DeleteTeachersFromClass(Guid classGuid, IEnumerable<Guid> teachersGuids);
     Task<StatusResponse> DeleteStudentsFromClass(Guid classGuid, IEnumerable<Guid> studentsGuids);
+    Task<StatusResponse> EditStudentsInClass(Guid classGuid, IEnumerable<Guid> studentsGuids);
+    Task<StatusResponse> EditTeachersInClass(Guid classGuid, IEnumerable<Guid> studentsGuids);
 }

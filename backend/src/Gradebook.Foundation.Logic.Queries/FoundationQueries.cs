@@ -64,6 +64,16 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<IEnumerable<TeacherDto>, bool>(teachers, true);
     }
 
+    public Task<ResponseWithStatus<IEnumerable<StudentDto>>> GetAllStudentsInClass(Guid classGuid)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<ResponseWithStatus<IEnumerable<TeacherDto>>> GetAllTeachersInClass(Guid classGuid)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<ResponseWithStatus<ClassDto, bool>> GetClassByGuid(Guid guid)
     {
         var resp = await Repository.GetClassByGuid(guid);

@@ -13,12 +13,13 @@ const mapStateToProps = (state: any) => ({
 const mapDispatchToProps = (dispatch: any) => ({});
 
 type Props = {
-  show: boolean;
   onHide: () => void;
   onConfirm: (peopleGuids: string[]) => void;
   getPeople: (schoolGuid: string, schoolRole: string, query: string, page: number) => Promise<PersonResponse[]>;
+  show: boolean;
   currentSchoolGuid?: string;
   discriminator?: string;
+  selectedPeople?: string[];
 };
 
 function PeoplePicker(props: Props) {
@@ -26,7 +27,7 @@ function PeoplePicker(props: Props) {
   const [selectedPeople, setSelectedPeople] = useState<string[]>([]);
   const [query, setQuery] = useState("");
   useEffect(() => {
-    setSelectedPeople([]);
+    setSelectedPeople(props.selectedPeople ?? []);
   }, [props.show]);
   return (
     <Modal show={props.show} onHide={props.onHide}>

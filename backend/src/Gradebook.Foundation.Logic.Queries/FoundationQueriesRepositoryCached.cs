@@ -90,4 +90,10 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
 
     public Task<bool> IsUserActive(string userGuid)
         => Base.IsUserActive(userGuid);
+
+    public Task<IEnumerable<StudentDto>> GetAllStudentsInClass(Guid classGuid)
+        => Base.GetAllStudentsInClass(classGuid);
+
+    public Task<IEnumerable<TeacherDto>> GetAllTeachersInClass(Guid classGuid)
+        => Base.GetAllTeachersInClass(classGuid);
 }
