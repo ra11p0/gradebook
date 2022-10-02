@@ -6,6 +6,9 @@ import PeopleProxy from "../../ApiClient/People/PeopleProxy"
 import SchoolRolesEnum from "../../Common/Enums/SchoolRolesEnum";
 import testConstraints from '../Constraints'
 import accountsQuickActions from "../QuickActions/accountsQuickActions";
+require('dotenv').config();
+
+const isTestEnvironment = process.env.ENVIRONMENT === 'TEST';
 
 describe('Integration', () => {
     describe('Account', () => {
@@ -45,10 +48,17 @@ describe('Integration', () => {
             //  log out
             accountsQuickActions.logOut();
             //  register student
-            await AccountsProxy.register({
-                email: newStudentEmail,
-                password: testConstraints.password
-            });
+            try {
+                await AccountsProxy.register({
+                    email: newStudentEmail,
+                    password: testConstraints.password
+                });
+            }
+            catch {
+                if (isTestEnvironment) {
+                    return assert.ok(false, 'could not register new account');
+                }
+            }
             await accountsQuickActions.logIn(newStudentEmail, testConstraints.password);
             await PeopleProxy.activatePerson(activationCode);
             let newMe = await AccountsProxy.getMe();

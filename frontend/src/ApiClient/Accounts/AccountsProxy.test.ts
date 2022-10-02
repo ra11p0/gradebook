@@ -3,6 +3,7 @@ import AccountsProxy from "./AccountsProxy";
 import testConstraints from '../../tests/Constraints'
 import accountsQuickActions from "../../tests/QuickActions/accountsQuickActions";
 import AdministratorsProxy from "../Administrators/AdministratorsProxy";
+import Constraints from "../../tests/Constraints";
 require('dotenv').config();
 
 const isTestEnvironment = process.env.ENVIRONMENT === 'TEST';
@@ -48,19 +49,34 @@ describe('AccountsProxy', () => {
         it('Should activate as administrator with new school', async () => {
             //  login to account
             await accountsQuickActions.logIn(testConstraints.email, testConstraints.password);
-            //  create new student
+            //  activate school and administrator
             await AdministratorsProxy.newAdministratorWithSchool({
                 name: "Mateusz",
                 surname: "Szwagierczak",
                 birthday: new Date(1991, 12, 12)
             }, {
-                name: "ZS3",
-                addressLine1: "Polna 12",
+                name: Constraints.schoolName,
+                addressLine1: Constraints.schoolAddress,
                 addressLine2: "",
-                city: "Wygwizdów",
+                city: Constraints.schoolCity,
                 postalCode: "27-270"
             });
         })
+        it('Should show accessible school', async () => {
+            //  login to account
+            await accountsQuickActions.logIn(testConstraints.email, testConstraints.password);
+            //get me
+            let meResponse = await AccountsProxy.getMe();
+            //  get all accessible schools
+            let accessibleSchools = await AccountsProxy.getAccessibleSchools(meResponse.data.userId)
+            let foundSchool = accessibleSchools.data.find(e =>
+                e.school.name == Constraints.schoolName &&
+                e.school.city == Constraints.schoolCity &&
+                e.school.addressLine1 == Constraints.schoolAddress
+            );
+            assert.ok(foundSchool)
+        })
     })
+
 
 })

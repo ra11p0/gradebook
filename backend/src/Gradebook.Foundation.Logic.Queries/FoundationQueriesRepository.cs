@@ -304,9 +304,20 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
         });
     }
 
-    public Task<IPagedList<StudentDto>> GetStudentsInClass(Guid schoolGuid, Pager pager)
+    public async Task<IPagedList<StudentDto>> GetStudentsInClass(Guid classGuid, Pager pager)
     {
-        throw new NotImplementedException();
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryPagedAsync<StudentDto>(@"
+            SELECT Name, Surname, SchoolRole, Birthday, CreatorGuid, Guid, UserGuid, SchoolGuid
+            FROM Person 
+            WHERE Discriminator = 'Student'
+                AND Guid IN (
+                SELECT StudentsGuid FROM ClassStudent WHERE ClassesGuid = @classGuid
+            )
+        ", new
+        {
+            classGuid
+        }, pager);
     }
 
     public async Task<IPagedList<StudentDto>> GetStudentsInSchool(Guid schoolGuid, Pager pager)
@@ -340,9 +351,20 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
         });
     }
 
-    public Task<IPagedList<TeacherDto>> GetTeachersInClass(Guid schoolGuid, Pager pager)
+    public async Task<IPagedList<TeacherDto>> GetTeachersInClass(Guid classGuid, Pager pager)
     {
-        throw new NotImplementedException();
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryPagedAsync<TeacherDto>(@"
+            SELECT Name, Surname, SchoolRole, Birthday, CreatorGuid, Guid, UserGuid, SchoolGuid
+            FROM Person 
+            WHERE Discriminator = 'Teacher'
+                AND Guid IN (
+                SELECT OwnersTeachersGuid FROM ClassTeacher WHERE OwnedClassesGuid = @classGuid
+            )
+        ", new
+        {
+            classGuid
+        }, pager);
     }
 
     public async Task<bool> IsUserActive(string userGuid)
