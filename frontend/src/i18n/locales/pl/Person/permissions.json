@@ -3,10 +3,15 @@
   "administration": "Administracyjne",
 
   "permission_1": "Zaproszenia",
-  "permission_2": "Uprawnienia",
-
   "permissionLevel_1": "Nie może tworzyć zaproszeń",
   "permissionLevel_2": "Może tworzyć zaproszenia",
+
+  "permission_2": "Uprawnienia",
   "permissionLevel_3": "Nie może zarządzać uprawnieniami",
-  "permissionLevel_4": "Może zarządzać uprawnieniami"
+  "permissionLevel_4": "Może zarządzać uprawnieniami",
+
+  "permission_3": "Klasy",
+  "permissionLevel_5": "Tylko wyświetlanie",
+  "permissionLevel_6": "Zarządzanie własnymi",
+  "permissionLevel_7": "Zarządzanie wszystkimi"
 }

@@ -26,6 +26,9 @@ public class ClassesController : ControllerBase
     [ProducesResponseType(typeof(string), 400)]
     public async Task<IActionResult> DeleteClass([FromRoute] Guid classGuid)
     {
+        var currentPerson = await _foundationQueries.Service.RecogniseCurrentPersonByRelatedPerson(teachersGuids.First());
+        if (!await _foundationPermissions.Service.CanManageClass(classGuid, currentPerson.Response))
+            return new StatusResponse("Forbidden");
         var resp = await _foundationCommands.Service.DeleteClass(classGuid);
         return resp.Status ? Ok() : BadRequest(resp.Message);
     }
@@ -72,9 +75,9 @@ public class ClassesController : ControllerBase
     [Route("{classGuid}/Students")]
     [Authorize(Roles = "SuperAdmin")]
     [ProducesResponseType(typeof(string), 400)]
-    public async Task<IActionResult> AddStudentsToClass([FromRoute] Guid classGuid, [FromBody] IEnumerable<Guid> studentsGuids)
+    public async Task<IActionResult> EditStudentsInClass([FromRoute] Guid classGuid, [FromBody] IEnumerable<Guid> studentsGuids)
     {
-        var resp = await _foundationCommands.Service.AddStudentsToClass(classGuid, studentsGuids);
+        var resp = await _foundationCommands.Service.EditStudentsInClass(classGuid, studentsGuids);
         return resp.Status ? Ok() : BadRequest(resp.Message);
     }
     [HttpDelete]
@@ -99,9 +102,9 @@ public class ClassesController : ControllerBase
     [Route("{classGuid}/Teachers")]
     [Authorize(Roles = "SuperAdmin")]
     [ProducesResponseType(typeof(string), 400)]
-    public async Task<IActionResult> AddTeachersToClass([FromRoute] Guid classGuid, [FromBody] IEnumerable<Guid> teachersGuids)
+    public async Task<IActionResult> EditTeachersInClass([FromRoute] Guid classGuid, [FromBody] IEnumerable<Guid> teachersGuids)
     {
-        var resp = await _foundationCommands.Service.AddTeachersToClass(classGuid, teachersGuids);
+        var resp = await _foundationCommands.Service.EditTeachersInClass(classGuid, teachersGuids);
         return resp.Status ? Ok() : BadRequest(resp.Message);
     }
     [HttpDelete]

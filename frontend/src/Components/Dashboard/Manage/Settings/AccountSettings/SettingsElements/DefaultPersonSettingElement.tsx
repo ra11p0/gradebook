@@ -8,6 +8,7 @@ import Notifications from "../../../../../../Notifications/Notifications";
 import getCurrentUserIdReduxProxy from "../../../../../../Redux/ReduxProxy/getCurrentUserIdReduxProxy";
 import Person from "../../../../../Shared/Person";
 import { connect } from "react-redux";
+import LoadingScreen from "../../../../../Shared/LoadingScreen";
 
 const mapStateToProps = (state: any) => ({
   currentUserGuid: getCurrentUserIdReduxProxy(state),
@@ -36,33 +37,36 @@ function DefaultPersonSettingElement(props: Props) {
       .catch(Notifications.showApiError);
   }, [props.currentUserGuid]);
   return (
-    <>
-      <Row>
-        <Col className="my-auto">
-          <label className="fs-5">{t("defaultPerson")}</label>
-        </Col>
-        <Col>
-          <Select
-            className="setDefaultPersonGuidSelect form-control"
-            value={people.map((e) => e.guid).includes(defaultPersonGuid) ? defaultPersonGuid : ""}
-            onChange={(e) => {
-              setDefaultPersonGuid(e.target.value);
-              props.onChange(e.target.value);
-            }}
-            renderValue={(selected: string) => {
-              let person = people.find((p) => p.guid == selected);
-              return `${person?.name} ${person?.surname}`;
-            }}
-          >
-            {people.map((person) => (
-              <MenuItem key={person.guid} value={person.guid} className="row">
-                <Person guid={person.guid} name={person.name} surname={person.surname} birthday={person.birthday} noLink={true} />
-              </MenuItem>
-            ))}
-          </Select>
-        </Col>
-      </Row>
-    </>
+    <LoadingScreen isReady={defaultPersonGuid != ""}>
+      <>
+        <Row>
+          <Col className="my-auto">
+            <label className="fs-5">{t("defaultPerson")}</label>
+          </Col>
+          <Col>
+            <Select
+              className="setDefaultPersonGuidSelect form-control"
+              value={people.map((e) => e.guid).includes(defaultPersonGuid) ? defaultPersonGuid : ""}
+              onChange={(e) => {
+                setDefaultPersonGuid(e.target.value);
+                props.onChange(e.target.value);
+              }}
+              renderValue={(selected: string) => {
+                let person = people.find((p) => p.guid == selected);
+                return `${person?.name} ${person?.surname}`;
+              }}
+            >
+              {people.map((person) => (
+                <MenuItem key={person.guid} value={person.guid} className="row">
+                  <Person guid={person.guid} name={person.name} surname={person.surname} birthday={person.birthday} noLink={true} />
+                </MenuItem>
+              ))}
+            </Select>
+          </Col>
+        </Row>
+      </>
+    </LoadingScreen>
+
   );
 }
 

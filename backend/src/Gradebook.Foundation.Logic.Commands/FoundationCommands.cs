@@ -69,6 +69,9 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
 
     public async Task<StatusResponse> AddNewClass(NewClassCommand command)
     {
+        var currentPerson = await _foundationQueries.Service.GetCurrentPersonGuid(command.SchoolGuid);
+        if (!await _foundationPermissions.Service.CanCreateNewClass(currentPerson.Response))
+            return new StatusResponse("Forbidden");
         command.CreatedDate = DateTime.Now;
         var resp = await Repository.AddNewClass(command);
         if (!resp.Status) return new StatusResponse(false, resp.Message);
@@ -119,6 +122,9 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
 
     public async Task<StatusResponse> AddStudentsToClass(Guid classGuid, IEnumerable<Guid> studentsGuids)
     {
+        var currentPerson = await _foundationQueries.Service.RecogniseCurrentPersonByRelatedPerson(studentsGuids.First());
+        if (!await _foundationPermissions.Service.CanManageClass(classGuid, currentPerson.Response))
+            return new StatusResponse("Forbidden");
         var resp = await Repository.AddStudentsToClass(classGuid, studentsGuids);
         if (!resp.Status) return new StatusResponse(resp.Message);
         await Repository.SaveChangesAsync();
@@ -127,6 +133,9 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
 
     public async Task<StatusResponse> AddTeachersToClass(Guid classGuid, IEnumerable<Guid> teachersGuids)
     {
+        var currentPerson = await _foundationQueries.Service.RecogniseCurrentPersonByRelatedPerson(teachersGuids.First());
+        if (!await _foundationPermissions.Service.CanManageClass(classGuid, currentPerson.Response))
+            return new StatusResponse("Forbidden");
         var resp = await Repository.AddTeachersToClass(classGuid, teachersGuids);
         if (!resp.Status) return new StatusResponse(resp.Message);
         await Repository.SaveChangesAsync();
@@ -159,6 +168,9 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
 
     public async Task<StatusResponse> DeleteStudentsFromClass(Guid classGuid, IEnumerable<Guid> studentsGuids)
     {
+        var currentPerson = await _foundationQueries.Service.RecogniseCurrentPersonByRelatedPerson(studentsGuids.First());
+        if (!await _foundationPermissions.Service.CanManageClass(classGuid, currentPerson.Response))
+            return new StatusResponse("Forbidden");
         var resp = await Repository.DeleteStudentsFromClass(classGuid, studentsGuids);
         if (!resp.Status) return new StatusResponse(resp.Message);
         await Repository.SaveChangesAsync();
@@ -167,10 +179,65 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
 
     public async Task<StatusResponse> DeleteTeachersFromClass(Guid classGuid, IEnumerable<Guid> teachersGuids)
     {
+        var currentPerson = await _foundationQueries.Service.RecogniseCurrentPersonByRelatedPerson(teachersGuids.First());
+        if (!await _foundationPermissions.Service.CanManageClass(classGuid, currentPerson.Response))
+            return new StatusResponse("Forbidden");
         var resp = await Repository.DeleteTeachersFromClass(classGuid, teachersGuids);
         if (!resp.Status) return new StatusResponse(resp.Message);
         await Repository.SaveChangesAsync();
         return new StatusResponse(true);
+    }
+
+    public async Task<StatusResponse> EditStudentsInClass(Guid classGuid, IEnumerable<Guid> studentsGuids)
+    {
+        var currentPerson = await _foundationQueries.Service.RecogniseCurrentPersonByRelatedPerson(studentsGuids.First());
+        if (!await _foundationPermissions.Service.CanManageClass(classGuid, currentPerson.Response))
+            return new StatusResponse("Forbidden");
+        Repository.BeginTransaction();
+        var currentStudentsInClass = await _foundationQueries.Service.GetAllStudentsInClass(classGuid);
+        if (!currentStudentsInClass.Status) return new StatusResponse(currentStudentsInClass.Message);
+        var currentStudentsInClassGuids = currentStudentsInClass.Response!.Select(s => s.Guid);
+        var studentsToRemove = currentStudentsInClassGuids.Where(s => !studentsGuids.Contains(s));
+        var studentsToAdd = studentsGuids.Where(s => !currentStudentsInClassGuids.Contains(s));
+        var addResp = await AddStudentsToClass(classGuid, studentsToAdd);
+        var removeResp = await DeleteStudentsFromClass(classGuid, studentsToRemove);
+        if (addResp.Status && removeResp.Status)
+        {
+            await Repository.SaveChangesAsync();
+            Repository.CommitTransaction();
+            return new StatusResponse();
+        }
+        else
+        {
+            Repository.RollbackTransaction();
+            return new StatusResponse($"{addResp.Message} {removeResp.Status}");
+        }
+    }
+
+    public async Task<StatusResponse> EditTeachersInClass(Guid classGuid, IEnumerable<Guid> teachersGuids)
+    {
+        var currentPerson = await _foundationQueries.Service.RecogniseCurrentPersonByRelatedPerson(teachersGuids.First());
+        if (!await _foundationPermissions.Service.CanManageClass(classGuid, currentPerson.Response))
+            return new StatusResponse("Forbidden");
+        Repository.BeginTransaction();
+        var currentTeachersInClass = await _foundationQueries.Service.GetAllTeachersInClass(classGuid);
+        if (!currentTeachersInClass.Status) return new StatusResponse(currentTeachersInClass.Message);
+        var currentTeachersInClassGuids = currentTeachersInClass.Response!.Select(s => s.Guid);
+        var teachersToRemove = currentTeachersInClassGuids.Where(s => !teachersGuids.Contains(s));
+        var teachersToAdd = teachersGuids.Where(s => !currentTeachersInClassGuids.Contains(s));
+        var addResp = await AddTeachersToClass(classGuid, teachersToAdd);
+        var removeResp = await DeleteTeachersFromClass(classGuid, teachersToRemove);
+        if (addResp.Status && removeResp.Status)
+        {
+            await Repository.SaveChangesAsync();
+            Repository.CommitTransaction();
+            return new StatusResponse();
+        }
+        else
+        {
+            Repository.RollbackTransaction();
+            return new StatusResponse($"{addResp.Message} {removeResp.Status}");
+        }
     }
 
     public async Task<ResponseWithStatus<string[], bool>> GenerateMultipleSystemInvitation(Guid[] peopleGuid, SchoolRoleEnum role, Guid schoolGuid)

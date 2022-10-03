@@ -9,6 +9,7 @@ import getCurrentPersonReduxProxy from "../../Redux/ReduxProxy/getCurrentPersonR
 import getIsLoggedInReduxProxy from "../../Redux/ReduxProxy/getIsLoggedInReduxProxy";
 import getIsUserActivatedReduxProxy from "../../Redux/ReduxProxy/getIsUserActivatedReduxProxy";
 import setLogOutReduxWrapper from "../../Redux/ReduxWrappers/setLogOutReduxWrapper";
+import LoadingScreen from "./LoadingScreen";
 import SchoolSelect from "./SchoolSelect";
 
 const mapStateToProps = (state: any) => {
@@ -59,15 +60,21 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               <div className="d-flex gap-2">
                 {this.props.isActive && (
                   <>
-                    <div>
-                      <SchoolSelect />
-                    </div>
+                    <LoadingScreen
+                      isReady={this.props.currentPerson}>
+                      <>
+                        <div>
+                          <SchoolSelect />
+                        </div>
 
-                    <div className="my-auto">
-                      <Link to="/account/profile" className="btn btn-outline-primary">
-                        {`${this.props.currentPerson?.name} ${this.props.currentPerson?.surname}`}
-                      </Link>
-                    </div>
+                        <div className="my-auto">
+                          <Link to="/account/profile" className="btn btn-outline-primary">
+                            {`${this.props.currentPerson?.name} ${this.props.currentPerson?.surname}`}
+                          </Link>
+                        </div>
+                      </>
+                    </LoadingScreen>
+
                     <div className="my-auto">
                       <Link to="/dashboard" className="btn btn-outline-primary">
                         {t("dashboard")}
