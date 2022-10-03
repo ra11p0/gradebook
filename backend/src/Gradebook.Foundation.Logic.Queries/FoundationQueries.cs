@@ -271,4 +271,9 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         var searchedPerson = people.Response!.FirstOrDefault(e => e.SchoolGuid == schoolGuidOfRequested);
         return searchedPerson is null ? new ResponseWithStatus<Guid>("Could not find person") : new ResponseWithStatus<Guid>(searchedPerson.Guid, true);
     }
+    public async Task<ResponseWithStatus<Guid>> RecogniseCurrentPersonBySchoolGuid(Guid schoolGuid)
+    {
+        var resp = await GetCurrentPersonGuid(schoolGuid);
+        return resp.Status ? new ResponseWithStatus<Guid>(resp.Response, true) : new ResponseWithStatus<Guid>(resp.Message);
+    }
 }
