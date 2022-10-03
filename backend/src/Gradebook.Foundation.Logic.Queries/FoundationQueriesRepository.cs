@@ -408,4 +408,23 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
             classGuid
         });
     }
+
+    public async Task<bool> IsClassOwner(Guid classGuid, Guid personGuid)
+    {
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryFirstOrDefaultAsync<bool>(@"
+                SELECT EXISTS (
+                    SELECT * 
+                    FROM Person 
+                    WHERE Guid IN (
+                        SELECT OwnersTeachersGuid FROM ClassTeacher WHERE OwnedClassesGuid = @classGuid
+                    )
+                    AND Guid = @personGuid
+                )
+            ", new
+        {
+            classGuid,
+            personGuid
+        });
+    }
 }

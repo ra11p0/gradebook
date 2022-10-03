@@ -96,4 +96,7 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
 
     public Task<IEnumerable<TeacherDto>> GetAllTeachersInClass(Guid classGuid)
         => Base.GetAllTeachersInClass(classGuid);
+
+    public Task<bool> IsClassOwner(Guid classGuid, Guid personGuid)
+        => Base.IsClassOwner(classGuid, personGuid);
 }

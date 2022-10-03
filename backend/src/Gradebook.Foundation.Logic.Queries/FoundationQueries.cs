@@ -64,14 +64,16 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<IEnumerable<TeacherDto>, bool>(teachers, true);
     }
 
-    public Task<ResponseWithStatus<IEnumerable<StudentDto>>> GetAllStudentsInClass(Guid classGuid)
+    public async Task<ResponseWithStatus<IEnumerable<StudentDto>>> GetAllStudentsInClass(Guid classGuid)
     {
-        throw new NotImplementedException();
+        var resp = await Repository.GetAllStudentsInClass(classGuid);
+        return new ResponseWithStatus<IEnumerable<StudentDto>>(resp, true);
     }
 
-    public Task<ResponseWithStatus<IEnumerable<TeacherDto>>> GetAllTeachersInClass(Guid classGuid)
+    public async Task<ResponseWithStatus<IEnumerable<TeacherDto>>> GetAllTeachersInClass(Guid classGuid)
     {
-        throw new NotImplementedException();
+        var resp = await Repository.GetAllTeachersInClass(classGuid);
+        return new ResponseWithStatus<IEnumerable<TeacherDto>>(resp, true);
     }
 
     public async Task<ResponseWithStatus<ClassDto, bool>> GetClassByGuid(Guid guid)
@@ -244,6 +246,12 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         var pager = new Pager(page);
         var response = await Repository.GetTeachersInSchool(schoolGuid, pager);
         return new ResponseWithStatus<IPagedList<TeacherDto>>(response, true);
+    }
+
+    public async Task<ResponseWithStatus<bool>> IsClassOwner(Guid classGuid, Guid personGuid)
+    {
+        var resp = await Repository.IsClassOwner(classGuid, personGuid);
+        return new ResponseWithStatus<bool>(resp, true);
     }
 
     public async Task<ResponseWithStatus<bool>> IsUserActive(string userGuid)

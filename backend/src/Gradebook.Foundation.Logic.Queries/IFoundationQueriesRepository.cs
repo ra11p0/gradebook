@@ -28,5 +28,6 @@ public interface IFoundationQueriesRepository : IBaseRepository
     Task<IEnumerable<TeacherDto>> GetAllTeachersInClass(Guid classGuid);
     Task<IPagedList<TeacherDto>> GetTeachersInSchool(Guid schoolGuid, Pager pager);
     Task<IPagedList<PersonDto>> GetPeopleInSchool(Guid schoolGuid, string discriminator, string query, Pager pager);
+    Task<bool> IsClassOwner(Guid classGuid, Guid personGuid);
     Task<bool> IsUserActive(string userGuid);
 }
