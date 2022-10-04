@@ -7,16 +7,16 @@ import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faTimes, faTrash, faWindowMaximize } from "@fortawesome/free-solid-svg-icons";
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
-import StudentInSchoolResponse from "../../../../ApiClient/Schools/Definitions/StudentInSchoolResponse";
+import StudentInSchoolResponse from "../../../../ApiClient/Schools/Definitions/Responses/StudentInSchoolResponse";
 import InfiniteScrollWrapper from "../../../Shared/InfiniteScrollWrapper";
 import Tippy from "@tippyjs/react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import Notifications from "../../../../Notifications/Notifications";
 import PeopleProxy from "../../../../ApiClient/People/PeopleProxy";
-import { currentSchoolProxy } from "../../../../Redux/ReduxProxy/currentSchoolProxy";
+import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
 const mapStateToProps = (state: any) => ({
-  currentSchoolGuid: currentSchoolProxy(state)?.schoolGuid,
+  currentSchoolGuid: getCurrentSchoolReduxProxy(state)?.schoolGuid,
 });
 const mapDispatchToProps = (dispatch: any) => ({});
 interface StudentsListProps {
@@ -39,7 +39,7 @@ const StudentsList = (props: StudentsListProps): ReactElement => {
     }).then((result) => {
       if (result.isConfirmed) {
         PeopleProxy.removePerson(personGuid)
-          .then((response) => {
+          .then(() => {
             Notifications.showSuccessNotification("personRemovedNotificationTitle", "personRemovedNotificationText");
             setRefreshEffectKey((k) => k + 1);
           })
@@ -60,7 +60,7 @@ const StudentsList = (props: StudentsListProps): ReactElement => {
                 setShowAddStudentModal(false);
               }}
             />
-            <Button onClick={() => setShowAddStudentModal(true)} variant="outlined">
+            <Button onClick={() => setShowAddStudentModal(true)} variant="outlined" className="addNewStudentButton">
               {t("addStudent")}
             </Button>
           </div>
@@ -108,7 +108,7 @@ const StudentsList = (props: StudentsListProps): ReactElement => {
                       <div className="d-flex gap-1 flex-wrap">
                         <Link to={`/person/show/${element.guid}`}>
                           <Tippy content={t("showPerson")} arrow={true} animation={"scale"}>
-                            <Button variant="outlined">
+                            <Button variant="outlined" className="showProfileButton">
                               <FontAwesomeIcon icon={faWindowMaximize} />
                             </Button>
                           </Tippy>

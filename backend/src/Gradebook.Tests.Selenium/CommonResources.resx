@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <data name="email" xml:space="preserve">
+        <value>marcel.golaczynski@school.pl</value>
+    </data>
+    <data name="password" xml:space="preserve">
+        <value>hEll0worldpl112!A</value>
+    </data>
+    <data name="name" xml:space="preserve">
+        <value>Marcel</value>
+    </data>
+    <data name="surname" xml:space="preserve">
+        <value>Gołczyński</value>
+    </data>
+    <data name="birthday" xml:space="preserve">
+        <value>02021994</value>
+    </data>
+    <data name="schoolName" xml:space="preserve">
+        <value>ZS nr 3</value>
+    </data>
+    <data name="schoolAddress" xml:space="preserve">
+        <value>ul. Sandomierska 2</value>
+    </data>
+    <data name="postalCode" xml:space="preserve">
+        <value>27-400</value>
+    </data>
+    <data name="city" xml:space="preserve">
+        <value>Ostrowiec Świętokrzyski</value>
+    </data>
+    <data name="nameInSecondSchool" xml:space="preserve">
+        <value>mgr Marcel Jan</value>
+    </data>
+    <data name="secondSchoolSurname" xml:space="preserve">
+        <value>Gołczyński</value>
+    </data>
+    <data name="secondSchoolBirthday" xml:space="preserve">
+        <value>02021994</value>
+    </data>
+    <data name="secondSchoolName" xml:space="preserve">
+        <value>Gołkowska szkoła policealna nr 6</value>
+    </data>
+    <data name="secondSchoolAddress" xml:space="preserve">
+        <value>ul. Kazimierska 12</value>
+    </data>
+    <data name="secondSchoolPostalCode" xml:space="preserve">
+        <value>27-170</value>
+    </data>
+    <data name="secondSchoolCity" xml:space="preserve">
+        <value>Wola Gołkowa</value>
+    </data>
+</root>

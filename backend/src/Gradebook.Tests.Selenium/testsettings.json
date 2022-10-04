@@ -1,0 +1,9 @@
+{
+  "Browser": {
+    "RunHeadless": false,
+    "Platform": "macos"
+  },
+  "Urls": {
+    "ApplicationUrl": "http://development.gradebook.com/"
+  }
+}

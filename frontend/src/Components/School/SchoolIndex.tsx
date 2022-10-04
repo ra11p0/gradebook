@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import GetSchoolResponse from "../../ApiClient/Schools/Definitions/GetSchoolResponse";
+import GetSchoolResponse from "../../ApiClient/Schools/Definitions/Responses/GetSchoolResponse";
 import SchoolsProxy from "../../ApiClient/Schools/SchoolsProxy";
 import Notifications from "../../Notifications/Notifications";
 

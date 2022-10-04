@@ -1,0 +1,18 @@
+{
+  "system": "System",
+  "administration": "Administration",
+
+  "permission_1": "Invitations",
+
+  "permissionLevel_1": "Cannot create invitations",
+  "permissionLevel_2": "Can create invitations",
+
+  "permission_2": "Permissions",
+  "permissionLevel_3": "Cannot manage permissions",
+  "permissionLevel_4": "Can manage permissions",
+
+  "permission_3": "Classes",
+  "permissionLevel_5": "View only",
+  "permissionLevel_6": "Can manage own classes",
+  "permissionLevel_7": "Can manage all classes"
+}

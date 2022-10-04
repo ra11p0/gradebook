@@ -1,0 +1,12 @@
+{
+  "accessCode": "Kod dostępu",
+  "group": "Grupa",
+  "class": "Klasa",
+  "back": "Wstecz",
+  "ActivateStudent": "Zarejestruj się jako uczeń",
+  "birthday": "Data urodzenia",
+  "name": "Imię",
+  "surname": "Nazwisko",
+  "confirmInformation": "Potwierdź informacje",
+  "wrongAccessCodeLength": "Nieprawidłowa długość kodu dostępu"
+}

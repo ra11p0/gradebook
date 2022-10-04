@@ -1,6 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text.Json;
 using Api.Models.Account;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
@@ -8,7 +7,9 @@ using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 using Gradebook.Foundation.Common.Settings.Commands;
+using Gradebook.Foundation.Common.Settings.Commands.Definitions;
 using Gradebook.Foundation.Common.Settings.Enums;
+using Gradebook.Foundation.Common.Settings.Queries.Definitions;
 using Gradebook.Foundation.Identity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -40,17 +41,20 @@ public class AccountController : ControllerBase
     #region authorization authentication
     [HttpGet]
     [Route("Me")]
-    [ProducesResponseType(typeof(IEnumerable<PersonDto>), statusCode: 200)]
+    [ProducesResponseType(typeof(MeResponseModel), statusCode: 200)]
     [ProducesResponseType(typeof(string), statusCode: 400)]
     [Authorize]
     public async Task<IActionResult> GetMe()
     {
         var user = await _userManager.Service.FindByNameAsync(User.Identity!.Name);
         var accessibleSchools = await _foundationQueries.Service.GetSchoolsForUser(user.Id);
+        if (!accessibleSchools.Status) return BadRequest();
+        var schools = accessibleSchools.Response ?? Enumerable.Empty<SchoolWithRelatedPersonDto>();
         return Ok(new MeResponseModel
         {
             UserId = user.Id,
-            Schools = accessibleSchools.Response ?? Enumerable.Empty<SchoolWithRelatedPersonDto>()
+            IsActive = schools.Any(),
+            Schools = schools
         });
     }
     [Authorize]
@@ -85,7 +89,7 @@ public class AccountController : ControllerBase
     [Route("login")]
     public async Task<IActionResult> Login([FromForm] LoginModel model)
     {
-        var user = await _userManager.Service.FindByNameAsync(model.Username);
+        var user = await _userManager.Service.FindByNameAsync(model.Email);
         if (user != null && await _userManager.Service.CheckPasswordAsync(user, model.Password))
         {
             var userRoles = await _userManager.Service.GetRolesAsync(user);
@@ -127,7 +131,7 @@ public class AccountController : ControllerBase
     {
         var userExists = await _userManager.Service.FindByNameAsync(model.Email);
         if (userExists != null)
-            return StatusCode(StatusCodes.Status500InternalServerError, new LoginRegisterResponse { Status = "Error", Message = "User already exists!" });
+            return StatusCode(400, new LoginRegisterResponse { Status = "Error", Message = "User already exists!" });
 
         ApplicationUser user = new()
         {
@@ -137,7 +141,7 @@ public class AccountController : ControllerBase
         };
         var result = await _userManager.Service.CreateAsync(user, model.Password);
         if (!result.Succeeded)
-            return StatusCode(StatusCodes.Status500InternalServerError, new LoginRegisterResponse { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+            return StatusCode(400, new LoginRegisterResponse { Status = "Error", Message = "User creation failed! Please check user details and try again." });
 
         return Ok(new LoginRegisterResponse { Status = "Success", Message = "User created successfully!" });
     }
@@ -209,6 +213,19 @@ public class AccountController : ControllerBase
 
     #endregion
 
+    #region people
+    [HttpGet]
+    [Route("{userGuid}/people")]
+    [ProducesResponseType(typeof(IEnumerable<PersonDto>), 200)]
+    [ProducesResponseType(typeof(string), statusCode: 400)]
+    [Authorize]
+    public async Task<IActionResult> GetRelatedPeople([FromRoute] string userGuid)
+    {
+        var resp = await _foundationQueries.Service.GetPeopleByUserGuid(userGuid);
+        return resp.Status ? Ok(resp.Response) : BadRequest();
+    }
+    #endregion
+
     #region settings
     [HttpGet]
     [Route("{userGuid}/Settings/{settingEnum}")]
@@ -219,7 +236,8 @@ public class AccountController : ControllerBase
         switch (settingEnum)
         {
             case SettingEnum.DefaultPersonGuid:
-                setting = await _settingsQueries.Service.GetDefaultPersonGuid(userGuid);
+                var resp = await _settingsQueries.Service.GetDefaultPersonGuid(userGuid);
+                setting = resp == default ? null : resp;
                 break;
             default:
                 return BadRequest();
@@ -241,6 +259,25 @@ public class AccountController : ControllerBase
                 return BadRequest();
         }
         return Ok();
+    }
+    [HttpPost]
+    [Route("{userGuid}/Settings")]
+    [Authorize]
+    [ProducesResponseType(typeof(string), statusCode: 400)]
+    public async Task<IActionResult> SetSettings([FromRoute] string userGuid, [FromBody] SettingsCommand settings)
+    {
+        var resp = await _settingsCommands.Service.SetAccountSettings(userGuid, settings);
+        return resp.Status ? Ok() : BadRequest(resp.Message);
+    }
+    [HttpGet]
+    [Route("{userGuid}/Settings")]
+    [Authorize]
+    [ProducesResponseType(typeof(SettingsDto), statusCode: 200)]
+    [ProducesResponseType(typeof(string), statusCode: 400)]
+    public async Task<IActionResult> GetSettings([FromRoute] string userGuid)
+    {
+        var resp = await _settingsQueries.Service.GetAccountSettings(userGuid);
+        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
     }
     [HttpGet]
     [Route("{userGuid}/Settings/DefaultPerson")]

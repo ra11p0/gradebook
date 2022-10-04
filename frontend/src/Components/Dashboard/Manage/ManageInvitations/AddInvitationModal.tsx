@@ -3,16 +3,16 @@ import { connect } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { Modal } from "react-bootstrap";
 import { Button, FormControl, InputLabel, MenuItem, Select, Stack } from "@mui/material";
-import StudentResponse from "../../../../ApiClient/Students/Definitions/StudentResponse";
+import StudentResponse from "../../../../ApiClient/Students/Definitions/Responses/StudentResponse";
 import Person from "../../../Shared/Person";
 import PersonSmall from "../../../Shared/PersonSmall";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import SchoolRolesEnum from "../../../../Common/Enums/SchoolRolesEnum";
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
-import { currentSchoolProxy } from "../../../../Redux/ReduxProxy/currentSchoolProxy";
+import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
 const mapStateToProps = (state: any) => ({
-  currentSchool: currentSchoolProxy(state),
+  currentSchool: getCurrentSchoolReduxProxy(state),
 });
 const mapDispatchToProps = (dispatch: any) => ({});
 interface AddInvitationModalProps {
@@ -52,6 +52,7 @@ const AddInvitationModal = (props: AddInvitationModalProps): ReactElement => {
             <FormControl>
               <InputLabel>{t("selectPeopleToInvite")}</InputLabel>
               <Select
+                className="selectPeopleToInvite"
                 multiple
                 value={selectedStudents}
                 onChange={(event) => {

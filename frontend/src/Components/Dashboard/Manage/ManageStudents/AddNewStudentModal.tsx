@@ -1,13 +1,14 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { Button, Modal } from "react-bootstrap";
 import { useFormik } from "formik";
-import NewStudentRequest from "../../../../ApiClient/Schools/Definitions/NewStudentRequest";
+import NewStudentRequest from "../../../../ApiClient/Schools/Definitions/Requests/NewStudentRequest";
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
-import { currentSchoolProxy } from "../../../../Redux/ReduxProxy/currentSchoolProxy";
+import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
+import Notifications from "../../../../Notifications/Notifications";
 const mapStateToProps = (state: any) => ({
-  currentSchool: currentSchoolProxy(state),
+  currentSchool: getCurrentSchoolReduxProxy(state),
 });
 const mapDispatchToProps = (dispatch: any) => ({});
 interface formValues {
@@ -28,6 +29,9 @@ const AddNewStudentModal = (props: AddNewStudentModalProps): ReactElement => {
     if (values.surname.length < 3) errors.surname = t("surnameInvalid");
     return errors;
   };
+  useEffect(() => {
+    formik.resetForm();
+  }, [props.show]);
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -41,7 +45,7 @@ const AddNewStudentModal = (props: AddNewStudentModalProps): ReactElement => {
         Surname: values.surname,
         Birthday: new Date(values.birthday),
       };
-      SchoolsProxy.addNewStudent(student, props.currentSchool.schoolGuid!).then(props.onHide);
+      SchoolsProxy.addNewStudent(student, props.currentSchool.schoolGuid!).then(props.onHide).catch(Notifications.showApiError);
     },
   });
   return (

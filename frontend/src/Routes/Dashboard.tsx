@@ -13,11 +13,11 @@ import StudentsList from "../Components/Dashboard/Manage/ManageStudents/Students
 import SchoolsList from "../Components/Dashboard/Manage/ManageSchool/SchoolsList";
 import SchoolSelectedOnly from "../Components/Shared/SchoolSelectedOnly";
 import ManageClasses from "../Components/Dashboard/Manage/ManageClasses/ManageClasses";
-import { isLoggedInProxy } from "../Redux/ReduxProxy/isLoggedInProxy";
+import getIsLoggedInReduxProxy from "../Redux/ReduxProxy/getIsLoggedInReduxProxy";
 import SettingsIndex from "../Components/Dashboard/Manage/Settings/SettingsIndex";
 
 const mapStateToProps = (state: any) => ({
-  isLoggedIn: isLoggedInProxy(state),
+  isLoggedIn: getIsLoggedInReduxProxy(state),
 });
 
 const mapDispatchToProps = (dispatch: any) => ({});
@@ -29,7 +29,7 @@ interface DashboardProps {
 class Dashboard extends React.Component<DashboardProps> {
   render() {
     return (
-      <div className="">
+      <div>
         <div className="p-3 bg-light">
           <DashboardNavigation />
         </div>

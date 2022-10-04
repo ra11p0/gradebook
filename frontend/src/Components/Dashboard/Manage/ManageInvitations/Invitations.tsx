@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { Button } from "react-bootstrap";
 import AddInvitationModal from "./AddInvitationModal";
-import InvitationResponse from "../../../../ApiClient/Invitations/Definitions/InvitationResponse";
+import InvitationResponse from "../../../../ApiClient/Invitations/Definitions/Responses/InvitationResponse";
 import { Stack, Grid, List, ListItem } from "@mui/material";
 import InfiniteScrollWrapper from "../../../Shared/InfiniteScrollWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,9 +11,11 @@ import moment from "moment";
 import Person from "../../../Shared/Person";
 import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
-import { currentSchoolProxy } from "../../../../Redux/ReduxProxy/currentSchoolProxy";
+import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
+import PermissionsBlocker from "../../../Shared/PermissionsBlocker"
+import PermissionLevelEnum from '../../../../Common/Enums/Permissions/PermissionLevelEnum';
 const mapStateToProps = (state: any) => ({
-  currentSchool: currentSchoolProxy(state),
+  currentSchool: getCurrentSchoolReduxProxy(state),
 });
 const mapDispatchToProps = (dispatch: any) => ({});
 interface InvitationsProps {
@@ -28,8 +30,12 @@ const Invitations = (props: InvitationsProps): ReactElement => {
         <div className="d-flex justify-content-between">
           <div className="my-auto">{t("invitations")}</div>
           <div>
-            <Button onClick={() => setShowInvitationModal(true)}>{t("inviteStudent")}</Button>
-            <AddInvitationModal show={showInvitationModal} onHide={() => setShowInvitationModal(false)} />
+            <PermissionsBlocker permissions={[PermissionLevelEnum.Invitations_CanInvite]}>
+              <Button className="addInvitationButton" onClick={() => setShowInvitationModal(true)}>
+                {t("inviteStudent")}
+              </Button>
+              <AddInvitationModal show={showInvitationModal} onHide={() => setShowInvitationModal(false)} />
+            </PermissionsBlocker>
           </div>
         </div>
         <Stack className={"border rounded-3 my-1 p-3 bg-light"}>

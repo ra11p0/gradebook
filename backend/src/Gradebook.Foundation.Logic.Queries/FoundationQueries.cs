@@ -64,6 +64,18 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<IEnumerable<TeacherDto>, bool>(teachers, true);
     }
 
+    public async Task<ResponseWithStatus<IEnumerable<StudentDto>>> GetAllStudentsInClass(Guid classGuid)
+    {
+        var resp = await Repository.GetAllStudentsInClass(classGuid);
+        return new ResponseWithStatus<IEnumerable<StudentDto>>(resp, true);
+    }
+
+    public async Task<ResponseWithStatus<IEnumerable<TeacherDto>>> GetAllTeachersInClass(Guid classGuid)
+    {
+        var resp = await Repository.GetAllTeachersInClass(classGuid);
+        return new ResponseWithStatus<IEnumerable<TeacherDto>>(resp, true);
+    }
+
     public async Task<ResponseWithStatus<ClassDto, bool>> GetClassByGuid(Guid guid)
     {
         var resp = await Repository.GetClassByGuid(guid);
@@ -135,6 +147,14 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
             return invitation;
         }));
         return new ResponseWithStatus<IPagedList<InvitationDto>, bool>(invitationsWithPeople.ToPagedList(invitationsResponse.Page, invitationsResponse.Total, invitationsResponse.TotalPages), true);
+    }
+
+    public async Task<ResponseWithStatus<IEnumerable<PersonDto>>> GetPeopleByUserGuid(string userGuid)
+    {
+        var resp = await GetSchoolsForUser(userGuid);
+        if (!resp.Status) return new ResponseWithStatus<IEnumerable<PersonDto>>(resp.Message);
+        var people = resp.Response!.Select(e => e.Person);
+        return new ResponseWithStatus<IEnumerable<PersonDto>>(people, true);
     }
 
     public async Task<ResponseWithStatus<IEnumerable<PersonDto>, bool>> GetPeopleInSchool(Guid schoolGuid)
@@ -228,8 +248,32 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<IPagedList<TeacherDto>>(response, true);
     }
 
+    public async Task<ResponseWithStatus<bool>> IsClassOwner(Guid classGuid, Guid personGuid)
+    {
+        var resp = await Repository.IsClassOwner(classGuid, personGuid);
+        return new ResponseWithStatus<bool>(resp, true);
+    }
+
     public async Task<ResponseWithStatus<bool>> IsUserActive(string userGuid)
     {
         return new ResponseWithStatus<bool>(await Repository.IsUserActive(userGuid), true);
+    }
+
+    public async Task<ResponseWithStatus<Guid>> RecogniseCurrentPersonByRelatedPerson(Guid requestedPersonGuid)
+    {
+        var uid = await _identityLogic.Service.CurrentUserId();
+        if (!uid.Status) return new ResponseWithStatus<Guid>(uid.Message);
+        var people = await GetPeopleByUserGuid(uid.Response!);
+        if (!people.Status) return new ResponseWithStatus<Guid>(people.Message);
+        var requestedPerson = await GetPersonByGuid(requestedPersonGuid);
+        if (!requestedPerson.Status) return new ResponseWithStatus<Guid>(requestedPerson.Message);
+        var schoolGuidOfRequested = requestedPerson.Response!.SchoolGuid;
+        var searchedPerson = people.Response!.FirstOrDefault(e => e.SchoolGuid == schoolGuidOfRequested);
+        return searchedPerson is null ? new ResponseWithStatus<Guid>("Could not find person") : new ResponseWithStatus<Guid>(searchedPerson.Guid, true);
+    }
+    public async Task<ResponseWithStatus<Guid>> RecogniseCurrentPersonBySchoolGuid(Guid schoolGuid)
+    {
+        var resp = await GetCurrentPersonGuid(schoolGuid);
+        return resp.Status ? new ResponseWithStatus<Guid>(resp.Response, true) : new ResponseWithStatus<Guid>(resp.Message);
     }
 }

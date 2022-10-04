@@ -1,24 +1,19 @@
 import { AxiosResponse } from "axios";
 import { axiosApiAuthorized } from "../AxiosInterceptor";
-import InvitationResponse from "../Invitations/Definitions/InvitationResponse";
-import StudentResponse from "../Students/Definitions/StudentResponse";
-import ClassResponse from "./Definitions/ClassResponse";
-import GetSchoolResponse from "./Definitions/GetSchoolResponse";
-import InviteMultiplePeopleRequest from "./Definitions/InviteMultiplePeopleRequest";
-import MeResponse from "../Account/Definitions/MeResponse";
-import NewClassRequest from "./Definitions/NewClassRequest";
-import NewSchoolRequest from "./Definitions/NewSchoolRequest";
-import NewStudentRequest from "./Definitions/NewStudentRequest";
-import NewTeacherRequest from "./Definitions/NewTeacherRequest";
-import PersonResponse from "./Definitions/PersonResponse";
-import StudentInSchoolResponse from "./Definitions/StudentInSchoolResponse";
-import TeacherInSchoolResponse from "./Definitions/TeacherInSchoolResponse";
+import InvitationResponse from "../Invitations/Definitions/Responses/InvitationResponse";
+import StudentResponse from "../Students/Definitions/Responses/StudentResponse";
+import ClassResponse from "./Definitions/Responses/ClassResponse";
+import GetSchoolResponse from "./Definitions/Responses/GetSchoolResponse";
+import InviteMultiplePeopleRequest from "./Definitions/Requests/InviteMultiplePeopleRequest";
+import NewClassRequest from "./Definitions/Requests/NewClassRequest";
+import NewStudentRequest from "./Definitions/Requests/NewStudentRequest";
+import NewTeacherRequest from "./Definitions/Requests/NewTeacherRequest";
+import PersonResponse from "./Definitions/Responses/PersonResponse";
+import StudentInSchoolResponse from "./Definitions/Responses/StudentInSchoolResponse";
+import TeacherInSchoolResponse from "./Definitions/Responses/TeacherInSchoolResponse";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-const addNewSchool = (school: NewSchoolRequest): Promise<AxiosResponse> => {
-    return axiosApiAuthorized.post(API_URL + '/schools', school);
-};
 
 const removeSchool = (schoolGuid: string): Promise<AxiosResponse> => {
     return axiosApiAuthorized.delete(API_URL + `/schools/${schoolGuid}`);
@@ -84,7 +79,6 @@ const searchPeople = (schoolGuid: string, discriminator: string, query: string, 
 
 
 export default {
-    addNewSchool,
     removeSchool,
     getSchool,
     getStudentsInSchool,

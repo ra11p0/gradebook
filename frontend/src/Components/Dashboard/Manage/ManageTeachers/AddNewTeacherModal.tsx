@@ -5,7 +5,7 @@ import { Modal } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
 import { connect } from "react-redux";
-import NewTeacherRequest from "../../../../ApiClient/Schools/Definitions/NewTeacherRequest";
+import NewTeacherRequest from "../../../../ApiClient/Schools/Definitions/Requests/NewTeacherRequest";
 
 type Props = { show: boolean; onHide: () => void; currentSchoolGuid?: string };
 const mapStateToProps = (state: any) => ({
@@ -38,9 +38,7 @@ function AddNewTeacherModal(props: Props) {
         Surname: values.surname,
         Birthday: new Date(values.birthday),
       };
-      SchoolsProxy.addNewTeacher(teacher, props.currentSchoolGuid!).then(
-        props.onHide
-      );
+      SchoolsProxy.addNewTeacher(teacher, props.currentSchoolGuid!).then(props.onHide);
     },
   });
   return (
@@ -52,19 +50,8 @@ function AddNewTeacherModal(props: Props) {
         <Modal.Body>
           <div className="m-1 p-1">
             <label htmlFor="name">{t("name")}</label>
-            <input
-              className="form-control"
-              id="name"
-              name="name"
-              type="text"
-              onChange={formik.handleChange}
-              value={formik.values.name}
-            />
-            {formik.errors.name && formik.touched.name ? (
-              <div className="invalid-feedback d-block">
-                {formik.errors.name}
-              </div>
-            ) : null}
+            <input className="form-control" id="name" name="name" type="text" onChange={formik.handleChange} value={formik.values.name} />
+            {formik.errors.name && formik.touched.name ? <div className="invalid-feedback d-block">{formik.errors.name}</div> : null}
           </div>
           <div className="m-1 p-1">
             <label htmlFor="surname">{t("surname")}</label>
@@ -77,9 +64,7 @@ function AddNewTeacherModal(props: Props) {
               value={formik.values.surname}
             />
             {formik.errors.surname && formik.touched.surname ? (
-              <div className="invalid-feedback d-block">
-                {formik.errors.surname}
-              </div>
+              <div className="invalid-feedback d-block">{formik.errors.surname}</div>
             ) : null}
           </div>
           <div className="m-1 p-1">
@@ -93,9 +78,7 @@ function AddNewTeacherModal(props: Props) {
               value={formik.values.birthday}
             />
             {formik.errors.birthday && formik.touched.birthday ? (
-              <div className="invalid-feedback d-block">
-                {formik.errors.birthday as string}
-              </div>
+              <div className="invalid-feedback d-block">{formik.errors.birthday as string}</div>
             ) : null}
           </div>
         </Modal.Body>

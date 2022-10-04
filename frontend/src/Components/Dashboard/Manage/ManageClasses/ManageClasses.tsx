@@ -3,7 +3,7 @@ import { Stack } from "@mui/system";
 import moment from "moment";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import ClassResponse from "../../../../ApiClient/Schools/Definitions/ClassResponse";
+import ClassResponse from "../../../../ApiClient/Schools/Definitions/Responses/ClassResponse";
 import InfiniteScrollWrapper from "../../../Shared/InfiniteScrollWrapper";
 import AddClassModal from "./AddClassModal";
 import { connect } from "react-redux";
@@ -15,10 +15,10 @@ import { faTrash, faWindowMaximize } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import Notifications from "../../../../Notifications/Notifications";
 import ClassesProxy from "../../../../ApiClient/Classes/ClassesProxy";
-import { currentSchoolProxy } from "../../../../Redux/ReduxProxy/currentSchoolProxy";
+import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
 
 const mapStateToProps = (state: any) => ({
-  currentSchool: currentSchoolProxy(state),
+  currentSchool: getCurrentSchoolReduxProxy(state),
 });
 type Props = {
   currentSchool: any;

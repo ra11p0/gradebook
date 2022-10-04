@@ -5,22 +5,23 @@ import { Dropdown } from "react-bootstrap";
 import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { currentPersonProxy } from "../../Redux/ReduxProxy/currentPersonProxy";
-import { isLoggedInProxy } from "../../Redux/ReduxProxy/isLoggedInProxy";
-import { isUserActivatedProxy } from "../../Redux/ReduxProxy/isUserAcrivatedProxy";
-import { logOutWrapper } from "../../Redux/ReduxWrappers/logOutWrapper";
+import getCurrentPersonReduxProxy from "../../Redux/ReduxProxy/getCurrentPersonReduxProxy";
+import getIsLoggedInReduxProxy from "../../Redux/ReduxProxy/getIsLoggedInReduxProxy";
+import getIsUserActivatedReduxProxy from "../../Redux/ReduxProxy/getIsUserActivatedReduxProxy";
+import setLogOutReduxWrapper from "../../Redux/ReduxWrappers/setLogOutReduxWrapper";
+import LoadingScreen from "./LoadingScreen";
 import SchoolSelect from "./SchoolSelect";
 
 const mapStateToProps = (state: any) => {
   return {
-    isLoggedIn: isLoggedInProxy(state),
-    currentPerson: currentPersonProxy(state),
-    isActive: isUserActivatedProxy(state),
+    isLoggedIn: getIsLoggedInReduxProxy(state),
+    currentPerson: getCurrentPersonReduxProxy(state),
+    isActive: getIsUserActivatedReduxProxy(state),
   };
 };
 
 const mapDispatchToProps = (dispatch: any) => ({
-  logOutHandler: () => logOutWrapper(dispatch),
+  logOutHandler: () => setLogOutReduxWrapper(dispatch),
 });
 
 interface HeaderProps {
@@ -59,15 +60,21 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               <div className="d-flex gap-2">
                 {this.props.isActive && (
                   <>
-                    <div>
-                      <SchoolSelect />
-                    </div>
+                    <LoadingScreen
+                      isReady={this.props.currentPerson}>
+                      <>
+                        <div>
+                          <SchoolSelect />
+                        </div>
 
-                    <div className="my-auto">
-                      <Link to="/account/profile" className="btn btn-outline-primary">
-                        {`${this.props.currentPerson?.name} ${this.props.currentPerson?.surname}`}
-                      </Link>
-                    </div>
+                        <div className="my-auto">
+                          <Link to="/account/profile" className="btn btn-outline-primary">
+                            {`${this.props.currentPerson?.name} ${this.props.currentPerson?.surname}`}
+                          </Link>
+                        </div>
+                      </>
+                    </LoadingScreen>
+
                     <div className="my-auto">
                       <Link to="/dashboard" className="btn btn-outline-primary">
                         {t("dashboard")}
@@ -76,7 +83,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                   </>
                 )}
                 <div className="my-auto">
-                  <a className="btn btn-outline-primary" onClick={() => this.logOut()}>
+                  <a className="btn btn-outline-primary logoutButton" onClick={() => this.logOut()}>
                     {t("logout")}
                   </a>
                 </div>

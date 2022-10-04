@@ -3,7 +3,6 @@
     "target": "ES6",
     "lib": ["dom", "dom.iterable", "esnext"],
     "sourceRoot": "/src",
-    "module": "esnext",
     "outDir": "out",
     "sourceMap": true,
     "allowJs": true,
@@ -17,7 +16,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "module": "CommonJS"
   },
-  "include": ["src"]
+  "include": ["/**/*.ts", "src"],
+  "exclude": ["node_modules"]
 }

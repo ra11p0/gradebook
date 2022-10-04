@@ -12,10 +12,12 @@ public class Person : BaseDomainModel
     public SchoolRoleEnum SchoolRole { get; set; }
     public DateTime? Birthday { get; set; }
     public Guid? CreatorGuid { get; set; }
+    public Guid? SchoolGuid { get; set; }
 
     //**********
 
     [ForeignKey("CreatorGuid")]
     public Administrator? Creator { get; set; }
-    public virtual ICollection<School>? Schools { get; set; }
+    [ForeignKey("SchoolGuid")]
+    public School? School { get; set; }
 }
