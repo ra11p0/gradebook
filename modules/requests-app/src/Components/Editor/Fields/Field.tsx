@@ -12,6 +12,7 @@ import ShortText from "./FieldTypes/ShortText";
 type Props = {
   field: FieldValues;
   editorMode?: boolean;
+  onRemoveFieldHandler: () => void;
 };
 type FieldValues = {
   name: string;
@@ -30,7 +31,11 @@ function Field(props: Props) {
           onFinishEditingHandler={() => setEditorMode(false)}
         />
       ) : (
-        <FieldPreview field={props.field} onEditFieldHandler={() => setEditorMode(true)} />
+        <FieldPreview
+          field={props.field}
+          onRemoveFieldHandler={props.onRemoveFieldHandler}
+          onEditFieldHandler={() => setEditorMode(true)}
+        />
       )}
     </>
   );

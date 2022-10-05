@@ -1,23 +1,23 @@
 import React from "react";
 import { ListGroup } from "react-bootstrap";
 import FieldTypes from "../../Constraints/FieldTypes";
-import Field from "./Fields/Field";
+import Field from "../../Interfaces/Common/Field";
+import FieldComponent from "./Fields/Field";
 
-type Props = {};
+type Props = {
+  fields: Field[];
+  onRemoveFieldHandler: (uuid: string) => void;
+};
 
-function EditorStage({}: Props) {
+function EditorStage(props: Props) {
   return (
     <div className="d-flex justify-content-center m-2 p-2">
       <ListGroup>
-        <ListGroup.Item>
-          <Field
-            field={{
-              name: "Imię i nazwisko",
-              type: FieldTypes.ShortText,
-              value: "Marian broda",
-            }}
-          ></Field>
-        </ListGroup.Item>
+        {props.fields.map((field, index) => (
+          <ListGroup.Item key={index}>
+            <FieldComponent field={field} onRemoveFieldHandler={() => props.onRemoveFieldHandler(field.uuid)} />
+          </ListGroup.Item>
+        ))}
       </ListGroup>
     </div>
   );

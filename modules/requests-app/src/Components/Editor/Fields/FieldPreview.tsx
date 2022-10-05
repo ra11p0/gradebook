@@ -6,6 +6,7 @@ import FieldTypes from "../../../Constraints/FieldTypes";
 type Props = {
   field: FieldValues;
   onEditFieldHandler: () => void;
+  onRemoveFieldHandler: () => void;
 };
 
 type FieldValues = {
@@ -22,6 +23,9 @@ function FieldPreview(props: Props) {
       <Row>
         <div className="d-flex justify-content-end">
           <ButtonGroup>
+            <Button variant="danger" onClick={props.onRemoveFieldHandler}>
+              {t("removeField")}
+            </Button>
             <Button onClick={props.onEditFieldHandler}>{t("editField")}</Button>
           </ButtonGroup>
         </div>
