@@ -1,0 +1,10 @@
+{
+  "loading": "Ładowanie...",
+  "addNewField": "Dodaj nowe pole",
+  "discard": "Anuluj",
+  "confirm": "Potwierdź",
+  "fieldName": "Nazwa pola",
+  "fieldType": "Typ pola",
+  "ShortText": "Krótki tekst",
+  "LongText": "Długi tekst"
+}

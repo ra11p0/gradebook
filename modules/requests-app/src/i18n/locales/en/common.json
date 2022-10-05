@@ -1,0 +1,10 @@
+{
+  "loading": "Loading...",
+  "addNewField": "Add new field",
+  "discard": "Discard",
+  "confirm": "Confirm",
+  "fieldName": "Field name",
+  "fieldType": "Field type",
+  "ShortText": "Short text",
+  "LongText": "Long text"
+}
