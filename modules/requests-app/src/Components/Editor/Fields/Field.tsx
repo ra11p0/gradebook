@@ -1,44 +1,37 @@
-import { Formik, FormikHelpers, FormikValues, Field as FormikField } from "formik";
-import React, { useState } from "react";
-import { Button, ButtonGroup, Col, Form, Row } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
-import ReactSelect, { GroupBase } from "react-select";
-import FieldTypes from "../../../Constraints/FieldTypes";
+import { useState } from "react";
 import FieldEditor from "./FieldEditor";
 import FieldPreview from "./FieldPreview";
-import LongText from "./FieldTypes/LongText";
-import ShortText from "./FieldTypes/ShortText";
+import FieldInterface from "../../../Interfaces/Common/Field";
+import ReduxSetCurrentlyEdited from "../../../Redux/ReduxSet/ReduxSetCurrentlyEdited";
+import { connect } from "react-redux";
+import ReduxGetCurrentlyEdited from "../../../Redux/ReduxGet/ReduxGetCurrentlyEdited";
 
 type Props = {
-  field: FieldValues;
-  editorMode?: boolean;
+  field: FieldInterface;
+  currentlyEdited: string;
   onRemoveFieldHandler: () => void;
-};
-type FieldValues = {
-  name: string;
-  type?: FieldTypes;
-  value?: any;
 };
 
 function Field(props: Props) {
-  const [editorMode, setEditorMode] = useState(props.editorMode ?? false);
   return (
     <>
-      {editorMode ? (
+      {props.currentlyEdited == props.field.uuid ? (
         <FieldEditor
           field={props.field}
-          onAbortEditingHandler={() => setEditorMode(false)}
-          onFinishEditingHandler={() => setEditorMode(false)}
+          onAbortEditingHandler={() => ReduxSetCurrentlyEdited("")}
+          onFinishEditingHandler={() => ReduxSetCurrentlyEdited("")}
         />
       ) : (
         <FieldPreview
           field={props.field}
           onRemoveFieldHandler={props.onRemoveFieldHandler}
-          onEditFieldHandler={() => setEditorMode(true)}
+          onEditFieldHandler={() => ReduxSetCurrentlyEdited(props.field.uuid)}
         />
       )}
     </>
   );
 }
 
-export default Field;
+export default connect((state) => ({
+  currentlyEdited: ReduxGetCurrentlyEdited(state),
+}))(Field);

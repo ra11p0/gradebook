@@ -19,7 +19,7 @@ function FieldPreview(props: Props) {
   const { t } = useTranslation();
   return (
     <div>
-      <Row>{props.field.value as string}</Row>
+      <Row>{props.field.name as string}</Row>
       <Row>
         <div className="d-flex justify-content-end">
           <ButtonGroup>

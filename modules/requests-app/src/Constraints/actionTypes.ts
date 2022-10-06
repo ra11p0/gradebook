@@ -1,1 +1,2 @@
-export const APP_LOAD = 'APP_LOAD';
+export const SET_FIELDS = 'SET_FIELDS';
+export const SET_CURRENTLY_EDITED_FIELD = 'SET_CURRENTLY_EDITED_FIELD';

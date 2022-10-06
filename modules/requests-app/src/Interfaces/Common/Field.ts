@@ -5,4 +5,5 @@ export default interface Field {
     name: string;
     type?: FieldTypes;
     value?: any;
+    order: number;
 }
