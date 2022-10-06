@@ -3,7 +3,7 @@ import ReduxGetFields from "../ReduxGet/ReduxGetFields";
 import { store } from "../store";
 import ReduxSetFields from "./ReduxSetFields";
 
-export default (field: Field) => {
-    let fields = ReduxGetFields(store.getState()).filter(f => f.uuid != field.uuid);
+export default (uuid: string) => {
+    let fields = ReduxGetFields(store.getState()).filter(f => f.uuid != uuid);
     ReduxSetFields([...fields]);
 };

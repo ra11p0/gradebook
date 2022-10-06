@@ -8,11 +8,12 @@ import Field from "../../../Interfaces/Common/Field";
 import ReduxSetField from "../../../Redux/ReduxSet/ReduxSetField";
 import LongText from "./FieldTypes/LongText";
 import ShortText from "./FieldTypes/ShortText";
+import * as Yup from "yup";
 
 type Props = {
   field: Field;
   onFinishEditingHandler: () => void;
-  onAbortEditingHandler: () => void;
+  onAbortEditingHandler: (uuid: string) => void;
 };
 
 function FieldEditor(props: Props) {
@@ -23,18 +24,17 @@ function FieldEditor(props: Props) {
       name: props.field.name,
       type: props.field.type ?? FieldTypes.ShortText,
     },
-    validate(values: { name: string; type: FieldTypes }) {
-      const err = {};
-      if (values.name.length === 0) return { name: t("nameCantBeEmpty") };
-      return err;
-    },
+    validationSchema: Yup.object().shape({
+      name: Yup.string().required(t("fieldNameIsRequired")),
+      description: Yup.string(),
+    }),
     onSubmit(values, formikHelpers) {
       ReduxSetField({ ...props.field, name: values.name, type: values.type });
       props.onFinishEditingHandler();
     },
   });
   return (
-    <Form onSubmit={formik.handleSubmit}>
+    <Form onSubmit={formik.handleSubmit} className="shadow m-2 p-2">
       <Row className="m-2 p-2">
         <Col>
           <Form.Label htmlFor="name">{t("fieldName")}</Form.Label>
@@ -73,7 +73,7 @@ function FieldEditor(props: Props) {
       <Row className="m-2 p-2">
         <div className="d-flex justify-content-end">
           <ButtonGroup>
-            <Button variant="danger" onClick={props.onAbortEditingHandler}>
+            <Button variant="danger" onClick={() => props.onAbortEditingHandler(props.field.uuid)}>
               {t("discard")}
             </Button>
             <Button variant="success" type="submit">

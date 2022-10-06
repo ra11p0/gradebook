@@ -12,7 +12,7 @@ type Props = {
 function EditorStage(props: Props) {
   return (
     <div className="d-flex justify-content-center m-2 p-2">
-      <ListGroup>
+      <ListGroup className="w-75">
         {props.fields.map((field, index) => (
           <ListGroup.Item key={index}>
             <FieldComponent field={field} onRemoveFieldHandler={() => props.onRemoveFieldHandler(field.uuid)} />

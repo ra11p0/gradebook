@@ -5,6 +5,7 @@ import FieldTypes from "../../Constraints/FieldTypes";
 import Field from "../../Interfaces/Common/Field";
 import ReduxGetFields from "../../Redux/ReduxGet/ReduxGetFields";
 import ReduxRemoveField from "../../Redux/ReduxSet/ReduxRemoveField";
+import ReduxRemoveInvalid from "../../Redux/ReduxSet/ReduxRemoveInvalid";
 import ReduxSetCurrentlyEdited from "../../Redux/ReduxSet/ReduxSetCurrentlyEdited";
 import ReduxSetField from "../../Redux/ReduxSet/ReduxSetField";
 import ReduxSetFields from "../../Redux/ReduxSet/ReduxSetFields";
@@ -43,15 +44,16 @@ function Editor(props: Props) {
           onRemoveFieldHandler={(uuid) => {
             let fieldToRemove = props.fields.find((o) => o.uuid == uuid);
             if (!fieldToRemove) return;
-            ReduxRemoveField(fieldToRemove);
+            ReduxRemoveField(fieldToRemove.uuid);
           }}
         />
       </Row>
       <Row>
         <EditorToolbar
           onAddNewFieldHandler={() => {
+            ReduxRemoveInvalid();
             const newUuid = Math.random().toString();
-            ReduxSetField({ uuid: newUuid, name: "", order: props.fields.length });
+            ReduxSetField({ uuid: newUuid, name: "", order: Math.max(...[0, ...props.fields.map((f) => f.order)]) + 1 });
             ReduxSetCurrentlyEdited(newUuid);
           }}
           onConfirmHandler={() => {}}
