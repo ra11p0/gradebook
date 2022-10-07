@@ -5,6 +5,13 @@ import ReduxSetFields from "./ReduxSetFields";
 
 export default (field: Field) => {
     if (!field) return;
-    let fields = ReduxGetFields(store.getState()).filter(f => f.uuid != field.uuid);
-    ReduxSetFields([...fields, field]);
+    const fields = ReduxGetFields(store.getState());
+    const index = fields.indexOf(fields.find(f => f.uuid == field.uuid)!);
+
+    const newFields = fields.slice();
+    if (index < 0)
+        newFields.push(field);
+    else
+        newFields[index] = field;
+    ReduxSetFields(newFields);
 };
