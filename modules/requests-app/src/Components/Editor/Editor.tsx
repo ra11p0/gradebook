@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { ListGroup, Row } from "react-bootstrap";
+import { Col, ListGroup, Row } from "react-bootstrap";
 import { connect } from "react-redux";
 import FieldTypes from "../../Constraints/FieldTypes";
 import Field from "../../Interfaces/Common/Field";
 import ReduxGetFields from "../../Redux/ReduxGet/ReduxGetFields";
+import ReduxFixFields from "../../Redux/ReduxSet/ReduxFixFields";
 import ReduxRemoveField from "../../Redux/ReduxSet/ReduxRemoveField";
 import ReduxSetCurrentlyEdited from "../../Redux/ReduxSet/ReduxSetCurrentlyEdited";
 import ReduxSetField from "../../Redux/ReduxSet/ReduxSetField";
@@ -35,28 +36,35 @@ function Editor(props: Props) {
   return (
     <>
       <Row>
-        <EditorTitle />
+        <Col>
+          <EditorTitle />
+        </Col>
       </Row>
       <Row>
-        <EditorStage
-          fields={props.fields}
-          onRemoveFieldHandler={(uuid) => {
-            let fieldToRemove = props.fields.find((o) => o.uuid == uuid);
-            if (!fieldToRemove) return;
-            ReduxRemoveField(fieldToRemove.uuid);
-          }}
-        />
+        <Col>
+          <EditorStage
+            fields={props.fields}
+            onRemoveFieldHandler={(uuid) => {
+              let fieldToRemove = props.fields.find((o) => o.uuid == uuid);
+              if (!fieldToRemove) return;
+              ReduxRemoveField(fieldToRemove.uuid);
+            }}
+          />
+        </Col>
       </Row>
       <Row>
-        <EditorToolbar
-          onAddNewFieldHandler={() => {
-            const newUuid = Math.random().toString();
-            ReduxSetField({ uuid: newUuid, name: "" });
-            ReduxSetCurrentlyEdited(newUuid);
-          }}
-          onConfirmHandler={() => { }}
-          onDiscardHandler={() => { }}
-        />
+        <Col>
+          <EditorToolbar
+            onAddNewFieldHandler={() => {
+              ReduxFixFields();
+              const newUuid = Math.random().toString();
+              ReduxSetField({ uuid: newUuid, name: "" });
+              ReduxSetCurrentlyEdited(newUuid);
+            }}
+            onConfirmHandler={() => { }}
+            onDiscardHandler={() => { }}
+          />
+        </Col>
       </Row>
     </>
   );

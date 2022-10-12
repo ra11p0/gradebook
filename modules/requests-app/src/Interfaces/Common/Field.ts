@@ -5,5 +5,7 @@ export default interface Field {
     name: string;
     type?: FieldTypes;
     value?: any;
-    //order: number;
+    labels?: string[];
+    description?: string;
+    distinctValues?: boolean;
 }

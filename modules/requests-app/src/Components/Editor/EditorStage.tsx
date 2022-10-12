@@ -1,5 +1,5 @@
 import React from "react";
-import { ListGroup } from "react-bootstrap";
+import { Col, ListGroup, Row } from "react-bootstrap";
 import { DndProvider } from "react-dnd";
 import FieldTypes from "../../Constraints/FieldTypes";
 import Field from "../../Interfaces/Common/Field";
@@ -13,15 +13,15 @@ type Props = {
 
 function EditorStage(props: Props) {
   return (
-    <div className="d-flex justify-content-center m-2 p-2">
-      <ListGroup className="w-75">
-        <DndProvider backend={HTML5Backend}>
+    <DndProvider backend={HTML5Backend}>
+      <Row className="d-flex justify-content-center">
+        <Col>
           {props.fields.map((field, index) => (
             <FieldComponent key={index} field={field} onRemoveFieldHandler={() => props.onRemoveFieldHandler(field.uuid)} />
           ))}
-        </DndProvider>
-      </ListGroup>
-    </div>
+        </Col>
+      </Row>
+    </DndProvider >
   );
 }
 

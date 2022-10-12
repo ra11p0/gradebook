@@ -8,11 +8,13 @@ import ReduxGetCurrentlyEdited from "../../../Redux/ReduxGet/ReduxGetCurrentlyEd
 import ReduxGetFields from "../../../Redux/ReduxGet/ReduxGetFields";
 import { store } from "../../../Redux/store";
 import ReduxRemoveField from "../../../Redux/ReduxSet/ReduxRemoveField";
-import { ListGroup } from "react-bootstrap";
+import { ListGroup, Row } from "react-bootstrap";
 import { useDrag, useDrop } from "react-dnd";
 import update from "immutability-helper";
 import ReduxSetFields from "../../../Redux/ReduxSet/ReduxSetFields";
 import ReduxSetField from "../../../Redux/ReduxSet/ReduxSetField";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHand, faHandDots, faListDots } from "@fortawesome/free-solid-svg-icons";
 
 type Props = {
   field: FieldInterface;
@@ -85,26 +87,29 @@ function Field(props: Props) {
   */
   drag(drop(ref));
 
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div ref={ref}>
-      <ListGroup.Item>
-        {props.currentlyEdited == props.field.uuid ? (
-          <FieldEditor
-            field={props.field}
-            onAbortEditingHandler={() => {
-              ReduxSetCurrentlyEdited("");
-            }}
-            onFinishEditingHandler={() => ReduxSetCurrentlyEdited("")}
-          />
-        ) : (
-          <FieldPreview
-            field={props.field}
-            onRemoveFieldHandler={props.onRemoveFieldHandler}
-            onEditFieldHandler={() => ReduxSetCurrentlyEdited(props.field.uuid)}
-          />
-        )}
-      </ListGroup.Item>
+    <div ref={ref} className={(isHovered ? "border rounded-3 shadow " : "") + " m-2 p-2"} onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}>
+
+      {props.currentlyEdited == props.field.uuid ? (
+        <FieldEditor
+          field={props.field}
+          onAbortEditingHandler={() => {
+            ReduxSetCurrentlyEdited("");
+          }}
+          onFinishEditingHandler={() => ReduxSetCurrentlyEdited("")}
+        />
+      ) : (
+        <FieldPreview
+          field={props.field}
+          onRemoveFieldHandler={props.onRemoveFieldHandler}
+          onEditFieldHandler={() => ReduxSetCurrentlyEdited(props.field.uuid)}
+          isHovered={isHovered}
+        />
+      )}
+
     </div>
   );
 }

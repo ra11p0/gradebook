@@ -1,5 +1,6 @@
 enum FieldTypes {
     ShortText = "ShortText",
-    LongText = "LongText"
+    LongText = "LongText",
+    Checkbox = "Checkbox"
 }
 export default FieldTypes;

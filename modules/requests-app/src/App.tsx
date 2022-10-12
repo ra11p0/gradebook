@@ -1,10 +1,10 @@
 import "./App.css";
-import Requests from "./Components/Requests";
+import Forms from "./Components/Forms";
 
 function App() {
   return (
     <>
-      <Requests />
+      <Forms />
     </>
   );
 }

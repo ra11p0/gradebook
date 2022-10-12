@@ -6,14 +6,16 @@ import "bootstrap/dist/css/bootstrap.css";
 import Editor from "./Editor/Editor";
 type Props = {};
 
-function Requests(props: Props) {
+function Forms(props: Props) {
   return (
     <Provider store={store}>
-      <Loading isReady={true}>
-        <Editor></Editor>
-      </Loading>
+      <div className="w-50">
+        <Loading isReady={true}>
+          <Editor />
+        </Loading>
+      </div>
     </Provider>
   );
 }
 
-export default Requests;
+export default Forms;
