@@ -9,6 +9,9 @@ import SchoolsProxy from "../../ApiClient/Schools/SchoolsProxy";
 import Notifications from "../../Notifications/Notifications";
 import LoadingScreen from "../Shared/LoadingScreen";
 import PeoplePicker from "../Shared/PeoplePicker";
+import { Forms } from "@ra11p0/forms-app"
+import Field from "@ra11p0/forms-app/dist/esm/types/Interfaces/Common/Field";
+import FormFilledResult from "@ra11p0/forms-app/dist/esm/types/Interfaces/Common/FormFilledResult";
 
 type Props = {};
 
@@ -90,7 +93,12 @@ function ClassIndex(props: Props) {
             </Col>
           </Row>
         </div>
-        <div className="m-4"></div>
+        <div className="m-4">
+          <Forms
+            mode={ApplicationModes.Edit}
+            onSubmit={(result: Field[] | FormFilledResult): void => { }}
+            onDiscard={() => { }} />
+        </div>
       </>
     </LoadingScreen>
   );
