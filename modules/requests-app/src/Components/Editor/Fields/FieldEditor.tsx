@@ -1,15 +1,11 @@
 import { useFormik } from "formik";
-import { useState } from "react";
 import { Button, ButtonGroup, Col, Form, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import ReactSelect from "react-select";
 import FieldTypes from "../../../Constraints/FieldTypes";
 import Field from "../../../Interfaces/Common/Field";
 import ReduxSetField from "../../../Redux/ReduxSet/ReduxSetField";
-import LongText from "./FieldTypes/LongText";
-import ShortText from "./FieldTypes/ShortText";
 import * as Yup from "yup";
-import Checkbox from "./FieldTypes/Checkbox";
 import DynamicTextListInput from "../../Common/DynamicTextListInput";
 
 type Props = {
@@ -29,7 +25,10 @@ function FieldEditor(props: Props) {
       description: props.field.description ?? "",
       labels: props.field.labels ?? [''],
       useDescription: props.field.description != null && props.field.description != '',
-      distinctValues: props.field.distinctValues ?? false
+      distinctValues: props.field.distinctValues ?? false,
+      forbidPast: props.field.forbidPast ?? false,
+      forbidFuture: props.field.forbidFuture ?? false,
+      isRequired: props.field.isRequired ?? false
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required(t("fieldNameIsRequired")),
@@ -42,7 +41,10 @@ function FieldEditor(props: Props) {
         type: values.type,
         labels: values.labels,
         description: values.useDescription ? values.description : '',
-        distinctValues: values.distinctValues
+        distinctValues: values.distinctValues,
+        forbidPast: values.forbidPast,
+        forbidFuture: values.forbidFuture,
+        isRequired: values.isRequired
       });
       props.onFinishEditingHandler();
     },
@@ -78,6 +80,7 @@ function FieldEditor(props: Props) {
         <Row>
           <Col>
             {
+              //  field options, different for different fields
               formik.values.type == FieldTypes.Checkbox &&
               <DynamicTextListInput
                 name='labels'
@@ -93,6 +96,34 @@ function FieldEditor(props: Props) {
                 checked={formik.values.distinctValues}
                 onChange={formik.handleChange}
                 label={t('distinctValues')}
+              />
+            }
+            {
+              formik.values.type == FieldTypes.Date &&
+              <>
+                <Form.Check
+                  id='forbidPast'
+                  name='forbidPast'
+                  checked={formik.values.forbidPast}
+                  onChange={formik.handleChange}
+                  label={t('forbidPast')}
+                />
+                <Form.Check
+                  id='forbidFuture'
+                  name='forbidFuture'
+                  checked={formik.values.forbidFuture}
+                  onChange={formik.handleChange}
+                  label={t('forbidFuture')}
+                />
+              </>
+            }
+            {
+              <Form.Check
+                id='isRequired'
+                name='isRequired'
+                checked={formik.values.isRequired}
+                onChange={formik.handleChange}
+                label={t('isRequired')}
               />
             }
           </Col>

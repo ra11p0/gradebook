@@ -7,14 +7,9 @@ import { connect } from "react-redux";
 import ReduxGetCurrentlyEdited from "../../../Redux/ReduxGet/ReduxGetCurrentlyEdited";
 import ReduxGetFields from "../../../Redux/ReduxGet/ReduxGetFields";
 import { store } from "../../../Redux/store";
-import ReduxRemoveField from "../../../Redux/ReduxSet/ReduxRemoveField";
-import { ListGroup, Row } from "react-bootstrap";
 import { useDrag, useDrop } from "react-dnd";
 import update from "immutability-helper";
 import ReduxSetFields from "../../../Redux/ReduxSet/ReduxSetFields";
-import ReduxSetField from "../../../Redux/ReduxSet/ReduxSetField";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHand, faHandDots, faListDots } from "@fortawesome/free-solid-svg-icons";
 
 type Props = {
   field: FieldInterface;
@@ -40,9 +35,6 @@ function Field(props: Props) {
       };
     },
   }));
-
-
-
   const [, drop] = useDrop({
     // accept receives a definition of what must be the type of the dragged item to be droppable
     accept: type,

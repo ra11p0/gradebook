@@ -17,21 +17,6 @@ type Props = {
   fields: Field[];
 };
 
-/* const fields: Field[] = [
-  {
-    uuid: "aaaaa",
-    name: "Imię i nazwisko",
-    type: FieldTypes.ShortText,
-    value: "Marian broda",
-  },
-  {
-    uuid: "bbbbb",
-    name: "Odpowiedz na pytanie",
-    type: FieldTypes.LongText,
-    value: "To jest bardzo dluga odpowiedz na pytanie w tym momencie prosze bardzo.",
-  },
-]; */
-
 function Editor(props: Props) {
   return (
     <>

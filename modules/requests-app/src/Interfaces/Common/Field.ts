@@ -8,4 +8,14 @@ export default interface Field {
     labels?: string[];
     description?: string;
     distinctValues?: boolean;
+    forbidPast?: boolean;
+    forbidFuture?: boolean;
+    isRequired?: boolean;
+    hasError?: boolean;
+    validationKey?: number;
+    onBlur?: (evt: {
+        target: Field;
+        updatedValue: any;
+        errors: any;
+    }) => void;
 }

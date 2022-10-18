@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { SET_CURRENTLY_EDITED_FIELD, SET_FIELDS } from '../Constraints/actionTypes';
+import { SET_ANSWER, SET_ANSWERS, SET_CURRENTLY_EDITED_FIELD, SET_FIELDS } from '../Constraints/actionTypes';
 
 
 const defaultState = {
@@ -11,6 +11,17 @@ const reducer = (state: any = defaultState, action: any) => {
     switch (action.type) {
         case SET_FIELDS:
             return { ...state, fields: action.payload };
+        case SET_ANSWERS:
+            return { ...state, answers: action.payload };
+        case SET_ANSWER:
+            return {
+                ...state,
+                answers: state.answers ? [
+                    ...state.answers.filter((a: any, i: number) => i < action.payload.index),
+                    { ...state.answers[action.payload.index], ...action.payload.field },
+                    ...state.answers.filter((a: any, i: number) => i > action.payload.index),
+                ] : [action.payload.field]
+            }
         case SET_CURRENTLY_EDITED_FIELD:
             return { ...state, currentlyEdited: action.payload };
         default:

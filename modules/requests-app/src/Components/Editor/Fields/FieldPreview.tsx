@@ -6,6 +6,8 @@ import { useTranslation } from "react-i18next";
 import FieldTypes from "../../../Constraints/FieldTypes";
 import Field from "../../../Interfaces/Common/Field";
 import Checkbox from "./FieldTypes/Checkbox";
+import Date from "./FieldTypes/Date";
+import Email from "./FieldTypes/Email";
 import LongText from "./FieldTypes/LongText";
 import ShortText from "./FieldTypes/ShortText";
 
@@ -52,11 +54,15 @@ function FieldPreview(props: Props) {
           {(() => {
             switch (props.field.type) {
               case FieldTypes.ShortText:
-                return <ShortText value={props.field.value} />;
+                return <ShortText {...props.field} />;
               case FieldTypes.LongText:
-                return <LongText value={props.field.value} />;
+                return <LongText {...props.field} />;
               case FieldTypes.Checkbox:
-                return <Checkbox value={props.field.value} labels={props.field.labels ?? []} distinctValues={props.field.distinctValues} />;
+                return <Checkbox {...props.field} />;
+              case FieldTypes.Date:
+                return <Date {...props.field} />;
+              case FieldTypes.Email:
+                return <Email {...props.field} />;
               default:
                 return null;
             }
