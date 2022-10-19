@@ -9,9 +9,11 @@ import SchoolsProxy from "../../ApiClient/Schools/SchoolsProxy";
 import Notifications from "../../Notifications/Notifications";
 import LoadingScreen from "../Shared/LoadingScreen";
 import PeoplePicker from "../Shared/PeoplePicker";
-import { Forms } from "@ra11p0/forms-app"
-import Field from "@ra11p0/forms-app/dist/esm/types/Interfaces/Common/Field";
-import FormFilledResult from "@ra11p0/forms-app/dist/esm/types/Interfaces/Common/FormFilledResult";
+import ApplicationModes from "@ra11p0/forms-app/Constraints/ApplicationModes";
+import Field from "@ra11p0/forms-app/Interfaces/Common/Field";
+import FormFilledResult from "@ra11p0/forms-app/Interfaces/Common/FormFilledResult";
+import Forms from "@ra11p0/forms-app/Components/Forms";
+
 
 type Props = {};
 

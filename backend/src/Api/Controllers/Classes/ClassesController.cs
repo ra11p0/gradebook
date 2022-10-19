@@ -26,11 +26,12 @@ public class ClassesController : ControllerBase
     [ProducesResponseType(typeof(string), 400)]
     public async Task<IActionResult> DeleteClass([FromRoute] Guid classGuid)
     {
-        var currentPerson = await _foundationQueries.Service.RecogniseCurrentPersonByRelatedPerson(teachersGuids.First());
-        if (!await _foundationPermissions.Service.CanManageClass(classGuid, currentPerson.Response))
-            return new StatusResponse("Forbidden");
-        var resp = await _foundationCommands.Service.DeleteClass(classGuid);
-        return resp.Status ? Ok() : BadRequest(resp.Message);
+        return Ok();
+        /* var currentPerson = await _foundationQueries.Service.RecogniseCurrentPersonByRelatedPerson(teachersGuids.First());
+         if (!await _foundationPermissions.Service.CanManageClass(classGuid, currentPerson.Response))
+             return new StatusResponse("Forbidden");
+         var resp = await _foundationCommands.Service.DeleteClass(classGuid);
+         return resp.Status ? Ok() : BadRequest(resp.Message);*/
     }
     [HttpGet]
     [Route("{classGuid}")]

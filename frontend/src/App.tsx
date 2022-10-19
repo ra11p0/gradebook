@@ -19,6 +19,7 @@ import LoadingScreen from "./Components/Shared/LoadingScreen";
 import AccountProxy from "./ApiClient/Accounts/AccountsProxy";
 import setLoginReduxWrapper from './Redux/ReduxWrappers/setLoginReduxWrapper';
 import { store } from './store';
+import setLogOutReduxWrapper from "./Redux/ReduxWrappers/setLogOutReduxWrapper";
 
 interface AppProps {
   onLoad: (isAppLoaded: boolean) => {};
@@ -38,6 +39,8 @@ class App extends React.Component<AppProps> {
           refreshToken: refreshAccessTokenResponse.data.refresh_token,
         });
         this.props.onLoad(true);
+      }).catch(() => {
+        setLogOutReduxWrapper();
       });
     }
     else {

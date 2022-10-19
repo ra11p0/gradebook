@@ -20,7 +20,7 @@ type Props = {
 function FieldPreview(props: Props) {
   const { t } = useTranslation();
   return (
-    < >
+    <>
       <Row className={((props.isHovered ?? false) ? '' : 'invisible') + ' position-static'}>
         <Col className="d-flex justify-content-between">
           <FontAwesomeIcon icon={faHandDots} />

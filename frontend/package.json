@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@ra11p0/forms-app": "../modules/forms-app/",
+    "@ra11p0/forms-app": "../modules/forms-app/dist",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@fortawesome/fontawesome-svg-core": "^6.1.2",
@@ -47,7 +47,9 @@
     "build": "CI=false react-scripts build",
     "test": "react-scripts test",
     "testApi": "mocha -r ts-node/register -r mock-local-storage 'src/**/*.test.ts'",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "clean": "rm -fr node_modules",
+    "cleanpp": "rm -fr node_modules/@ra11p0"
   },
   "eslintConfig": {
     "extends": [
