@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@ra11p0/forms-app": "../modules/forms-app/dist",
+    "@ra11p0/forms-app": "https://github.com/ra11p0/forms-app.git",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@fortawesome/fontawesome-svg-core": "^6.1.2",

@@ -9,15 +9,16 @@ import SchoolsProxy from "../../ApiClient/Schools/SchoolsProxy";
 import Notifications from "../../Notifications/Notifications";
 import LoadingScreen from "../Shared/LoadingScreen";
 import PeoplePicker from "../Shared/PeoplePicker";
-import ApplicationModes from "@ra11p0/forms-app/Constraints/ApplicationModes";
-import Field from "@ra11p0/forms-app/Interfaces/Common/Field";
-import FormFilledResult from "@ra11p0/forms-app/Interfaces/Common/FormFilledResult";
-import Forms from "@ra11p0/forms-app/Components/Forms";
+import ApplicationModes from "@ra11p0/forms-app/dist/Constraints/ApplicationModes";
+import Field from "@ra11p0/forms-app/dist/Interfaces/Common/Field";
+import FormFilledResult from "@ra11p0/forms-app/dist/Interfaces/Common/FormFilledResult";
+import Forms from "@ra11p0/forms-app/dist/Components/Forms";
 
 
 type Props = {};
 
 function ClassIndex(props: Props) {
+
   const { t } = useTranslation("classIndex");
   const { classGuid } = useParams();
   const [_class, setClass] = useState<ClassResponse | null>(null);
