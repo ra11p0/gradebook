@@ -11,6 +11,8 @@ import AccountProxy from "../../../ApiClient/Accounts/AccountsProxy";
 import GetAccessibleSchoolsResponse from "../../../ApiClient/Accounts/Definitions/Responses/GetAccessibleSchoolsResponse";
 import getCurrentUserIdReduxProxy from "../../../Redux/ReduxProxy/getCurrentUserIdReduxProxy";
 import setSchoolsListReduxWrapper from "../../../Redux/ReduxWrappers/setSchoolsListReduxWrapper";
+import setLoginReduxWrapper from "../../../Redux/ReduxWrappers/setLoginReduxWrapper";
+import { store } from "../../../store";
 
 const mapStateToProps = (state: any) => ({
   userId: getCurrentUserIdReduxProxy(state),
@@ -55,7 +57,10 @@ const ActivateStudentForm = (props: ActivateStudentFormProps): ReactElement => {
       PeopleProxy.activatePerson(values.accessCode)
         .then(() => {
           AccountProxy.getAccessibleSchools(props.userId!).then((schoolsResponse) => {
-            props.setSchoolsList!(schoolsResponse.data);
+            setLoginReduxWrapper(store.dispatch, {
+              accessToken: store.getState().common.session.accessToken,
+              refreshToken: store.getState().common.session.refreshToken,
+            });
             if (props.onSubmit) props.onSubmit();
           });
         })

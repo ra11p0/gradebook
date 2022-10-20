@@ -1,5 +1,6 @@
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
+using Gradebook.Foundation.Common.Foundation;
 using Gradebook.Foundation.Common.Foundation.Commands;
 using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
@@ -15,10 +16,12 @@ public class ClassesController : ControllerBase
 {
     private readonly ServiceResolver<IFoundationCommands> _foundationCommands;
     private readonly ServiceResolver<IFoundationQueries> _foundationQueries;
+    private readonly ServiceResolver<IFoundationPermissionsLogic> _foundationPermissions;
     public ClassesController(IServiceProvider serviceProvider)
     {
         _foundationCommands = serviceProvider.GetResolver<IFoundationCommands>();
         _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
+        _foundationPermissions = serviceProvider.GetResolver<IFoundationPermissionsLogic>();
     }
     [HttpDelete]
     [Route("{classGuid}")]
@@ -26,12 +29,13 @@ public class ClassesController : ControllerBase
     [ProducesResponseType(typeof(string), 400)]
     public async Task<IActionResult> DeleteClass([FromRoute] Guid classGuid)
     {
-        return Ok();
-        /* var currentPerson = await _foundationQueries.Service.RecogniseCurrentPersonByRelatedPerson(teachersGuids.First());
-         if (!await _foundationPermissions.Service.CanManageClass(classGuid, currentPerson.Response))
-             return new StatusResponse("Forbidden");
-         var resp = await _foundationCommands.Service.DeleteClass(classGuid);
-         return resp.Status ? Ok() : BadRequest(resp.Message);*/
+        var classResponse = await _foundationQueries.Service.GetClassByGuid(classGuid);
+        if (!classResponse.Status) return BadRequest(classResponse.Message);
+        var currentPerson = await _foundationQueries.Service.RecogniseCurrentPersonBySchoolGuid(classResponse.Response!.SchoolGuid);
+        if (!await _foundationPermissions.Service.CanManageClass(classGuid, currentPerson.Response))
+            return Forbid();
+        var resp = await _foundationCommands.Service.DeleteClass(classGuid);
+        return resp.Status ? Ok() : BadRequest(resp.Message);
     }
     [HttpGet]
     [Route("{classGuid}")]

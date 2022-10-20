@@ -6,4 +6,5 @@ public class ClassDto
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
     public DateTime CreatedDate { get; set; }
+    public Guid SchoolGuid { get; set; }
 }

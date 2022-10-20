@@ -81,7 +81,7 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
     {
         using var cn = await GetOpenConnectionAsync();
         return await cn.QueryFirstOrDefaultAsync<ClassDto>(@"
-                SELECT Name, CreatedDate, Description, Guid
+                SELECT Name, CreatedDate, Description, Guid, SchoolGuid
                 FROM Classes
                 WHERE Guid like @guid
                     AND IsDeleted = 0

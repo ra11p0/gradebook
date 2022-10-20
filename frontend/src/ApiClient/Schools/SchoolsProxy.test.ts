@@ -20,15 +20,16 @@ describe('SchoolsProxy', () => {
             let school = await SchoolsProxy.getSchool(accessibleSchools.data.find(() => true)?.school.guid!);
             assert.ok(school);
         })
-        it('Should add person to school and show ', async () => {
+        it('Should add student to school and show ', async () => {
             const newStudentName = 'Mateusz';
             const newStudentSurname = "Walczak";
             const newStudentBirthday = new Date(2002, 12, 21)
             await accountsQuickActions.logIn(testConstraints.email, testConstraints.password);
             let meResponse = await AccountsProxy.getMe();
             let accessibleSchools = await AccountsProxy.getAccessibleSchools(meResponse.data.userId);
-            let firstSchoolGuid = await accessibleSchools.data.find(() => true)?.school.guid!;
-            SchoolsProxy.addNewStudent({
+            let firstSchoolGuid = await accessibleSchools.data.find(() => true)?.school.guid;
+            if (!firstSchoolGuid) assert.ok(false, 'no schools')
+            await SchoolsProxy.addNewStudent({
                 Name: newStudentName,
                 Surname: newStudentSurname,
                 Birthday: newStudentBirthday
@@ -48,8 +49,9 @@ describe('SchoolsProxy', () => {
             await accountsQuickActions.logIn(testConstraints.email, testConstraints.password);
             let meResponse = await AccountsProxy.getMe();
             let accessibleSchools = await AccountsProxy.getAccessibleSchools(meResponse.data.userId);
-            let firstSchoolGuid = await accessibleSchools.data.find(() => true)?.school.guid!;
-            SchoolsProxy.addNewTeacher({
+            let firstSchoolGuid = await accessibleSchools.data.find(() => true)?.school.guid;
+            if (!firstSchoolGuid) assert.ok(false, 'no schools')
+            await SchoolsProxy.addNewTeacher({
                 Name: newTeacherName,
                 Surname: newTeacherSurname,
                 Birthday: newTeacherBirthday

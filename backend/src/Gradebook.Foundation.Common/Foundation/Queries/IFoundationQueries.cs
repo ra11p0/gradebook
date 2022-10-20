@@ -33,4 +33,5 @@ public interface IFoundationQueries
     Task<ResponseWithStatus<bool>> IsClassOwner(Guid classGuid, Guid personGuid);
     Task<ResponseWithStatus<IPagedList<PersonDto>>> GetPeopleInSchool(Guid schoolGuid, string discriminator, string query, int page);
     Task<ResponseWithStatus<Guid>> RecogniseCurrentPersonByRelatedPerson(Guid requestedPerson);
+    Task<ResponseWithStatus<Guid>> RecogniseCurrentPersonBySchoolGuid(Guid schoolGuid);
 }
