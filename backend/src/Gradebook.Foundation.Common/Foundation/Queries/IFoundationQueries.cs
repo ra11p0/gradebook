@@ -32,6 +32,9 @@ public interface IFoundationQueries
     Task<ResponseWithStatus<IEnumerable<TeacherDto>>> GetAllTeachersInClass(Guid classGuid);
     Task<ResponseWithStatus<bool>> IsClassOwner(Guid classGuid, Guid personGuid);
     Task<ResponseWithStatus<IPagedList<PersonDto>>> GetPeopleInSchool(Guid schoolGuid, string discriminator, string query, int page);
+    Task<ResponseWithStatus<IPagedList<StudentDto>>> SearchStudentsCandidatesToClassWithCurrent(Guid classGuid, string query, int page);
     Task<ResponseWithStatus<Guid>> RecogniseCurrentPersonByRelatedPerson(Guid requestedPerson);
     Task<ResponseWithStatus<Guid>> RecogniseCurrentPersonBySchoolGuid(Guid schoolGuid);
+    Task<ResponseWithStatus<Guid>> RecogniseCurrentPersonByClassGuid(Guid classGuid);
+    Task<ResponseWithStatus<bool>> IsStudentInAnyClass(Guid studentGuid);
 }

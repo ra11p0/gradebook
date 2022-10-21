@@ -5,6 +5,7 @@ using Gradebook.Foundation.Common.Foundation.Commands;
 using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
 using Gradebook.Foundation.Common.Foundation.Enums;
 using Gradebook.Foundation.Common.Foundation.Queries;
+using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 using Gradebook.Foundation.Identity.Models;
 
@@ -67,27 +68,27 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         return new StatusResponse<bool>(true);
     }
 
-    public async Task<StatusResponse> AddNewClass(NewClassCommand command)
+    public async Task<ResponseWithStatus<Guid>> AddNewClass(NewClassCommand command)
     {
         var currentPerson = await _foundationQueries.Service.GetCurrentPersonGuid(command.SchoolGuid);
         if (!await _foundationPermissions.Service.CanCreateNewClass(currentPerson.Response))
-            return new StatusResponse("Forbidden");
+            return new ResponseWithStatus<Guid>("Forbidden");
         command.CreatedDate = DateTime.Now;
         var resp = await Repository.AddNewClass(command);
-        if (!resp.Status) return new StatusResponse(false, resp.Message);
+        if (!resp.Status) return new ResponseWithStatus<Guid>(false, resp.Message);
         await Repository.SaveChangesAsync();
         return resp;
     }
 
-    public async Task<StatusResponse<bool>> AddNewStudent(NewStudentCommand command, Guid schoolGuid)
+    public async Task<ResponseWithStatus<Guid>> AddNewStudent(NewStudentCommand command, Guid schoolGuid)
     {
         Repository.BeginTransaction();
         command.CreatorGuid = (await _foundationQueries.Service.GetCurrentPersonGuid(schoolGuid)).Response;
         var resp = await Repository.AddNewStudent(command);
-        if (resp.Status is not true) return new StatusResponse<bool>(false);
+        if (resp.Status is not true) return new ResponseWithStatus<Guid>(false);
         await Repository.SaveChangesAsync();
         var addToSchoolResponse = await AddPersonToSchool(schoolGuid, resp.Response);
-        if (addToSchoolResponse.Status is not true) return new StatusResponse<bool>(addToSchoolResponse.Message);
+        if (addToSchoolResponse.Status is not true) return new ResponseWithStatus<Guid>(addToSchoolResponse.Message);
         await Repository.SaveChangesAsync();
         Repository.CommitTransaction();
         return resp;
@@ -123,6 +124,11 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
     public async Task<StatusResponse> AddStudentsToClass(Guid classGuid, IEnumerable<Guid> studentsGuids)
     {
         if (!studentsGuids.Any()) return new StatusResponse(true, "No change");
+        foreach (var student in studentsGuids)
+        {
+            var isStudentAlreadyInAnyClass = await _foundationQueries.Service.IsStudentInAnyClass(student);
+            if (isStudentAlreadyInAnyClass.Response) return new StatusResponse(false, "At least one student is already assigned to class");
+        }
         var currentPerson = await _foundationQueries.Service.RecogniseCurrentPersonByRelatedPerson(studentsGuids.First());
         if (!await _foundationPermissions.Service.CanManageClass(classGuid, currentPerson.Response))
             return new StatusResponse("Forbidden");
@@ -192,14 +198,14 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         return new StatusResponse(true);
     }
 
-    public async Task<StatusResponse> EditStudentsInClass(Guid classGuid, IEnumerable<Guid> studentsGuids)
+    public async Task<ResponseWithStatus<IPagedList<StudentDto>>> EditStudentsInClass(Guid classGuid, IEnumerable<Guid> studentsGuids)
     {
-        var currentPerson = await _foundationQueries.Service.RecogniseCurrentPersonByRelatedPerson(studentsGuids.First());
+        var currentPerson = await _foundationQueries.Service.RecogniseCurrentPersonByClassGuid(classGuid);
         if (!await _foundationPermissions.Service.CanManageClass(classGuid, currentPerson.Response))
-            return new StatusResponse("Forbidden");
+            return new ResponseWithStatus<IPagedList<StudentDto>>("Forbidden");
         Repository.BeginTransaction();
         var currentStudentsInClass = await _foundationQueries.Service.GetAllStudentsInClass(classGuid);
-        if (!currentStudentsInClass.Status) return new StatusResponse(currentStudentsInClass.Message);
+        if (!currentStudentsInClass.Status) return new ResponseWithStatus<IPagedList<StudentDto>>(currentStudentsInClass.Message);
         var currentStudentsInClassGuids = currentStudentsInClass.Response!.Select(s => s.Guid);
         var studentsToRemove = currentStudentsInClassGuids.Where(s => !studentsGuids.Contains(s));
         var studentsToAdd = studentsGuids.Where(s => !currentStudentsInClassGuids.Contains(s));
@@ -209,23 +215,25 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         {
             await Repository.SaveChangesAsync();
             Repository.CommitTransaction();
-            return new StatusResponse(true);
+            var resp = await _foundationQueries.Service.GetStudentsInClass(classGuid, 0);
+            if (!resp.Status) return new ResponseWithStatus<IPagedList<StudentDto>>(new PagedList<StudentDto>(), true, "Could not load students");
+            return new ResponseWithStatus<IPagedList<StudentDto>>(resp.Response);
         }
         else
         {
             Repository.RollbackTransaction();
-            return new StatusResponse($"{addResp.Message}; {removeResp.Message}");
+            return new ResponseWithStatus<IPagedList<StudentDto>>($"{addResp.Message}; {removeResp.Message}");
         }
     }
 
-    public async Task<StatusResponse> EditTeachersInClass(Guid classGuid, IEnumerable<Guid> teachersGuids)
+    public async Task<ResponseWithStatus<IPagedList<TeacherDto>>> EditTeachersInClass(Guid classGuid, IEnumerable<Guid> teachersGuids)
     {
-        var currentPerson = await _foundationQueries.Service.RecogniseCurrentPersonByRelatedPerson(teachersGuids.First());
+        var currentPerson = await _foundationQueries.Service.RecogniseCurrentPersonByClassGuid(classGuid);
         if (!await _foundationPermissions.Service.CanManageClass(classGuid, currentPerson.Response))
-            return new StatusResponse("Forbidden");
+            return new ResponseWithStatus<IPagedList<TeacherDto>>("Forbidden");
         Repository.BeginTransaction();
         var currentTeachersInClass = await _foundationQueries.Service.GetAllTeachersInClass(classGuid);
-        if (!currentTeachersInClass.Status) return new StatusResponse(currentTeachersInClass.Message);
+        if (!currentTeachersInClass.Status) return new ResponseWithStatus<IPagedList<TeacherDto>>(currentTeachersInClass.Message);
         var currentTeachersInClassGuids = currentTeachersInClass.Response!.Select(s => s.Guid);
         var teachersToRemove = currentTeachersInClassGuids.Where(s => !teachersGuids.Contains(s));
         var teachersToAdd = teachersGuids.Where(s => !currentTeachersInClassGuids.Contains(s));
@@ -235,12 +243,14 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         {
             await Repository.SaveChangesAsync();
             Repository.CommitTransaction();
-            return new StatusResponse(true);
+            var teachers = await _foundationQueries.Service.GetTeachersInClass(classGuid, 0);
+            if (!teachers.Status) return new ResponseWithStatus<IPagedList<TeacherDto>>(new PagedList<TeacherDto>(), true, "Could not load teachers");
+            return new ResponseWithStatus<IPagedList<TeacherDto>>(teachers.Response);
         }
         else
         {
             Repository.RollbackTransaction();
-            return new StatusResponse($"{addResp.Message}; {removeResp.Message}");
+            return new ResponseWithStatus<IPagedList<TeacherDto>>($"{addResp.Message}; {removeResp.Message}");
         }
     }
 

@@ -58,6 +58,16 @@ public class ClassesController : ControllerBase
         return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
     }
     [HttpGet]
+    [Route("{classGuid}/Students/Candidates/Search")]
+    [Authorize(Roles = "SuperAdmin")]
+    [ProducesResponseType(typeof(IPagedList<StudentDto>), statusCode: 200)]
+    [ProducesResponseType(typeof(string), 400)]
+    public async Task<IActionResult> SearchStudentsCandidatesToClassWithCurrent([FromRoute] Guid classGuid, [FromQuery] int page = 1, [FromQuery] string? query = "")
+    {
+        var resp = await _foundationQueries.Service.SearchStudentsCandidatesToClassWithCurrent(classGuid, query!, page);
+        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
+    }
+    [HttpGet]
     [Route("{classGuid}/Teachers")]
     [Authorize(Roles = "SuperAdmin")]
     [ProducesResponseType(typeof(IPagedList<TeacherDto>), statusCode: 200)]
@@ -83,7 +93,7 @@ public class ClassesController : ControllerBase
     public async Task<IActionResult> EditStudentsInClass([FromRoute] Guid classGuid, [FromBody] IEnumerable<Guid> studentsGuids)
     {
         var resp = await _foundationCommands.Service.EditStudentsInClass(classGuid, studentsGuids);
-        return resp.Status ? Ok() : BadRequest(resp.Message);
+        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
     }
     [HttpDelete]
     [Route("{classGuid}/Students")]
@@ -110,7 +120,7 @@ public class ClassesController : ControllerBase
     public async Task<IActionResult> EditTeachersInClass([FromRoute] Guid classGuid, [FromBody] IEnumerable<Guid> teachersGuids)
     {
         var resp = await _foundationCommands.Service.EditTeachersInClass(classGuid, teachersGuids);
-        return resp.Status ? Ok() : BadRequest(resp.Message);
+        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
     }
     [HttpDelete]
     [Route("{classGuid}/Teachers")]

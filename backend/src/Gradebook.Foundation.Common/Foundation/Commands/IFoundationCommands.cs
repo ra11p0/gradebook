@@ -1,11 +1,12 @@
 using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
 using Gradebook.Foundation.Common.Foundation.Enums;
+using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 
 namespace Gradebook.Foundation.Common.Foundation.Commands;
 
 public interface IFoundationCommands
 {
-    Task<StatusResponse<bool>> AddNewStudent(NewStudentCommand newStudentDto, Guid schoolGuid);
+    Task<ResponseWithStatus<Guid>> AddNewStudent(NewStudentCommand newStudentDto, Guid schoolGuid);
     Task<StatusResponse<bool>> AddNewTeacher(NewTeacherCommand newTeacherCommand, Guid schoolGuid);
     Task<StatusResponse> DeleteSchool(Guid schoolGuid);
     Task<StatusResponse<bool>> NewAdministrator(NewAdministratorCommand command);
@@ -14,13 +15,13 @@ public interface IFoundationCommands
     Task<ResponseWithStatus<string[], bool>> GenerateMultipleSystemInvitation(Guid[] peopleGuid, SchoolRoleEnum role, Guid schoolGuid);
     Task<StatusResponse<bool>> AddPersonToSchool(Guid schoolGuid, Guid? personGuid = null);
     Task<StatusResponse<bool>> ActivatePerson(string activationCode);
-    Task<StatusResponse> AddNewClass(NewClassCommand command);
+    Task<ResponseWithStatus<Guid>> AddNewClass(NewClassCommand command);
     Task<StatusResponse> DeleteClass(Guid classGuid);
     Task<StatusResponse> DeletePerson(Guid personGuid);
     Task<StatusResponse> AddStudentsToClass(Guid classGuid, IEnumerable<Guid> studentsGuids);
     Task<StatusResponse> AddTeachersToClass(Guid classGuid, IEnumerable<Guid> teachersGuids);
     Task<StatusResponse> DeleteTeachersFromClass(Guid classGuid, IEnumerable<Guid> teachersGuids);
     Task<StatusResponse> DeleteStudentsFromClass(Guid classGuid, IEnumerable<Guid> studentsGuids);
-    Task<StatusResponse> EditStudentsInClass(Guid classGuid, IEnumerable<Guid> studentsGuids);
-    Task<StatusResponse> EditTeachersInClass(Guid classGuid, IEnumerable<Guid> studentsGuids);
+    Task<ResponseWithStatus<IPagedList<StudentDto>>> EditStudentsInClass(Guid classGuid, IEnumerable<Guid> studentsGuids);
+    Task<ResponseWithStatus<IPagedList<TeacherDto>>> EditTeachersInClass(Guid classGuid, IEnumerable<Guid> studentsGuids);
 }

@@ -13,6 +13,7 @@ import ApplicationModes from "@ra11p0/forms-app/dist/Constraints/ApplicationMode
 import Field from "@ra11p0/forms-app/dist/Interfaces/Common/Field";
 import FormFilledResult from "@ra11p0/forms-app/dist/Interfaces/Common/FormFilledResult";
 import Forms from "@ra11p0/forms-app/dist/Components/Forms";
+import TeachersInClassResponse from "../../ApiClient/Classes/Definitions/Responses/TeachersInClassResponse";
 
 
 type Props = {};
@@ -25,15 +26,16 @@ function ClassIndex(props: Props) {
   const [showStudentsPicker, setShowStudentsPicker] = useState(false);
   const [showTeachersPicker, setShowTeachersPicker] = useState(false);
   const [studentsInClass, setStudentsInClass] = useState<string[]>([]);
-  const [classOwners, setClassOwners] = useState<string[]>();
+  const [classOwners, setClassOwners] = useState<TeachersInClassResponse[]>([]);
   const [isReady, setIsReady] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
   useEffect(() => {
     Promise.all([
       ClassesProxy.getClass(classGuid!).then(r => setClass(r.data)).catch(Notifications.showApiError),
       ClassesProxy.getStudentsInClass(classGuid!).then(r => setStudentsInClass(r.data.map(e => e.guid))).catch(Notifications.showApiError),
-      ClassesProxy.getTeachersInClass(classGuid!).then(r => setClassOwners(r.data.map(e => e.guid))).catch(Notifications.showApiError)])
+      ClassesProxy.getTeachersInClass(classGuid!).then(r => setClassOwners(r.data)).catch(Notifications.showApiError)])
       .then(() => setIsReady(true));
-  }, [classGuid]);
+  }, [classGuid, refreshKey]);
   return (
     <LoadingScreen isReady={isReady}>
       <>
@@ -44,7 +46,19 @@ function ClassIndex(props: Props) {
                 <Col className="my-auto">
                   <h2>{_class?.name}</h2>
                 </Col>
-                <Col>{_class?.description}</Col>
+                <Col>
+                  <Row>
+                    <Col>
+                      {_class?.description}
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      {t('owners')}:
+                      {classOwners.map((e, i) => <div key={i}>{e.name}</div>)}
+                    </Col>
+                  </Row>
+                </Col>
               </Row>
             </Col>
             <Col>
@@ -63,11 +77,15 @@ function ClassIndex(props: Props) {
                     setShowStudentsPicker(false);
                   }}
                   onConfirm={(studentsGuids: string[]) => {
+                    ClassesProxy.addStudentsToClass(classGuid ?? "", studentsGuids).then(r => {
+                      setRefreshKey(e => e++);
+                    }).catch(Notifications.showApiError);
                     setStudentsInClass(studentsGuids);
                   }}
                   selectedPeople={studentsInClass}
                   getPeople={async (schoolGuid, discriminator: string, query: string, page: number) => {
-                    return (await SchoolsProxy.searchPeople(schoolGuid, 'Student', query, page)).data;
+                    return (await ClassesProxy.searchStudentsCandidatesToClassWithCurrent(classGuid ?? "", query, page)).data;
+                    //return (await SchoolsProxy.searchPeople(schoolGuid, 'Student', query, page)).data;
                   }}
                 />
                 <Button
@@ -82,12 +100,14 @@ function ClassIndex(props: Props) {
                   show={showTeachersPicker}
                   onHide={() => {
                     setShowTeachersPicker(false);
-                    //ClassesProxy.a
                   }}
                   onConfirm={(teachers: string[]) => {
-                    setClassOwners(teachers);
+                    ClassesProxy.addTeachersToClass(classGuid ?? "", teachers).then(r => {
+                      setClassOwners(r.data);
+                      setRefreshKey(e => e++);
+                    }).catch(Notifications.showApiError);
                   }}
-                  selectedPeople={classOwners}
+                  selectedPeople={classOwners.map(o => o.guid)}
                   getPeople={async (schoolGuid, discriminator: string, query: string, page: number) => {
                     return (await SchoolsProxy.searchPeople(schoolGuid, 'Teacher', query, page)).data;
                   }}

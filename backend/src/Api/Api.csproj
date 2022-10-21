@@ -13,6 +13,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.*" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.22.*" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.*" />
+    <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gradebook.Foundation.Identity\Gradebook.Foundation.Identity.csproj" />

@@ -30,6 +30,7 @@ interface AppProps {
 
 class App extends React.Component<AppProps> {
   componentDidMount() {
+
     var access = localStorage.getItem("access_token");
     var refresh = localStorage.getItem("refresh_token");
     if (access && refresh) {

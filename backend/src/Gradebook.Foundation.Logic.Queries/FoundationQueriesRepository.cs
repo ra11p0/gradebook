@@ -209,9 +209,9 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
             builder.WHERE("CONCAT(Name, ' ', Surname) like @query");
         if (!string.IsNullOrEmpty(discriminator))
             builder.WHERE("Discriminator = @discriminator");
+        builder.WHERE("IsDeleted = 0");
         builder.ORDER_BY("Name, Surname");
         using var cn = await GetOpenConnectionAsync();
-        var q = builder.ToString();
         return await cn.QueryPagedAsync<PersonDto>(builder.ToString(), new
         {
             schoolGuid,
@@ -425,6 +425,47 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
         {
             classGuid,
             personGuid
+        });
+    }
+
+    public async Task<IPagedList<StudentDto>> SearchStudentsCandidatesToClassWithCurrent(Guid classGuid, string query, Pager pager)
+    {
+        var builder = new SqlBuilder();
+        builder.SELECT("Name, Surname, SchoolRole, Birthday, Guid, SchoolGuid");
+        builder.FROM("Person AS ps");
+        builder.LEFT_JOIN("ClassStudent AS cs ON ps.Guid = cs.StudentsGuid");
+        builder.WHERE("(cs.ClassesGuid = @classGuid OR cs.ClassesGuid IS null)");
+        builder.WHERE("Discriminator = 'Student'");
+        builder.WHERE("IsDeleted = 0");
+        builder.WHERE(@"SchoolGuid = (
+            SELECT SchoolGuid FROM Classes WHERE Guid = @classGuid
+        )");
+        if (!string.IsNullOrEmpty(query))
+            builder.WHERE("CONCAT(Name, ' ', Surname) like @query");
+        builder.ORDER_BY("Name, Surname");
+        using var cn = await GetOpenConnectionAsync();
+        var q = builder.ToString();
+        return await cn.QueryPagedAsync<StudentDto>(builder.ToString(), new
+        {
+            classGuid,
+            query = $"%{query}%",
+        }, pager);
+    }
+
+    public async Task<bool> IsStudentInAnyClass(Guid studentGuid)
+    {
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryFirstAsync<bool>(@"
+                SELECT EXISTS (
+                    SELECT * 
+                    FROM Person AS ps
+                    JOIN ClassStudent AS cs
+                        ON cs.StudentsGuid = ps.Guid
+                    WHERE ps.Guid = @studentGuid
+                )
+            ", new
+        {
+            studentGuid
         });
     }
 }

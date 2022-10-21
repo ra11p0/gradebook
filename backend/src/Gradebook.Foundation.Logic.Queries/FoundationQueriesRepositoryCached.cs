@@ -84,7 +84,6 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
     public Task<IPagedList<TeacherDto>> GetTeachersInSchool(Guid schoolGuid, Pager pager)
         => Base.GetTeachersInSchool(schoolGuid, pager);
 
-
     public Task<IPagedList<PersonDto>> GetPeopleInSchool(Guid schoolGuid, string schoolRole, string query, Pager pager)
         => Base.GetPeopleInSchool(schoolGuid, schoolRole, query, pager);
 
@@ -99,4 +98,10 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
 
     public Task<bool> IsClassOwner(Guid classGuid, Guid personGuid)
         => Base.IsClassOwner(classGuid, personGuid);
+
+    public Task<IPagedList<StudentDto>> SearchStudentsCandidatesToClassWithCurrent(Guid classGuid, string query, Pager pager)
+        => Base.SearchStudentsCandidatesToClassWithCurrent(classGuid, query, pager);
+
+    public Task<bool> IsStudentInAnyClass(Guid studentGuid)
+        => Base.IsStudentInAnyClass(studentGuid);
 }

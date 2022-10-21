@@ -69,7 +69,7 @@ function PeoplePicker(props: Props) {
         <Button
           variant="outlined"
           onClick={() => {
-            props.onConfirm(selectedPeople);
+            props.onConfirm([...(new Set(selectedPeople))]);
             props.onHide();
           }}
         >

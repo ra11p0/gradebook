@@ -43,7 +43,7 @@ const inviteMultiplePeople = (request: InviteMultiplePeopleRequest, schoolGuid: 
     return axiosApiAuthorized.post(API_URL + `/schools/${schoolGuid}/Invitations`, request);
 };
 
-const addNewStudent = (student: NewStudentRequest, schoolGuid: string): Promise<AxiosResponse<any>> => {
+const addNewStudent = (student: NewStudentRequest, schoolGuid: string): Promise<AxiosResponse<string>> => {
     return axiosApiAuthorized.post(API_URL + `/schools/${schoolGuid}/students`, student);
 };
 
@@ -59,7 +59,7 @@ const getInactiveAccessibleStudentsInSchool = (schoolGuid: string): Promise<Axio
     return axiosApiAuthorized.get(API_URL + `/schools/${schoolGuid}/students/inactive`);
 }
 
-const addNewClass = (classRequest: NewClassRequest, schoolGuid: string): Promise<AxiosResponse<any>> => {
+const addNewClass = (classRequest: NewClassRequest, schoolGuid: string): Promise<AxiosResponse<string>> => {
     return axiosApiAuthorized.post(API_URL + `/schools/${schoolGuid}/Classes`, classRequest);
 }
 
