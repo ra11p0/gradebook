@@ -6,6 +6,7 @@ using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Api.Controllers.Classes;
 
@@ -82,10 +83,12 @@ public class ClassesController : ControllerBase
     }
     [HttpPost]
     [Route("{classGuid}/Students")]
+    [ProducesResponseType(typeof(IPagedList<StudentDto>), 200)]
     [ProducesResponseType(typeof(string), 400)]
     public async Task<IActionResult> EditStudentsInClass([FromRoute] Guid classGuid, [FromBody] IEnumerable<Guid> studentsGuids)
     {
         var resp = await _foundationCommands.Service.EditStudentsInClass(classGuid, studentsGuids);
+        //  returns all students in class
         return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
     }
     [HttpDelete]

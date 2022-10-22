@@ -1,5 +1,7 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import setApplicationLanguageReduxWrapper from '../Redux/ReduxWrappers/setApplicationLanguageReduxWrapper';
+import { store } from '../store';
 
 i18n.init({
   fallbackNS: 'common',
@@ -67,5 +69,9 @@ i18n.init({
 });
 
 i18n.languages = ['en', 'pl'];
+
+i18n.on('languageChanged', (language) => {
+  setApplicationLanguageReduxWrapper(store.dispatch, language);
+})
 
 export default i18n;

@@ -89,7 +89,7 @@ function ManageClasses(props: Props) {
                       <div>{element.description}</div>
                     </Grid>
                     <Grid item xs className="my-auto">
-                      <div>{moment(element.createdDate).format("YYYY-MM-DD")}</div>
+                      <div>{moment(element.createdDate).format("L")}</div>
                     </Grid>
                     <Grid item xs={1} className="my-auto">
                       <div className="d-flex gap-1 flex-wrap">
