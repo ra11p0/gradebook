@@ -8,3 +8,4 @@ export const SET_SCHOOLS_LIST = 'SET_SCHOOLS_LIST';
 export const SET_PEOPLE_LIST = 'SET_PEOPLE_LIST';
 export const SET_PERSON = 'SET_PERSON';
 export const SET_PERMISSIONS = 'SET_PERMISSIONS';
+export const SET_LANGUAGE = 'SET_LANGUAGE';

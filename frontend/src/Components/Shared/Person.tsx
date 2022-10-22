@@ -19,10 +19,7 @@ interface PersonProps {
 const Person = (props: PersonProps): ReactElement => {
   const { t } = useTranslation("person");
   return (
-    <Link
-      to={props.noLink ? `#` : `/person/show/${props.guid}`}
-      className={`text-reset`}
-    >
+    <Link to={props.noLink ? `#` : `/person/show/${props.guid}`} className={`text-reset`}>
       <div className={`bg-light border rounded-3 m-1 p-2 ${props.className}`}>
         <Row>
           <Col xs={2} className="my-auto text-center">
@@ -32,9 +29,7 @@ const Person = (props: PersonProps): ReactElement => {
             <Row>{props.name}</Row>
             <Row>{props.surname}</Row>
           </Col>
-          <Col className="my-auto">
-            {moment(props.birthday).format("YYYY-MM-DD")}
-          </Col>
+          <Col className="my-auto">{moment(props.birthday).format("L")}</Col>
         </Row>
       </div>
     </Link>

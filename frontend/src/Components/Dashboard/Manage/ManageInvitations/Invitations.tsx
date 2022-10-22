@@ -12,8 +12,8 @@ import Person from "../../../Shared/Person";
 import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
 import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
-import PermissionsBlocker from "../../../Shared/PermissionsBlocker"
-import PermissionLevelEnum from '../../../../Common/Enums/Permissions/PermissionLevelEnum';
+import PermissionsBlocker from "../../../Shared/PermissionsBlocker";
+import PermissionLevelEnum from "../../../../Common/Enums/Permissions/PermissionLevelEnum";
 const mapStateToProps = (state: any) => ({
   currentSchool: getCurrentSchoolReduxProxy(state),
 });
@@ -67,7 +67,7 @@ const Invitations = (props: InvitationsProps): ReactElement => {
                       <FontAwesomeIcon icon={invitation.isUsed ? faCheck : faTimes} />
                     </Grid>
                     <Grid item xs className="my-auto">
-                      {moment(invitation.exprationDate).format("YYYY-MM-DD HH:MM")}
+                      {moment(invitation.exprationDate).format("lll")}
                     </Grid>
                     {invitation.invitedPerson && (
                       <Grid item xs className="my-auto">
