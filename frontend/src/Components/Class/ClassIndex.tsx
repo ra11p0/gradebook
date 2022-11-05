@@ -14,9 +14,14 @@ import Field from "@ra11p0/forms-app/dist/Interfaces/Common/Field";
 import FormFilledResult from "@ra11p0/forms-app/dist/Interfaces/Common/FormFilledResult";
 import Forms from "@ra11p0/forms-app/dist/Components/Forms";
 import TeachersInClassResponse from "../../ApiClient/Classes/Definitions/Responses/TeachersInClassResponse";
+import { connect } from "react-redux";
+import getApplicationLanguageReduxProxy from "../../Redux/ReduxProxy/getApplicationLanguageReduxProxy";
 
 
-type Props = {};
+
+type Props = {
+  localization: string
+};
 
 function ClassIndex(props: Props) {
 
@@ -118,6 +123,7 @@ function ClassIndex(props: Props) {
         </div>
         <div className="m-4">
           <Forms
+            localization={props.localization}
             mode={ApplicationModes.Edit}
             onSubmit={(result: Field[] | FormFilledResult): void => { }}
             onDiscard={() => { }} />
@@ -127,4 +133,6 @@ function ClassIndex(props: Props) {
   );
 }
 
-export default ClassIndex;
+export default connect((state) => ({
+  localization: getApplicationLanguageReduxProxy(state)
+}), () => ({}))(ClassIndex);
