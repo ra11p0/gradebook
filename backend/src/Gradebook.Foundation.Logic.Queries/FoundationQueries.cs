@@ -254,9 +254,22 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<bool>(resp, true);
     }
 
+    public async Task<ResponseWithStatus<bool>> IsStudentInAnyClass(Guid studentGuid)
+    {
+        var resp = await Repository.IsStudentInAnyClass(studentGuid);
+        return new ResponseWithStatus<bool>(resp);
+    }
+
     public async Task<ResponseWithStatus<bool>> IsUserActive(string userGuid)
     {
         return new ResponseWithStatus<bool>(await Repository.IsUserActive(userGuid), true);
+    }
+
+    public async Task<ResponseWithStatus<Guid>> RecogniseCurrentPersonByClassGuid(Guid classGuid)
+    {
+        var _class = await Repository.GetClassByGuid(classGuid);
+        if (_class is null) return new ResponseWithStatus<Guid>(false, "Could not find class");
+        return await RecogniseCurrentPersonBySchoolGuid(_class.SchoolGuid);
     }
 
     public async Task<ResponseWithStatus<Guid>> RecogniseCurrentPersonByRelatedPerson(Guid requestedPersonGuid)
@@ -271,9 +284,17 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         var searchedPerson = people.Response!.FirstOrDefault(e => e.SchoolGuid == schoolGuidOfRequested);
         return searchedPerson is null ? new ResponseWithStatus<Guid>("Could not find person") : new ResponseWithStatus<Guid>(searchedPerson.Guid, true);
     }
+
     public async Task<ResponseWithStatus<Guid>> RecogniseCurrentPersonBySchoolGuid(Guid schoolGuid)
     {
         var resp = await GetCurrentPersonGuid(schoolGuid);
         return resp.Status ? new ResponseWithStatus<Guid>(resp.Response, true) : new ResponseWithStatus<Guid>(resp.Message);
+    }
+
+    public async Task<ResponseWithStatus<IPagedList<StudentDto>>> SearchStudentsCandidatesToClassWithCurrent(Guid classGuid, string query, int page)
+    {
+        var pager = new Pager(page);
+        var resp = await Repository.SearchStudentsCandidatesToClassWithCurrent(classGuid, query, pager);
+        return new ResponseWithStatus<IPagedList<StudentDto>>(resp);
     }
 }

@@ -126,12 +126,13 @@ public class SchoolsController : ControllerBase
 
     [HttpPost]
     [Route("{schoolGuid}/Students")]
+    [ProducesResponseType(typeof(Guid), 200)]
     [ProducesResponseType(typeof(string), 400)]
     public async Task<IActionResult> AddNewStudent([FromBody] NewStudentModel model, [FromRoute] Guid schoolGuid)
     {
         var command = _mapper.Service.Map<NewStudentCommand>(model);
         var response = await _foundationCommands.Service.AddNewStudent(command, schoolGuid);
-        return response.Status ? Ok() : BadRequest(response.Message);
+        return response.Status ? Ok(response.Response) : BadRequest(response.Message);
     }
 
     [HttpGet]
@@ -180,13 +181,14 @@ public class SchoolsController : ControllerBase
     #region classes
     [HttpPost]
     [Route("{schoolGuid}/Classes")]
+    [ProducesResponseType(typeof(Guid), 200)]
     [ProducesResponseType(typeof(string), 400)]
     public async Task<IActionResult> AddNewClass([FromRoute] Guid schoolGuid, [FromBody] NewClassModel model)
     {
         var command = _mapper.Service.Map<NewClassCommand>(model);
         command.SchoolGuid = schoolGuid;
         var resp = await _foundationCommands.Service.AddNewClass(command);
-        return resp.Status ? Ok() : BadRequest(resp.Message);
+        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
     }
     [HttpGet]
     [Route("{schoolGuid}/Classes")]

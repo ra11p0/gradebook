@@ -53,7 +53,8 @@ public class RegisterAndLogin
         wait.Until(d => d.FindElement(By.CssSelector("button.activateAdministrator"))).Click();
         wait.Until(d => d.FindElement(By.CssSelector("input[name='name']"))).SendKeys(CommonResources.GetValue("name"));
         _driver.FindElement(By.CssSelector("input[name='surname']")).SendKeys(CommonResources.GetValue("surname"));
-        _driver.FindElement(By.CssSelector("input[name='birthday']")).SendKeys(CommonResources.GetValue("birthday"));
+        _driver.FindElement(By.CssSelector("input.birthday")).SendKeys(Keys.Control + 'a' + Keys.Delete);
+        _driver.FindElement(By.CssSelector("input.birthday")).SendKeys(CommonResources.GetValue("birthday"));
         _driver.FindElement(By.CssSelector("button[type='submit']")).Click();
         wait.Until(d => d.FindElement(By.CssSelector("input[name='city']"))).SendKeys(CommonResources.GetValue("city"));
         _driver.FindElement(By.CssSelector("input[name='postalCode']")).SendKeys(CommonResources.GetValue("postalCode"));

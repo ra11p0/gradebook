@@ -1,10 +1,11 @@
-import { faLanguage } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faLanguage } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Dropdown } from "react-bootstrap";
 import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import getApplicationLanguageReduxProxy from "../../Redux/ReduxProxy/getApplicationLanguageReduxProxy";
 import getCurrentPersonReduxProxy from "../../Redux/ReduxProxy/getCurrentPersonReduxProxy";
 import getIsLoggedInReduxProxy from "../../Redux/ReduxProxy/getIsLoggedInReduxProxy";
 import getIsUserActivatedReduxProxy from "../../Redux/ReduxProxy/getIsUserActivatedReduxProxy";
@@ -17,6 +18,7 @@ const mapStateToProps = (state: any) => {
     isLoggedIn: getIsLoggedInReduxProxy(state),
     currentPerson: getCurrentPersonReduxProxy(state),
     isActive: getIsUserActivatedReduxProxy(state),
+    language: getApplicationLanguageReduxProxy(state),
   };
 };
 
@@ -31,6 +33,7 @@ interface HeaderProps {
   isActive: boolean;
   i18n: any;
   t: any;
+  language: string;
 }
 
 interface HeaderState {
@@ -60,8 +63,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               <div className="d-flex gap-2">
                 {this.props.isActive && (
                   <>
-                    <LoadingScreen
-                      isReady={this.props.currentPerson}>
+                    <LoadingScreen isReady={this.props.currentPerson}>
                       <>
                         <div>
                           <SchoolSelect />
@@ -95,8 +97,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                   <FontAwesomeIcon icon={faLanguage} />
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  <Dropdown.Item onClick={() => i18n.changeLanguage("pl")}>{t("polish")} (Polish)</Dropdown.Item>
-                  <Dropdown.Item onClick={() => i18n.changeLanguage("en")}>{t("english")} (English)</Dropdown.Item>
+                  <Dropdown.Item onClick={() => i18n.changeLanguage("pl")}>
+                    {t("polish")} (Polish)
+                    {this.props.language == "pl" && <FontAwesomeIcon icon={faCheck} />}
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => i18n.changeLanguage("en")}>
+                    {t("english")} (English)
+                    {this.props.language == "en" && <FontAwesomeIcon icon={faCheck} />}
+                  </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </div>

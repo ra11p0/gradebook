@@ -15,4 +15,11 @@ public class PagedList<T> : List<T>, IPagedList<T>
         _totalPages = totalPages;
         AddRange(list);
     }
+    public PagedList(IEnumerable<T>? list = null)
+    {
+        _page = -1;
+        _total = -1;
+        _totalPages = -1;
+        if (list is not null) AddRange(list);
+    }
 }

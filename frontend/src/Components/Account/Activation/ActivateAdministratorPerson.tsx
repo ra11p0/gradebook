@@ -3,18 +3,24 @@ import { connect } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { useFormik } from "formik";
 import { Button } from "react-bootstrap";
-const mapStateToProps = (state: any) => ({});
+import ReactDatePicker from "react-datepicker";
+import moment from "moment";
+import getApplicationLanguageReduxProxy from "../../../Redux/ReduxProxy/getApplicationLanguageReduxProxy";
+const mapStateToProps = (state: any) => ({
+  locale: getApplicationLanguageReduxProxy(state),
+});
 const mapDispatchToProps = (dispatch: any) => ({});
 interface ActivateAdministratorPersonProps {
   onSubmit: (values: ActivateAdministratorPersonValues) => void;
   name?: string;
   surname?: string;
-  birthday?: string;
+  birthday?: Date;
+  locale: string;
 }
 interface ActivateAdministratorPersonValues {
   name: string;
   surname: string;
-  birthday: string;
+  birthday: Date;
 }
 const ActivateAdministratorPerson = (props: ActivateAdministratorPersonProps): ReactElement => {
   const { t } = useTranslation("ActivateAdministratorPerson");
@@ -32,7 +38,7 @@ const ActivateAdministratorPerson = (props: ActivateAdministratorPersonProps): R
     initialValues: {
       name: props.name ?? "",
       surname: props.surname ?? "",
-      birthday: props.birthday ?? new Date().toDateString(),
+      birthday: props.birthday ?? new Date(),
     },
     validate,
     onSubmit: props.onSubmit,
@@ -58,17 +64,15 @@ const ActivateAdministratorPerson = (props: ActivateAdministratorPersonProps): R
       </div>
       <div className="m-1 p-1">
         <label htmlFor="birthday">{t("birthday")}</label>
-        <input
-          className="form-control"
-          id="birthday"
-          name="birthday"
-          type="date"
-          onChange={formik.handleChange}
-          value={formik.values.birthday}
+        <ReactDatePicker
+          selected={formik.values.birthday}
+          className="form-control birthday"
+          onChange={(evt) => {
+            formik.handleChange({ target: { name: "birthday", id: "birthday", value: evt } });
+          }}
+          locale={props.locale}
+          dateFormat="P"
         />
-        {formik.errors.birthday && formik.touched.birthday ? (
-          <div className="invalid-feedback d-block">{formik.errors.birthday}</div>
-        ) : null}
       </div>
       <div className="m-1 p-1 d-flex justify-content-end">
         <Button variant="outline-primary" type="submit">

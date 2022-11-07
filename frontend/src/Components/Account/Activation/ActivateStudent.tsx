@@ -64,7 +64,7 @@ const ActivateStudentForm = (props: ActivateStudentFormProps): ReactElement => {
             if (props.onSubmit) props.onSubmit();
           });
         })
-        .catch(Notifications.showCommonError);
+        .catch(Notifications.showApiError);
     },
   });
 
@@ -75,13 +75,14 @@ const ActivateStudentForm = (props: ActivateStudentFormProps): ReactElement => {
           var data = resp.data;
           setName(data.person.name);
           setSurname(data.person.surname);
-          setBirthday(moment(data.person.birthday).format("YYYY-MM-DD"));
+          setBirthday(moment(data.person.birthday).format("L"));
         })
         .catch((err) => {
           setName("");
           setSurname("");
           setBirthday("");
-        });
+        })
+        .catch(Notifications.showApiError);
     }
   };
 

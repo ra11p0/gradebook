@@ -34,7 +34,7 @@ describe('SchoolsProxy', () => {
                 Surname: newStudentSurname,
                 Birthday: newStudentBirthday
             }, firstSchoolGuid);
-            let studentsInSchool = await SchoolsProxy.getStudentsInSchool(firstSchoolGuid, 1);
+            let studentsInSchool = await SchoolsProxy.getStudentsInSchool(firstSchoolGuid, 0);
             let searchedStudent = studentsInSchool.data.find(e =>
                 e.name == newStudentName &&
                 e.surname == newStudentSurname &&
@@ -56,7 +56,7 @@ describe('SchoolsProxy', () => {
                 Surname: newTeacherSurname,
                 Birthday: newTeacherBirthday
             }, firstSchoolGuid);
-            let teachersInSchool = await SchoolsProxy.getTeachersInSchool(firstSchoolGuid, 1);
+            let teachersInSchool = await SchoolsProxy.getTeachersInSchool(firstSchoolGuid, 0);
             let searchedTeacher = teachersInSchool.data.find(e =>
                 e.name == newTeacherName &&
                 e.surname == newTeacherSurname
@@ -93,9 +93,14 @@ describe('SchoolsProxy', () => {
             //  get created class
             let classesInSchool = await SchoolsProxy.getClassesInSchool(firstSchoolGuid, 1);
             let firstFoundClass = classesInSchool.data.find(() => true)!;
-            let studentsInSchool = await SchoolsProxy.getStudentsInSchool(firstSchoolGuid);
-            let firstStudentGuid = studentsInSchool.data.find(() => true)?.guid!;
-            await ClassesProxy.addStudentToClass(firstFoundClass.guid, [firstStudentGuid]);
+            let student = await SchoolsProxy.addNewStudent({
+                Name: "Maria",
+                Surname: "Sokołowska",
+                Birthday: new Date(2007, 8, 28)
+            }, firstSchoolGuid);
+
+            let firstStudentGuid = student.data;
+            await ClassesProxy.addStudentsToClass(firstFoundClass.guid, [firstStudentGuid]);
             var studentsInClass = await ClassesProxy.getStudentsInClass(firstFoundClass.guid);
             var foundStudent = studentsInClass.data.find(e => e.guid == firstStudentGuid);
             assert.ok(foundStudent);
@@ -106,11 +111,11 @@ describe('SchoolsProxy', () => {
             let accessibleSchools = await AccountsProxy.getAccessibleSchools(meResponse.data.userId);
             let firstSchoolGuid = await accessibleSchools.data.find(() => true)?.school.guid!;
             //  get created class
-            let classesInSchool = await SchoolsProxy.getClassesInSchool(firstSchoolGuid, 1);
+            let classesInSchool = await SchoolsProxy.getClassesInSchool(firstSchoolGuid, 0);
             let firstFoundClass = classesInSchool.data.find(() => true)!;
             let teachersInSchool = await SchoolsProxy.getTeachersInSchool(firstSchoolGuid);
             let firstTeacherGuid = teachersInSchool.data.find(() => true)?.guid!;
-            await ClassesProxy.addTeacherToClass(firstFoundClass.guid, [firstTeacherGuid]);
+            await ClassesProxy.addTeachersToClass(firstFoundClass.guid, [firstTeacherGuid]);
             var teachersInClass = await ClassesProxy.getTeachersInClass(firstFoundClass.guid);
             var foundTeacher = teachersInClass.data.find(e => e.guid == firstTeacherGuid);
             assert.ok(foundTeacher);

@@ -24,6 +24,9 @@ public class ResponseWithStatus<R, S> : StatusResponse<S> where S : struct
 
 public class ResponseWithStatus<R> : ResponseWithStatus<R, bool>
 {
+    public ResponseWithStatus(R? response) : this(response, true, default)
+    {
+    }
     public ResponseWithStatus(string? message = null) : this(400, false, message)
     {
     }

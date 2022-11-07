@@ -11,16 +11,22 @@ public static class MyMySqlConnectionExtensions
         SELECT COUNT(*) 
         FROM ({orderedQuery}) AS _;
         ";
-        var pagedQuery = $@"
-        SELECT *
-        FROM ({orderedQuery}) AS _
-        LIMIT {pager.PageSize}
-        OFFSET {pager.PageSize * (pager.Page - 1)};
+
+        var pagedQuery = pager.Page <= 0 ?
+        $@"
+            SELECT *
+            FROM ({orderedQuery}) AS _
+        " :
+        $@"
+            SELECT *
+            FROM ({orderedQuery}) AS _
+            LIMIT {pager.PageSize}
+            OFFSET {pager.PageSize * (pager.Page - 1)};
         ";
 
         using var query = await cn.QueryMultipleAsync(countQuery + pagedQuery, queryData);
         var total = await query.ReadFirstOrDefaultAsync<int>();
         var resp = await query.ReadAsync<T>();
-        return resp.ToPagedList(pager.Page, total, (int)Math.Ceiling(total / (decimal)pager.PageSize));
+        return resp.ToPagedList(pager.Page, total, pager.Page <= 0 ? -1 : (int)Math.Ceiling(total / (decimal)pager.PageSize));
     }
 }

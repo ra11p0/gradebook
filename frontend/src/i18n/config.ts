@@ -1,7 +1,9 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import setApplicationLanguageReduxWrapper from '../Redux/ReduxWrappers/setApplicationLanguageReduxWrapper';
+import { store } from '../store';
 
-i18n.use(initReactI18next).init({
+i18n.init({
   fallbackNS: 'common',
   fallbackLng: 'en',
   lng: 'pl',
@@ -29,6 +31,8 @@ i18n.use(initReactI18next).init({
       addNewClassModal: require('./locales/en/Dashboard/Manage/Classes/addNewClassModal'),
       settings: require('./locales/en/Dashboard/Manage/Settings/settings'),
       permissions: require('./locales/en/Person/permissions.json'),
+      personNavigation: require('./locales/en/Person/personNavigation.json'),
+      classIndex: require('./locales/en/Class/classIndex.json')
     },
     pl: {
       common: require('./locales/pl/common.json'),
@@ -53,15 +57,21 @@ i18n.use(initReactI18next).init({
       addNewClassModal: require('./locales/pl/Dashboard/Manage/Classes/addNewClassModal'),
       settings: require('./locales/pl/Dashboard/Manage/Settings/settings'),
       permissions: require('./locales/pl/Person/permissions.json'),
+      personNavigation: require('./locales/pl/Person/personNavigation.json'),
+      classIndex: require('./locales/pl/Class/classIndex.json')
     }
   },
   ns: ['common', 'loginForm', 'registerForm', 'activateAccount', 'ActivateStudent', 'header', 'notifications',
     'dashboardNavigation', 'addNewStudentModal', 'studentsList', 'profile', 'invitations',
     'addInvitationModal', 'ActivateAdministrator', 'ActivateAdministratorPerson', 'ActivateAdministratorSchool', 'schoolSelect',
-    'schoolsList', "classes", "addNewClassModal", "settings", "permissions"],
+    'schoolsList', "classes", "addNewClassModal", "settings", "permissions", 'personNavigation', 'classIndex'],
   defaultNS: 'common'
 });
 
 i18n.languages = ['en', 'pl'];
+
+i18n.on('languageChanged', (language) => {
+  setApplicationLanguageReduxWrapper(store.dispatch, language);
+})
 
 export default i18n;

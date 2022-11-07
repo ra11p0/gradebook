@@ -10,7 +10,6 @@ const logIn = (email: string, password: string) => {
             refreshToken: response.data.refresh_token
         })
     })
-
 }
 
 const logOut = () => setLogOutReduxWrapper(store.dispatch);
