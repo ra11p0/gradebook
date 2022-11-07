@@ -21,7 +21,7 @@ public class Permissions
     [Order(1)]
     public void CanSetOwnPermission()
     {
-        _driver!.AddNewStudent("Mikołaj", "Lubuszczyk", "02022002");
+        _driver!.AddNewStudent("Mikołaj", "Lubuszczyk", "02.02.2002");
         _wait!.Until(d => d.FindElement(By.CssSelector("a[href='/account/profile']"))).Click();
         _wait.Until(d => d.FindElement(By.CssSelector("a.permissions"))).Click();
         _wait.Until(d => d.FindElement(By.CssSelector("button.administrationPermissions"))).Click();
