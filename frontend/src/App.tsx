@@ -17,9 +17,11 @@ import getIsUserActivatedReduxProxy from "./Redux/ReduxProxy/getIsUserActivatedR
 import setAppLoadReduxWrapper from "./Redux/ReduxWrappers/setAppLoadReduxWrapper";
 import LoadingScreen from "./Components/Shared/LoadingScreen";
 import AccountProxy from "./ApiClient/Accounts/AccountsProxy";
-import setLoginReduxWrapper from './Redux/ReduxWrappers/setLoginReduxWrapper';
-import { store } from './store';
+import setLoginReduxWrapper from "./Redux/ReduxWrappers/setLoginReduxWrapper";
+import { store } from "./store";
 import setLogOutReduxWrapper from "./Redux/ReduxWrappers/setLogOutReduxWrapper";
+import setApplicationLanguageReduxWrapper from "./Redux/ReduxWrappers/setApplicationLanguageReduxWrapper";
+import i18n from "./i18n/config";
 
 interface AppProps {
   onLoad: (isAppLoaded: boolean) => {};
@@ -30,29 +32,29 @@ interface AppProps {
 
 class App extends React.Component<AppProps> {
   componentDidMount() {
-
+    setApplicationLanguageReduxWrapper(store.dispatch, i18n.language);
     var access = localStorage.getItem("access_token");
     var refresh = localStorage.getItem("refresh_token");
     if (access && refresh) {
-      AccountProxy.refreshAccessToken(access, refresh).then(async (refreshAccessTokenResponse) => {
-        await setLoginReduxWrapper(store.dispatch, {
-          accessToken: refreshAccessTokenResponse.data.access_token,
-          refreshToken: refreshAccessTokenResponse.data.refresh_token,
+      AccountProxy.refreshAccessToken(access, refresh)
+        .then(async (refreshAccessTokenResponse) => {
+          await setLoginReduxWrapper(store.dispatch, {
+            accessToken: refreshAccessTokenResponse.data.access_token,
+            refreshToken: refreshAccessTokenResponse.data.refresh_token,
+          });
+          this.props.onLoad(true);
+        })
+        .catch(() => {
+          setLogOutReduxWrapper();
         });
-        this.props.onLoad(true);
-      }).catch(() => {
-        setLogOutReduxWrapper();
-      });
-    }
-    else {
+    } else {
       this.props.onLoad(true);
     }
   }
   render(): React.ReactNode {
     return (
       <div>
-        <LoadingScreen
-          isReady={this.props.appLoaded}>
+        <LoadingScreen isReady={this.props.appLoaded}>
           <BrowserRouter>
             <ReactNotifications />
             <Header />
@@ -68,8 +70,7 @@ class App extends React.Component<AppProps> {
               }
               {
                 //Only for logged in and inactive
-                this.props.isLoggedIn && !this.props.isUserActivated &&
-                <Route path="*" element={<ActivateAccount />} />
+                this.props.isLoggedIn && !this.props.isUserActivated && <Route path="*" element={<ActivateAccount />} />
               }
               {
                 // only for logged in and activated
@@ -88,7 +89,6 @@ class App extends React.Component<AppProps> {
             </Routes>
           </BrowserRouter>
         </LoadingScreen>
-
       </div>
     );
   }

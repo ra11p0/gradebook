@@ -7,19 +7,24 @@ import NewStudentRequest from "../../../../ApiClient/Schools/Definitions/Request
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
 import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
 import Notifications from "../../../../Notifications/Notifications";
+import ReactDatePicker from "react-datepicker";
+import getApplicationLanguageReduxProxy from "../../../../Redux/ReduxProxy/getApplicationLanguageReduxProxy";
+
 const mapStateToProps = (state: any) => ({
   currentSchool: getCurrentSchoolReduxProxy(state),
+  locale: getApplicationLanguageReduxProxy(state),
 });
 const mapDispatchToProps = (dispatch: any) => ({});
 interface formValues {
   name: string;
   surname: string;
-  birthday: any;
+  birthday: Date;
 }
 interface AddNewStudentModalProps {
   show: boolean;
   onHide: () => void;
   currentSchool: any;
+  locale: string;
 }
 const AddNewStudentModal = (props: AddNewStudentModalProps): ReactElement => {
   const { t } = useTranslation("addNewStudentModal");
@@ -36,7 +41,7 @@ const AddNewStudentModal = (props: AddNewStudentModalProps): ReactElement => {
     initialValues: {
       name: "",
       surname: "",
-      birthday: new Date().toDateString(),
+      birthday: new Date(),
     },
     validate,
     onSubmit: (values: formValues) => {
@@ -76,13 +81,14 @@ const AddNewStudentModal = (props: AddNewStudentModalProps): ReactElement => {
           </div>
           <div className="m-1 p-1">
             <label htmlFor="birthday">{t("birthday")}</label>
-            <input
+            <ReactDatePicker
+              selected={formik.values.birthday}
               className="form-control"
-              id="birthday"
-              name="birthday"
-              type="date"
-              onChange={formik.handleChange}
-              value={formik.values.birthday}
+              onChange={(evt) => {
+                formik.handleChange({ target: { name: "birthday", id: "birthday", value: evt } });
+              }}
+              locale={props.locale}
+              dateFormat="P"
             />
             {formik.errors.birthday && formik.touched.birthday ? (
               <div className="invalid-feedback d-block">{formik.errors.birthday as string}</div>

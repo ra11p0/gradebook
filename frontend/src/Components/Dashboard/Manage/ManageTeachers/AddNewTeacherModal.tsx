@@ -6,16 +6,25 @@ import { useTranslation } from "react-i18next";
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
 import { connect } from "react-redux";
 import NewTeacherRequest from "../../../../ApiClient/Schools/Definitions/Requests/NewTeacherRequest";
+import ReactDatePicker from "react-datepicker";
+import moment from "moment";
+import getApplicationLanguageReduxProxy from "../../../../Redux/ReduxProxy/getApplicationLanguageReduxProxy";
 
-type Props = { show: boolean; onHide: () => void; currentSchoolGuid?: string };
+type Props = {
+  show: boolean;
+  onHide: () => void;
+  currentSchoolGuid?: string;
+  locale: string;
+};
 const mapStateToProps = (state: any) => ({
   currentSchoolGuid: state.common.school?.schoolGuid,
+  locale: getApplicationLanguageReduxProxy(state),
 });
 const mapDispatchToProps = (dispatch: any) => ({});
 interface formValues {
   name: string;
   surname: string;
-  birthday: any;
+  birthday: Date;
 }
 function AddNewTeacherModal(props: Props) {
   const { t } = useTranslation("addNewTeacherModal");
@@ -29,7 +38,7 @@ function AddNewTeacherModal(props: Props) {
     initialValues: {
       name: "",
       surname: "",
-      birthday: new Date().toDateString(),
+      birthday: new Date(),
     },
     validate,
     onSubmit: (values: formValues) => {
@@ -69,17 +78,15 @@ function AddNewTeacherModal(props: Props) {
           </div>
           <div className="m-1 p-1">
             <label htmlFor="birthday">{t("birthday")}</label>
-            <input
+            <ReactDatePicker
+              selected={formik.values.birthday}
               className="form-control"
-              id="birthday"
-              name="birthday"
-              type="date"
-              onChange={formik.handleChange}
-              value={formik.values.birthday}
+              onChange={(evt) => {
+                formik.handleChange({ target: { name: "birthday", id: "birthday", value: evt } });
+              }}
+              dateFormat={"P"}
+              locale={props.locale}
             />
-            {formik.errors.birthday && formik.touched.birthday ? (
-              <div className="invalid-feedback d-block">{formik.errors.birthday as string}</div>
-            ) : null}
           </div>
         </Modal.Body>
         <Modal.Footer>

@@ -21,7 +21,7 @@ function JoinSchoolModal(props: JoinSchoolModalProps) {
       <Modal.Body>
         <ActivateAccount
           onSubmit={props.onHide}
-          person={props.person ? { ...props.person, birthday: moment(props.person?.birthday).format("YYYY-MM-DD") } : undefined}
+          person={props.person ? { ...props.person, birthday: props.person?.birthday } : undefined}
         />
       </Modal.Body>
     </Modal>
