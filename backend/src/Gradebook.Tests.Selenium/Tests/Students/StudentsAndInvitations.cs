@@ -15,7 +15,7 @@ public class StudentsAndInvitations
         // Set up storage
         _storage["studentName"] = "Mateusz";
         _storage["studentSurname"] = "Kowalczyk";
-        _storage["studentBirthday"] = "09032005";
+        _storage["studentBirthday"] = "09.03.2005";
         _storage["studentEmail"] = "mateusz.kowalczyiiik@szkola.pl";
         _storage["studentPassword"] = "!QAZ2wsx";
     }
@@ -28,6 +28,7 @@ public class StudentsAndInvitations
         wait.Until(d => d.FindElement(By.CssSelector("button.addNewStudentButton"))).Click();
         wait.Until(d => d.FindElement(By.CssSelector("input[name='name']"))).SendKeys(_storage["studentName"]);
         _driver!.FindElement(By.CssSelector("input[name='surname']")).SendKeys(_storage["studentSurname"]);
+        _driver.FindElement(By.CssSelector("input.birthday")).SendKeys(Keys.Control + 'a' + Keys.Delete);
         _driver!.FindElement(By.CssSelector("input.birthday")).SendKeys(_storage["studentBirthday"]);
         _driver.FindElement(By.CssSelector("button[type='submit']")).Click();
         var studentNameRecord = wait.Until(d => d.FindElement(By.XPath($"//div[text()='{_storage["studentName"]}']")));
