@@ -83,7 +83,7 @@ const AddNewStudentModal = (props: AddNewStudentModalProps): ReactElement => {
             <label htmlFor="birthday">{t("birthday")}</label>
             <ReactDatePicker
               selected={formik.values.birthday}
-              className="form-control"
+              className="form-control birthday"
               onChange={(evt) => {
                 formik.handleChange({ target: { name: "birthday", id: "birthday", value: evt } });
               }}

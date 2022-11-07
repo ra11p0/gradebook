@@ -28,7 +28,7 @@ public class StudentsAndInvitations
         wait.Until(d => d.FindElement(By.CssSelector("button.addNewStudentButton"))).Click();
         wait.Until(d => d.FindElement(By.CssSelector("input[name='name']"))).SendKeys(_storage["studentName"]);
         _driver!.FindElement(By.CssSelector("input[name='surname']")).SendKeys(_storage["studentSurname"]);
-        _driver!.FindElement(By.CssSelector("input[name='birthday']")).SendKeys(_storage["studentBirthday"]);
+        _driver!.FindElement(By.CssSelector("input.birthday")).SendKeys(_storage["studentBirthday"]);
         _driver.FindElement(By.CssSelector("button[type='submit']")).Click();
         var studentNameRecord = wait.Until(d => d.FindElement(By.XPath($"//div[text()='{_storage["studentName"]}']")));
         var studentSurnameRecord = wait.Until(d => d.FindElement(By.XPath($"//div[text()='{_storage["studentSurname"]}']")));
