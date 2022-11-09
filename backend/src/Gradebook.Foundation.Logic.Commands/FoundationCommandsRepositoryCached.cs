@@ -90,4 +90,10 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
 
     public Task<StatusResponse> DeleteTeachersFromClass(Guid classGuid, IEnumerable<Guid> teachersGuids)
         => Base.DeleteTeachersFromClass(classGuid, teachersGuids);
+
+    public Task<StatusResponse> SetStudentActiveClass(Guid classGuid, Guid studentGuid)
+        => Base.SetStudentActiveClass(classGuid, studentGuid);
+
+    public Task<StatusResponse> RemoveStudentActiveClass(Guid studentGuid)
+        => Base.RemoveStudentActiveClass(studentGuid);
 }

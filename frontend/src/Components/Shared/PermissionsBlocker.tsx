@@ -1,36 +1,31 @@
-import PermissionLevelEnum from '../../Common/Enums/Permissions/PermissionLevelEnum'
-import getPermissionsReduxProxy from '../../Redux/ReduxProxy/getPermissionsReduxProxy'
-import { connect } from 'react-redux'
+import PermissionLevelEnum from "../../Common/Enums/Permissions/PermissionLevelEnum";
+import getPermissionsReduxProxy from "../../Redux/ReduxProxy/getPermissionsReduxProxy";
+import { connect } from "react-redux";
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 
 type Props = {
-    currentPermissions: PermissionLevelEnum[];
-    permissions: PermissionLevelEnum[];
-    children?: React.ReactNode;
-}
+  currentPermissions: PermissionLevelEnum[];
+  allowingPermissions: PermissionLevelEnum[];
+  children?: React.ReactNode;
+};
 
 function PermissionsBlocker(props: Props) {
-    const [canSee, setCanSee] = useState<boolean>(false);
-    useEffect(() => {
-        setCanSee(false);
-        let canSee = true;
-        props.permissions.forEach((permission) => {
-            if (!props.currentPermissions.includes(permission)) canSee = false;
-        })
-        setCanSee(canSee);
-    }, [props.currentPermissions]);
-    return (
-        <>
-            {
-                canSee && <div>
-                    {props.children}
-                </div>
-            }
-        </>
-    )
+  const [canSee, setCanSee] = useState<boolean>(false);
+  useEffect(() => {
+    setCanSee(false);
+    let canSee = false;
+    props.currentPermissions.forEach((permission) => {
+      if (props.allowingPermissions.includes(permission)) canSee = true;
+    });
+    setCanSee(canSee);
+  }, [props.currentPermissions]);
+  return <>{canSee && <div>{props.children}</div>}</>;
 }
 
-export default connect((state) => ({
-    currentPermissions: getPermissionsReduxProxy(state)
-}), () => ({}))(PermissionsBlocker);
+export default connect(
+  (state) => ({
+    currentPermissions: getPermissionsReduxProxy(state),
+  }),
+  () => ({})
+)(PermissionsBlocker);

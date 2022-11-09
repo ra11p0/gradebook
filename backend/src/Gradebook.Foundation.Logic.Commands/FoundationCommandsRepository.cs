@@ -200,4 +200,21 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
         _class.OwnersTeachers!.RemoveRange(teachers);
         return new StatusResponse(true);
     }
+
+    public async Task<StatusResponse> SetStudentActiveClass(Guid classGuid, Guid studentGuid)
+    {
+        var _class = await Context.Classes!.FirstOrDefaultAsync(e => e.Guid == classGuid);
+        var student = await Context.Students!.FirstOrDefaultAsync(e => e.Guid == studentGuid);
+        if (_class is null || student is null) return new StatusResponse(false, _class is null ? "Class not found" : "Student not found");
+        student.CurrentClassGuid = _class.Guid;
+        return new StatusResponse(true);
+    }
+
+    public async Task<StatusResponse> RemoveStudentActiveClass(Guid studentGuid)
+    {
+        var student = await Context.Students!.FirstOrDefaultAsync(e => e.Guid == studentGuid);
+        if (student is null) return new StatusResponse(false, "Class not found");
+        student.CurrentClassGuid = null;
+        return new StatusResponse(true);
+    }
 }

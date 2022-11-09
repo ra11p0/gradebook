@@ -134,6 +134,9 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
             return new StatusResponse("Forbidden");
         var resp = await Repository.AddStudentsToClass(classGuid, studentsGuids);
         if (!resp.Status) return new StatusResponse(resp.Message);
+
+        if (!(await SetStudentsActiveClass(classGuid, studentsGuids.ToList())).Status)
+            return new StatusResponse(false, "Could not set default class");
         await Repository.SaveChangesAsync();
         return new StatusResponse(true);
     }
@@ -182,6 +185,8 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
             return new StatusResponse("Forbidden");
         var resp = await Repository.DeleteStudentsFromClass(classGuid, studentsGuids);
         if (!resp.Status) return new StatusResponse(resp.Message);
+        if (!(await RemoveStudentsActiveClass(studentsGuids.ToList())).Status)
+            return new StatusResponse(false, "Could not remove default class");
         await Repository.SaveChangesAsync();
         return new StatusResponse(true);
     }
@@ -319,5 +324,15 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
             return new StatusResponse<bool>(true);
         }
         return new StatusResponse<bool>(false);
+    }
+    private async Task<StatusResponse> SetStudentsActiveClass(Guid classGuid, List<Guid> studentGuid)
+    {
+        foreach (var guid in studentGuid) if (!(await Repository.SetStudentActiveClass(classGuid, guid)).Status) return new StatusResponse(false, "Could not set active school");
+        return new StatusResponse(true);
+    }
+    private async Task<StatusResponse> RemoveStudentsActiveClass(List<Guid> studentGuid)
+    {
+        foreach (var guid in studentGuid) if (!(await Repository.RemoveStudentActiveClass(guid)).Status) return new StatusResponse(false, "Could not remove active school");
+        return new StatusResponse(true);
     }
 }

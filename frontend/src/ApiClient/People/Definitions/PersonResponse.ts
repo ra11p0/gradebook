@@ -6,4 +6,13 @@ export default interface PersonResponse {
     surname: string;
     schoolRole: SchoolRolesEnum;
     birthday: Date;
+    activeClassGuid: string;
+    activeClass: ClassResponse | undefined;
+}
+
+export interface ClassResponse {
+    guid: string;
+    name: string;
+    description?: string;
+    createdDate: Date;
 }

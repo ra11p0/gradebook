@@ -7,5 +7,9 @@
   "schoolIsNotSelected": "School is not selected",
   "selectSchoolToManageStudents": "Select school to manage students",
   "actions": "Actions",
-  "save": "Save"
+  "save": "Save",
+  "name": "Name",
+  "surname": "Surname",
+  "birthday": "Birthday",
+  "isActive": "Is active"
 }

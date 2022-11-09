@@ -31,7 +31,7 @@ function PeoplePicker(props: Props) {
   }, [props.show]);
   return (
     <Modal show={props.show} onHide={props.onHide}>
-      <Modal.Header closeButton>header</Modal.Header>
+      <Modal.Header closeButton>{t("peoplePicker")}</Modal.Header>
       <Modal.Body>
         <Input type="text" className="w-100" placeholder={t("searchPeople")} value={query} onChange={(e) => setQuery(e.target.value)} />
         <div className="vh-50 overflow-scroll">
@@ -69,7 +69,7 @@ function PeoplePicker(props: Props) {
         <Button
           variant="outlined"
           onClick={() => {
-            props.onConfirm([...(new Set(selectedPeople))]);
+            props.onConfirm([...new Set(selectedPeople)]);
             props.onHide();
           }}
         >

@@ -9,5 +9,7 @@ public class PersonDto
     public string Surname { get; set; } = string.Empty;
     public SchoolRoleEnum SchoolRole { get; set; }
     public Guid? SchoolGuid { get; set; }
+    public Guid? ActiveClassGuid { get; set; }
     public DateTime? Birthday { get; set; }
+    public ClassDto? ActiveClass { get; set; }
 }

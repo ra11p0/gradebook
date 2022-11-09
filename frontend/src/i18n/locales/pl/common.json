@@ -7,5 +7,9 @@
   "schoolIsNotSelected": "Szkoła nie została wybrana",
   "selectSchoolToManageStudents": "Wybierz szkołę by zarządzać uczniami ",
   "actions": "Akcje",
-  "save": "Zapisz"
+  "save": "Zapisz",
+  "name": "Imię",
+  "surname": "Nazwisko",
+  "birthday": "Data urodzenia",
+  "isActive": "Czy aktywny"
 }

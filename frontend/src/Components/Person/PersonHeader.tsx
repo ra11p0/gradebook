@@ -1,14 +1,18 @@
 import React, { useState } from "react";
-import { Button, Col, Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { ClassResponse } from "../../ApiClient/People/Definitions/PersonResponse";
+import SchoolRolesEnum from "../../Common/Enums/SchoolRolesEnum";
 
 type Props = {
   personName: string;
   personSurname: string;
+  personSchoolRole: SchoolRolesEnum;
+  activeClass: ClassResponse | undefined;
 };
 
-function PersonNavigation(props: Props) {
+function PersonHeader(props: Props) {
   const [activeTab, setActiveTab] = useState<string>("");
   const { t } = useTranslation("personNavigation");
   return (
@@ -17,7 +21,13 @@ function PersonNavigation(props: Props) {
         <Col>
           <Row>
             <Col className="fs-3">{`${props.personName} ${props.personSurname}`}</Col>
-            <Col> class placeholder </Col>
+            {props.personSchoolRole === SchoolRolesEnum.Student && props.activeClass && (
+              <Col>
+                <Link className="btn btn-link text-reset" to={`/class/show/${props.activeClass.guid}`}>
+                  {`${t("class")}: ${props.activeClass.name}`}
+                </Link>
+              </Col>
+            )}
           </Row>
         </Col>
         <Col>
@@ -47,4 +57,4 @@ function PersonNavigation(props: Props) {
   );
 }
 
-export default PersonNavigation;
+export default PersonHeader;

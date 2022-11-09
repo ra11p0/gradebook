@@ -104,4 +104,7 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
 
     public Task<bool> IsStudentInAnyClass(Guid studentGuid)
         => Base.IsStudentInAnyClass(studentGuid);
+
+    public Task<IPagedList<ClassDto>> GetClassesForPerson(Guid personGuid, Pager pager)
+        => Base.GetClassesForPerson(personGuid, pager);
 }

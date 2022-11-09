@@ -16,6 +16,8 @@ import Swal from "sweetalert2";
 import Notifications from "../../../../Notifications/Notifications";
 import ClassesProxy from "../../../../ApiClient/Classes/ClassesProxy";
 import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
+import PermissionsBlocker from "../../../Shared/PermissionsBlocker";
+import PermissionLevelEnum from "../../../../Common/Enums/Permissions/PermissionLevelEnum";
 
 const mapStateToProps = (state: any) => ({
   currentSchool: getCurrentSchoolReduxProxy(state),
@@ -54,10 +56,12 @@ function ManageClasses(props: Props) {
         <div className="d-flex justify-content-between">
           <div className="my-auto">{t("classes")}</div>
           <div>
-            <Button onClick={() => setShowAddClassModal(true)} variant="outlined">
-              {t("addClasses")}
-            </Button>
-            <AddClassModal show={showAddClassModal} onHide={() => setShowAddClassModal(false)} />
+            <PermissionsBlocker allowingPermissions={[PermissionLevelEnum.Classes_CanManageOwn, PermissionLevelEnum.Classes_CanManageAll]}>
+              <Button onClick={() => setShowAddClassModal(true)} variant="outlined">
+                {t("addClasses")}
+              </Button>
+              <AddClassModal show={showAddClassModal} onHide={() => setShowAddClassModal(false)} />
+            </PermissionsBlocker>
           </div>
         </div>
         <Stack className={"border rounded-3 my-1 p-3 bg-light"}>
@@ -100,11 +104,15 @@ function ManageClasses(props: Props) {
                             </Button>
                           </Tippy>
                         </Link>
-                        <Tippy content={t("removeClass")} arrow={true} animation={"scale"}>
-                          <Button variant="outlined" color="error" onClick={() => removeClassClickHandler(element.guid)}>
-                            <FontAwesomeIcon icon={faTrash} />
-                          </Button>
-                        </Tippy>
+                        <PermissionsBlocker
+                          allowingPermissions={[PermissionLevelEnum.Classes_CanManageOwn, PermissionLevelEnum.Classes_CanManageAll]}
+                        >
+                          <Tippy content={t("removeClass")} arrow={true} animation={"scale"}>
+                            <Button variant="outlined" color="error" onClick={() => removeClassClickHandler(element.guid)}>
+                              <FontAwesomeIcon icon={faTrash} />
+                            </Button>
+                          </Tippy>
+                        </PermissionsBlocker>
                       </div>
                     </Grid>
                   </Grid>

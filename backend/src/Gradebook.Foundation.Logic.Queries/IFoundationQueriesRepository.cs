@@ -22,6 +22,7 @@ public interface IFoundationQueriesRepository : IBaseRepository
     Task<SchoolDto> GetSchoolByGuid(Guid guid);
     Task<IPagedList<StudentDto>> GetStudentsInSchool(Guid schoolGuid, Pager pager);
     Task<IPagedList<ClassDto>> GetClassesInSchool(Guid schoolGuid, Pager pager);
+    Task<IPagedList<ClassDto>> GetClassesForPerson(Guid personGuid, Pager pager);
     Task<IPagedList<StudentDto>> GetStudentsInClass(Guid classGuid, Pager pager);
     Task<IPagedList<TeacherDto>> GetTeachersInClass(Guid classGuid, Pager pager);
     Task<IPagedList<StudentDto>> SearchStudentsCandidatesToClassWithCurrent(Guid classGuid, string query, Pager pager);

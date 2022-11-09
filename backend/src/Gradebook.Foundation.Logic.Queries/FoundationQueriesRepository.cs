@@ -224,7 +224,7 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
     {
         using var cn = await GetOpenConnectionAsync();
         return await cn.QueryFirstOrDefaultAsync<PersonDto>(@"
-                SELECT Guid, Name, Surname, SchoolRole, Birthday, UserGuid, SchoolGuid
+                SELECT Guid, Name, Surname, SchoolRole, Birthday, UserGuid, SchoolGuid, CurrentClassGuid AS 'ActiveClassGuid'
                 FROM Person
                 WHERE Guid = @guid
                     AND IsDeleted = 0
@@ -309,6 +309,7 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
                 AND Guid IN (
                 SELECT StudentsGuid FROM ClassStudent WHERE ClassesGuid = @classGuid
             )
+            ORDER BY Name, Surname
         ", new
         {
             classGuid
@@ -467,5 +468,25 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
         {
             studentGuid
         });
+    }
+
+    public async Task<IPagedList<ClassDto>> GetClassesForPerson(Guid personGuid, Pager pager)
+    {
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryPagedAsync<ClassDto>(@"
+            SELECT Name, Description, CreatedDate, Guid
+            FROM Classes
+            WHERE IsDeleted = 0 
+                AND Guid IN (
+                    SELECT OwnedClassesGuid AS 'Guid'
+                    FROM ClassTeacher
+                    WHERE OwnersTeachersGuid = @personGuid
+                    UNION
+                    SELECT ClassesGuid AS 'Guid'
+                    FROM ClassStudent
+                    WHERE StudentsGuid = @personGuid
+                )
+            ORDER BY CreatedDate DESC
+         ", new { personGuid }, pager);
     }
 }

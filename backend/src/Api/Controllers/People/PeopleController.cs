@@ -48,6 +48,14 @@ public class PeopleController : ControllerBase
         return personResponse.Status ? Ok(personResponse.Response) : BadRequest(personResponse.Message);
     }
 
+    [HttpGet, Route("{personGuid}/Classes")]
+    [ProducesResponseType(typeof(PagedList<ClassDto>), statusCode: 200)]
+    public async Task<IActionResult> GetManagedClasses([FromRoute] Guid personGuid, [FromQuery] int page = 0)
+    {
+        var classesResponse = await _foundationQueries.Service.GetClassesForPerson(personGuid, page);
+        return classesResponse.Status ? Ok(classesResponse.Response) : BadRequest(classesResponse.Message);
+    }
+
 
     [HttpDelete]
     [Route("{personGuid}")]

@@ -13,5 +13,8 @@
   "permission_3": "Klasy",
   "permissionLevel_5": "Tylko wyświetlanie",
   "permissionLevel_6": "Zarządzanie własnymi",
-  "permissionLevel_7": "Zarządzanie wszystkimi"
+  "permissionLevel_7": "Zarządzanie wszystkimi",
+
+  "permission_1_description": "Wysyłanie zaproszeń do platformy szkoły (dla uczniów, nauczycieli, i administratorów.).",
+  "permission_2_description": "Zarządzanie uprawnieniami użytkowników na platformie szkoły."
 }

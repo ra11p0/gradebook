@@ -1,9 +1,20 @@
 import React from "react";
+import SchoolRolesEnum from "../../Common/Enums/SchoolRolesEnum";
+import GroupsList from "./GroupsList";
+import ManagedClassesList from "./ManagedClassesList";
 
-type Props = {};
+type Props = {
+  schoolRole: SchoolRolesEnum;
+  personGuid: string;
+};
 
-function Overview({}: Props) {
-  return <div>Overview</div>;
+function Overview(props: Props) {
+  return (
+    <div>
+      {props.schoolRole === SchoolRolesEnum.Teacher && <ManagedClassesList personGuid={props.personGuid} />}
+      <GroupsList />
+    </div>
+  );
 }
 
 export default Overview;

@@ -8,7 +8,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 type Props = {
   mapper: (item: any, index: number) => ReactElement;
-  fetch: (page: number) => Promise<[]>;
+  fetch: (page: number) => Promise<any[]>;
   effect?: any;
 };
 

@@ -14,5 +14,8 @@
   "permission_3": "Classes",
   "permissionLevel_5": "View only",
   "permissionLevel_6": "Can manage own classes",
-  "permissionLevel_7": "Can manage all classes"
+  "permissionLevel_7": "Can manage all classes",
+
+  "permission_1_description": "Sending invitations to school platform (students, teachers, administrators.).",
+  "permission_2_description": "Managing permissions of users on school platform."
 }
