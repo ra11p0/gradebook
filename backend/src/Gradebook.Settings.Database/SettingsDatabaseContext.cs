@@ -1,3 +1,4 @@
+using Gradebook.Foundation.Domain;
 using Gradebook.Settings.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -16,6 +17,11 @@ public class SettingsDatabaseContext : DbContext
         : base(options)
     {
 
+    }
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+        FoundationModelsMappings.ConfigureModels(builder);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
