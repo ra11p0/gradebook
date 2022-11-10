@@ -489,4 +489,27 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
             ORDER BY CreatedDate DESC
          ", new { personGuid }, pager);
     }
+
+    public async Task<SubjectDto> GetSubject(Guid subjectGuid)
+    {
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryFirstOrDefaultAsync<SubjectDto>(@"
+            SELECT Name, SchoolGuid, Guid
+            FROM Subjects
+            WHERE IsDeleted = 0 
+                AND Guid = @subjectGuid
+            ORDER BY CreatedDate DESC
+         ", new { subjectGuid });
+    }
+
+    public async Task<IPagedList<SubjectDto>> GetSubjectsForSchool(Guid schoolGuid, Pager pager)
+    {
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryPagedAsync<SubjectDto>(@"
+            SELECT Name, SchoolGuid, Guid
+            FROM Subjects
+            WHERE IsDeleted = 0 
+                AND SchoolGuid = @schoolGuid
+         ", new { schoolGuid }, pager);
+    }
 }

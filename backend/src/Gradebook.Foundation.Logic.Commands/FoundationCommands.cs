@@ -34,12 +34,12 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
 
         var invitation = invitationResult.Response!;
         if (invitation.IsUsed) return new StatusResponse<bool>(false, "Invitation already used");
-        if (invitation.ExprationDate < DateTime.Now) return new StatusResponse<bool>(false, "Invitation expired");
+        if (invitation.ExprationDate < DateTime.UtcNow) return new StatusResponse<bool>(false, "Invitation expired");
 
         var useInvitationResult = await Repository.UseInvitation(new UseInvitationCommand()
         {
             InvitationGuid = invitation.Guid,
-            UsedDate = DateTime.Now,
+            UsedDate = DateTime.UtcNow,
             UserGuid = userGuid.Response!
         });
         if (!useInvitationResult.Status) return new StatusResponse<bool>(false, useInvitationResult.Message);
@@ -73,7 +73,7 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         var currentPerson = await _foundationQueries.Service.GetCurrentPersonGuid(command.SchoolGuid);
         if (!await _foundationPermissions.Service.CanCreateNewClass(currentPerson.Response))
             return new ResponseWithStatus<Guid>("Forbidden");
-        command.CreatedDate = DateTime.Now;
+        command.CreatedDate = DateTime.UtcNow;
         var resp = await Repository.AddNewClass(command);
         if (!resp.Status) return new ResponseWithStatus<Guid>(false, resp.Message);
         await Repository.SaveChangesAsync();
@@ -334,5 +334,13 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
     {
         foreach (var guid in studentGuid) if (!(await Repository.RemoveStudentActiveClass(guid)).Status) return new StatusResponse(false, "Could not remove active school");
         return new StatusResponse(true);
+    }
+
+    public async Task<ResponseWithStatus<Guid>> AddSubject(Guid schoolGuid, NewSubjectCommand command)
+    {
+        var resp = await Repository.AddSubject(schoolGuid, command);
+        if (!resp.Status) return new ResponseWithStatus<Guid>(resp.Message);
+        await Repository.SaveChangesAsync();
+        return new ResponseWithStatus<Guid>(resp.Response);
     }
 }

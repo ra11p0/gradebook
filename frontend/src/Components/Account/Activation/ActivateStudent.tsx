@@ -75,7 +75,7 @@ const ActivateStudentForm = (props: ActivateStudentFormProps): ReactElement => {
           var data = resp.data;
           setName(data.person.name);
           setSurname(data.person.surname);
-          setBirthday(moment(data.person.birthday).format("L"));
+          setBirthday(moment.utc(data.person.birthday).local().format("L"));
         })
         .catch((err) => {
           setName("");

@@ -47,7 +47,9 @@ function AddNewTeacherModal(props: Props) {
         Surname: values.surname,
         Birthday: new Date(values.birthday),
       };
-      SchoolsProxy.addNewTeacher(teacher, props.currentSchoolGuid!).then(props.onHide);
+      SchoolsProxy.addNewTeacher({ ...teacher, Birthday: moment(teacher.Birthday).utc().toDate() }, props.currentSchoolGuid!).then(
+        props.onHide
+      );
     },
   });
   return (

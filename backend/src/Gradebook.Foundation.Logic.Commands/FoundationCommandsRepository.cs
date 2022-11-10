@@ -217,4 +217,14 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
         student.CurrentClassGuid = null;
         return new StatusResponse(true);
     }
+
+    public async Task<ResponseWithStatus<Guid>> AddSubject(Guid schoolGuid, NewSubjectCommand command)
+    {
+        var school = await Context.Schools!.FirstOrDefaultAsync(s => s.Guid == schoolGuid);
+        if (school is null) return new ResponseWithStatus<Guid>("School does not exist");
+        var subject = _mapper.Map<Subject>(command);
+        subject.School = school;
+        await Context.Subjects!.AddAsync(subject);
+        return new ResponseWithStatus<Guid>(subject.Guid);
+    }
 }

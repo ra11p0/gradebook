@@ -27,4 +27,5 @@ public interface IFoundationCommandsRepository : IBaseRepository
     Task<StatusResponse> DeleteTeachersFromClass(Guid classGuid, IEnumerable<Guid> teachersGuids);
     Task<StatusResponse> SetStudentActiveClass(Guid classGuid, Guid studentGuid);
     Task<StatusResponse> RemoveStudentActiveClass(Guid studentGuid);
+    Task<ResponseWithStatus<Guid>> AddSubject(Guid schoolGuid, NewSubjectCommand command);
 }

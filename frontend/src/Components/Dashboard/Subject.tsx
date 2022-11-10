@@ -1,16 +1,25 @@
 import React from "react";
-import { connect } from "react-redux";
+import SubjectResponse from "../../ApiClient/Schools/Definitions/Responses/SubjectResponse";
+import SchoolsProxy from "../../ApiClient/Schools/SchoolsProxy";
+import InfiniteScrollWrapper from "../Shared/InfiniteScrollWrapper";
+import NewSubjectModalWithButton from "./Manage/ManageSubjects/NewSubjectModalWithButton";
 
-const mapStateToProps = (state: any) => ({});
+type Props = {};
 
-const mapDispatchToProps = (dispatch: any) => ({});
-
-interface SubjectProps {}
-
-class Subject extends React.Component<SubjectProps> {
-  render(): React.ReactNode {
-    return <div>d-board Subject</div>;
-  }
+function Subject({}: Props) {
+  return (
+    <div>
+      <NewSubjectModalWithButton />{" "}
+      <div>
+        <InfiniteScrollWrapper
+          mapper={(item: SubjectResponse, index: number) => <div>{item.name}</div>}
+          fetch={async (page: number) => {
+            return (await SchoolsProxy.subjects.getSubjectsInSchool(page)).data;
+          }}
+        />
+      </div>
+    </div>
+  );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Subject);
+export default Subject;

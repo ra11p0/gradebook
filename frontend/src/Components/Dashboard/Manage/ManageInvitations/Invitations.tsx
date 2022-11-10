@@ -67,7 +67,7 @@ const Invitations = (props: InvitationsProps): ReactElement => {
                       <FontAwesomeIcon icon={invitation.isUsed ? faCheck : faTimes} />
                     </Grid>
                     <Grid item xs className="my-auto">
-                      {moment(invitation.exprationDate).format("lll")}
+                      {moment.utc(invitation.exprationDate).local().format("lll")}
                     </Grid>
                     {invitation.invitedPerson && (
                       <Grid item xs className="my-auto">

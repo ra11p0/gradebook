@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { useFormik } from "formik";
 import { Button } from "react-bootstrap";
 import ReactDatePicker from "react-datepicker";
-import moment from "moment";
 import getApplicationLanguageReduxProxy from "../../../Redux/ReduxProxy/getApplicationLanguageReduxProxy";
 const mapStateToProps = (state: any) => ({
   locale: getApplicationLanguageReduxProxy(state),

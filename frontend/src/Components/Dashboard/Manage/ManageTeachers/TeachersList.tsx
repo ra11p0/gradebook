@@ -97,7 +97,7 @@ const TeachersList = (props: ManageTeachersProps): ReactElement => {
                       <div>{element.surname}</div>
                     </Grid>
                     <Grid item xs className="my-auto">
-                      <div>{moment(element.birthday).format("L")}</div>
+                      <div>{moment.utc(element.birthday).local().format("L")}</div>
                     </Grid>
                     <Grid item xs className="my-auto">
                       <div>

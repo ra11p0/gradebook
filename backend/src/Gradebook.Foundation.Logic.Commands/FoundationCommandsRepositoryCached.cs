@@ -96,4 +96,7 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
 
     public Task<StatusResponse> RemoveStudentActiveClass(Guid studentGuid)
         => Base.RemoveStudentActiveClass(studentGuid);
+
+    public Task<ResponseWithStatus<Guid>> AddSubject(Guid schoolGuid, NewSubjectCommand command)
+        => Base.AddSubject(schoolGuid, command);
 }

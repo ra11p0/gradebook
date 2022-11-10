@@ -5,6 +5,8 @@ namespace Gradebook.Foundation.Logic.Queries;
 
 public interface IFoundationQueriesRepository : IBaseRepository
 {
+    Task<SubjectDto> GetSubject(Guid subjectGuid);
+    Task<IPagedList<SubjectDto>> GetSubjectsForSchool(Guid schoolGuid, Pager pager);
     Task<Guid?> GetPersonGuidForUser(string userId, Guid schoolGuid);
     Task<IEnumerable<SchoolDto>> GetSchoolsForUser(string userGuid);
     Task<IEnumerable<PersonDto>> GetPeopleInSchool(Guid schoolGuid);
