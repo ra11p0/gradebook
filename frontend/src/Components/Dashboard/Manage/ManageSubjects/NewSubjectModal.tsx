@@ -5,7 +5,8 @@ import { Button, Modal } from "react-bootstrap";
 import { useFormik } from "formik";
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
 import Notifications from "../../../../Notifications/Notifications";
-import NewSubjectRequest from "../../../../ApiClient/Schools/Definitions/Requests/NewSubjectRequest";
+import * as Yup from "yup";
+import FormikInput from "../../../Shared/FormikInput";
 
 interface formValues {
   name: string;
@@ -15,44 +16,34 @@ interface Props {
   onHide: () => void;
 }
 const NewSubjectModal = (props: Props): ReactElement => {
-  const { t } = useTranslation("addNewStudentModal");
-  const validate = (values: formValues) => {
-    const errors: any = {};
-    if (values.name.length < 3) errors.name = t("nameInvalid");
-    return errors;
-  };
+  const { t } = useTranslation("addNewSubjectModal");
   useEffect(() => {
     formik.resetForm();
   }, [props.show]);
   const formik = useFormik({
     initialValues: {
       name: "",
-      surname: "",
-      birthday: new Date(),
     },
-    validate,
+    validationSchema: Yup.object().shape({
+      name: Yup.string().required(t("nameIsRequired")),
+    }),
     onSubmit: (values: formValues) => {
-      var subject: NewSubjectRequest = {
-        name: values.name,
-      };
-      SchoolsProxy.subjects.addNewSubject(subject).then(props.onHide).catch(Notifications.showApiError);
+      SchoolsProxy.subjects.addNewSubject(values).then(props.onHide).catch(Notifications.showApiError);
     },
   });
   return (
     <Modal show={props.show} onHide={props.onHide}>
       <Modal.Header closeButton>
-        <Modal.Title>{t("addStudent")}</Modal.Title>
+        <Modal.Title>{t("addSubject")}</Modal.Title>
       </Modal.Header>
       <form onSubmit={formik.handleSubmit}>
         <Modal.Body>
           <div className="m-1 p-1">
-            <label htmlFor="name">{t("name")}</label>
-            <input className="form-control" id="name" name="name" type="text" onChange={formik.handleChange} value={formik.values.name} />
-            {formik.errors.name && formik.touched.name ? <div className="invalid-feedback d-block">{formik.errors.name}</div> : null}
+            <FormikInput name={"name"} label={t("name")} formik={formik} />
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button type="submit">{t("addStudent")}</Button>
+          <Button type="submit">{t("addSubject")}</Button>
         </Modal.Footer>
       </form>
     </Modal>

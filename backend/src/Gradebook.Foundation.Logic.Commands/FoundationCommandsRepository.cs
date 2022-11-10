@@ -227,4 +227,22 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
         await Context.Subjects!.AddAsync(subject);
         return new ResponseWithStatus<Guid>(subject.Guid);
     }
+
+    public async Task<StatusResponse> AddTeachersToSubject(Guid subjectGuid, List<Guid> teachersGuids)
+    {
+        var subject = await Context.Subjects!.Include(sub => sub.Teachers).FirstOrDefaultAsync(sub => sub.Guid == subjectGuid);
+        if (subject is null) return new StatusResponse("Subject not found");
+        var teachers = Context.Teachers!.Where(tea => teachersGuids.Contains(tea.Guid));
+        subject.Teachers!.AddRange(teachers);
+        return new StatusResponse(true);
+    }
+
+    public async Task<StatusResponse> RemoveTeachersFromSubject(Guid subjectGuid, List<Guid> teachersGuids)
+    {
+        var subject = await Context.Subjects!.Include(sub => sub.Teachers).FirstOrDefaultAsync(sub => sub.Guid == subjectGuid);
+        if (subject is null) return new StatusResponse("Subject not found");
+        var teachers = Context.Teachers!.Where(tea => teachersGuids.Contains(tea.Guid));
+        subject.Teachers!.RemoveRange(teachers);
+        return new StatusResponse(true);
+    }
 }

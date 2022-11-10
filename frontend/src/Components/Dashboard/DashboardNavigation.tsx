@@ -52,7 +52,7 @@ class DashboardNavigation extends React.Component<DashboardNavigationProps, Dash
             {t("absence")}
           </Link>
           <Link
-            to="subject"
+            to="manageSubjects"
             className={"btn btn-outline-primary " + (this.state.activeTab == "subject" ? "active" : "")}
             onClick={() => {
               this.setActiveTab("subject");

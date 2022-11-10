@@ -23,6 +23,7 @@ function ManagedClassesList(props: Props) {
           <InfiniteScrollWrapper
             mapper={(item: ClassResponse, index: number) => (
               <ListGroupItem
+                key={index}
                 className="cursor-pointer"
                 onClick={() => {
                   navigate(`/class/show/${item.guid}`);

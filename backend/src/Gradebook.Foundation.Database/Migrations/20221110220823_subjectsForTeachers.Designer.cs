@@ -3,6 +3,7 @@ using System;
 using Gradebook.Foundation.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gradebook.Foundation.Database.Migrations
 {
     [DbContext(typeof(FoundationDatabaseContext))]
-    partial class FoundationDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20221110220823_subjectsForTeachers")]
+    partial class subjectsForTeachers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -409,21 +411,6 @@ namespace Gradebook.Foundation.Database.Migrations
                     b.ToTable("GroupTeacher");
                 });
 
-            modelBuilder.Entity("SubjectTeacher", b =>
-                {
-                    b.Property<Guid>("SubjectsGuid")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("TeachersGuid")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("SubjectsGuid", "TeachersGuid");
-
-                    b.HasIndex("TeachersGuid");
-
-                    b.ToTable("SubjectTeacher");
-                });
-
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Administrator", b =>
                 {
                     b.HasBaseType("Gradebook.Foundation.Domain.Models.Person");
@@ -446,6 +433,16 @@ namespace Gradebook.Foundation.Database.Migrations
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Teacher", b =>
                 {
                     b.HasBaseType("Gradebook.Foundation.Domain.Models.Person");
+
+                    b.Property<Guid?>("SubjectGuid")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("TeacherGuid")
+                        .HasColumnType("char(36)");
+
+                    b.HasIndex("SubjectGuid");
+
+                    b.HasIndex("TeacherGuid");
 
                     b.HasDiscriminator().HasValue("Teacher");
                 });
@@ -629,21 +626,6 @@ namespace Gradebook.Foundation.Database.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SubjectTeacher", b =>
-                {
-                    b.HasOne("Gradebook.Foundation.Domain.Models.Subject", null)
-                        .WithMany()
-                        .HasForeignKey("SubjectsGuid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Gradebook.Foundation.Domain.Models.Teacher", null)
-                        .WithMany()
-                        .HasForeignKey("TeachersGuid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Student", b =>
                 {
                     b.HasOne("Gradebook.Foundation.Domain.Models.Class", "CurrentClass")
@@ -651,6 +633,17 @@ namespace Gradebook.Foundation.Database.Migrations
                         .HasForeignKey("CurrentClassGuid");
 
                     b.Navigation("CurrentClass");
+                });
+
+            modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Teacher", b =>
+                {
+                    b.HasOne("Gradebook.Foundation.Domain.Models.Subject", null)
+                        .WithMany("Teachers")
+                        .HasForeignKey("SubjectGuid");
+
+                    b.HasOne("Gradebook.Foundation.Domain.Models.Teacher", null)
+                        .WithMany("Subjects")
+                        .HasForeignKey("TeacherGuid");
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Class", b =>
@@ -664,6 +657,16 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.Navigation("People");
 
+                    b.Navigation("Subjects");
+                });
+
+            modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Subject", b =>
+                {
+                    b.Navigation("Teachers");
+                });
+
+            modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Teacher", b =>
+                {
                     b.Navigation("Subjects");
                 });
 #pragma warning restore 612, 618

@@ -1,8 +1,7 @@
-import { faFile, faFlagCheckered } from "@fortawesome/free-solid-svg-icons";
+import { faFlagCheckered } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CircularProgress } from "@mui/material";
 import React, { ReactElement, useEffect, useState } from "react";
-import { Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import InfiniteScroll from "react-infinite-scroll-component";
 
@@ -47,7 +46,7 @@ function InfiniteScrollWrapper(props: Props) {
       loader={
         <div className="d-flex gap-3 justify-content-center fs-3">
           <div className="my-auto">
-            <CircularProgress />{" "}
+            <CircularProgress />
           </div>
           {t("loading")}
         </div>

@@ -35,7 +35,7 @@ function ClassHeader(props: Props) {
               <Col>
                 {t("owners")}:
                 {props.classOwners.map((e, i) => (
-                  <div>
+                  <div key={i}>
                     <Link className="text-reset btn btn-link" key={i} to={`/person/show/${e.guid}`}>{`${e.name} ${e.surname}`}</Link>
                   </div>
                 ))}

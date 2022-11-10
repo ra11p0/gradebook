@@ -343,4 +343,27 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         await Repository.SaveChangesAsync();
         return new ResponseWithStatus<Guid>(resp.Response);
     }
+
+    public async Task<StatusResponse> EditTeachersInSubject(Guid subjectGuid, List<Guid> teachersGuids)
+    {
+        Repository.BeginTransaction();
+        var currentTeachersInSubject = await _foundationQueries.Service.GetTeachersForSubject(subjectGuid, 0);
+        if (!currentTeachersInSubject.Status) return new StatusResponse(currentTeachersInSubject.Message);
+        var currentTeachersInSubjectGuids = currentTeachersInSubject.Response!.Select(s => s.Guid);
+        var teachersToRemove = currentTeachersInSubjectGuids.Where(s => !teachersGuids.Contains(s));
+        var teachersToAdd = teachersGuids.Where(s => !currentTeachersInSubjectGuids.Contains(s));
+        var addResp = await Repository.AddTeachersToSubject(subjectGuid, teachersToAdd.ToList());
+        var removeResp = await Repository.RemoveTeachersFromSubject(subjectGuid, teachersToRemove.ToList());
+        if (addResp.Status && removeResp.Status)
+        {
+            await Repository.SaveChangesAsync();
+            Repository.CommitTransaction();
+            return new StatusResponse(true);
+        }
+        else
+        {
+            Repository.RollbackTransaction();
+            return new StatusResponse($"{addResp.Message}; {removeResp.Message}");
+        }
+    }
 }

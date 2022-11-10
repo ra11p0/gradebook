@@ -510,6 +510,43 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
             FROM Subjects
             WHERE IsDeleted = 0 
                 AND SchoolGuid = @schoolGuid
+            ORDER BY Name
          ", new { schoolGuid }, pager);
+    }
+
+    public async Task<IPagedList<TeacherDto>> GetTeachersForSubject(Guid subjectGuid, Pager pager)
+    {
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryPagedAsync<TeacherDto>(@"
+            SELECT Name, Surname, SchoolRole, Birthday, CreatorGuid, Guid, UserGuid, SchoolGuid
+            FROM Person
+            WHERE IsDeleted = 0 
+                AND Discriminator = 'Teacher'
+                AND Guid IN (
+                    SELECT TeachersGuid 
+                    FROM SubjectTeacher
+                    WHERE SubjectsGuid = @subjectGuid
+                )
+            ORDER BY Name, Surname
+         ", new { subjectGuid }, pager);
+    }
+
+    public async Task<IPagedList<SubjectDto>> GetSubjectsForTeacher(Guid teacherGuid, Pager pager)
+    {
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryPagedAsync<SubjectDto>(@"
+            SELECT Name, SchoolGuid, Guid
+            FROM Subjects
+            WHERE Guid IN (
+                SELECT SubjectsGuid
+                FROM SubjectTeacher st
+                JOIN Person ps
+                ON ps.Guid = st.TeachersGuid
+                WHERE TeachersGuid = !teacherGuid
+                    AND ps.Discriminator = 'Teacher'
+                    AND ps.IsDeleted = 0 
+            )
+            ORDER BY Name
+         ", new { teacherGuid }, pager);
     }
 }

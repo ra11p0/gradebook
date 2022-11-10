@@ -22,6 +22,7 @@ import { store } from "./store";
 import setLogOutReduxWrapper from "./Redux/ReduxWrappers/setLogOutReduxWrapper";
 import setApplicationLanguageReduxWrapper from "./Redux/ReduxWrappers/setApplicationLanguageReduxWrapper";
 import i18n from "./i18n/config";
+import Subject from "./Routes/Subject";
 
 interface AppProps {
   onLoad: (isAppLoaded: boolean) => {};
@@ -83,6 +84,7 @@ class App extends React.Component<AppProps> {
                     <Route path="/student/*" element={<Student />} />
                     <Route path="/person/*" element={<Person />} />
                     <Route path="/class/*" element={<Class />} />
+                    <Route path="/subject/*" element={<Subject />} />
                   </>
                 )
               }

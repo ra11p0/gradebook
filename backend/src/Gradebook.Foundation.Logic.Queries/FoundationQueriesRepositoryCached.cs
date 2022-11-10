@@ -113,4 +113,10 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
 
     public Task<IPagedList<SubjectDto>> GetSubjectsForSchool(Guid schoolGuid, Pager pager)
         => Base.GetSubjectsForSchool(schoolGuid, pager);
+
+    public Task<IPagedList<TeacherDto>> GetTeachersForSubject(Guid subjectGuid, Pager pager)
+        => Base.GetTeachersForSubject(subjectGuid, pager);
+
+    public Task<IPagedList<SubjectDto>> GetSubjectsForTeacher(Guid teacherGuid, Pager pager)
+        => Base.GetSubjectsForTeacher(teacherGuid, pager);
 }
