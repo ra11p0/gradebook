@@ -36,7 +36,7 @@ public class IdentityLogic : IIdentityLogic
         var token = new JwtSecurityToken(
             issuer: _configuration.Service["JWT:ValidIssuer"],
             audience: _configuration.Service["JWT:ValidAudience"],
-            expires: DateTime.UtcNow.AddMinutes(tokenValidityInMinutes),
+            expires: Time.UtcNow.AddMinutes(tokenValidityInMinutes),
             claims: authClaims,
             signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
             );
