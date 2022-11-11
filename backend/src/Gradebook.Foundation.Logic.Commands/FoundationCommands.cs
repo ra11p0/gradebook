@@ -82,6 +82,9 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
 
     public async Task<ResponseWithStatus<Guid>> AddNewStudent(NewStudentCommand command, Guid schoolGuid)
     {
+        var person = await _foundationQueries.Service.GetCurrentPersonGuid(schoolGuid);
+        if (!person.Status) return new ResponseWithStatus<Guid>(false, "Cannot recognise person");
+        if (!await _foundationPermissions.Service.CanCreateNewStudents(person.Response)) return new ResponseWithStatus<Guid>("Person cannot create new students");
         Repository.BeginTransaction();
         command.CreatorGuid = (await _foundationQueries.Service.GetCurrentPersonGuid(schoolGuid)).Response;
         var resp = await Repository.AddNewStudent(command);
@@ -155,6 +158,10 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
 
     public async Task<StatusResponse> DeleteClass(Guid classGuid)
     {
+        var person = await _foundationQueries.Service.RecogniseCurrentPersonByClassGuid(classGuid);
+        if (!person.Status) return new StatusResponse(person.Message);
+        if (!await _foundationPermissions.Service.CanManageClass(classGuid, person.Response))
+            return new StatusResponse("Permission denied");
         var resp = await Repository.DeleteClass(classGuid);
         if (!resp.Status) return new StatusResponse(false, resp.Message);
         await Repository.SaveChangesAsync();
@@ -163,8 +170,21 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
 
     public async Task<StatusResponse> DeletePerson(Guid personGuid)
     {
+        var personToDelete = await _foundationQueries.Service.GetPersonByGuid(personGuid);
+        if (!personToDelete.Status) return new StatusResponse(personToDelete.Message);
+
+        var currentPerson = await _foundationQueries.Service.GetCurrentPersonGuid(personToDelete.Response!.SchoolGuid!.Value);
+        if (!currentPerson.Status) return new StatusResponse(currentPerson.Message);
+
+        if (personToDelete.Response!.SchoolRole.HasFlag(SchoolRoleEnum.Student))
+        {
+            if (!await _foundationPermissions.Service.CanDeleteStudents(currentPerson.Response))
+                return new StatusResponse("Permission denied");
+        }
+
         var resp = await Repository.DeletePerson(personGuid);
         if (!resp.Status) return new StatusResponse(false);
+
         await Repository.SaveChangesAsync();
         return new StatusResponse(true);
     }
@@ -338,6 +358,10 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
 
     public async Task<ResponseWithStatus<Guid>> AddSubject(Guid schoolGuid, NewSubjectCommand command)
     {
+        var person = await _foundationQueries.Service.GetCurrentPersonGuid(schoolGuid);
+        if (!person.Status) return new ResponseWithStatus<Guid>(person.Message);
+        if (!await _foundationPermissions.Service.CanCreateNewSubject(person.Response))
+            return new ResponseWithStatus<Guid>("Permission denied");
         var resp = await Repository.AddSubject(schoolGuid, command);
         if (!resp.Status) return new ResponseWithStatus<Guid>(resp.Message);
         await Repository.SaveChangesAsync();
@@ -346,6 +370,10 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
 
     public async Task<StatusResponse> EditTeachersInSubject(Guid subjectGuid, List<Guid> teachersGuids)
     {
+        var currentPerson = await _foundationQueries.Service.GetCurrentPersonGuidBySubjectGuid(subjectGuid);
+        if (!currentPerson.Status) return new StatusResponse(currentPerson.Message);
+        if (!await _foundationPermissions.Service.CanManageSubject(subjectGuid, currentPerson.Response))
+            return new StatusResponse("Permission denied");
         Repository.BeginTransaction();
         var currentTeachersInSubject = await _foundationQueries.Service.GetTeachersForSubject(subjectGuid, 0);
         if (!currentTeachersInSubject.Status) return new StatusResponse(currentTeachersInSubject.Message);

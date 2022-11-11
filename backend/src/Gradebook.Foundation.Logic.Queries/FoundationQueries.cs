@@ -107,6 +107,17 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return personGuid;
     }
 
+    public async Task<ResponseWithStatus<Guid>> GetCurrentPersonGuidBySubjectGuid(Guid subjectGuid)
+    {
+        var subject = await GetSubject(subjectGuid);
+        if (!subject.Status) return new ResponseWithStatus<Guid>(subject.Message);
+
+        var currentSchoolGuid = subject.Response!.SchoolGuid;
+        var currentPerson = await GetCurrentPersonGuid(currentSchoolGuid);
+        if (!currentPerson.Status) return new ResponseWithStatus<Guid>(currentPerson.Message);
+        return new ResponseWithStatus<Guid>(currentPerson.Response);
+    }
+
     public async Task<ResponseWithStatus<GroupDto, bool>> GetGroupByGuid(Guid guid)
     {
         var resp = await Repository.GetGroupByGuid(guid);

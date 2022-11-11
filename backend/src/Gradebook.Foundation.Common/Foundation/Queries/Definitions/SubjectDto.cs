@@ -4,4 +4,5 @@ public class SubjectDto
 {
     public Guid Guid { get; set; }
     public string Name { get; set; } = string.Empty;
+    public Guid SchoolGuid { get; set; }
 }
