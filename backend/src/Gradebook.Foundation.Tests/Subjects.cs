@@ -1,3 +1,4 @@
+using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Foundation;
 using Gradebook.Foundation.Common.Foundation.Commands;
 using Gradebook.Foundation.Common.Foundation.Queries;

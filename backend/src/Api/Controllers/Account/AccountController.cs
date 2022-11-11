@@ -111,7 +111,7 @@ public class AccountController : ControllerBase
             _ = int.TryParse(_configuration.Service["JWT:RefreshTokenValidityInDays"], out int refreshTokenValidityInDays);
 
             user.RefreshToken = refreshToken;
-            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(refreshTokenValidityInDays);
+            user.RefreshTokenExpiryTime = Time.UtcNow.AddDays(refreshTokenValidityInDays);
 
             await _userManager.Service.UpdateAsync(user);
 
@@ -164,7 +164,7 @@ public class AccountController : ControllerBase
 
         var user = await _userManager.Service.FindByNameAsync(username);
 
-        if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+        if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= Time.UtcNow)
         {
             return BadRequest("Invalid access token or refresh token");
         }
