@@ -130,6 +130,7 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         foreach (var student in studentsGuids)
         {
             var isStudentAlreadyInAnyClass = await _foundationQueries.Service.IsStudentInAnyClass(student);
+            if (!isStudentAlreadyInAnyClass.Status) return new StatusResponse("Cant check if students are able to assign to class");
             if (isStudentAlreadyInAnyClass.Response) return new StatusResponse(false, "At least one student is already assigned to class");
         }
         var currentPerson = await _foundationQueries.Service.RecogniseCurrentPersonByRelatedPerson(studentsGuids.First());
