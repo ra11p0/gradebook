@@ -7,6 +7,13 @@ enum PermissionLevelEnum {
 
     Classes_ViewOnly = 5,
     Classes_CanManageOwn = 6,
-    Classes_CanManageAll = 7
+    Classes_CanManageAll = 7,
+
+    Subjects_ViewOnly = 8,
+    Subjects_CanManageAssigned = 9,
+    Subjects_CanManageAll = 10,
+
+    Students_ViewOnly = 11,
+    Students_CanCreateAndDelete = 12
 }
 export default PermissionLevelEnum;

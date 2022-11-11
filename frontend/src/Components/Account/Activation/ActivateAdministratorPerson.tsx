@@ -4,8 +4,8 @@ import { useTranslation } from "react-i18next";
 import { useFormik } from "formik";
 import { Button } from "react-bootstrap";
 import ReactDatePicker from "react-datepicker";
-import moment from "moment";
 import getApplicationLanguageReduxProxy from "../../../Redux/ReduxProxy/getApplicationLanguageReduxProxy";
+import moment from "moment";
 const mapStateToProps = (state: any) => ({
   locale: getApplicationLanguageReduxProxy(state),
 });
@@ -65,7 +65,7 @@ const ActivateAdministratorPerson = (props: ActivateAdministratorPersonProps): R
       <div className="m-1 p-1">
         <label htmlFor="birthday">{t("birthday")}</label>
         <ReactDatePicker
-          selected={formik.values.birthday}
+          selected={moment.utc(formik.values.birthday).local().toDate()}
           className="form-control birthday"
           onChange={(evt) => {
             formik.handleChange({ target: { name: "birthday", id: "birthday", value: evt } });

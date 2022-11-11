@@ -29,7 +29,7 @@ const Person = (props: PersonProps): ReactElement => {
             <Row>{props.name}</Row>
             <Row>{props.surname}</Row>
           </Col>
-          <Col className="my-auto">{moment(props.birthday).format("L")}</Col>
+          <Col className="my-auto">{moment.utc(props.birthday).local().format("L")}</Col>
         </Row>
       </div>
     </Link>

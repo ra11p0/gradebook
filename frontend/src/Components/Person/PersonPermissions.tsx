@@ -1,7 +1,7 @@
 import { Box, Button, Tab, Tabs } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import GetPermissionsResponse from "../../ApiClient/People/Definitions/GetPermissionsResponse";
+import GetPermissionsResponse from "../../ApiClient/People/Definitions/Responses/GetPermissionsResponse";
 import PeopleProxy from "../../ApiClient/People/PeopleProxy";
 import PermissionEnum from "../../Common/Enums/Permissions/PermissionEnum";
 import PermissionLevelEnum from "../../Common/Enums/Permissions/PermissionLevelEnum";
@@ -29,10 +29,13 @@ function PersonPermissions(props: Props) {
   };
 
   useEffect(() => {
-    PeopleProxy.permissions.getPermissions(props.personGuid).then((permissionsResponse) => {
-      setPermissions(permissionsResponse.data);
-      setIsReady(true);
-    }).catch(Notifications.showApiError);
+    PeopleProxy.permissions
+      .getPermissions(props.personGuid)
+      .then((permissionsResponse) => {
+        setPermissions(permissionsResponse.data);
+        setIsReady(true);
+      })
+      .catch(Notifications.showApiError);
   }, [props.personGuid]);
 
   const onPermissionChanged = (permissionId: PermissionEnum, permissionLevel: PermissionLevelEnum) => {
@@ -42,8 +45,7 @@ function PersonPermissions(props: Props) {
 
   return (
     <>
-      <LoadingScreen
-        isReady={isReady}>
+      <LoadingScreen isReady={isReady}>
         <>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs value={tab} onChange={handleTabChange}>
@@ -70,10 +72,10 @@ function PersonPermissions(props: Props) {
                   .then((resp) => {
                     Notifications.showSuccessNotification("success", "permissionsSaved");
                     setPermissionsReduxWrapper(store.dispatch, {
-                      permissions: resp.data.map(e => e.permissionLevel)
+                      permissions: resp.data.map((e) => e.permissionLevel),
                     });
-                  }
-                  ).catch(Notifications.showApiError);
+                  })
+                  .catch(Notifications.showApiError);
               }}
             >
               {t("save")}
@@ -81,7 +83,6 @@ function PersonPermissions(props: Props) {
           </div>
         </>
       </LoadingScreen>
-
     </>
   );
 }

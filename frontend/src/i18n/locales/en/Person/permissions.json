@@ -16,6 +16,15 @@
   "permissionLevel_6": "Can manage own classes",
   "permissionLevel_7": "Can manage all classes",
 
+  "permission_4": "Subjects",
+  "permissionLevel_8": "View only",
+  "permissionLevel_9": "Can manage assigned subjects",
+  "permissionLevel_10": "Can manage all subjects",
+
+  "permission_5": "Students",
+  "permissionLevel_11": "View only",
+  "permissionLevel_12": "Can create and delete students",
+
   "permission_1_description": "Sending invitations to school platform (students, teachers, administrators.).",
   "permission_2_description": "Managing permissions of users on school platform."
 }

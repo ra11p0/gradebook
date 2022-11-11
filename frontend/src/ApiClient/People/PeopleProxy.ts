@@ -1,8 +1,9 @@
 import { AxiosResponse } from "axios";
 import { axiosApiAuthorized } from "../AxiosInterceptor";
-import GetPermissionsResponse from "./Definitions/GetPermissionsResponse";
-import PersonResponse, { ClassResponse } from "./Definitions/PersonResponse";
-import SetPermissionsRequest from "./Definitions/SetPermissionsRequest";
+import GetPermissionsResponse from "./Definitions/Responses/GetPermissionsResponse";
+import PersonResponse, { ClassResponse } from "./Definitions/Responses/PersonResponse";
+import SetPermissionsRequest from "./Definitions/Requests/SetPermissionsRequest";
+import SubjectsForTeacherResponse from "./Definitions/Responses/SubjectsForTeacherResponse";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -31,6 +32,10 @@ const setPermissions = (personGuid: string, permissions: SetPermissionsRequest[]
     return axiosApiAuthorized.post(API_URL + `/people/${personGuid}/permissions`, permissions);
 }
 
+const getSubjectsForTeacher = (personGuid: string, page: number = 0): Promise<AxiosResponse<SubjectsForTeacherResponse[]>> => {
+    return axiosApiAuthorized.get(`${API_URL}/people/${personGuid}/subjects`, { params: { page } });
+}
+
 export default {
     getPerson,
     activatePerson,
@@ -38,5 +43,8 @@ export default {
     getClassesForPerson,
     permissions: {
         getPermissions, setPermissions
+    },
+    subjects: {
+        getSubjectsForTeacher
     }
 }

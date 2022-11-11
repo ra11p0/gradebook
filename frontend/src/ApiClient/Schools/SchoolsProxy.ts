@@ -11,6 +11,9 @@ import NewTeacherRequest from "./Definitions/Requests/NewTeacherRequest";
 import PersonResponse from "./Definitions/Responses/PersonResponse";
 import StudentInSchoolResponse from "./Definitions/Responses/StudentInSchoolResponse";
 import TeacherInSchoolResponse from "./Definitions/Responses/TeacherInSchoolResponse";
+import SubjectResponse from "./Definitions/Responses/SubjectResponse";
+import NewSubjectRequest from "./Definitions/Requests/NewSubjectRequest";
+import getCurrentSchoolReduxProxy from "../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -75,6 +78,14 @@ const searchPeople = (schoolGuid: string, discriminator: string, query: string, 
     });
 }
 
+const addNewSubject = (newSubjectRequest: NewSubjectRequest, schoolGuid: string = getCurrentSchoolReduxProxy()?.schoolGuid ?? ''): Promise<AxiosResponse<string>> => {
+    return axiosApiAuthorized.post(API_URL + `/schools/${schoolGuid}/Subjects`, newSubjectRequest);
+}
+
+const getSubjectsInSchool = (page: number, schoolGuid: string = getCurrentSchoolReduxProxy()?.schoolGuid ?? ''): Promise<AxiosResponse<SubjectResponse[]>> => {
+    return axiosApiAuthorized.get(API_URL + `/schools/${schoolGuid}/Subjects`, { params: { page } });
+}
+
 
 
 
@@ -90,5 +101,6 @@ export default {
     getClassesInSchool,
     searchPeople,
     getTeachersInSchool,
-    addNewTeacher
+    addNewTeacher,
+    subjects: { getSubjectsInSchool, addNewSubject }
 }

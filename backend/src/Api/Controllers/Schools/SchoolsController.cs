@@ -200,4 +200,23 @@ public class SchoolsController : ControllerBase
         return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
     }
     #endregion
+
+    #region subjects
+    [HttpGet, Route("{schoolGuid}/subjects")]
+    [ProducesResponseType(typeof(PagedList<SubjectDto>), statusCode: 200)]
+    [ProducesResponseType(typeof(string), statusCode: 400)]
+    public async Task<IActionResult> GetSubjects([FromRoute] Guid schoolGuid, [FromQuery] int page = 0)
+    {
+        var resp = await _foundationQueries.Service.GetSubjectsForSchool(schoolGuid, page);
+        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
+    }
+    [HttpPost, Route("{schoolGuid}/subjects")]
+    [ProducesResponseType(typeof(Guid), statusCode: 200)]
+    [ProducesResponseType(typeof(string), statusCode: 400)]
+    public async Task<IActionResult> AddSubject([FromBody] NewSubjectCommand command, [FromRoute] Guid schoolGuid)
+    {
+        var resp = await _foundationCommands.Service.AddSubject(schoolGuid, command);
+        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
+    }
+    #endregion
 }

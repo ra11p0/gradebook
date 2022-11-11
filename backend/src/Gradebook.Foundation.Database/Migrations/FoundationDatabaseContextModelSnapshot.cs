@@ -16,7 +16,7 @@ namespace Gradebook.Foundation.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.10")
+                .HasAnnotation("ProductVersion", "6.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("ClassStudent", b =>
@@ -31,7 +31,7 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasIndex("StudentsGuid");
 
-                    b.ToTable("ClassStudent", (string)null);
+                    b.ToTable("ClassStudent");
                 });
 
             modelBuilder.Entity("ClassTeacher", b =>
@@ -46,7 +46,7 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasIndex("OwnersTeachersGuid");
 
-                    b.ToTable("ClassTeacher", (string)null);
+                    b.ToTable("ClassTeacher");
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Class", b =>
@@ -75,7 +75,7 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasIndex("SchoolGuid");
 
-                    b.ToTable("Classes", (string)null);
+                    b.ToTable("Classes");
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Grade", b =>
@@ -119,7 +119,7 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasIndex("TeacherGuid");
 
-                    b.ToTable("Grades", (string)null);
+                    b.ToTable("Grades");
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Group", b =>
@@ -143,7 +143,7 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasKey("Guid");
 
-                    b.ToTable("Groups", (string)null);
+                    b.ToTable("Groups");
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Lesson", b =>
@@ -157,7 +157,7 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasKey("Guid");
 
-                    b.ToTable("Lessons", (string)null);
+                    b.ToTable("Lessons");
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Person", b =>
@@ -202,7 +202,7 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasIndex("SchoolGuid");
 
-                    b.ToTable("Person", (string)null);
+                    b.ToTable("Person");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Person");
                 });
@@ -222,7 +222,7 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasKey("Guid");
 
-                    b.ToTable("Positions", (string)null);
+                    b.ToTable("Positions");
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.School", b =>
@@ -255,7 +255,7 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasKey("Guid");
 
-                    b.ToTable("Schools", (string)null);
+                    b.ToTable("Schools");
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.StudentsAbsence", b =>
@@ -280,7 +280,7 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasIndex("StudentGuid");
 
-                    b.ToTable("StudentsAbsences", (string)null);
+                    b.ToTable("StudentsAbsences");
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Subject", b =>
@@ -296,9 +296,14 @@ namespace Gradebook.Foundation.Database.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<Guid>("SchoolGuid")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("Guid");
 
-                    b.ToTable("Subjects", (string)null);
+                    b.HasIndex("SchoolGuid");
+
+                    b.ToTable("Subjects");
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.SystemInvitation", b =>
@@ -346,7 +351,7 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasIndex("SchoolGuid");
 
-                    b.ToTable("SystemInvitations", (string)null);
+                    b.ToTable("SystemInvitations");
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.TeachersAbsence", b =>
@@ -371,7 +376,7 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasIndex("TeacherGuid");
 
-                    b.ToTable("TeachersAbsences", (string)null);
+                    b.ToTable("TeachersAbsences");
                 });
 
             modelBuilder.Entity("GroupStudent", b =>
@@ -386,7 +391,7 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasIndex("StudentsGuid");
 
-                    b.ToTable("GroupStudent", (string)null);
+                    b.ToTable("GroupStudent");
                 });
 
             modelBuilder.Entity("GroupTeacher", b =>
@@ -401,7 +406,22 @@ namespace Gradebook.Foundation.Database.Migrations
 
                     b.HasIndex("OwnersTeachersGuid");
 
-                    b.ToTable("GroupTeacher", (string)null);
+                    b.ToTable("GroupTeacher");
+                });
+
+            modelBuilder.Entity("SubjectTeacher", b =>
+                {
+                    b.Property<Guid>("SubjectsGuid")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("TeachersGuid")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("SubjectsGuid", "TeachersGuid");
+
+                    b.HasIndex("TeachersGuid");
+
+                    b.ToTable("SubjectTeacher");
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Administrator", b =>
@@ -532,6 +552,17 @@ namespace Gradebook.Foundation.Database.Migrations
                     b.Navigation("Student");
                 });
 
+            modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Subject", b =>
+                {
+                    b.HasOne("Gradebook.Foundation.Domain.Models.School", "School")
+                        .WithMany("Subjects")
+                        .HasForeignKey("SchoolGuid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("School");
+                });
+
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.SystemInvitation", b =>
                 {
                     b.HasOne("Gradebook.Foundation.Domain.Models.Person", "Creator")
@@ -598,6 +629,21 @@ namespace Gradebook.Foundation.Database.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SubjectTeacher", b =>
+                {
+                    b.HasOne("Gradebook.Foundation.Domain.Models.Subject", null)
+                        .WithMany()
+                        .HasForeignKey("SubjectsGuid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Gradebook.Foundation.Domain.Models.Teacher", null)
+                        .WithMany()
+                        .HasForeignKey("TeachersGuid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Student", b =>
                 {
                     b.HasOne("Gradebook.Foundation.Domain.Models.Class", "CurrentClass")
@@ -617,6 +663,8 @@ namespace Gradebook.Foundation.Database.Migrations
                     b.Navigation("Classes");
 
                     b.Navigation("People");
+
+                    b.Navigation("Subjects");
                 });
 #pragma warning restore 612, 618
         }

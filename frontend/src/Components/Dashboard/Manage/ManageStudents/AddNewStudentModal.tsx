@@ -9,6 +9,7 @@ import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxProxy/getCurrentS
 import Notifications from "../../../../Notifications/Notifications";
 import ReactDatePicker from "react-datepicker";
 import getApplicationLanguageReduxProxy from "../../../../Redux/ReduxProxy/getApplicationLanguageReduxProxy";
+import moment from "moment";
 
 const mapStateToProps = (state: any) => ({
   currentSchool: getCurrentSchoolReduxProxy(state),
@@ -50,7 +51,9 @@ const AddNewStudentModal = (props: AddNewStudentModalProps): ReactElement => {
         Surname: values.surname,
         Birthday: new Date(values.birthday),
       };
-      SchoolsProxy.addNewStudent(student, props.currentSchool.schoolGuid!).then(props.onHide).catch(Notifications.showApiError);
+      SchoolsProxy.addNewStudent({ ...student, Birthday: moment(student.Birthday).utc().toDate() }, props.currentSchool.schoolGuid!)
+        .then(props.onHide)
+        .catch(Notifications.showApiError);
     },
   });
   return (

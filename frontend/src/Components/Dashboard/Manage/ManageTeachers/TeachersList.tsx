@@ -23,7 +23,7 @@ interface ManageTeachersProps {
   currentSchool: any;
 }
 const TeachersList = (props: ManageTeachersProps): ReactElement => {
-  const { t } = useTranslation("teachersList");
+  const { t } = useTranslation("manageTeachers");
   const [showAddTeacherModal, setShowAddTeacherModal] = useState(false);
   const [refreshEffectKey, setRefreshEffectKey] = useState(0);
 
@@ -97,7 +97,7 @@ const TeachersList = (props: ManageTeachersProps): ReactElement => {
                       <div>{element.surname}</div>
                     </Grid>
                     <Grid item xs className="my-auto">
-                      <div>{moment(element.birthday).format("L")}</div>
+                      <div>{moment.utc(element.birthday).local().format("L")}</div>
                     </Grid>
                     <Grid item xs className="my-auto">
                       <div>

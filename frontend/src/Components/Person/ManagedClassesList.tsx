@@ -2,7 +2,7 @@ import React from "react";
 import { Card, ListGroup, ListGroupItem } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
-import { ClassResponse } from "../../ApiClient/People/Definitions/PersonResponse";
+import { ClassResponse } from "../../ApiClient/People/Definitions/Responses/PersonResponse";
 import PeopleProxy from "../../ApiClient/People/PeopleProxy";
 import InfiniteScrollWrapper from "../Shared/InfiniteScrollWrapper";
 
@@ -23,6 +23,7 @@ function ManagedClassesList(props: Props) {
           <InfiniteScrollWrapper
             mapper={(item: ClassResponse, index: number) => (
               <ListGroupItem
+                key={index}
                 className="cursor-pointer"
                 onClick={() => {
                   navigate(`/class/show/${item.guid}`);

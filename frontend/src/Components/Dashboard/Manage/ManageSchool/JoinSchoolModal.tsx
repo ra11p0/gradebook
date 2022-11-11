@@ -1,10 +1,8 @@
 import React from "react";
 import { Modal } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import getCurrentPersonReduxProxy, { CurrentPersonProxyResult } from "../../../../Redux/ReduxProxy/getCurrentPersonReduxProxy";
+import { CurrentPersonProxyResult } from "../../../../Redux/ReduxProxy/getCurrentPersonReduxProxy";
 import ActivateAccount from "../../../Account/Activation/ActivateAccount";
-import { connect } from "react-redux";
-import moment from "moment";
 
 interface JoinSchoolModalProps {
   show: boolean;

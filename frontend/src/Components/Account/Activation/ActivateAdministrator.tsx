@@ -11,6 +11,7 @@ import ActivateAdministratorPerson, { ActivateAdministratorPersonValues } from "
 import ActivateAdministratorSchool, { ActivateAdministratorSchoolValues } from "./ActivateAdministratorSchool";
 import setLoginReduxWrapper from "../../../Redux/ReduxWrappers/setLoginReduxWrapper";
 import { store } from "../../../store";
+import moment from "moment";
 
 const mapStateToProps = (state: any) => ({
   userId: getCurrentUserIdReduxProxy(state),
@@ -41,7 +42,7 @@ const ActivateAdministratorForm = (props: ActivateAdministratorFormProps): React
   }, []);
 
   const activateWithSchool = (person: ActivateAdministratorPersonValues, school: ActivateAdministratorSchoolValues) => {
-    AdministratorsProxy.newAdministratorWithSchool({ ...person, birthday: new Date(person.birthday) }, school)
+    AdministratorsProxy.newAdministratorWithSchool({ ...person, birthday: moment(person.birthday).utc().toDate() }, school)
       .then((response) => {
         setLoginReduxWrapper(store.dispatch, {
           accessToken: store.getState().common.session.accessToken,

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Route, Routes, useParams } from "react-router-dom";
-import { ClassResponse } from "../../ApiClient/People/Definitions/PersonResponse";
+import { ClassResponse } from "../../ApiClient/People/Definitions/Responses/PersonResponse";
 import PeopleProxy from "../../ApiClient/People/PeopleProxy";
 import SchoolRolesEnum from "../../Common/Enums/SchoolRolesEnum";
 import LoadingScreen from "../Shared/LoadingScreen";

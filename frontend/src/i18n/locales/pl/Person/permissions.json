@@ -15,6 +15,15 @@
   "permissionLevel_6": "Zarządzanie własnymi",
   "permissionLevel_7": "Zarządzanie wszystkimi",
 
+  "permission_4": "Przedmioty",
+  "permissionLevel_8": "Tylko wyświetlanie",
+  "permissionLevel_9": "Zarządzanie przypisanymi",
+  "permissionLevel_10": "Zarządzanie wszystkimi",
+
+  "permission_5": "Uczniowie",
+  "permissionLevel_11": "Tylko wyświetlanie",
+  "permissionLevel_12": "Może tworzyć i usuwać uczniów",
+
   "permission_1_description": "Wysyłanie zaproszeń do platformy szkoły (dla uczniów, nauczycieli, i administratorów.).",
   "permission_2_description": "Zarządzanie uprawnieniami użytkowników na platformie szkoły."
 }
