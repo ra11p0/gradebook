@@ -40,6 +40,20 @@ public class PermissionsQueries : BaseLogic<IPermissionsQueriesRepository>, IPer
                 SchoolRoleEnum.Admin => PermissionLevelEnum.Classes_CanManageAll,
                 _ => 0,
             },
+            PermissionEnum.Subjects => schoolRole switch
+            {
+                SchoolRoleEnum.Student => PermissionLevelEnum.Subjects_ViewOnly,
+                SchoolRoleEnum.Teacher => PermissionLevelEnum.Subjects_CanManageAssigned,
+                SchoolRoleEnum.Admin => PermissionLevelEnum.Subjects_CanManageAll,
+                _ => 0,
+            },
+            PermissionEnum.Students => schoolRole switch
+            {
+                SchoolRoleEnum.Student => PermissionLevelEnum.Students_ViewOnly,
+                SchoolRoleEnum.Teacher => PermissionLevelEnum.Students_ViewOnly,
+                SchoolRoleEnum.Admin => PermissionLevelEnum.Students_CanCreate,
+                _ => 0,
+            },
             _ => 0,
         };
     }
@@ -60,6 +74,8 @@ public class PermissionsQueries : BaseLogic<IPermissionsQueriesRepository>, IPer
         {
             PermissionEnum.Classes => PermissionGroupEnum.Administration,
             PermissionEnum.Invitations => PermissionGroupEnum.Administration,
+            PermissionEnum.Subjects => PermissionGroupEnum.Administration,
+            PermissionEnum.Students => PermissionGroupEnum.Administration,
             PermissionEnum.Permissions => PermissionGroupEnum.System,
             _ => 0,
         };
@@ -77,10 +93,19 @@ public class PermissionsQueries : BaseLogic<IPermissionsQueriesRepository>, IPer
                 PermissionLevelEnum.Permissions_CannotManagePermissions,
                 PermissionLevelEnum.Permissions_CanManagePermissions
                 },
+            PermissionEnum.Students => new PermissionLevelEnum[] {
+                PermissionLevelEnum.Students_ViewOnly,
+                PermissionLevelEnum.Students_CanCreate
+                },
             PermissionEnum.Classes => new PermissionLevelEnum[] {
                 PermissionLevelEnum.Classes_ViewOnly,
                 PermissionLevelEnum.Classes_CanManageOwn,
                 PermissionLevelEnum.Classes_CanManageAll
+                },
+            PermissionEnum.Subjects => new PermissionLevelEnum[] {
+                PermissionLevelEnum.Subjects_ViewOnly,
+                PermissionLevelEnum.Subjects_CanManageAssigned,
+                PermissionLevelEnum.Subjects_CanManageAll
                 },
             _ => Array.Empty<PermissionLevelEnum>()
         };

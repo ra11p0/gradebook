@@ -23,7 +23,7 @@ interface ManageTeachersProps {
   currentSchool: any;
 }
 const TeachersList = (props: ManageTeachersProps): ReactElement => {
-  const { t } = useTranslation("teachersList");
+  const { t } = useTranslation("manageTeachers");
   const [showAddTeacherModal, setShowAddTeacherModal] = useState(false);
   const [refreshEffectKey, setRefreshEffectKey] = useState(0);
 

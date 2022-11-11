@@ -31,7 +31,13 @@ i18n.init({
       settings: require('./locales/en/Dashboard/Manage/Settings/settings'),
       permissions: require('./locales/en/Person/permissions.json'),
       personNavigation: require('./locales/en/Person/personNavigation.json'),
-      classIndex: require('./locales/en/Class/classIndex.json')
+      classIndex: require('./locales/en/Class/classIndex.json'),
+      addNewSubjectModal: require('./locales/en/Subjects/addNewSubjectModal.json'),
+      subjects: require('./locales/en/Subjects/subjects.json'),
+      peoplePicker: require('./locales/en/Shared/peoplePicker.json'),
+      manageTeachers: require('./locales/en/Dashboard/Manage/ManageTeachers/manageTeachers.json'),
+      addNewTeacherModal: require('./locales/en/Dashboard/Manage/ManageTeachers/addNewTeacherModal.json'),
+      person: require('./locales/en/Person/person.json')
     },
     pl: {
       common: require('./locales/pl/common.json'),
@@ -57,13 +63,20 @@ i18n.init({
       settings: require('./locales/pl/Dashboard/Manage/Settings/settings'),
       permissions: require('./locales/pl/Person/permissions.json'),
       personNavigation: require('./locales/pl/Person/personNavigation.json'),
-      classIndex: require('./locales/pl/Class/classIndex.json')
+      classIndex: require('./locales/pl/Class/classIndex.json'),
+      addNewSubjectModal: require('./locales/pl/Subjects/addNewSubjectModal.json'),
+      subjects: require('./locales/pl/Subjects/subjects.json'),
+      peoplePicker: require('./locales/pl/Shared/peoplePicker.json'),
+      manageTeachers: require('./locales/pl/Dashboard/Manage/ManageTeachers/manageTeachers.json'),
+      addNewTeacherModal: require('./locales/pl/Dashboard/Manage/ManageTeachers/addNewTeacherModal.json'),
+      person: require('./locales/pl/Person/person.json')
     }
   },
-  ns: ['common', 'loginForm', 'registerForm', 'activateAccount', 'ActivateStudent', 'header', 'notifications',
-    'dashboardNavigation', 'addNewStudentModal', 'studentsList', 'profile', 'invitations',
+  ns: ['common', 'loginForm', 'registerForm', 'activateAccount', 'ActivateStudent', 'header', 'notifications', 'manageTeachers',
+    'dashboardNavigation', 'addNewStudentModal', 'studentsList', 'profile', 'invitations', 'subjects', 'peoplePicker',
     'addInvitationModal', 'ActivateAdministrator', 'ActivateAdministratorPerson', 'ActivateAdministratorSchool', 'schoolSelect',
-    'schoolsList', "classes", "addNewClassModal", "settings", "permissions", 'personNavigation', 'classIndex'],
+    'schoolsList', "classes", "addNewClassModal", "settings", "permissions", 'personNavigation', 'classIndex', 'addNewSubjectModal',
+    'addNewTeacherModal', 'person'],
   defaultNS: 'common'
 });
 

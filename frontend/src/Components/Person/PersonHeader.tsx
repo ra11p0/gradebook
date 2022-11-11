@@ -3,7 +3,10 @@ import { Col, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { ClassResponse } from "../../ApiClient/People/Definitions/Responses/PersonResponse";
+import PermissionLevelEnum from "../../Common/Enums/Permissions/PermissionLevelEnum";
 import SchoolRolesEnum from "../../Common/Enums/SchoolRolesEnum";
+import Class from "../Shared/Class";
+import PermissionsBlocker from "../Shared/PermissionsBlocker";
 
 type Props = {
   personName: string;
@@ -23,9 +26,7 @@ function PersonHeader(props: Props) {
             <Col className="fs-3">{`${props.personName} ${props.personSurname}`}</Col>
             {props.personSchoolRole === SchoolRolesEnum.Student && props.activeClass && (
               <Col>
-                <Link className="btn btn-link text-reset" to={`/class/show/${props.activeClass.guid}`}>
-                  {`${t("class")}: ${props.activeClass.name}`}
-                </Link>
+                <Class {...props.activeClass} />
               </Col>
             )}
           </Row>
@@ -41,15 +42,17 @@ function PersonHeader(props: Props) {
             >
               {t("overview")}
             </Link>
-            <Link
-              to="permissions"
-              className={" permissions btn btn-outline-primary " + (activeTab == "permissions" ? "active" : "")}
-              onClick={() => {
-                setActiveTab("permissions");
-              }}
-            >
-              {t("permissions")}
-            </Link>
+            <PermissionsBlocker allowingPermissions={[PermissionLevelEnum.Permissions_CanManagePermissions]}>
+              <Link
+                to="permissions"
+                className={" permissions btn btn-outline-primary " + (activeTab == "permissions" ? "active" : "")}
+                onClick={() => {
+                  setActiveTab("permissions");
+                }}
+              >
+                {t("permissions")}
+              </Link>
+            </PermissionsBlocker>
           </div>
         </Col>
       </Row>

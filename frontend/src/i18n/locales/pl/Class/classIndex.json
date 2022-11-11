@@ -1,5 +1,7 @@
 {
   "manageStudentsInClass": "Zarządzaj uczniami w klasie",
   "manageClassOwners": "Zarządzaj opiekunami klasy",
-  "owners": "Opiekunowie"
+  "owners": "Opiekunowie",
+  "studentsInClass": "Uczniowie w klasie",
+  "index": "Lp."
 }

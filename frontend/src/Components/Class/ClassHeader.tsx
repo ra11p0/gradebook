@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import StudentInClassResponse from "../../ApiClient/Classes/Definitions/Responses/StudentInClassResponse";
 import TeachersInClassResponse from "../../ApiClient/Classes/Definitions/Responses/TeachersInClassResponse";
 import ClassResponse from "../../ApiClient/Schools/Definitions/Responses/ClassResponse";
+import PersonSmall from "../Shared/PersonSmall";
 import ManageClassOwners from "./ManageClassOwners";
 import ManageStudentsInClass from "./ManageStudentsInClass";
 
@@ -22,23 +23,29 @@ function ClassHeader(props: Props) {
   const { t } = useTranslation("classIndex");
   return (
     <Row>
-      <Col xs={"6"}>
+      <Col xs={"7"}>
         <Row>
-          <Col className="my-auto">
-            <h2>{props.class?.name}</h2>
-          </Col>
           <Col>
+            <Row>
+              <Col className="my-auto">
+                <h2>{props.class?.name}</h2>
+              </Col>
+            </Row>
             <Row>
               <Col>{props.class?.description}</Col>
             </Row>
+          </Col>
+          <Col>
             <Row>
               <Col>
                 {t("owners")}:
-                {props.classOwners.map((e, i) => (
-                  <div key={i}>
-                    <Link className="text-reset btn btn-link" key={i} to={`/person/show/${e.guid}`}>{`${e.name} ${e.surname}`}</Link>
-                  </div>
-                ))}
+                <div className="d-flex flex-wrap w-100">
+                  {props.classOwners.map((e, i) => (
+                    <Link key={i} to={`/person/show/${e.guid}`}>
+                      <PersonSmall name={e.name} surname={e.surname} />
+                    </Link>
+                  ))}
+                </div>
               </Col>
             </Row>
           </Col>

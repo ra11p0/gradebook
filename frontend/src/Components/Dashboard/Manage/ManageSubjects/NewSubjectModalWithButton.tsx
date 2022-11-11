@@ -9,7 +9,7 @@ type Props = {
 
 function NewSubjectModalWithButton(props: Props) {
   const [showNewSubjectModal, setShowNewSubjectModal] = useState(false);
-  const { t } = useTranslation();
+  const { t } = useTranslation("subjects");
   return (
     <div>
       <Button
