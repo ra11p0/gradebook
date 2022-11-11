@@ -38,7 +38,7 @@ public class PeopleController : ControllerBase
         /*         _settingsQueries = serviceProvider.GetResolver<ISettingsQueries>();
                 _settingsCommands = serviceProvider.GetResolver<ISettingsCommands>(); */
     }
-    [HttpGet, Route("{personGuid}/subjects")]
+    [HttpGet, Route("{teacherGuid}/subjects")]
     [ProducesResponseType(typeof(PersonDto), statusCode: 200)]
     public async Task<IActionResult> GetSubjectsForTeacher([FromRoute] Guid teacherGuid, [FromQuery] int page = 0)
     {

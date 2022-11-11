@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { ClassResponse } from "../../ApiClient/People/Definitions/PersonResponse";
+import { ClassResponse } from "../../ApiClient/People/Definitions/Responses/PersonResponse";
 import SchoolRolesEnum from "../../Common/Enums/SchoolRolesEnum";
 
 type Props = {

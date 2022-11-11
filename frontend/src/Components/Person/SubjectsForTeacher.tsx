@@ -2,7 +2,7 @@ import React from "react";
 import { Card, ListGroup, ListGroupItem } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
-import { ClassResponse } from "../../ApiClient/People/Definitions/Responses/PersonResponse";
+import SubjectsForTeacherResponse from "../../ApiClient/People/Definitions/Responses/SubjectsForTeacherResponse";
 import PeopleProxy from "../../ApiClient/People/PeopleProxy";
 import InfiniteScrollWrapper from "../Shared/InfiniteScrollWrapper";
 
@@ -10,30 +10,30 @@ type Props = {
   personGuid: string;
 };
 
-function ManagedClassesList(props: Props) {
+function SubjectsForTeacher(props: Props) {
   const { t } = useTranslation("person");
   const navigate = useNavigate();
   return (
     <Card>
       <Card.Header>
-        <Card.Title>{t("managedClasses")}</Card.Title>
+        <Card.Title>{t("subjectsForTeacher")}</Card.Title>
       </Card.Header>
       <Card.Body>
         <ListGroup>
           <InfiniteScrollWrapper
-            mapper={(item: ClassResponse, index: number) => (
+            mapper={(item: SubjectsForTeacherResponse, index: number) => (
               <ListGroupItem
                 key={index}
                 className="cursor-pointer"
                 onClick={() => {
-                  navigate(`/class/show/${item.guid}`);
+                  navigate(`/subject/show/${item.guid}`);
                 }}
               >
                 {item.name}
               </ListGroupItem>
             )}
             fetch={async (page: number) => {
-              return (await PeopleProxy.getClassesForPerson(props.personGuid, page)).data;
+              return (await PeopleProxy.subjects.getSubjectsForTeacher(props.personGuid, page)).data;
             }}
           />
         </ListGroup>
@@ -42,4 +42,4 @@ function ManagedClassesList(props: Props) {
   );
 }
 
-export default ManagedClassesList;
+export default SubjectsForTeacher;

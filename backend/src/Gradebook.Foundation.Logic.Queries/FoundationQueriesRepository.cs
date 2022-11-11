@@ -498,7 +498,7 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
             FROM Subjects
             WHERE IsDeleted = 0 
                 AND Guid = @subjectGuid
-            ORDER BY CreatedDate DESC
+            ORDER BY Name DESC
          ", new { subjectGuid });
     }
 
@@ -538,12 +538,12 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
             SELECT Name, SchoolGuid, Guid
             FROM Subjects
             WHERE Guid IN (
-                SELECT SubjectsGuid
+                SELECT st.SubjectsGuid
                 FROM SubjectTeacher st
                 JOIN Person ps
-                ON ps.Guid = st.TeachersGuid
-                WHERE TeachersGuid = !teacherGuid
+                ON ps.Guid = st.TeachersGuid 
                     AND ps.Discriminator = 'Teacher'
+                WHERE ps.Guid = @teacherGuid
                     AND ps.IsDeleted = 0 
             )
             ORDER BY Name
