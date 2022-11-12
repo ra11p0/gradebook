@@ -15,6 +15,7 @@ import SchoolSelectedOnly from "../Components/Shared/SchoolSelectedOnly";
 import ManageClasses from "../Components/Dashboard/Manage/ManageClasses/ManageClasses";
 import getIsLoggedInReduxProxy from "../Redux/ReduxProxy/getIsLoggedInReduxProxy";
 import SettingsIndex from "../Components/Dashboard/Manage/Settings/SettingsIndex";
+import EducationCycle from "../Components/Dashboard/Manage/EducationCycle/EducationCycle";
 
 const mapStateToProps = (state: any) => ({
   isLoggedIn: getIsLoggedInReduxProxy(state),
@@ -35,9 +36,17 @@ class Dashboard extends React.Component<DashboardProps> {
         </div>
         <div className="m-4">
           <Routes>
-            <Route path="*" element={<DashboardIndex />}></Route>
-            <Route path="absence" element={<Absence />}></Route>
-            <Route path="grades" element={<Grades />}></Route>
+            <Route path="*" element={<DashboardIndex />} />
+            <Route path="absence" element={<Absence />} />
+            <Route path="grades" element={<Grades />} />
+            <Route
+              path="educationCycle/*"
+              element={
+                <SchoolSelectedOnly>
+                  <EducationCycle />
+                </SchoolSelectedOnly>
+              }
+            />
             <Route
               path="manageSubjects"
               element={
@@ -46,7 +55,7 @@ class Dashboard extends React.Component<DashboardProps> {
                 </SchoolSelectedOnly>
               }
             ></Route>
-            <Route path="timetable" element={<Timetable />}></Route>
+            <Route path="timetable" element={<Timetable />} />
             <Route
               path="manageStudents/*"
               element={
@@ -54,7 +63,7 @@ class Dashboard extends React.Component<DashboardProps> {
                   <StudentsList />
                 </SchoolSelectedOnly>
               }
-            ></Route>
+            />
             <Route
               path="manageTeachers/*"
               element={
@@ -62,7 +71,7 @@ class Dashboard extends React.Component<DashboardProps> {
                   <TeachersList />
                 </SchoolSelectedOnly>
               }
-            ></Route>
+            />
             <Route
               path="manageInvitations/*"
               element={
@@ -70,7 +79,7 @@ class Dashboard extends React.Component<DashboardProps> {
                   <Invitations />
                 </SchoolSelectedOnly>
               }
-            ></Route>
+            />
             <Route
               path="manageClasses/*"
               element={
@@ -78,9 +87,9 @@ class Dashboard extends React.Component<DashboardProps> {
                   <ManageClasses />
                 </SchoolSelectedOnly>
               }
-            ></Route>
-            <Route path="manageSchool/*" element={<SchoolsList />}></Route>
-            <Route path="settings/*" element={<SettingsIndex />}></Route>
+            />
+            <Route path="manageSchool/*" element={<SchoolsList />} />
+            <Route path="settings/*" element={<SettingsIndex />} />
           </Routes>
         </div>
       </div>

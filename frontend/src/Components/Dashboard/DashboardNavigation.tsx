@@ -70,6 +70,15 @@ class DashboardNavigation extends React.Component<DashboardNavigationProps, Dash
             {t("timetable")}
           </Link>
           <Link
+            to="educationCycle"
+            className={"btn btn-outline-primary " + (this.state.activeTab == "educationCycle" ? "active" : "")}
+            onClick={() => {
+              this.setActiveTab("educationCycle");
+            }}
+          >
+            {t("educationCycle")}
+          </Link>
+          <Link
             to="manageStudents"
             className={"btn btn-outline-primary " + (this.state.activeTab == "manageStudents" ? "active" : "")}
             onClick={() => {
