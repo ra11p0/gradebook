@@ -205,9 +205,9 @@ public class SchoolsController : ControllerBase
     [HttpGet, Route("{schoolGuid}/subjects")]
     [ProducesResponseType(typeof(PagedList<SubjectDto>), statusCode: 200)]
     [ProducesResponseType(typeof(string), statusCode: 400)]
-    public async Task<IActionResult> GetSubjects([FromRoute] Guid schoolGuid, [FromQuery] int page = 0)
+    public async Task<IActionResult> GetSubjects([FromRoute] Guid schoolGuid, [FromQuery] int? page = 0, [FromQuery] string? query = "")
     {
-        var resp = await _foundationQueries.Service.GetSubjectsForSchool(schoolGuid, page);
+        var resp = await _foundationQueries.Service.GetSubjectsForSchool(schoolGuid, page ?? 0, query ?? "");
         return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
     }
     [HttpPost, Route("{schoolGuid}/subjects")]

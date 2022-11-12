@@ -255,10 +255,10 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<SubjectDto>(resp, true);
     }
 
-    public async Task<ResponseWithStatus<IPagedList<SubjectDto>>> GetSubjectsForSchool(Guid schoolGuid, int page)
+    public async Task<ResponseWithStatus<IPagedList<SubjectDto>>> GetSubjectsForSchool(Guid schoolGuid, int page, string query)
     {
         var pager = new Pager(page);
-        var response = await Repository.GetSubjectsForSchool(schoolGuid, pager);
+        var response = await Repository.GetSubjectsForSchool(schoolGuid, pager, query);
         return new ResponseWithStatus<IPagedList<SubjectDto>>(response, true);
     }
 

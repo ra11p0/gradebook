@@ -49,6 +49,26 @@ const AddInvitationModal = (props: AddInvitationModalProps): ReactElement => {
       <Modal.Body>
         <Stack>
           <Stack>
+            <div className="d-flex flex-wrap gap-1 justify-content-center mt-2">
+              <>
+                {inactiveStudents
+                  .filter((student) => selectedStudents.includes(student.guid))
+                  .map((student) => (
+                    <div className="border rounded-3 p-0" key={student.guid}>
+                      <PersonSmall name={student.name} surname={student.surname} />
+                      <div className="d-inline mx-2">
+                        <FontAwesomeIcon
+                          icon={faTimes}
+                          className="my-auto text-danger cursor-pointer"
+                          onClick={() => setSelectedStudents(selectedStudents.filter((guid) => guid != student.guid))}
+                        />
+                      </div>
+                    </div>
+                  ))}
+              </>
+            </div>
+          </Stack>
+          <Stack>
             <FormControl>
               <InputLabel>{t("selectPeopleToInvite")}</InputLabel>
               <Select
@@ -71,26 +91,6 @@ const AddInvitationModal = (props: AddInvitationModalProps): ReactElement => {
                 ))}
               </Select>
             </FormControl>
-          </Stack>
-          <Stack>
-            <div className="d-flex flex-wrap gap-1 justify-content-center mt-2">
-              <>
-                {inactiveStudents
-                  .filter((student) => selectedStudents.includes(student.guid))
-                  .map((student) => (
-                    <div className="border rounded-3 p-0" key={student.guid}>
-                      <PersonSmall name={student.name} surname={student.surname} />
-                      <div className="d-inline mx-2">
-                        <FontAwesomeIcon
-                          icon={faTimes}
-                          className="my-auto text-danger cursor-pointer"
-                          onClick={() => setSelectedStudents(selectedStudents.filter((guid) => guid != student.guid))}
-                        />
-                      </div>
-                    </div>
-                  ))}
-              </>
-            </div>
           </Stack>
         </Stack>
       </Modal.Body>

@@ -82,8 +82,8 @@ const addNewSubject = (newSubjectRequest: NewSubjectRequest, schoolGuid: string 
     return axiosApiAuthorized.post(API_URL + `/schools/${schoolGuid}/Subjects`, newSubjectRequest);
 }
 
-const getSubjectsInSchool = (page: number, schoolGuid: string = getCurrentSchoolReduxProxy()?.schoolGuid ?? ''): Promise<AxiosResponse<SubjectResponse[]>> => {
-    return axiosApiAuthorized.get(API_URL + `/schools/${schoolGuid}/Subjects`, { params: { page } });
+const getSubjectsInSchool = (page: number, query: string | undefined = undefined, schoolGuid: string = getCurrentSchoolReduxProxy()?.schoolGuid ?? ''): Promise<AxiosResponse<SubjectResponse[]>> => {
+    return axiosApiAuthorized.get(API_URL + `/schools/${schoolGuid}/Subjects`, { params: { page, query } });
 }
 
 

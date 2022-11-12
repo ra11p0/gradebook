@@ -3,13 +3,15 @@ using Gradebook.Foundation.Common;
 
 namespace Gradebook.Foundation.Domain.Models;
 
-public class Subject : BaseDomainModel
+public class EducationCycle : BaseDomainModel
 {
+    public string? Name { get; set; }
     public Guid SchoolGuid { get; set; }
-    public string Name { get; set; } = string.Empty;
+    public Guid CreatorGuid { get; set; }
+    public DateTime CreatedDate { get; set; }
 
     [ForeignKey("SchoolGuid")]
     public virtual School School { get; set; } = new School();
-    public virtual ICollection<Teacher>? Teachers { get; set; }
-    public virtual ICollection<EducationCycleStep>? EducationCycleSteps { get; set; }
+    [ForeignKey("CreatorGuid")]
+    public virtual Person Creator { get; set; } = new Person();
 }

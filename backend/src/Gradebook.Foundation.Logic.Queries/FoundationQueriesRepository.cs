@@ -445,7 +445,6 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
             builder.WHERE("CONCAT(Name, ' ', Surname) like @query");
         builder.ORDER_BY("Name, Surname");
         using var cn = await GetOpenConnectionAsync();
-        var q = builder.ToString();
         return await cn.QueryPagedAsync<StudentDto>(builder.ToString(), new
         {
             classGuid,
@@ -502,16 +501,19 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
          ", new { subjectGuid });
     }
 
-    public async Task<IPagedList<SubjectDto>> GetSubjectsForSchool(Guid schoolGuid, Pager pager)
+    public async Task<IPagedList<SubjectDto>> GetSubjectsForSchool(Guid schoolGuid, Pager pager, string query)
     {
+        var builder = new SqlBuilder();
+        builder.SELECT("Name, SchoolGuid, Guid");
+        builder.FROM("Subjects");
+        builder.WHERE("IsDeleted = 0");
+        builder.WHERE("SchoolGuid = @schoolGuid");
+
+        if (!string.IsNullOrEmpty(query))
+            builder.WHERE("CONCAT(Name) like @query");
+        builder.ORDER_BY("Name");
         using var cn = await GetOpenConnectionAsync();
-        return await cn.QueryPagedAsync<SubjectDto>(@"
-            SELECT Name, SchoolGuid, Guid
-            FROM Subjects
-            WHERE IsDeleted = 0 
-                AND SchoolGuid = @schoolGuid
-            ORDER BY Name
-         ", new { schoolGuid }, pager);
+        return await cn.QueryPagedAsync<SubjectDto>(builder.ToString(), new { schoolGuid, query = $"%{query}%", }, pager);
     }
 
     public async Task<IPagedList<TeacherDto>> GetTeachersForSubject(Guid subjectGuid, Pager pager)
