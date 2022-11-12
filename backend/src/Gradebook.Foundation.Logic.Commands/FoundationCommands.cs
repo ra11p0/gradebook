@@ -34,12 +34,12 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
 
         var invitation = invitationResult.Response!;
         if (invitation.IsUsed) return new StatusResponse<bool>(false, "Invitation already used");
-        if (invitation.ExprationDate < DateTime.UtcNow) return new StatusResponse<bool>(false, "Invitation expired");
+        if (invitation.ExprationDate < Time.UtcNow) return new StatusResponse<bool>(false, "Invitation expired");
 
         var useInvitationResult = await Repository.UseInvitation(new UseInvitationCommand()
         {
             InvitationGuid = invitation.Guid,
-            UsedDate = DateTime.UtcNow,
+            UsedDate = Time.UtcNow,
             UserGuid = userGuid.Response!
         });
         if (!useInvitationResult.Status) return new StatusResponse<bool>(false, useInvitationResult.Message);
@@ -73,7 +73,7 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         var currentPerson = await _foundationQueries.Service.GetCurrentPersonGuid(command.SchoolGuid);
         if (!await _foundationPermissions.Service.CanCreateNewClass(currentPerson.Response))
             return new ResponseWithStatus<Guid>("Forbidden");
-        command.CreatedDate = DateTime.UtcNow;
+        command.CreatedDate = Time.UtcNow;
         var resp = await Repository.AddNewClass(command);
         if (!resp.Status) return new ResponseWithStatus<Guid>(false, resp.Message);
         await Repository.SaveChangesAsync();

@@ -22,7 +22,7 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         var invitationResponse = await GetInvitationByActivationCode(activationCode);
         if (!invitationResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto>(invitationResponse.Message);
         if (invitationResponse.Response!.IsUsed) return new ResponseWithStatus<ActivationCodeInfoDto>("Invitation code is used");
-        if (invitationResponse.Response!.ExprationDate < DateTime.UtcNow) return new ResponseWithStatus<ActivationCodeInfoDto>("Invitation code expired");
+        if (invitationResponse.Response!.ExprationDate < Time.UtcNow) return new ResponseWithStatus<ActivationCodeInfoDto>("Invitation code expired");
 
         var invitation = invitationResponse.Response!;
         var invitedPersonGuid = invitation.InvitedPersonGuid;

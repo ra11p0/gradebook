@@ -36,7 +36,7 @@ public class Activation
         foundationQueriesRepository.Setup(e => e.GetInvitationByActivationCode(It.IsAny<string>()))
         .ReturnsAsync(new InvitationDto()
         {
-            ExprationDate = DateTime.UtcNow.AddMinutes(10),
+            ExprationDate = Time.UtcNow.AddMinutes(10),
             InvitedPersonGuid = Guid.NewGuid(),
             SchoolRole = Common.Foundation.Enums.SchoolRoleEnum.Student
         });
@@ -57,7 +57,7 @@ public class Activation
         foundationQueriesRepository.Setup(e => e.GetInvitationByActivationCode(It.IsAny<string>()))
         .ReturnsAsync(new InvitationDto()
         {
-            ExprationDate = DateTime.UtcNow.AddMinutes(-10),
+            ExprationDate = Time.UtcNow.AddMinutes(-10),
             InvitedPersonGuid = Guid.NewGuid(),
             SchoolRole = Common.Foundation.Enums.SchoolRoleEnum.Student
         });
@@ -79,7 +79,7 @@ public class Activation
         .ReturnsAsync(new InvitationDto()
         {
             IsUsed = true,
-            ExprationDate = DateTime.UtcNow.AddMinutes(10),
+            ExprationDate = Time.UtcNow.AddMinutes(10),
             InvitedPersonGuid = Guid.NewGuid(),
             SchoolRole = Common.Foundation.Enums.SchoolRoleEnum.Student
         });
