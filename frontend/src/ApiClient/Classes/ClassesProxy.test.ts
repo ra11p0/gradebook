@@ -1,11 +1,13 @@
 import assert from "assert";
 import testConstraints from '../../tests/Constraints'
 import accountsQuickActions from "../../tests/QuickActions/accountsQuickActions";
-import AdministratorsProxy from "../Administrators/AdministratorsProxy";
-import Constraints from "../../tests/Constraints";
+import PermissionEnum from "../../Common/Enums/Permissions/PermissionEnum";
 import AccountsProxy from "../Accounts/AccountsProxy";
 import ClassesProxy from "./ClassesProxy";
 import SchoolsProxy from "../Schools/SchoolsProxy";
+import PeopleProxy from "../People/PeopleProxy";
+import getCurrentPersonReduxProxy from "../../Redux/ReduxProxy/getCurrentPersonReduxProxy";
+import PermissionLevelEnum from "../../Common/Enums/Permissions/PermissionLevelEnum";
 require('dotenv').config();
 
 const isTestEnvironment = process.env.ENVIRONMENT === 'TEST';
@@ -17,6 +19,8 @@ describe('ClassesProxy', () => {
             await accountsQuickActions.logIn(testConstraints.email, testConstraints.password);
             //  get user guid
             let me = await AccountsProxy.getMe();
+            //  set permission to add new student
+            await PeopleProxy.permissions.setPermissions(getCurrentPersonReduxProxy()?.guid!, [{ permissionId: PermissionEnum.Students, permissionLevel: PermissionLevelEnum.Students_CanCreateAndDelete }])
             //  get schools
             let schoolsList = await AccountsProxy.getAccessibleSchools(me.data.userId);
             let schoolGuid = schoolsList.data.find(() => true)?.school.guid!;

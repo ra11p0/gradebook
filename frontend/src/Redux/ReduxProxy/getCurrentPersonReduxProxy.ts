@@ -1,6 +1,7 @@
+import { store } from "../../store";
 import getCurrentSchoolReduxProxy from "./getCurrentSchoolReduxProxy"
 
-export default (state: any): CurrentPersonProxyResult | null => {
+export default (state: any = store.getState()): CurrentPersonProxyResult | null => {
 
     let currentSchool = getCurrentSchoolReduxProxy(state);
     if (!currentSchool) return null;
