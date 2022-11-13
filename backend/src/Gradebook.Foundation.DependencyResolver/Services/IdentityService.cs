@@ -22,7 +22,8 @@ public class IdentityService
             .AddEntityFrameworkStores<ApplicationIdentityDatabaseContext>()
             .AddDefaultTokenProviders();
 
-        services.AddAuthentication(options =>{
+        services.AddAuthentication(options =>
+        {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -47,5 +48,16 @@ public class IdentityService
         });
 
         services.AddScoped<IIdentityLogic, IdentityLogic>();
+
+        services.AddCors(e =>
+        {
+            e.AddDefaultPolicy(p =>
+            {
+                //TODO: move to appsettings.json
+                p.WithOrigins("http://development.gradebook.com", "http://api-tests.gradebook.com")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+            });
+        });
     }
 }
