@@ -11,4 +11,9 @@ public class NotificationsHubWrapper : BaseHubWrapper<NotificationsHub, INotific
     public NotificationsHubWrapper(IHubContext<NotificationsHub, INotificationsHub> hub) : base(hub)
     {
     }
+
+    public Task UserLoggedIn(string username)
+    {
+        return Hub.Clients.All.UserLoggedIn(username);
+    }
 }
