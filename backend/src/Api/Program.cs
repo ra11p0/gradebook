@@ -1,5 +1,5 @@
 using Receipts.Foundation.DependencyResolver;
-using Microsoft.OpenApi.Models;
+using Gradebook.Foundation.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,5 +22,7 @@ app.UseAuthorization();
 app.MapGet("/", () => "Hello World!");
 
 app.MapDefaultControllerRoute();
+
+HubsMapper.MapHubs(app);
 
 app.Run();

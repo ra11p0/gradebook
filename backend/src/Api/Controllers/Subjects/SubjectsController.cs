@@ -3,11 +3,13 @@ using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Foundation.Commands;
 using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers.Subjects;
 
 [Route("api/[controller]")]
+[Authorize]
 public class SubjectsController : ControllerBase
 {
     private readonly ServiceResolver<IFoundationQueries> _foundationQueries;

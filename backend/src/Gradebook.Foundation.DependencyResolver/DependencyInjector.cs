@@ -14,6 +14,7 @@ public class DependencyInjector
         PermissionsService.Inject(services, configuration);
         SettingsService.Inject(services, configuration);
         SwaggerService.Inject(services, configuration);
+        SignalRService.Inject(services, configuration);
     }
 }
 
