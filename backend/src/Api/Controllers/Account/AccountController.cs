@@ -12,6 +12,7 @@ using Gradebook.Foundation.Common.Settings.Enums;
 using Gradebook.Foundation.Common.Settings.Queries.Definitions;
 using Gradebook.Foundation.Common.SignalR.Notifications;
 using Gradebook.Foundation.Identity.Models;
+using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -119,7 +120,12 @@ public class AccountController : ControllerBase
 
             await _userManager.Service.UpdateAsync(user);
 
-            await _notificationsHubWrapper.Service.UserLoggedIn(user.UserName);
+            //  Hangfire and websocket tests
+
+            var jobid = BackgroundJob.Schedule(() => _notificationsHubWrapper.Service.UserLoggedIn(user.UserName + " Recuring! 30"), TimeSpan.FromSeconds(30));
+
+            await _notificationsHubWrapper.Service.UserLoggedIn(jobid);
+            //  end tests
 
             return Ok(new
             {
