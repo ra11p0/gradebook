@@ -20,5 +20,6 @@
     <ProjectReference Include="..\Gradebook.Foundation.Identity\Gradebook.Foundation.Identity.csproj" />
     <ProjectReference Include="..\Gradebook.Foundation.DependencyResolver\Gradebook.Foundation.DependencyResolver.csproj" />
     <ProjectReference Include="..\Gradebook.Foundation.SignalR\Gradebook.Foundation.SignalR.csproj" />
+    <ProjectReference Include="..\Gradebook.Foundation.Hangfire\Gradebook.Foundation.Hangfire.csproj" />
   </ItemGroup>
 </Project>

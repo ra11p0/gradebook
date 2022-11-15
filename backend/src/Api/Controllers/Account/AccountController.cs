@@ -29,7 +29,6 @@ public class AccountController : ControllerBase
     private readonly ServiceResolver<IFoundationQueries> _foundationQueries;
     private readonly ServiceResolver<ISettingsQueries> _settingsQueries;
     private readonly ServiceResolver<ISettingsCommands> _settingsCommands;
-    private readonly ServiceResolver<INotificationsHubWrapper> _notificationsHubWrapper;
     public AccountController(IServiceProvider serviceProvider)
     {
         _userManager = serviceProvider.GetResolver<UserManager<ApplicationUser>>();
@@ -38,7 +37,6 @@ public class AccountController : ControllerBase
         _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
         _settingsCommands = serviceProvider.GetResolver<ISettingsCommands>();
         _settingsQueries = serviceProvider.GetResolver<ISettingsQueries>();
-        _notificationsHubWrapper = serviceProvider.GetResolver<INotificationsHubWrapper>();
     }
 
     #region authorization authentication
@@ -118,8 +116,6 @@ public class AccountController : ControllerBase
             user.RefreshTokenExpiryTime = Time.UtcNow.AddDays(refreshTokenValidityInDays);
 
             await _userManager.Service.UpdateAsync(user);
-
-            await _notificationsHubWrapper.Service.UserLoggedIn(user.UserName);
 
             return Ok(new
             {

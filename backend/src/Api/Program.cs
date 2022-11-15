@@ -1,5 +1,6 @@
 using Receipts.Foundation.DependencyResolver;
 using Gradebook.Foundation.SignalR;
+using Gradebook.Foundation.DependencyResolver.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,5 +25,6 @@ app.MapGet("/", () => "Hello World!");
 app.MapDefaultControllerRoute();
 
 HubsMapper.MapHubs(app);
+HangfireService.MapHangfireEndpoint(app);
 
 app.Run();

@@ -12,8 +12,8 @@ public class NotificationsHubWrapper : BaseHubWrapper<NotificationsHub, INotific
     {
     }
 
-    public Task UserLoggedIn(string username)
+    public Task UserLoggedIn(string username, string userId)
     {
-        return Hub.Clients.All.UserLoggedIn(username);
+        return Hub.Clients.User(userId).UserLoggedIn(username);
     }
 }

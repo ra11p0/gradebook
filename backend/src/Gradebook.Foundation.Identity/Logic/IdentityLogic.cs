@@ -19,14 +19,14 @@ public class IdentityLogic : IIdentityLogic
     private readonly ServiceResolver<ApplicationIdentityDatabaseContext> _identityContext;
     private readonly ServiceResolver<UserManager<ApplicationUser>> _userManager;
     private readonly ServiceResolver<RoleManager<IdentityRole>> _roleManager;
-    private readonly ServiceResolver<IHttpContextAccessor> _httpContextAccessor;
-    public IdentityLogic(IServiceProvider serviceProvider)
+    private readonly Context _context;
+    public IdentityLogic(IServiceProvider serviceProvider, Context context)
     {
         _configuration = serviceProvider.GetResolver<IConfiguration>();
         _userManager = serviceProvider.GetResolver<UserManager<ApplicationUser>>();
         _roleManager = serviceProvider.GetResolver<RoleManager<IdentityRole>>();
         _identityContext = serviceProvider.GetResolver<ApplicationIdentityDatabaseContext>();
-        _httpContextAccessor = serviceProvider.GetResolver<IHttpContextAccessor>();
+        _context = context;
     }
     public JwtSecurityToken CreateToken(List<Claim> authClaims)
     {
@@ -92,7 +92,7 @@ public class IdentityLogic : IIdentityLogic
     }
     public async Task<ResponseWithStatus<string, bool>> CurrentUserId()
     {
-        var user = await _userManager.Service.FindByNameAsync(_httpContextAccessor.Service.HttpContext.User.Identity!.Name);
+        var user = await _userManager.Service.FindByIdAsync(_context.UserId);
         return user is null ?
             new ResponseWithStatus<string, bool>(null, false) :
             new ResponseWithStatus<string, bool>(user.Id, true);
