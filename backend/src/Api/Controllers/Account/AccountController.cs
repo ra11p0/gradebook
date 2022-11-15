@@ -12,7 +12,6 @@ using Gradebook.Foundation.Common.Settings.Enums;
 using Gradebook.Foundation.Common.Settings.Queries.Definitions;
 using Gradebook.Foundation.Common.SignalR.Notifications;
 using Gradebook.Foundation.Identity.Models;
-using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +29,6 @@ public class AccountController : ControllerBase
     private readonly ServiceResolver<IFoundationQueries> _foundationQueries;
     private readonly ServiceResolver<ISettingsQueries> _settingsQueries;
     private readonly ServiceResolver<ISettingsCommands> _settingsCommands;
-    private readonly ServiceResolver<INotificationsHubWrapper> _notificationsHubWrapper;
     public AccountController(IServiceProvider serviceProvider)
     {
         _userManager = serviceProvider.GetResolver<UserManager<ApplicationUser>>();
@@ -39,7 +37,6 @@ public class AccountController : ControllerBase
         _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
         _settingsCommands = serviceProvider.GetResolver<ISettingsCommands>();
         _settingsQueries = serviceProvider.GetResolver<ISettingsQueries>();
-        _notificationsHubWrapper = serviceProvider.GetResolver<INotificationsHubWrapper>();
     }
 
     #region authorization authentication
@@ -119,13 +116,6 @@ public class AccountController : ControllerBase
             user.RefreshTokenExpiryTime = Time.UtcNow.AddDays(refreshTokenValidityInDays);
 
             await _userManager.Service.UpdateAsync(user);
-
-            //  Hangfire and websocket tests
-
-            var jobid = BackgroundJob.Schedule(() => _notificationsHubWrapper.Service.UserLoggedIn(user.UserName + " Recuring! 30"), TimeSpan.FromSeconds(30));
-
-            await _notificationsHubWrapper.Service.UserLoggedIn(jobid);
-            //  end tests
 
             return Ok(new
             {

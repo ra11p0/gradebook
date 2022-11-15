@@ -34,5 +34,6 @@
     <ProjectReference Include="..\Gradebook.Settings.Logic.Commands\Gradebook.Settings.Logic.Commands.csproj" />
     <ProjectReference Include="..\Gradebook.Settings.Database\Gradebook.Settings.Database.csproj" />
     <ProjectReference Include="..\Gradebook.Foundation.SignalR\Gradebook.Foundation.SignalR.csproj" />
+    <ProjectReference Include="..\Gradebook.Foundation.Hangfire\Gradebook.Foundation.Hangfire.csproj" />
   </ItemGroup>
 </Project>

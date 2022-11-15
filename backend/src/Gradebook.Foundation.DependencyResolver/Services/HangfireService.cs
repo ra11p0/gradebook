@@ -1,3 +1,7 @@
+using Gradebook.Foundation.Common.Hangfire;
+using Gradebook.Foundation.Hangfire;
+using Gradebook.Foundation.Hangfire.Messages;
+using Gradebook.Foundation.Hangfire.Workers;
 using Hangfire;
 using Hangfire.MySql;
 using Microsoft.AspNetCore.Builder;
@@ -27,6 +31,10 @@ public class HangfireService
                  TablesPrefix = "Hangfire"
              })));
         services.AddHangfireServer();
+
+        services.AddScoped<HangfireClient>();
+
+        services.AddScoped<BaseHangfireWorker<NotificationsWorkerMessage>, NotificationsWorker>();
     }
     public static void MapHangfireEndpoint(WebApplication app)
     {
