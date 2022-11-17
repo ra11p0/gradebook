@@ -29,3 +29,11 @@
 .vh-66 {
   height: 66vh !important;
 }
+
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
+.w-33 {
+  width: 33% !important;
+}

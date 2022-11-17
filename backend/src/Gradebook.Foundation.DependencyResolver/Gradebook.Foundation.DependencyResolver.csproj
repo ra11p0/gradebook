@@ -8,13 +8,18 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.*" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.*" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Microsoft.OpenApi" Version="1.4.*" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.*" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.*" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.*" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.*" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.*" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.22.*" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.*" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.*" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.4.*" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.*" />
+    <PackageReference Include="Hangfire.MySqlStorage" Version="2.0.*" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gradebook.Foundation.Common\Gradebook.Foundation.Common.csproj" />
@@ -28,5 +33,7 @@
     <ProjectReference Include="..\Gradebook.Settings.Logic.Queries\Gradebook.Settings.Logic.Queries.csproj" />
     <ProjectReference Include="..\Gradebook.Settings.Logic.Commands\Gradebook.Settings.Logic.Commands.csproj" />
     <ProjectReference Include="..\Gradebook.Settings.Database\Gradebook.Settings.Database.csproj" />
+    <ProjectReference Include="..\Gradebook.Foundation.SignalR\Gradebook.Foundation.SignalR.csproj" />
+    <ProjectReference Include="..\Gradebook.Foundation.Hangfire\Gradebook.Foundation.Hangfire.csproj" />
   </ItemGroup>
 </Project>

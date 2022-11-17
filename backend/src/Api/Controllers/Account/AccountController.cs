@@ -10,6 +10,7 @@ using Gradebook.Foundation.Common.Settings.Commands;
 using Gradebook.Foundation.Common.Settings.Commands.Definitions;
 using Gradebook.Foundation.Common.Settings.Enums;
 using Gradebook.Foundation.Common.Settings.Queries.Definitions;
+using Gradebook.Foundation.Common.SignalR.Notifications;
 using Gradebook.Foundation.Identity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -96,6 +97,7 @@ public class AccountController : ControllerBase
 
             var authClaims = new List<Claim>
             {
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };

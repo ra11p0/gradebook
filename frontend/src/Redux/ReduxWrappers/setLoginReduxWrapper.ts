@@ -1,6 +1,6 @@
 import AccountsProxy from "../../ApiClient/Accounts/AccountsProxy";
+import { connectAllHubs } from "../../ApiClient/SignalR/HubsResolver";
 import { LOG_IN } from "../../Constraints/actionTypes";
-import setPersonReduxWrapper from "./setPersonReduxWrapper";
 import setSchoolReduxWrapper from "./setSchoolReduxWrapper";
 import setSchoolsListReduxWrapper from "./setSchoolsListReduxWrapper";
 import setUserReduxWrapper from "./setUserReduxWrapper";
@@ -21,15 +21,20 @@ export default (dispatch: any, action: logInAction): Promise<void> => {
         localStorage.setItem("refresh_token", action.refreshToken);
 
         dispatch({ ...logIn, ...action });
-        AccountsProxy.getMe().then((getMeResponse) => {
+        AccountsProxy.getMe()
+            .then((getMeResponse) => {
 
-            setUserReduxWrapper(dispatch, { userId: getMeResponse.data.userId });
-            setSchoolsListReduxWrapper(dispatch, { schoolsList: getMeResponse.data.schools });
-            let defaultSchool = getMeResponse.data.schools.find(() => true);
-            setSchoolReduxWrapper(dispatch, {
-                schoolGuid: defaultSchool?.school.guid ?? "",
-                schoolName: defaultSchool?.school.name ?? ""
-            });
-        }).then(resolve);
+                setUserReduxWrapper(dispatch, { userId: getMeResponse.data.userId });
+                setSchoolsListReduxWrapper(dispatch, { schoolsList: getMeResponse.data.schools });
+                let defaultSchool = getMeResponse.data.schools.find(() => true);
+                setSchoolReduxWrapper(dispatch, {
+                    schoolGuid: defaultSchool?.school.guid ?? "",
+                    schoolName: defaultSchool?.school.name ?? ""
+                });
+            })
+            .then(() => {
+                connectAllHubs();
+            })
+            .then(resolve);
     })
 };

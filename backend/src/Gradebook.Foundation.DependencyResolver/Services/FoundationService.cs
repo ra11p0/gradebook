@@ -1,3 +1,4 @@
+using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Foundation;
 using Gradebook.Foundation.Common.Foundation.Commands;
 using Gradebook.Foundation.Common.Foundation.Queries;
@@ -30,5 +31,7 @@ public class FoundationService
         services.AddScoped<FoundationCommandsRepository>();
 
         services.AddScoped<IFoundationPermissionsLogic, FoundationPermissionsLogic>();
+
+        services.AddScoped<Context>();
     }
 }
