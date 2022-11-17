@@ -32,6 +32,9 @@ interface AppProps {
 }
 
 class App extends React.Component<AppProps> {
+  onLoad(loaded: boolean) {
+    this.props.onLoad(loaded);
+  }
   componentDidMount() {
     setApplicationLanguageReduxWrapper(store.dispatch, i18n.language);
     var access = localStorage.getItem("access_token");
@@ -43,13 +46,13 @@ class App extends React.Component<AppProps> {
             accessToken: refreshAccessTokenResponse.data.access_token,
             refreshToken: refreshAccessTokenResponse.data.refresh_token,
           });
-          this.props.onLoad(true);
+          this.onLoad(true);
         })
         .catch(() => {
           setLogOutReduxWrapper();
         });
     } else {
-      this.props.onLoad(true);
+      this.onLoad(true);
     }
   }
   render(): React.ReactNode {

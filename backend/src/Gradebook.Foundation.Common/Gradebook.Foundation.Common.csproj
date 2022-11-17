@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="DbExtensions" Version="6.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.*" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.22.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.*" />
@@ -14,5 +15,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.*" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.*" />
     <PackageReference Include="Dapper" Version="2.0.*" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.*" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.*" />
   </ItemGroup>
 </Project>
