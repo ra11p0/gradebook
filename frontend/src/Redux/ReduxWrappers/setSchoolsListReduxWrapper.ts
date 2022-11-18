@@ -1,8 +1,9 @@
 import GetAccessibleSchoolsResponse from "../../ApiClient/Accounts/Definitions/Responses/GetAccessibleSchoolsResponse";
-import { SET_SCHOOLS_LIST } from "../../Constraints/actionTypes";
+import { SET_SCHOOLS_LIST } from "../../Constraints/accountActionTypes";
+import ActionTypes from "../ActionTypes/accountActionTypes";
 
 const setSchoolsList = {
-    type: SET_SCHOOLS_LIST
+    type: ActionTypes.SetSchoolsList
 }
 
 export interface setSchoolsListAction {
@@ -10,5 +11,5 @@ export interface setSchoolsListAction {
 }
 
 export default (dispatch: any, action: setSchoolsListAction) => {
-    dispatch({ ...setSchoolsList, ...action })
+    dispatch({ ...setSchoolsList, payload: { ...action } })
 };

@@ -1,13 +1,14 @@
 import AccountsProxy from "../../ApiClient/Accounts/AccountsProxy";
 import { connectAllHubs } from "../../ApiClient/SignalR/HubsResolver";
-import { LOG_IN } from "../../Constraints/actionTypes";
+import { LOG_IN } from "../../Constraints/accountActionTypes";
+import ActionTypes from "../ActionTypes/accountActionTypes";
 import setSchoolReduxWrapper from "./setSchoolReduxWrapper";
 import setSchoolsListReduxWrapper from "./setSchoolsListReduxWrapper";
 import setUserReduxWrapper from "./setUserReduxWrapper";
 const isTestEnvironment = process.env.ENVIRONMENT === 'TEST';
 
 const logIn = {
-    type: LOG_IN
+    type: ActionTypes.LogIn
 }
 
 export interface logInAction {
@@ -20,7 +21,7 @@ export default (dispatch: any, action: logInAction): Promise<void> => {
         localStorage.setItem("access_token", action.accessToken);
         localStorage.setItem("refresh_token", action.refreshToken);
 
-        dispatch({ ...logIn, ...action });
+        dispatch({ ...logIn, payload: { ...action } });
         AccountsProxy.getMe()
             .then((getMeResponse) => {
 

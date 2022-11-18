@@ -3,12 +3,10 @@ using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
-using Gradebook.Foundation.Common.Hangfire;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 using Gradebook.Foundation.Common.SignalR.Notifications;
 using Gradebook.Foundation.Hangfire;
 using Gradebook.Foundation.Hangfire.Messages;
-using Gradebook.Foundation.Hangfire.Workers;
 
 namespace Gradebook.Foundation.Logic.Queries;
 
@@ -16,13 +14,11 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
 {
     private readonly ServiceResolver<IIdentityLogic> _identityLogic;
     private readonly ServiceResolver<IMapper> _mapper;
-    private readonly ServiceResolver<INotificationsHubWrapper> _notificationsHubWrapper;
     private readonly ServiceResolver<HangfireClient> _hangfireClient;
     public FoundationQueries(IFoundationQueriesRepository repository, IServiceProvider serviceProvider) : base(repository)
     {
         _identityLogic = serviceProvider.GetResolver<IIdentityLogic>();
         _mapper = serviceProvider.GetResolver<IMapper>();
-        _notificationsHubWrapper = serviceProvider.GetResolver<INotificationsHubWrapper>();
         _hangfireClient = serviceProvider.GetResolver<HangfireClient>();
     }
 

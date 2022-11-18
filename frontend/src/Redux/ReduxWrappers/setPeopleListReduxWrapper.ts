@@ -1,8 +1,8 @@
 import GetAccessiblePeopleResponse from "../../ApiClient/Accounts/Definitions/Responses/GetAccessiblePeopleResponse";
-import { SET_PEOPLE_LIST } from "../../Constraints/actionTypes";
+import ActionTypes from "../ActionTypes/accountActionTypes";
 
 const setPeopleList = {
-    type: SET_PEOPLE_LIST
+    type: ActionTypes.SetPeopleList
 }
 
 export interface setPeopleListAction {
@@ -10,5 +10,5 @@ export interface setPeopleListAction {
 }
 
 export default (dispatch: any, action: setPeopleListAction) => {
-    dispatch({ ...setPeopleList, ...action })
+    dispatch({ ...setPeopleList, payload: { ...action } })
 };

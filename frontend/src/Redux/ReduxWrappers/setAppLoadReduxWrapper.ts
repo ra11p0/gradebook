@@ -1,6 +1,6 @@
-import { APP_LOAD } from "../../Constraints/actionTypes";
+import ActionTypes from "../ActionTypes/accountActionTypes";
 
 const appLoad = {
-    type: APP_LOAD,
+    type: ActionTypes.AppLoad,
 };
-export default (dispatch: any, isAppLoaded: boolean) => dispatch({ ...appLoad, isAppLoaded });
+export default (dispatch: any, isAppLoaded: boolean) => dispatch({ ...appLoad, payload: { isAppLoaded } });

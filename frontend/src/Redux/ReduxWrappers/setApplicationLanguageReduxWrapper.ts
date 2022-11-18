@@ -2,13 +2,14 @@ import pl from "date-fns/locale/pl";
 import enUS from "date-fns/locale/en-US";
 import moment from "moment";
 import { registerLocale } from "react-datepicker";
-import { SET_LANGUAGE } from "../../Constraints/actionTypes";
+import { SET_LANGUAGE } from "../../Constraints/accountActionTypes";
+import ActionTypes from "../ActionTypes/accountActionTypes";
 
 const setLanguage = {
-    type: SET_LANGUAGE,
+    type: ActionTypes.SetLanguage,
 };
 export default (dispatch: any, language: string) => {
-    dispatch({ ...setLanguage, language });
+    dispatch({ ...setLanguage, payload: { language } });
     switch (language) {
         case 'pl':
             moment.locale('pl');

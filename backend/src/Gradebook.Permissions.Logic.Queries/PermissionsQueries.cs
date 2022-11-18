@@ -51,6 +51,7 @@ public class PermissionsQueries : BaseLogic<IPermissionsQueriesRepository>, IPer
             {
                 SchoolRoleEnum.Student => PermissionLevelEnum.Students_ViewOnly,
                 SchoolRoleEnum.Teacher => PermissionLevelEnum.Students_CanCreateAndDelete,
+                SchoolRoleEnum.Admin => PermissionLevelEnum.Students_CanCreateAndDelete,
                 _ => 0,
             },
             _ => 0,

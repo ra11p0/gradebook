@@ -13,6 +13,7 @@ import getCurrentUserIdReduxProxy from "../../../Redux/ReduxProxy/getCurrentUser
 import setSchoolsListReduxWrapper from "../../../Redux/ReduxWrappers/setSchoolsListReduxWrapper";
 import setLoginReduxWrapper from "../../../Redux/ReduxWrappers/setLoginReduxWrapper";
 import { store } from "../../../store";
+import getSessionRedux from '../../../Redux/ReduxProxy/getSessionRedux'
 
 const mapStateToProps = (state: any) => ({
   userId: getCurrentUserIdReduxProxy(state),
@@ -57,9 +58,11 @@ const ActivateStudentForm = (props: ActivateStudentFormProps): ReactElement => {
       PeopleProxy.activatePerson(values.accessCode)
         .then(() => {
           AccountProxy.getAccessibleSchools(props.userId!).then((schoolsResponse) => {
+            const session = getSessionRedux();
+            if (!session) return;
             setLoginReduxWrapper(store.dispatch, {
-              accessToken: store.getState().common.session.accessToken,
-              refreshToken: store.getState().common.session.refreshToken,
+              accessToken: session.accessToken,
+              refreshToken: session.refreshToken,
             });
             if (props.onSubmit) props.onSubmit();
           });

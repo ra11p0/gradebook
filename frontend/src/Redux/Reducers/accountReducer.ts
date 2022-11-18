@@ -1,39 +1,61 @@
-import { APP_LOAD, LOG_IN, LOG_OUT, SET_LANGUAGE, SET_PERMISSIONS, SET_PERSON, SET_SCHOOL, SET_SCHOOLS_LIST, SET_USER } from '../../Constraints/actionTypes'
+import { APP_LOAD, LOG_IN, LOG_OUT, SET_LANGUAGE, SET_PERMISSIONS, SET_PERSON, SET_SCHOOL, SET_SCHOOLS_LIST, SET_USER } from '../../Constraints/accountActionTypes'
+import ActionType from '../ActionTypes/accountActionTypes'
+
+export type State = {
+    appLoaded: boolean;
+    school?: {
+        schoolGuid: any;
+        schoolName: any;
+    }
+    user?: {
+        userId: any;
+    }
+    person?: {
+        personGuid: any;
+    }
+    session?: {
+        accessToken: any;
+        refreshToken: any;
+    }
+    schoolsList?: [];
+    permissions?: any;
+    language?: any;
+}
 
 const defaultState = {
     appLoaded: false,
 };
 
-export default (state: any = defaultState, action: any) => {
+export default (state: State = defaultState, action: { type: ActionType, payload: any }) => {
     switch (action.type) {
-        case APP_LOAD:
+        case ActionType.AppLoad:
             return {
                 ...state,
-                appLoaded: action.isAppLoaded,
+                appLoaded: action.payload.isAppLoaded,
             };
-        case SET_USER:
+        case ActionType.SetUser:
             return {
                 ...state,
                 user: {
-                    userId: action.userId,
+                    userId: action.payload.userId,
                 }
             }
-        case SET_PERSON:
+        case ActionType.SetPerson:
             return {
                 ...state,
                 person: {
-                    personGuid: action.personGuid,
+                    personGuid: action.payload.personGuid,
                 }
             }
-        case LOG_IN:
+        case ActionType.LogIn:
             return {
                 ...state,
                 session: {
-                    accessToken: action.accessToken,
-                    refreshToken: action.refreshToken,
+                    accessToken: action.payload.accessToken,
+                    refreshToken: action.payload.refreshToken,
                 }
             };
-        case LOG_OUT:
+        case ActionType.LogOut:
             return {
                 ...state,
                 session: null,
@@ -41,29 +63,29 @@ export default (state: any = defaultState, action: any) => {
                 schoolsList: null,
                 user: null
             };
-        case SET_SCHOOL:
+        case ActionType.SetSchool:
             return {
                 ...state,
                 school: {
                     ...state.school,
-                    schoolGuid: action.schoolGuid,
-                    schoolName: action.schoolName
+                    schoolGuid: action.payload.schoolGuid,
+                    schoolName: action.payload.schoolName
                 }
             };
-        case SET_SCHOOLS_LIST:
+        case ActionType.SetSchoolsList:
             return {
                 ...state,
-                schoolsList: action.schoolsList
+                schoolsList: action.payload.schoolsList
             };
-        case SET_PERMISSIONS:
+        case ActionType.SetPermissions:
             return {
                 ...state,
-                permissions: action.permissions
+                permissions: action.payload.permissions
             };
-        case SET_LANGUAGE:
+        case ActionType.SetLanguage:
             return {
                 ...state,
-                language: action.language
+                language: action.payload.language
             }
         default:
             return state;

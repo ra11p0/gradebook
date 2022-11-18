@@ -1,10 +1,10 @@
-import { SET_SCHOOL } from "../../Constraints/actionTypes";
 import { store } from "../../store";
+import ActionTypes from "../ActionTypes/accountActionTypes";
 import getPeopleReduxProxy from "../ReduxProxy/getPeopleReduxProxy";
 import setPersonReduxWrapper from "./setPersonReduxWrapper";
 
 export const setSchool = {
-    type: SET_SCHOOL
+    type: ActionTypes.SetSchool
 }
 export interface setSchoolAction {
     schoolGuid: string;
@@ -12,7 +12,7 @@ export interface setSchoolAction {
 }
 
 export default (dispatch: any, action: setSchoolAction) => {
-    dispatch({ ...setSchool, ...action })
+    dispatch({ ...setSchool, payload: { ...action } })
     var schoolRelatedPerson = getPeopleReduxProxy(store.getState()).find(e => e.schoolGuid == action.schoolGuid);
     setPersonReduxWrapper(dispatch, {
         personGuid: schoolRelatedPerson?.guid ?? "",

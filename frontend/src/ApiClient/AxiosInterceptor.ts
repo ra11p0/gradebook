@@ -1,4 +1,5 @@
 import axios from 'axios';
+import getSessionRedux from '../Redux/ReduxProxy/getSessionRedux';
 import setLoginReduxWrapper from '../Redux/ReduxWrappers/setLoginReduxWrapper';
 import { store } from '../store'
 import AccountProxy from './Accounts/AccountsProxy';
@@ -35,9 +36,9 @@ axiosApiAuthorized.interceptors.response.use((response) => {
 });
 
 async function refreshAccessToken(): Promise<string> {
-  const accessToken: string = store.getState().common.session.accessToken;
-  const refreshToken: string = store.getState().common.session.refreshToken;
-  const refreshResponse = await AccountProxy.refreshAccessToken(accessToken, refreshToken);
+  const session = getSessionRedux();
+  if (!session) throw ('session should not be null')
+  const refreshResponse = await AccountProxy.refreshAccessToken(session.accessToken, session.refreshToken);
   setLoginReduxWrapper(store.dispatch, {
     accessToken: refreshResponse.data.access_token,
     refreshToken: refreshResponse.data.refresh_token
@@ -46,7 +47,9 @@ async function refreshAccessToken(): Promise<string> {
 }
 
 function getAccessToken(): string {
-  return store.getState().common.session.accessToken;
+  const session = getSessionRedux();
+  if (!session) throw ('session should not be null')
+  return session.accessToken;
 }
 
 export {

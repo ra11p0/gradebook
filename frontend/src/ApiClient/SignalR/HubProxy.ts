@@ -1,13 +1,15 @@
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
-import { store } from "../../store";
+import getSessionRedux from "../../Redux/ReduxProxy/getSessionRedux";
 
 export default class HubProxy {
     private subscribers: Subscriber[] = [];
     private connection: HubConnection | undefined = undefined;
     public connect(url: string) {
         if (this.connection) this.connection.stop();
+        const session = getSessionRedux();
+        if (!session) return;
         this.connection = new HubConnectionBuilder()
-            .withUrl(url, { accessTokenFactory: () => store.getState().common.session.accessToken })
+            .withUrl(url, { accessTokenFactory: () => session.accessToken })
             .withAutomaticReconnect()
             .build();
 

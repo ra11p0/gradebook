@@ -1,8 +1,9 @@
-import { SET_PERMISSIONS } from "../../Constraints/actionTypes";
+import { SET_PERMISSIONS } from "../../Constraints/accountActionTypes";
 import PermissionLevelEnum from '../../Common/Enums/Permissions/PermissionLevelEnum';
+import ActionTypes from "../ActionTypes/accountActionTypes";
 
 const setPermissions = {
-    type: SET_PERMISSIONS
+    type: ActionTypes.SetPermissions
 }
 
 export interface setPermissionsAction {
@@ -10,5 +11,5 @@ export interface setPermissionsAction {
 }
 
 export default (dispatch: any, action: setPermissionsAction) => {
-    dispatch({ ...setPermissions, ...action })
+    dispatch({ ...setPermissions, payload: { ...action } })
 };
