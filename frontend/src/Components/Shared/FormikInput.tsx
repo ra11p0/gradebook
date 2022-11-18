@@ -10,6 +10,7 @@ type Props = {
     errors: any;
     touched: any;
   };
+  onChange?: (evt: React.ChangeEvent<HTMLInputElement>) => void
 };
 
 function FormikInput(props: Props) {
@@ -21,7 +22,10 @@ function FormikInput(props: Props) {
         id={props.name}
         name={props.name}
         type={props.type ?? "text"}
-        onChange={props.formik.handleChange}
+        onChange={(evt) => {
+          props.formik.handleChange(evt)
+          if (props.onChange) props.onChange(evt);
+        }}
         value={props.formik.values[props.name]}
       />
       {props.formik.errors[props.name] && props.formik.touched[props.name] ? (
