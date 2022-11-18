@@ -3,7 +3,7 @@ import React from "react";
 import { Button, Stack } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { connect } from "react-redux";
-import getIsLoggedInReduxProxy from "../../Redux/ReduxQueries/getIsLoggedInRedux";
+import getIsLoggedInReduxProxy from "../../Redux/ReduxQueries/account/getIsLoggedInRedux";
 import CalendarCollapsible from "../Shared/CalendarCollapsible/CalendarCollapsible";
 
 const mapStateToProps = (state: any) => ({});

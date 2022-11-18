@@ -1,6 +1,5 @@
-import { LOG_OUT } from "../../Constraints/accountActionTypes";
-import { store } from "../../store";
-import ActionTypes from "../ActionTypes/accountActionTypes";
+import { store } from "../../../store";
+import ActionTypes from "../../ActionTypes/accountActionTypes";
 const isTestEnvironment = process.env.ENVIRONMENT === 'TEST';
 
 export default (dispatch: any = store.dispatch) => {

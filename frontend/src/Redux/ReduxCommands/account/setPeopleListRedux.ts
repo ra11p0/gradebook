@@ -1,5 +1,5 @@
-import GetAccessiblePeopleResponse from "../../ApiClient/Accounts/Definitions/Responses/GetAccessiblePeopleResponse";
-import ActionTypes from "../ActionTypes/accountActionTypes";
+import GetAccessiblePeopleResponse from "../../../ApiClient/Accounts/Definitions/Responses/GetAccessiblePeopleResponse";
+import ActionTypes from "../../ActionTypes/accountActionTypes";
 
 const setPeopleList = {
     type: ActionTypes.SetPeopleList

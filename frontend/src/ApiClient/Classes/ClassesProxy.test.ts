@@ -6,7 +6,7 @@ import AccountsProxy from "../Accounts/AccountsProxy";
 import ClassesProxy from "./ClassesProxy";
 import SchoolsProxy from "../Schools/SchoolsProxy";
 import PeopleProxy from "../People/PeopleProxy";
-import getCurrentPersonReduxProxy from "../../Redux/ReduxQueries/getCurrentPersonRedux";
+import getCurrentPersonReduxProxy from "../../Redux/ReduxQueries/account/getCurrentPersonRedux";
 import PermissionLevelEnum from "../../Common/Enums/Permissions/PermissionLevelEnum";
 require('dotenv').config();
 

@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import NewTeacherRequest from "../../../../ApiClient/Schools/Definitions/Requests/NewTeacherRequest";
 import ReactDatePicker from "react-datepicker";
 import moment from "moment";
-import getApplicationLanguageReduxProxy from "../../../../Redux/ReduxQueries/getApplicationLanguageRedux";
+import getApplicationLanguageReduxProxy from "../../../../Redux/ReduxQueries/account/getApplicationLanguageRedux";
 
 type Props = {
   show: boolean;

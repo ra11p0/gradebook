@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import AccountProxy from "../../../../../ApiClient/Accounts/AccountsProxy";
 import DefaultPersonSettingElement from "./SettingsElements/DefaultPersonSettingElement";
 import { connect } from "react-redux";
-import getCurrentUserIdReduxProxy from "../../../../../Redux/ReduxQueries/getCurrentUserIdRedux";
+import getCurrentUserIdReduxProxy from "../../../../../Redux/ReduxQueries/account/getCurrentUserIdRedux";
 
 const mapStateToProps = (state: any) => ({
   currentUserGuid: getCurrentUserIdReduxProxy(state),

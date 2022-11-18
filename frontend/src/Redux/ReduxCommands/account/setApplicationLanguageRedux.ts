@@ -2,8 +2,7 @@ import pl from "date-fns/locale/pl";
 import enUS from "date-fns/locale/en-US";
 import moment from "moment";
 import { registerLocale } from "react-datepicker";
-import { SET_LANGUAGE } from "../../Constraints/accountActionTypes";
-import ActionTypes from "../ActionTypes/accountActionTypes";
+import ActionTypes from "../../ActionTypes/accountActionTypes";
 
 const setLanguage = {
     type: ActionTypes.SetLanguage,

@@ -1,4 +1,4 @@
-import GetSchoolResponse from "../../ApiClient/Schools/Definitions/Responses/GetSchoolResponse"
+import GetSchoolResponse from "../../../ApiClient/Schools/Definitions/Responses/GetSchoolResponse"
 
 interface GetPeopleResponse {
     guid: string;

@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import Notifications from "../../../../Notifications/Notifications";
 import PeopleProxy from "../../../../ApiClient/People/PeopleProxy";
-import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxQueries/getCurrentSchoolRedux";
+import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxQueries/account/getCurrentSchoolRedux";
 import AddNewStudentModalWithButton from "./AddNewStudentModalWithButton";
 import PermissionsBlocker from "../../../Shared/PermissionsBlocker";
 import PermissionLevelEnum from "../../../../Common/Enums/Permissions/PermissionLevelEnum";

@@ -1,5 +1,5 @@
 import PermissionLevelEnum from "../../Common/Enums/Permissions/PermissionLevelEnum";
-import getPermissionsReduxProxy from "../../Redux/ReduxQueries/getPermissionsRedux";
+import getPermissionsReduxProxy from "../../Redux/ReduxQueries/account/getPermissionsRedux";
 import { connect } from "react-redux";
 
 import React, { useEffect, useState } from "react";

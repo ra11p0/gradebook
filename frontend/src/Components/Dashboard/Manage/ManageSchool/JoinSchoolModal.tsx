@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import { CurrentPersonProxyResult } from "../../../../Redux/ReduxQueries/getCurrentPersonRedux";
+import { CurrentPersonProxyResult } from "../../../../Redux/ReduxQueries/account/getCurrentPersonRedux";
 import ActivateAccount from "../../../Account/Activation/ActivateAccount";
 
 interface JoinSchoolModalProps {

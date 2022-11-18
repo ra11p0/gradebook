@@ -13,7 +13,7 @@ import StudentInSchoolResponse from "./Definitions/Responses/StudentInSchoolResp
 import TeacherInSchoolResponse from "./Definitions/Responses/TeacherInSchoolResponse";
 import SubjectResponse from "./Definitions/Responses/SubjectResponse";
 import NewSubjectRequest from "./Definitions/Requests/NewSubjectRequest";
-import getCurrentSchoolReduxProxy from "../../Redux/ReduxQueries/getCurrentSchoolRedux";
+import getCurrentSchoolReduxProxy from "../../Redux/ReduxQueries/account/getCurrentSchoolRedux";
 
 const API_URL = process.env.REACT_APP_API_URL;
 

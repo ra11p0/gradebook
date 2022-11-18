@@ -1,4 +1,4 @@
-import { store, GlobalState } from '../../store'
+import { store, GlobalState } from '../../../store'
 
 type Session = {
     accessToken: string;

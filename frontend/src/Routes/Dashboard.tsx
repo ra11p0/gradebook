@@ -13,7 +13,7 @@ import StudentsList from "../Components/Dashboard/Manage/ManageStudents/Students
 import SchoolsList from "../Components/Dashboard/Manage/ManageSchool/SchoolsList";
 import SchoolSelectedOnly from "../Components/Shared/SchoolSelectedOnly";
 import ManageClasses from "../Components/Dashboard/Manage/ManageClasses/ManageClasses";
-import getIsLoggedInReduxProxy from "../Redux/ReduxQueries/getIsLoggedInRedux";
+import getIsLoggedInReduxProxy from "../Redux/ReduxQueries/account/getIsLoggedInRedux";
 import SettingsIndex from "../Components/Dashboard/Manage/Settings/SettingsIndex";
 import EducationCycle from "../Components/Dashboard/Manage/EducationCycle/EducationCycle";
 

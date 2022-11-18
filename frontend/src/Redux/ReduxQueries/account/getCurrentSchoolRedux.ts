@@ -1,4 +1,4 @@
-import { store } from "../../store";
+import { store } from "../../../store";
 
 export default (state: any = store.getState()): getCurrentSchoolReduxProxyResult | null => {
     if (state.common?.school == null) {

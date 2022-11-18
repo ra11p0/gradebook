@@ -1,6 +1,6 @@
-import { store } from "../../store";
-import ActionTypes from "../ActionTypes/accountActionTypes";
-import getPeopleReduxProxy from "../ReduxQueries/getPeopleRedux";
+import { store } from "../../../store";
+import ActionTypes from "../../ActionTypes/accountActionTypes";
+import getPeopleReduxProxy from '../../ReduxQueries/account/getPeopleRedux';
 import setPersonReduxWrapper from "./setPersonRedux";
 
 export const setSchool = {

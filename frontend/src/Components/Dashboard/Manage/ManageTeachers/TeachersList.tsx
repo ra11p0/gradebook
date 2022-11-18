@@ -14,7 +14,7 @@ import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
 import TeacherInSchoolResponse from "../../../../ApiClient/Schools/Definitions/Responses/TeacherInSchoolResponse";
 import moment from "moment";
 import { Link } from "react-router-dom";
-import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxQueries/getCurrentSchoolRedux";
+import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxQueries/account/getCurrentSchoolRedux";
 const mapStateToProps = (state: any) => ({
   currentSchool: getCurrentSchoolReduxProxy(state),
 });

@@ -1,6 +1,5 @@
-import { SET_PERMISSIONS } from "../../Constraints/accountActionTypes";
-import PermissionLevelEnum from '../../Common/Enums/Permissions/PermissionLevelEnum';
-import ActionTypes from "../ActionTypes/accountActionTypes";
+import PermissionLevelEnum from '../../../Common/Enums/Permissions/PermissionLevelEnum';
+import ActionTypes from "../../ActionTypes/accountActionTypes";
 
 const setPermissions = {
     type: ActionTypes.SetPermissions

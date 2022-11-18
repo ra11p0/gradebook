@@ -5,8 +5,8 @@ import { Button, Card, Col, Row } from "react-bootstrap";
 import ActivateStudent from "./ActivateStudent";
 import ActivateTeacher from "./ActivateTeacher";
 import ActivateAdministrator from "./ActivateAdministrator";
-import getIsUserActivatedReduxProxy from "../../../Redux/ReduxQueries/getIsUserActivatedRedux";
-import getIsLoggedInReduxProxy from "../../../Redux/ReduxQueries/getIsLoggedInRedux";
+import getIsUserActivatedReduxProxy from "../../../Redux/ReduxQueries/account/getIsUserActivatedRedux";
+import getIsLoggedInReduxProxy from "../../../Redux/ReduxQueries/account/getIsLoggedInRedux";
 import { ActivateAdministratorPersonValues } from "./ActivateAdministratorPerson";
 
 interface ActivateAccountProps {

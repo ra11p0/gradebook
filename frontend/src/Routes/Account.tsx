@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import PersonIndex from "../Components/Person/PersonIndex";
-import getCurrentPersonReduxProxy from "../Redux/ReduxQueries/getCurrentPersonRedux";
+import getCurrentPersonReduxProxy from "../Redux/ReduxQueries/account/getCurrentPersonRedux";
 
 interface AccountProps {
   currentPersonGuid?: string;

@@ -1,9 +1,9 @@
-import { store } from "../../store";
-import getCurrentSchoolReduxProxy from "./getCurrentSchoolRedux"
+import { store } from "../../../store";
+import getCurrentSchoolRedux from "./getCurrentSchoolRedux"
 
 export default (state: any = store.getState()): CurrentPersonProxyResult | null => {
 
-    let currentSchool = getCurrentSchoolReduxProxy(state);
+    let currentSchool = getCurrentSchoolRedux(state);
     if (!currentSchool) return null;
     let peopleArr = state.common.schoolsList.filter((schoolPerson: any) => schoolPerson.school.guid == currentSchool?.schoolGuid);
     if (peopleArr.length == 0) return null

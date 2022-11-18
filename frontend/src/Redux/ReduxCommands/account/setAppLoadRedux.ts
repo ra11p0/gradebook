@@ -1,4 +1,4 @@
-import ActionTypes from "../ActionTypes/accountActionTypes";
+import ActionTypes from "../../ActionTypes/accountActionTypes";
 
 const appLoad = {
     type: ActionTypes.AppLoad,

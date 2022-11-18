@@ -1,5 +1,5 @@
 import i18n from 'i18next';
-import setApplicationLanguageReduxWrapper from '../Redux/ReduxCommands/setApplicationLanguageRedux';
+import setApplicationLanguageReduxWrapper from '../Redux/ReduxCommands/account/setApplicationLanguageRedux';
 import { store } from '../store';
 
 i18n.init({
