@@ -11,7 +11,7 @@ import FormFilledResult from "@ra11p0/forms-app/dist/Interfaces/Common/FormFille
 import Forms from "@ra11p0/forms-app/dist/Components/Forms";
 import TeachersInClassResponse from "../../ApiClient/Classes/Definitions/Responses/TeachersInClassResponse";
 import { connect } from "react-redux";
-import getApplicationLanguageReduxProxy from "../../Redux/ReduxProxy/getApplicationLanguageReduxProxy";
+import getApplicationLanguageReduxProxy from "../../Redux/ReduxQueries/getApplicationLanguageRedux";
 import StudentInClassResponse from "../../ApiClient/Classes/Definitions/Responses/StudentInClassResponse";
 import StudentsInClass from "./StudentsInClass";
 import ClassHeader from "./ClassHeader";
@@ -62,8 +62,8 @@ function ClassIndex(props: Props) {
           <Forms
             localization={props.localization}
             mode={ApplicationModes.Edit}
-            onSubmit={(result: Field[] | FormFilledResult): void => {}}
-            onDiscard={() => {}}
+            onSubmit={(result: Field[] | FormFilledResult): void => { }}
+            onDiscard={() => { }}
           />
         </div>
       </>

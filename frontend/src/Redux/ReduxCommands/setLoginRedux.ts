@@ -2,9 +2,9 @@ import AccountsProxy from "../../ApiClient/Accounts/AccountsProxy";
 import { connectAllHubs } from "../../ApiClient/SignalR/HubsResolver";
 import { LOG_IN } from "../../Constraints/accountActionTypes";
 import ActionTypes from "../ActionTypes/accountActionTypes";
-import setSchoolReduxWrapper from "./setSchoolReduxWrapper";
-import setSchoolsListReduxWrapper from "./setSchoolsListReduxWrapper";
-import setUserReduxWrapper from "./setUserReduxWrapper";
+import setSchoolReduxWrapper from "./setSchoolRedux";
+import setSchoolsListReduxWrapper from "./setSchoolsListRedux";
+import setUserReduxWrapper from "./setUserRedux";
 const isTestEnvironment = process.env.ENVIRONMENT === 'TEST';
 
 const logIn = {

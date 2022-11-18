@@ -1,7 +1,7 @@
 import { store } from "../../store";
 import ActionTypes from "../ActionTypes/accountActionTypes";
-import getPeopleReduxProxy from "../ReduxProxy/getPeopleReduxProxy";
-import setPersonReduxWrapper from "./setPersonReduxWrapper";
+import getPeopleReduxProxy from "../ReduxQueries/getPeopleRedux";
+import setPersonReduxWrapper from "./setPersonRedux";
 
 export const setSchool = {
     type: ActionTypes.SetSchool

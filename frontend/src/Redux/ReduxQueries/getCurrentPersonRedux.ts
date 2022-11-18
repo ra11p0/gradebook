@@ -1,5 +1,5 @@
 import { store } from "../../store";
-import getCurrentSchoolReduxProxy from "./getCurrentSchoolReduxProxy"
+import getCurrentSchoolReduxProxy from "./getCurrentSchoolRedux"
 
 export default (state: any = store.getState()): CurrentPersonProxyResult | null => {
 

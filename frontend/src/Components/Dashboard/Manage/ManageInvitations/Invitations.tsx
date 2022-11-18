@@ -11,7 +11,7 @@ import moment from "moment";
 import Person from "../../../Shared/Person";
 import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
-import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
+import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxQueries/getCurrentSchoolRedux";
 import PermissionsBlocker from "../../../Shared/PermissionsBlocker";
 import PermissionLevelEnum from "../../../../Common/Enums/Permissions/PermissionLevelEnum";
 const mapStateToProps = (state: any) => ({

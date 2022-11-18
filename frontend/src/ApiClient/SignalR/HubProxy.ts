@@ -1,5 +1,5 @@
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
-import getSessionRedux from "../../Redux/ReduxProxy/getSessionRedux";
+import getSessionRedux from "../../Redux/ReduxQueries/getSessionRedux";
 
 export default class HubProxy {
     private subscribers: Subscriber[] = [];

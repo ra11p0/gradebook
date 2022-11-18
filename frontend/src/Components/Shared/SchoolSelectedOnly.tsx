@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { t } from "i18next";
-import getIsLoggedInReduxProxy from "../../Redux/ReduxProxy/getIsSchoolSelectedReduxProxy";
+import getIsLoggedInReduxProxy from "../../Redux/ReduxQueries/getIsSchoolSelectedRedux";
 
 const mapStateToProps = (state: any) => ({
   isSchoolSelected: getIsLoggedInReduxProxy(state),

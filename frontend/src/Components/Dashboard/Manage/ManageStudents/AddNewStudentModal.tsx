@@ -5,10 +5,10 @@ import { Button, Modal } from "react-bootstrap";
 import { useFormik } from "formik";
 import NewStudentRequest from "../../../../ApiClient/Schools/Definitions/Requests/NewStudentRequest";
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
-import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
+import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxQueries/getCurrentSchoolRedux";
 import Notifications from "../../../../Notifications/Notifications";
 import ReactDatePicker from "react-datepicker";
-import getApplicationLanguageReduxProxy from "../../../../Redux/ReduxProxy/getApplicationLanguageReduxProxy";
+import getApplicationLanguageReduxProxy from "../../../../Redux/ReduxQueries/getApplicationLanguageRedux";
 import moment from "moment";
 
 const mapStateToProps = (state: any) => ({

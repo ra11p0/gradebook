@@ -15,7 +15,7 @@ import { faTrash, faWindowMaximize } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import Notifications from "../../../../Notifications/Notifications";
 import ClassesProxy from "../../../../ApiClient/Classes/ClassesProxy";
-import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
+import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxQueries/getCurrentSchoolRedux";
 import PermissionsBlocker from "../../../Shared/PermissionsBlocker";
 import PermissionLevelEnum from "../../../../Common/Enums/Permissions/PermissionLevelEnum";
 

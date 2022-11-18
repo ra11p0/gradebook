@@ -1,7 +1,7 @@
 import { store } from '../../store';
-import setLogInReduxWrapper from '../../Redux/ReduxWrappers/setLoginReduxWrapper'
+import setLogInReduxWrapper from '../../Redux/ReduxCommands/setLoginRedux'
 import AccountsProxy from '../../ApiClient/Accounts/AccountsProxy'
-import setLogOutReduxWrapper from '../../Redux/ReduxWrappers/setLogOutReduxWrapper';
+import setLogOutReduxWrapper from '../../Redux/ReduxCommands/setLogOutRedux';
 
 const logIn = (email: string, password: string) => {
     return AccountsProxy.logIn({ email, password }).then(response => {

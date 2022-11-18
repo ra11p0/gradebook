@@ -4,12 +4,12 @@ import { connect } from "react-redux";
 import AccountProxy from "../../../ApiClient/Accounts/AccountsProxy";
 import { withTranslation } from "react-i18next";
 import { Button } from "react-bootstrap";
-import getIsLoggedInReduxProxy from "../../../Redux/ReduxProxy/getIsLoggedInReduxProxy";
-import getCurrentSchoolReduxProxy from "../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
-import setLoginReduxWrapper, { logInAction } from "../../../Redux/ReduxWrappers/setLoginReduxWrapper";
-import setSchoolsListReduxWrapper, { setSchoolsListAction } from "../../../Redux/ReduxWrappers/setSchoolsListReduxWrapper";
-import setUserReduxWrapper, { setUserAction } from "../../../Redux/ReduxWrappers/setUserReduxWrapper";
-import setAppLoadReduxWrapper from "../../../Redux/ReduxWrappers/setAppLoadReduxWrapper";
+import getIsLoggedInReduxProxy from "../../../Redux/ReduxQueries/getIsLoggedInRedux";
+import getCurrentSchoolReduxProxy from "../../../Redux/ReduxQueries/getCurrentSchoolRedux";
+import setLoginReduxWrapper, { logInAction } from "../../../Redux/ReduxCommands/setLoginRedux";
+import setSchoolsListReduxWrapper, { setSchoolsListAction } from "../../../Redux/ReduxCommands/setSchoolsListRedux";
+import setUserReduxWrapper, { setUserAction } from "../../../Redux/ReduxCommands/setUserRedux";
+import setAppLoadReduxWrapper from "../../../Redux/ReduxCommands/setAppLoadRedux";
 import { store } from "../../../store";
 
 const mapStateToProps = (state: any) => ({

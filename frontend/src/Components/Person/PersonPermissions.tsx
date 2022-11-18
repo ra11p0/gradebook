@@ -6,7 +6,7 @@ import PeopleProxy from "../../ApiClient/People/PeopleProxy";
 import PermissionEnum from "../../Common/Enums/Permissions/PermissionEnum";
 import PermissionLevelEnum from "../../Common/Enums/Permissions/PermissionLevelEnum";
 import Notifications from "../../Notifications/Notifications";
-import setPermissionsReduxWrapper from "../../Redux/ReduxWrappers/setPermissionsReduxWrapper";
+import setPermissionsReduxWrapper from "../../Redux/ReduxCommands/setPermissionsRedux";
 import { store } from "../../store";
 import LoadingScreen from "../Shared/LoadingScreen";
 import TabPanel, { a11yProps } from "../Shared/TabPanel";

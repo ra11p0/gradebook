@@ -11,14 +11,14 @@ import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
 import Notifications from "../../../../Notifications/Notifications";
 import { Row } from "react-bootstrap";
 import AccountProxy from "../../../../ApiClient/Accounts/AccountsProxy";
-import getCurrentUserIdReduxProxy from "../../../../Redux/ReduxProxy/getCurrentUserIdReduxProxy";
-import getSchoolsListReduxProxy from "../../../../Redux/ReduxProxy/getSchoolsListReduxProxy";
+import getCurrentUserIdReduxProxy from "../../../../Redux/ReduxQueries/getCurrentUserIdRedux";
+import getSchoolsListReduxProxy from "../../../../Redux/ReduxQueries/getSchoolsListRedux";
 import GetSchoolResponse from "../../../../ApiClient/Schools/Definitions/Responses/GetSchoolResponse";
-import setSchoolsListReduxWrapper, { setSchoolsListAction } from "../../../../Redux/ReduxWrappers/setSchoolsListReduxWrapper";
-import setSchoolReduxWrapper, { setSchoolAction } from "../../../../Redux/ReduxWrappers/setSchoolReduxWrapper";
+import setSchoolsListReduxWrapper, { setSchoolsListAction } from "../../../../Redux/ReduxCommands/setSchoolsListRedux";
+import setSchoolReduxWrapper, { setSchoolAction } from "../../../../Redux/ReduxCommands/setSchoolRedux";
 import JoinSchoolModal from "./JoinSchoolModal";
-import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
-import getCurrentPersonReduxProxy, { CurrentPersonProxyResult } from "../../../../Redux/ReduxProxy/getCurrentPersonReduxProxy";
+import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxQueries/getCurrentSchoolRedux";
+import getCurrentPersonReduxProxy, { CurrentPersonProxyResult } from "../../../../Redux/ReduxQueries/getCurrentPersonRedux";
 
 interface SchoolsListProps {
   userId?: string;

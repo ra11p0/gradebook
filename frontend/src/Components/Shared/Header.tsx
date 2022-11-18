@@ -5,11 +5,11 @@ import { Dropdown } from "react-bootstrap";
 import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import getApplicationLanguageReduxProxy from "../../Redux/ReduxProxy/getApplicationLanguageReduxProxy";
-import getCurrentPersonReduxProxy from "../../Redux/ReduxProxy/getCurrentPersonReduxProxy";
-import getIsLoggedInReduxProxy from "../../Redux/ReduxProxy/getIsLoggedInReduxProxy";
-import getIsUserActivatedReduxProxy from "../../Redux/ReduxProxy/getIsUserActivatedReduxProxy";
-import setLogOutReduxWrapper from "../../Redux/ReduxWrappers/setLogOutReduxWrapper";
+import getApplicationLanguageReduxProxy from "../../Redux/ReduxQueries/getApplicationLanguageRedux";
+import getCurrentPersonReduxProxy from "../../Redux/ReduxQueries/getCurrentPersonRedux";
+import getIsLoggedInReduxProxy from "../../Redux/ReduxQueries/getIsLoggedInRedux";
+import getIsUserActivatedReduxProxy from "../../Redux/ReduxQueries/getIsUserActivatedRedux";
+import setLogOutReduxWrapper from "../../Redux/ReduxCommands/setLogOutRedux";
 import LoadingScreen from "./LoadingScreen";
 import SchoolSelect from "./SchoolSelect";
 

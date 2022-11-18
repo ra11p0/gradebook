@@ -1,7 +1,7 @@
 import PeopleProxy from "../../ApiClient/People/PeopleProxy";
 import { SET_PERSON } from "../../Constraints/accountActionTypes";
 import ActionTypes from "../ActionTypes/accountActionTypes";
-import setPermissionsReduxWrapper from "./setPermissionsReduxWrapper";
+import setPermissionsReduxWrapper from "./setPermissionsRedux";
 
 export const setPerson = {
     type: ActionTypes.SetPerson

@@ -5,14 +5,14 @@ import { Button, Row } from "react-bootstrap";
 import AdministratorsProxy from "../../../ApiClient/Administrators/AdministratorsProxy";
 import Notifications from "../../../Notifications/Notifications";
 import AccountProxy from "../../../ApiClient/Accounts/AccountsProxy";
-import getCurrentUserIdReduxProxy from "../../../Redux/ReduxProxy/getCurrentUserIdReduxProxy";
-import setSchoolsListReduxWrapper, { setSchoolsListAction } from "../../../Redux/ReduxWrappers/setSchoolsListReduxWrapper";
+import getCurrentUserIdReduxProxy from "../../../Redux/ReduxQueries/getCurrentUserIdRedux";
+import setSchoolsListReduxWrapper, { setSchoolsListAction } from "../../../Redux/ReduxCommands/setSchoolsListRedux";
 import ActivateAdministratorPerson, { ActivateAdministratorPersonValues } from "./ActivateAdministratorPerson";
 import ActivateAdministratorSchool, { ActivateAdministratorSchoolValues } from "./ActivateAdministratorSchool";
-import setLoginReduxWrapper from "../../../Redux/ReduxWrappers/setLoginReduxWrapper";
+import setLoginReduxWrapper from "../../../Redux/ReduxCommands/setLoginRedux";
 import { store } from "../../../store";
 import moment from "moment";
-import getSessionRedux from "../../../Redux/ReduxProxy/getSessionRedux";
+import getSessionRedux from "../../../Redux/ReduxQueries/getSessionRedux";
 
 const mapStateToProps = (state: any) => ({
   userId: getCurrentUserIdReduxProxy(state),

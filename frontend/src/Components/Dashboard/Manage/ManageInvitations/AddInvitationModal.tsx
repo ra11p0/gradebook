@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import SchoolRolesEnum from "../../../../Common/Enums/SchoolRolesEnum";
 import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
-import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
+import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxQueries/getCurrentSchoolRedux";
 const mapStateToProps = (state: any) => ({
   currentSchool: getCurrentSchoolReduxProxy(state),
 });

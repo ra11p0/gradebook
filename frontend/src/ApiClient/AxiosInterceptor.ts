@@ -1,6 +1,6 @@
 import axios from 'axios';
-import getSessionRedux from '../Redux/ReduxProxy/getSessionRedux';
-import setLoginReduxWrapper from '../Redux/ReduxWrappers/setLoginReduxWrapper';
+import getSessionRedux from '../Redux/ReduxQueries/getSessionRedux';
+import setLoginReduxWrapper from '../Redux/ReduxCommands/setLoginRedux';
 import { store } from '../store'
 import AccountProxy from './Accounts/AccountsProxy';
 

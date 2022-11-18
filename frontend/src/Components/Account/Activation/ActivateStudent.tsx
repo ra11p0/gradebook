@@ -9,11 +9,11 @@ import PeopleProxy from "../../../ApiClient/People/PeopleProxy";
 import Notifications from "../../../Notifications/Notifications";
 import AccountProxy from "../../../ApiClient/Accounts/AccountsProxy";
 import GetAccessibleSchoolsResponse from "../../../ApiClient/Accounts/Definitions/Responses/GetAccessibleSchoolsResponse";
-import getCurrentUserIdReduxProxy from "../../../Redux/ReduxProxy/getCurrentUserIdReduxProxy";
-import setSchoolsListReduxWrapper from "../../../Redux/ReduxWrappers/setSchoolsListReduxWrapper";
-import setLoginReduxWrapper from "../../../Redux/ReduxWrappers/setLoginReduxWrapper";
+import getCurrentUserIdReduxProxy from "../../../Redux/ReduxQueries/getCurrentUserIdRedux";
+import setSchoolsListReduxWrapper from "../../../Redux/ReduxCommands/setSchoolsListRedux";
+import setLoginReduxWrapper from "../../../Redux/ReduxCommands/setLoginRedux";
 import { store } from "../../../store";
-import getSessionRedux from '../../../Redux/ReduxProxy/getSessionRedux'
+import getSessionRedux from '../../../Redux/ReduxQueries/getSessionRedux'
 
 const mapStateToProps = (state: any) => ({
   userId: getCurrentUserIdReduxProxy(state),
