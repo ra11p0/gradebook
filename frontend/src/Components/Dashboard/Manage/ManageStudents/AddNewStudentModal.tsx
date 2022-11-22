@@ -10,6 +10,7 @@ import Notifications from "../../../../Notifications/Notifications";
 import ReactDatePicker from "react-datepicker";
 import getApplicationLanguageReduxProxy from "../../../../Redux/ReduxQueries/account/getApplicationLanguageRedux";
 import moment from "moment";
+import FormikInput from "../../../Shared/FormikInput";
 
 const mapStateToProps = (state: any) => ({
   currentSchool: getCurrentSchoolReduxProxy(state),
@@ -64,23 +65,18 @@ const AddNewStudentModal = (props: AddNewStudentModalProps): ReactElement => {
       <form onSubmit={formik.handleSubmit}>
         <Modal.Body>
           <div className="m-1 p-1">
-            <label htmlFor="name">{t("name")}</label>
-            <input className="form-control" id="name" name="name" type="text" onChange={formik.handleChange} value={formik.values.name} />
-            {formik.errors.name && formik.touched.name ? <div className="invalid-feedback d-block">{formik.errors.name}</div> : null}
+            <FormikInput
+              name="name"
+              label={t('name')}
+              formik={formik}
+            />
           </div>
           <div className="m-1 p-1">
-            <label htmlFor="surname">{t("surname")}</label>
-            <input
-              className="form-control"
-              id="surname"
+            <FormikInput
               name="surname"
-              type="text"
-              onChange={formik.handleChange}
-              value={formik.values.surname}
+              label={t('surname')}
+              formik={formik}
             />
-            {formik.errors.surname && formik.touched.surname ? (
-              <div className="invalid-feedback d-block">{formik.errors.surname}</div>
-            ) : null}
           </div>
           <div className="m-1 p-1">
             <label htmlFor="birthday">{t("birthday")}</label>

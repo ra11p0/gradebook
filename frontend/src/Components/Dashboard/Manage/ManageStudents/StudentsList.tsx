@@ -54,7 +54,7 @@ function StudentsList(props: StudentsListProps) {
     <div>
       <Stack>
         <div className="d-flex justify-content-between">
-          <div className="my-auto">{t("studentsList")}</div>
+          <h5 className="my-auto">{t("studentsList")}</h5>
           <div>
             <PermissionsBlocker allowingPermissions={[PermissionLevelEnum.Students_CanCreateAndDelete]}>
               <AddNewStudentModalWithButton setShowAddStudentModal={setShowAddStudentModal} showAddStudentModal={showAddStudentModal} />

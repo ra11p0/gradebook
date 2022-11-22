@@ -74,7 +74,7 @@ function SchoolsList(props: SchoolsListProps) {
     <div>
       <Stack>
         <div className="d-flex justify-content-between">
-          <div className="my-auto">{t("managedSchools")}</div>
+          <h5 className="my-auto">{t("managedSchools")}</h5>
           <div className="d-flex gap-2">
             <JoinSchoolModal
               show={showJoinSchoolModal}

@@ -1,4 +1,3 @@
-import { SET_USER } from "../../../Constraints/accountActionTypes";
 import ActionTypes from "../../ActionTypes/accountActionTypes";
 
 

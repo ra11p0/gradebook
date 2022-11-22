@@ -4,32 +4,36 @@ import { uniqueId } from "lodash";
 import React, { ReactElement, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 
-type Props = {
-  item: (uuid: string) => ReactElement;
+interface Props {
+  map: (uuid: string) => ReactElement;
+  list?: string[];
   onAdded?: (uuid: string) => void;
   onRemoved?: (uuid: string) => void;
 };
 
 function DynamicList(props: Props) {
-  const [list, setList] = useState<{ el: ReactElement; uuid: string }[]>([]);
+  const [list, setList] = useState<string[]>([]);
   const remove = (uuid: string) => {
-    setList(list.filter((el) => el.uuid != uuid));
+    if (!props.list) setList(list.filter((el) => el != uuid));
     if (props.onRemoved) props.onRemoved(uuid);
   };
   const add = () => {
     const newElUuid = uniqueId();
-    const newEl = { el: props.item(newElUuid), uuid: newElUuid };
-    setList([...list, newEl]);
-    if (props.onAdded) props.onAdded(newEl.uuid);
+    if (!props.list) setList([...list, newElUuid]);
+    if (props.onAdded) props.onAdded(newElUuid);
   };
   return (
     <div>
-      {list.map((e) => (
-        <Row key={e.uuid} className="my-1 py-1 border-bottom">
+      {(props.list ?? list).map((e) => (
+        <Row key={e} className="my-1 py-1 border-bottom">
           <Col className="d-flex justify-content-between">
-            <div className="w-100">{e.el}</div>
+            <div className="w-100">
+              {
+                props.map(e)
+              }
+            </div>
             <div>
-              <Button variant="danger" onClick={() => remove(e.uuid)}>
+              <Button variant="danger" onClick={() => remove(e)}>
                 <FontAwesomeIcon icon={faTrash} />
               </Button>
             </div>

@@ -54,7 +54,7 @@ function ManageClasses(props: Props) {
     <div>
       <Stack>
         <div className="d-flex justify-content-between">
-          <div className="my-auto">{t("classes")}</div>
+          <h5 className="my-auto">{t("classes")}</h5>
           <div>
             <PermissionsBlocker allowingPermissions={[PermissionLevelEnum.Classes_CanManageOwn, PermissionLevelEnum.Classes_CanManageAll]}>
               <Button onClick={() => setShowAddClassModal(true)} variant="outlined">

@@ -1,4 +1,3 @@
-import { APP_LOAD, LOG_IN, LOG_OUT, SET_LANGUAGE, SET_PERMISSIONS, SET_PERSON, SET_SCHOOL, SET_SCHOOLS_LIST, SET_USER } from '../../Constraints/accountActionTypes'
 import ActionType from '../ActionTypes/accountActionTypes'
 
 export type State = {

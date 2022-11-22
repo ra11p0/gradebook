@@ -52,7 +52,7 @@ const TeachersList = (props: ManageTeachersProps): ReactElement => {
     <div>
       <Stack>
         <div className="d-flex justify-content-between">
-          <div className="my-auto">{t("teachersList")}</div>
+          <h5 className="my-auto">{t("teachersList")}</h5>
           <div>
             <AddNewTeacherModal
               show={showAddTeacherModal}

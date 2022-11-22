@@ -28,7 +28,7 @@ const Invitations = (props: InvitationsProps): ReactElement => {
     <div>
       <Stack>
         <div className="d-flex justify-content-between">
-          <div className="my-auto">{t("invitations")}</div>
+          <h5 className="my-auto">{t("invitations")}</h5>
           <div>
             <PermissionsBlocker allowingPermissions={[PermissionLevelEnum.Invitations_CanInvite]}>
               <Button className="addInvitationButton" onClick={() => setShowInvitationModal(true)}>

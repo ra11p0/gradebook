@@ -8,6 +8,7 @@ interface Props<T> {
   fetch: (query: string, page: number) => Promise<T[]>;
   getOptionValue?: (option: T) => any;
   getOptionLabel?: (option: T) => string;
+  onMenuClose?: () => void
 }
 
 function SelectAsyncPaginate<T>(props: Props<T>) {
@@ -23,6 +24,7 @@ function SelectAsyncPaginate<T>(props: Props<T>) {
   };
   return (
     <AsyncPaginate
+      onMenuClose={props.onMenuClose}
       defaultOptions
       value={props.value}
       loadOptions={loadOptions}
