@@ -8,8 +8,6 @@ import NewCycleStepForm from "./NewCycleStepForm";
 import FormikValidationLabel from "../../../../Shared/FormikValidationLabel";
 import * as Yup from 'yup';
 
-
-
 export type Stage = {
   uuid: string;
   subjects: {
@@ -35,7 +33,9 @@ function NewCycleForm() {
         subjects: Yup.array().of(Yup.object().shape({
           hoursNo: Yup.number().moreThan(0, t('invalidHoursNumber')).required(),
           subjectGuid: Yup.string().required()
-        })).min(1)
+        })).min(1).test('unique', t('subjectSelectedMoreThanOnce'), e => {
+          return (new Set(e?.map(o => o.subjectGuid))).size === e?.map(o => o.subjectGuid).length;
+        })
       })).min(1)
     }),
     onSubmit: (values) => {
@@ -44,12 +44,6 @@ function NewCycleForm() {
   });
   return (
     <Stack>
-      <div>
-        {JSON.stringify(formik.errors)}
-      </div>
-      <div>
-        {JSON.stringify(formik.touched)}
-      </div>
       <div className="d-flex justify-content-between">
         <div>
           <h5>{t('addNewCycleForm')}</h5>

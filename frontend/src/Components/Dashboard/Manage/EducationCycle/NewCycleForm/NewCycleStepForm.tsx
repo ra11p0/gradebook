@@ -44,6 +44,7 @@ function NewCycleStepForm(props: Props) {
                 <FormikInput name={`stages.${props.index}.name`} label={t('stepName')} formik={props.formik} />
                 <div>
                   <small>{t('stepSubjects')}</small>
+                  <FormikValidationLabel name={`stages.${props.index}.subjects`} formik={props.formik} />
                   <DynamicList
                     map={
                       (uuid, key) => (
@@ -69,7 +70,6 @@ function NewCycleStepForm(props: Props) {
                       ]);
                     }}
                   />
-                  <FormikValidationLabel name={`stages.${props.index}.subjects`} formik={props.formik} />
                 </div>
               </Col>
             </Row>
