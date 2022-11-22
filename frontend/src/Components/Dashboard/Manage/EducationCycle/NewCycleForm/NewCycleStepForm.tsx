@@ -1,6 +1,4 @@
-import AsyncSelect from "react-select/async";
-import { useFormik } from "formik";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Accordion, Button, Col, Row, Stack } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import DynamicList from "../../../../Shared/DynamicList";
@@ -9,97 +7,69 @@ import SchoolsProxy from "../../../../../ApiClient/Schools/SchoolsProxy";
 import SelectAsyncPaginate from "../../../../Shared/SelectAsyncPaginate";
 import SubjectResponse from "../../../../../ApiClient/Schools/Definitions/Responses/SubjectResponse";
 import { SingleValue } from "react-select";
-import { v4 } from "uuid";
-import { string } from "yup";
-import addSubjectToStageRedux from '../../../../../Redux/ReduxCommands/newEducationCycleForm/addSubjectToStageRedux';
-import removeSubjectFromStageRedux from '../../../../../Redux/ReduxCommands/newEducationCycleForm/removeSubjectFromStageRedux';
-import setSubjectGuidForSubjectInStageRedux from '../../../../../Redux/ReduxCommands/newEducationCycleForm/setSubjectGuidForSubjectInStageRedux';
-import { connect } from "react-redux";
-import getStagesRedux from "../../../../../Redux/ReduxQueries/newEducationCycleForm/getStagesRedux";
 import FormikValidationLabel from "../../../../Shared/FormikValidationLabel";
 import _ from "lodash";
+import { Stage } from "./NewCycleForm";
+
+
+
+type Formik = {
+  setFieldValue: (fieldName: string, value: any) => void;
+  handleChange: (evt: React.ChangeEvent<any>) => void;
+  handleBlur: (evt: React.ChangeEvent<any>) => void;
+  errors: any,
+  touched: any
+  values: {
+    stages: Stage[]
+  },
+}
 
 type Props = {
-  validationKey: any,
-  onValidation: (isValid: boolean) => void,
-  stageUuid: string,
-  stages: {
-    uuid: string;
-    subjects: {
-      uuid: string;
-    }[]
-  }[]
+  stageUuid: string;
+  formik: Formik;
+  index: number;
 };
 
 function NewCycleStepForm(props: Props) {
   const { t } = useTranslation("educationCycle");
-  const [hasError, setHasError] = useState(false);
-  const formik = useFormik({
-    initialValues: { name: "" },
-    validate: (vals) => {
-      const errors: any = {};
-
-      if (vals.name.length < 3) errors.name = t('invalidName')
-      const subjectsForStage = getStagesRedux().find(e => e.uuid == props.stageUuid)?.subjects;
-      if (subjectsForStage?.length == 0) errors.subjects = t('invalidSubjectsCount')
-      return errors;
-    },
-    onSubmit: (vals) => {
-
-    }
-  });
-
-
-  useEffect(() => {
-    if (props.validationKey < 1) return;
-    (async () => {
-      setHasError(false);
-      const errors = await formik.validateForm();
-      if (!(_.isEmpty(errors))) setHasError(true);
-      formik.setFieldTouched('subjects');
-      formik.setFieldTouched('name');
-      props.onValidation(!hasError);
-    })()
-  }, [props.validationKey]);
-
 
   return (
-    <Accordion.Item eventKey={props.stageUuid} className={`${hasError ? `border border-danger ` : ``}`}>
-      <Accordion.Header >{`${t('educationCycleStep')}: ${formik.values.name}`}</Accordion.Header>
+    <Accordion.Item eventKey={props.stageUuid} className={`${(_.get(props.formik.errors.stages, props.index) && _.get(props.formik.touched.stages, props.index)) ? 'border border-danger' : ''}`} >
+      <Accordion.Header >{`${props.index + 1}. ${props.formik.values.stages[props.index]?.name ?? t('educationCycleStep')}`}</Accordion.Header>
       <Accordion.Body>
         <Row>
           <Col>
             <Row>
               <Col>
-                <FormikInput name="name" label={t('stepName')} formik={formik} />
+                <FormikInput name={`stages.${props.index}.name`} label={t('stepName')} formik={props.formik} />
                 <div>
                   <small>{t('stepSubjects')}</small>
                   <DynamicList
                     map={
-                      (uuid) => {
-                        return (
-                          <div className="m-2 p-2 shadow border rounded-3">
-                            <DynamicSubjectSelectField
-                              validationKey={props.validationKey}
-                              onValidation={(isValid) => {
-                                if (!isValid) setHasError(true);
-                                formik.setFieldTouched('subjects')
-                              }}
-                              onChange={(guid) => {
-                                setSubjectGuidForSubjectInStageRedux(guid, uuid);
-                              }} />
-                          </div>)
-                      }
+                      (uuid, key) => (
+                        <div className="m-2 p-2 shadow border rounded-3">
+                          <DynamicSubjectSelectField index={key} parentIndex={props.index} formik={props.formik} />
+                        </div>)
+
                     }
-                    list={props.stages.find(e => e.uuid == props.stageUuid)!.subjects.map(e => e.uuid)}
-                    onRemoved={(uuid) => {
-                      removeSubjectFromStageRedux(uuid)
-                    }}
+                    list={props.formik.values.stages[props.index]?.subjects?.map(e => e.uuid)}
                     onAdded={(uuid) => {
-                      addSubjectToStageRedux({ uuid }, props.stageUuid)
+                      props.formik.setFieldValue(`stages.${props.index}.subjects`, [
+                        ...props.formik.values?.stages[props.index]?.subjects,
+                        {
+                          uuid,
+                          hoursNo: '',
+                          subjectGuid: ''
+                        }
+                      ])
+                    }}
+                    onRemoved={(uuid) => {
+                      props.formik.setFieldValue(`stages.${props.index}.subjects`, [
+                        ...props.formik.values.stages[props.index].subjects.filter((e: any) => e.uuid != uuid)
+                      ]);
                     }}
                   />
-                  <FormikValidationLabel name="subjects" formik={formik} />
+                  <FormikValidationLabel name={`stages.${props.index}.subjects`} formik={props.formik} />
                 </div>
               </Col>
             </Row>
@@ -111,31 +81,15 @@ function NewCycleStepForm(props: Props) {
   );
 }
 
-function DynamicSubjectSelectField(props: { onChange: (subjectGuid: string) => void, validationKey: any, onValidation: (isValid: boolean) => void }) {
+type DynamicSubjectSelectFieldProps = {
+  index: number;
+  parentIndex: number;
+  formik: Formik
+}
+
+function DynamicSubjectSelectField(props: DynamicSubjectSelectFieldProps) {
   const [opt, setOpt] = useState<SubjectResponse | undefined>(undefined);
   const { t } = useTranslation('educationCycle');
-  const formik = useFormik({
-    initialValues: { hoursNo: '', subject: '' },
-    validate: (vals) => {
-      console.log('inValidation')
-      const errors: any = {};
-      if (!vals.hoursNo || parseInt(vals.hoursNo) <= 0) errors.hoursNo = t('invalidHoursNumber')
-      if (!opt) errors.subject = t('invalidSubject')
-      console.dir(errors)
-      return errors;
-    },
-    onSubmit: () => { }
-  })
-
-  useEffect(() => {
-    if (props.validationKey < 1) return;
-    formik.validateForm()
-      .then(errors => {
-        formik.setFieldTouched('subject');
-        formik.setFieldTouched('hoursNo');
-        props.onValidation(_.isEmpty(errors));
-      });
-  }, [props.validationKey])
 
   return (
     <Stack>
@@ -143,19 +97,16 @@ function DynamicSubjectSelectField(props: { onChange: (subjectGuid: string) => v
         value={opt}
         onChange={(nval: SingleValue<SubjectResponse>, act) => {
           setOpt(nval!);
-          props.onChange(nval!.guid);
+          props.formik.setFieldValue(`stages.${props.parentIndex}.subjects.${props.index}.subjectGuid`, nval?.guid)
         }}
-        onMenuClose={() => { formik.setFieldTouched('subject') }}
         getOptionLabel={(opt) => opt.name}
         getOptionValue={(opt) => opt.guid}
         fetch={async (query: string, page: number) => (await SchoolsProxy.subjects.getSubjectsInSchool(page, query)).data}
       />
-      <FormikValidationLabel name="subject" formik={formik} />
-      <FormikInput name="hoursNo" label={t('hoursNo')} formik={formik} />
+      <FormikValidationLabel name={`stages.${props.parentIndex}.subjects.${props.index}.subjectGuid`} formik={props.formik} />
+      <FormikInput name={`stages.${props.parentIndex}.subjects.${props.index}.hoursNo`} label={t('hoursNo')} formik={props.formik} />
     </Stack>
   );
 }
 
-export default connect((state: any) => ({
-  stages: getStagesRedux(state)
-}), () => ({}))(NewCycleStepForm);
+export default NewCycleStepForm;

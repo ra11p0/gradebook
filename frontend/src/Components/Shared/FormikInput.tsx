@@ -13,8 +13,8 @@ type Props = {
     errors: any;
     touched: any;
   };
-  onChange?: (evt: React.ChangeEvent<HTMLInputElement>) => void,
-  showErrorsDespiteTouching?: boolean
+  onChange?: (evt: React.ChangeEvent<HTMLInputElement>) => void;
+  showErrorsDespiteTouching?: boolean;
 };
 
 function FormikInput(props: Props) {

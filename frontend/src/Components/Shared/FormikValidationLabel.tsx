@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React from 'react'
 
 type Props = {
@@ -6,18 +7,20 @@ type Props = {
         errors: any,
         touched: any
     },
-    showDespiteTouching?: boolean
+    showDespiteTouching?: boolean,
 }
-
 function FormikValidationLabel(props: Props) {
     return (
-
-        <>{
-            (props.formik.errors[props.name] &&
-                (props.showDespiteTouching || props.formik.touched[props.name])) ?
-                (<div className="invalid-feedback d-block">{props.formik.errors[props.name]}</div>) :
-                ''
-        }</>
+        <>
+            {
+                ((_.get(props.formik.errors, props.name)) &&
+                    (props.showDespiteTouching || (_.get(props.formik.touched, props.name)))) ?
+                    (
+                        <div className="invalid-feedback d-block">{typeof (_.get(props.formik.errors, props.name)) == 'string' ? _.get(props.formik.errors, props.name) : <></>}</div>
+                    ) :
+                    <></>
+            }
+        </>
     )
 }
 

@@ -5,7 +5,7 @@ import React, { ReactElement, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 
 interface Props {
-  map: (uuid: string) => ReactElement;
+  map: (uuid: string, index: number) => ReactElement;
   list?: string[];
   onAdded?: (uuid: string) => void;
   onRemoved?: (uuid: string) => void;
@@ -24,22 +24,23 @@ function DynamicList(props: Props) {
   };
   return (
     <div>
-      {(props.list ?? list).map((e) => (
-        <Row key={e} className="my-1 py-1 border-bottom">
+      {(props.list ?? list).map((uuid, index) => (
+        <Row key={index} className="my-1 py-1 border-bottom">
           <Col className="d-flex justify-content-between">
             <div className="w-100">
               {
-                props.map(e)
+                props.map(uuid, index)
               }
             </div>
             <div>
-              <Button variant="danger" onClick={() => remove(e)}>
+              <Button variant="danger" onClick={() => remove(uuid)}>
                 <FontAwesomeIcon icon={faTrash} />
               </Button>
             </div>
           </Col>
         </Row>
-      ))}
+      ))
+      }
       <Row>
         <Col className="d-flex justify-content-end">
           <Button variant="success" onClick={() => add()}>
@@ -47,7 +48,7 @@ function DynamicList(props: Props) {
           </Button>
         </Col>
       </Row>
-    </div>
+    </div >
   );
 }
 
