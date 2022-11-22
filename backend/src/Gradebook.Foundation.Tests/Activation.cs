@@ -119,4 +119,12 @@ public class Activation
         var result = await foundationQueries!.GetInvitationsToSchool(Guid.NewGuid(), 1);
         Assert.That(result.Response!.Select(e => e.InvitedPerson).ToArray(), Is.EquivalentTo(fakeInvitedPeople));
     }
+    [Test]
+    public async Task ShouldReturnNotFoundActivationCode()
+    {
+        var info = await foundationQueries!.GetActivationCodeInfo("fakeCode", "student");
+        Assert.That(info.Status, Is.False);
+        Assert.That(info.StatusCode, Is.EqualTo(404));
+    }
+
 }

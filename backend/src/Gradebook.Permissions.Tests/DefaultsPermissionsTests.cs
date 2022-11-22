@@ -87,4 +87,49 @@ public class DefaultPermissionsTests
 
         Assert.That(permissions, Is.EqualTo(permissionsQueries.GetDefaultPermissionLevels(Foundation.Common.Foundation.Enums.SchoolRoleEnum.Admin)));
     }
+    [Test]
+    public async Task ShouldReturnAllAdminPermissionsHaveValue()
+    {
+        foundationQueriesRepository
+        .Setup(e => e.GetPersonByGuid(It.IsAny<Guid>()))
+        .Returns(Task.FromResult(new PersonDto() { SchoolRole = Foundation.Common.Foundation.Enums.SchoolRoleEnum.Admin }));
+
+        permissionsQueriesRepository
+        .Setup(e => e.GetPermissionsForPerson(It.IsAny<Guid>()))
+        .Returns(Task.FromResult(new Dictionary<PermissionEnum, PermissionLevelEnum>()));
+
+        var permissions = await permissionsQueries!.GetPermissionsForPerson(new Guid());
+
+        Assert.That(permissions.Any(e => e.Value == 0), Is.False);
+    }
+    [Test]
+    public async Task ShouldReturnAllStudentPermissionsHaveValue()
+    {
+        foundationQueriesRepository
+        .Setup(e => e.GetPersonByGuid(It.IsAny<Guid>()))
+        .Returns(Task.FromResult(new PersonDto() { SchoolRole = Foundation.Common.Foundation.Enums.SchoolRoleEnum.Student }));
+
+        permissionsQueriesRepository
+        .Setup(e => e.GetPermissionsForPerson(It.IsAny<Guid>()))
+        .Returns(Task.FromResult(new Dictionary<PermissionEnum, PermissionLevelEnum>()));
+
+        var permissions = await permissionsQueries!.GetPermissionsForPerson(new Guid());
+
+        Assert.That(permissions.Any(e => e.Value == 0), Is.False);
+    }
+    [Test]
+    public async Task ShouldReturnAllTeacherPermissionsHaveValue()
+    {
+        foundationQueriesRepository
+        .Setup(e => e.GetPersonByGuid(It.IsAny<Guid>()))
+        .Returns(Task.FromResult(new PersonDto() { SchoolRole = Foundation.Common.Foundation.Enums.SchoolRoleEnum.Teacher }));
+
+        permissionsQueriesRepository
+        .Setup(e => e.GetPermissionsForPerson(It.IsAny<Guid>()))
+        .Returns(Task.FromResult(new Dictionary<PermissionEnum, PermissionLevelEnum>()));
+
+        var permissions = await permissionsQueries!.GetPermissionsForPerson(new Guid());
+
+        Assert.That(permissions.Any(e => e.Value == 0), Is.False);
+    }
 }

@@ -314,6 +314,24 @@ public class Permissions
         Assert.That(result.Status, Is.False);
     }
     [Test]
+    public async Task CannotEditTeachersInClass()
+    {
+        identityLogic
+            .Setup(e => e.CurrentUserId())
+            .ReturnsAsync(new ResponseWithStatus<string, bool>(default, true));
+        foundationQueriesRepository
+            .Setup(e => e.GetPersonGuidForUser(It.IsAny<string>(), It.IsAny<Guid>()))
+            .ReturnsAsync(Guid.NewGuid());
+        foundationPermissionsLogic
+            .Setup(e => e.CanManageClass(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .ReturnsAsync(false);
+
+        var result = await foundationCommands!.AddTeachersToClass(Guid.NewGuid(), new List<Guid>() { Guid.NewGuid() });
+
+        Assert.That(result.Status, Is.False);
+        Assert.That(result.StatusCode, Is.EqualTo(403));
+    }
+    [Test]
     public async Task CanEditStudentsInClass()
     {
         identityLogic
@@ -333,6 +351,32 @@ public class Permissions
             .ReturnsAsync(true);
 
         var result = await foundationCommands!.AddStudentsToClass(Guid.NewGuid(), new List<Guid>() { Guid.NewGuid() });
+
+        Assert.That(result.Status, Is.True);
+    }
+    [Test]
+    public async Task CanEditTeachersInClass()
+    {
+        var schoolGuid = Guid.NewGuid();
+        identityLogic
+            .Setup(e => e.CurrentUserId())
+            .ReturnsAsync(new ResponseWithStatus<string, bool>("fakeUserId", true));
+        foundationQueriesRepository
+            .Setup(e => e.GetPersonByGuid(It.IsAny<Guid>()))
+            .ReturnsAsync(new PersonDto() { SchoolGuid= schoolGuid });
+        foundationQueriesRepository
+            .Setup(e => e.GetPersonGuidForUser(It.IsAny<string>(), It.IsAny<Guid>()))
+            .ReturnsAsync(Guid.NewGuid());
+        foundationQueriesRepository
+            .Setup(e => e.GetSchoolsForUser(It.IsAny<string>()))
+            .ReturnsAsync(new SchoolDto[] { new SchoolDto() { Guid=schoolGuid } });
+        foundationCommandsRepository
+            .Setup(e => e.AddTeachersToClass(It.IsAny<Guid>(), It.IsAny<IEnumerable<Guid>>()))
+            .ReturnsAsync(new StatusResponse(true));
+        foundationPermissionsLogic
+            .Setup(e => e.CanManageClass(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .ReturnsAsync(true);
+        var result = await foundationCommands!.AddTeachersToClass(Guid.NewGuid(), new List<Guid>() { Guid.NewGuid() });
 
         Assert.That(result.Status, Is.True);
     }

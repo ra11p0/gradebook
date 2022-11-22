@@ -150,7 +150,7 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
         if (!teachersGuids.Any()) return new StatusResponse(true, "No change");
         var currentPerson = await _foundationQueries.Service.RecogniseCurrentPersonByRelatedPerson(teachersGuids.First());
         if (!await _foundationPermissions.Service.CanManageClass(classGuid, currentPerson.Response))
-            return new StatusResponse("Forbidden");
+            return new StatusResponse(statusCode: 403, message: "Forbidden");
         var resp = await Repository.AddTeachersToClass(classGuid, teachersGuids);
         if (!resp.Status) return new StatusResponse(resp.Message);
         await Repository.SaveChangesAsync();
