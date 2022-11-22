@@ -7,6 +7,7 @@ using Gradebook.Foundation.Logic.Commands;
 using Gradebook.Foundation.Logic.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
+using MySqlX.XDevAPI.Common;
 
 namespace Gradebook.Foundation.Tests;
 
@@ -55,6 +56,7 @@ public class FindPersonLogic
 
         var response = await foundationQueries!.RecogniseCurrentPersonByRelatedPerson(relatedPerson.Guid);
         Assert.That(response.Response, Is.EqualTo(searchedPerson.Guid));
+        Assert.That(response.StatusCode, Is.EqualTo(200));
     }
     [Test]
     public async Task ShouldNotRecogniseRelatedPerson()
@@ -83,5 +85,6 @@ public class FindPersonLogic
 
         var response = await foundationQueries!.RecogniseCurrentPersonByRelatedPerson(relatedPerson.Guid);
         Assert.That(response.Status is false);
+        Assert.That(response.StatusCode, Is.EqualTo(404));
     }
 }

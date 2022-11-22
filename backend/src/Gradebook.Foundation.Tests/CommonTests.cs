@@ -31,7 +31,6 @@ namespace Gradebook.Foundation.Tests
         public void ShouldSetFakeTimeThenShouldSetCorrectTime()
         {
             var fakeTime = DateTime.UtcNow.AddHours(5);
-
             Time.SetFakeUtcNow(fakeTime);
             Assert.That(Time.UtcNow, Is.EqualTo(fakeTime));
             Assert.That(Time.UtcNow, Is.GreaterThan(DateTime.UtcNow));

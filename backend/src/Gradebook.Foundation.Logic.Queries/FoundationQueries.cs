@@ -58,7 +58,7 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
     public async Task<ResponseWithStatus<IEnumerable<StudentDto>, bool>> GetAllAccessibleStudents(Guid schoolGuid)
     {
         var relatedPersonGuid = await GetCurrentPersonGuid(schoolGuid);
-        if (!relatedPersonGuid.Status) return new ResponseWithStatus<IEnumerable<StudentDto>, bool>(null, false, "Cannot recognise current person");
+        if (!relatedPersonGuid.Status) return new ResponseWithStatus<IEnumerable<StudentDto>, bool>(message: "Cannot recognise current person", statusCode: 404);
         var students = await Repository.GetAllAccessibleStudents(relatedPersonGuid.Response);
         return new ResponseWithStatus<IEnumerable<StudentDto>, bool>(students, true);
     }
@@ -66,7 +66,7 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
     public async Task<ResponseWithStatus<IEnumerable<TeacherDto>, bool>> GetAllAccessibleTeachers(Guid schoolGuid)
     {
         var relatedPersonGuid = await GetCurrentPersonGuid(schoolGuid);
-        if (!relatedPersonGuid.Status) return new ResponseWithStatus<IEnumerable<TeacherDto>, bool>(null, false, "Cannot recognise current person");
+        if (!relatedPersonGuid.Status) return new ResponseWithStatus<IEnumerable<TeacherDto>, bool>(message: "Cannot recognise current person", statusCode: 404);
         var teachers = await Repository.GetAllAccessibleTeachers(relatedPersonGuid.Response);
         return new ResponseWithStatus<IEnumerable<TeacherDto>, bool>(teachers, true);
     }
@@ -146,7 +146,7 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
     public async Task<ResponseWithStatus<InvitationDto, bool>> GetInvitationByActivationCode(string activationCode)
     {
         var invitation = await Repository.GetInvitationByActivationCode(activationCode);
-        if (invitation is null) return new ResponseWithStatus<InvitationDto, bool>(statusCode:404, status:false,message: "Invitation does not exist");
+        if (invitation is null) return new ResponseWithStatus<InvitationDto, bool>(statusCode: 404, status: false, message: "Invitation does not exist");
         return new ResponseWithStatus<InvitationDto, bool>(invitation, true);
     }
 
@@ -344,7 +344,7 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         if (!requestedPerson.Status) return new ResponseWithStatus<Guid>(requestedPerson.Message);
         var schoolGuidOfRequested = requestedPerson.Response!.SchoolGuid;
         var searchedPerson = people.Response!.FirstOrDefault(e => e.SchoolGuid == schoolGuidOfRequested);
-        return searchedPerson is null ? new ResponseWithStatus<Guid>("Could not find person") : new ResponseWithStatus<Guid>(searchedPerson.Guid, true);
+        return searchedPerson is null ? new ResponseWithStatus<Guid>(statusCode: 404, message: "Could not find person") : new ResponseWithStatus<Guid>(searchedPerson.Guid, true);
     }
 
     public async Task<ResponseWithStatus<Guid>> RecogniseCurrentPersonBySchoolGuid(Guid schoolGuid)

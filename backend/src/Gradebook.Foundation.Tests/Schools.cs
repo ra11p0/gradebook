@@ -6,6 +6,7 @@ using Gradebook.Foundation.Logic.Commands;
 using Gradebook.Foundation.Logic.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
+using MySqlX.XDevAPI.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +43,7 @@ namespace Gradebook.Foundation.Tests
                 .ReturnsAsync(default(Guid));
             var resp = await foundationQueries!.GetAllAccessibleStudents(Guid.NewGuid());
             Assert.That(resp.Status, Is.False);
+            Assert.That(resp.StatusCode, Is.EqualTo(404));
         }
         [Test]
         public async Task ShouldNotShowTeachersInSchool_SchoolNotMatchedToStudent()
@@ -54,6 +56,7 @@ namespace Gradebook.Foundation.Tests
                 .ReturnsAsync(default(Guid));
             var resp = await foundationQueries!.GetAllAccessibleTeachers(Guid.NewGuid());
             Assert.That(resp.Status, Is.False);
+            Assert.That(resp.StatusCode, Is.EqualTo(404));
         }
     }
 }
