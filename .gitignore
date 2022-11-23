@@ -1,8 +1,10 @@
 .idea
 .vscode
+.vs
 bin
 obj
 **/build
 **/node_modules
 **/package-lock.json
 **/dist
+.DS_Store
