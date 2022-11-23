@@ -1,27 +1,29 @@
 import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import _ from "lodash";
 import { uniqueId } from "lodash";
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 
 interface Props {
   map: (uuid: string, index: number) => ReactElement;
   list?: string[];
   onAdded?: (uuid: string) => void;
-  onRemoved?: (uuid: string) => void;
+  onRemoved?: (uuid: string, index: number) => void;
 };
 
 function DynamicList(props: Props) {
   const [list, setList] = useState<string[]>([]);
-  const remove = (uuid: string) => {
-    if (!props.list) setList(list.filter((el) => el != uuid));
-    if (props.onRemoved) props.onRemoved(uuid);
+  const remove = (uuid: string, index: number) => {
+    if (!props.list) setList(_.remove(list, (el) => el != uuid));
+    if (props.onRemoved) props.onRemoved(uuid, index);
   };
   const add = () => {
     const newElUuid = uniqueId();
     if (!props.list) setList([...list, newElUuid]);
     if (props.onAdded) props.onAdded(newElUuid);
   };
+
   return (
     <div>
       {(props.list ?? list).map((uuid, index) => (
@@ -33,7 +35,7 @@ function DynamicList(props: Props) {
               }
             </div>
             <div>
-              <Button variant="danger" onClick={() => remove(uuid)}>
+              <Button variant="danger" onClick={() => remove(uuid, index)}>
                 <FontAwesomeIcon icon={faTrash} />
               </Button>
             </div>

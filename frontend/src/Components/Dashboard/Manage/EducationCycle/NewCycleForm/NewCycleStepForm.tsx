@@ -35,7 +35,7 @@ function NewCycleStepForm(props: Props) {
 
   return (
     <Accordion.Item eventKey={props.stageUuid} className={`${(_.get(props.formik.errors.stages, props.index) && _.get(props.formik.touched.stages, props.index)) ? 'border border-danger' : ''}`} >
-      <Accordion.Header >{`${props.index + 1}. ${props.formik.values.stages[props.index]?.name ?? t('educationCycleStep')}`}</Accordion.Header>
+      <Accordion.Header >{`${props.index + 1}. ${_.isEmpty(props.formik.values.stages[props.index]?.name) ? t('educationCycleStep') : props.formik.values.stages[props.index]?.name}`}</Accordion.Header>
       <Accordion.Body>
         <Row>
           <Col>
@@ -49,25 +49,25 @@ function NewCycleStepForm(props: Props) {
                     map={
                       (uuid, key) => (
                         <div className="m-2 p-2 shadow border rounded-3">
-                          <DynamicSubjectSelectField index={key} parentIndex={props.index} formik={props.formik} />
+                          <DynamicSubjectSelectField uuid={uuid} index={key} parentIndex={props.index} formik={props.formik} />
                         </div>)
 
                     }
                     list={props.formik.values.stages[props.index]?.subjects?.map(e => e.uuid)}
                     onAdded={(uuid) => {
                       props.formik.setFieldValue(`stages.${props.index}.subjects`, [
-                        ...props.formik.values?.stages[props.index]?.subjects,
+                        ...props.formik.values?.stages[props.index]?.subjects.concat(),
                         {
                           uuid,
                           hoursNo: '',
-                          subjectGuid: ''
+                          subjectGuid: '',
+                          isMandatory: true,
+                          canUseGroups: false
                         }
                       ])
                     }}
-                    onRemoved={(uuid) => {
-                      props.formik.setFieldValue(`stages.${props.index}.subjects`, [
-                        ...props.formik.values.stages[props.index].subjects.filter((e: any) => e.uuid != uuid)
-                      ]);
+                    onRemoved={(uuid, index) => {
+                      props.formik.setFieldValue(`stages.${props.index}.subjects`, _.remove(_.get(props.formik.values.stages, props.index).subjects, (el, ind) => ind != index));
                     }}
                   />
                 </div>
@@ -84,7 +84,8 @@ function NewCycleStepForm(props: Props) {
 type DynamicSubjectSelectFieldProps = {
   index: number;
   parentIndex: number;
-  formik: Formik
+  formik: Formik;
+  uuid: string;
 }
 
 function DynamicSubjectSelectField(props: DynamicSubjectSelectFieldProps) {
@@ -105,6 +106,8 @@ function DynamicSubjectSelectField(props: DynamicSubjectSelectFieldProps) {
       />
       <FormikValidationLabel name={`stages.${props.parentIndex}.subjects.${props.index}.subjectGuid`} formik={props.formik} />
       <FormikInput name={`stages.${props.parentIndex}.subjects.${props.index}.hoursNo`} label={t('hoursNo')} formik={props.formik} />
+      <FormikInput name={`stages.${props.parentIndex}.subjects.${props.index}.isMandatory`} label={t('isMandatory')} type='switch' formik={props.formik} />
+      <FormikInput name={`stages.${props.parentIndex}.subjects.${props.index}.canUseGroups`} label={t('canUseGroups')} type='switch' formik={props.formik} />
     </Stack>
   );
 }

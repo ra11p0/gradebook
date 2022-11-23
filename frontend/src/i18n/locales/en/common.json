@@ -11,5 +11,9 @@
   "name": "Name",
   "surname": "Surname",
   "birthday": "Birthday",
-  "isActive": "Is active"
+  "isActive": "Is active",
+  "select...": "Select...",
+  "noOptions": "No results",
+  "fieldRequired": "Field required",
+  "fieldNumberOnly": "Field must contain digits only"
 }

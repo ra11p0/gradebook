@@ -1,0 +1,21 @@
+{
+  "addNewCycleForm": "Dodaj nowy cykl nauczania",
+  "addNewCycle": "Potwierdź",
+  "educationCycleName": "Nazwa cyklu",
+  "educationCycleSteps": "Etapy",
+  "educationCycleStep": "Etap",
+  "stepName": "Nazwa etapu",
+  "stepSubjects": "Przedmioty realizowane w trakcie etapu",
+  "hoursNo": "Liczba godzin w trakcie etapu",
+  "educationCycleNameStepTooShort": "Nazwa etapu zbyt krótka",
+  "educationCycleStepNameIsRequired": "Nazwa etapu wymagana",
+  "atLeastOneSubject": "Przynajmniej jeden przedmiot wymagany",
+  "atLeastOneStep": "Przynajmniej jeden etap wymagany",
+  "educationCycleNameIsRequired": "Nazwa cyklu nauczania jest wymagana",
+  "educationCycleNameTooShort": "Nazwa cyklu nauczania zbyt krótka",
+  "educationCycleNameTooLong": "Nazwa cyklu nauczania zbyt długa",
+  "educationCycleStepNameTooLong": "Nazwa etapu zbyt długa",
+  "subjectSelectedMoreThanOnce": "Przedmiot wybrany więcej niż jeden raz w etapie",
+  "isMandatory": "Czy obowiązkowy?",
+  "canUseGroups": "Zezwalaj na podział na grupy"
+}

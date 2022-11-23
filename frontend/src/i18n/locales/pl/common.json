@@ -11,5 +11,9 @@
   "name": "Imię",
   "surname": "Nazwisko",
   "birthday": "Data urodzenia",
-  "isActive": "Czy aktywny"
+  "isActive": "Czy aktywny",
+  "select...": "Wybierz...",
+  "noOptions": "Brak wyników",
+  "fieldRequired": "Pole wymagane",
+  "fieldNumberOnly": "Pole musi zawierać tylko liczby"
 }

@@ -7,6 +7,7 @@ import FormikInput from "../../../../Shared/FormikInput";
 import NewCycleStepForm from "./NewCycleStepForm";
 import FormikValidationLabel from "../../../../Shared/FormikValidationLabel";
 import * as Yup from 'yup';
+import _ from "lodash";
 
 export type Stage = {
   uuid: string;
@@ -14,6 +15,8 @@ export type Stage = {
     uuid: string;
     hoursNo: number;
     subjectGuid: string;
+    isMandatory: boolean;
+    canUseGroups: boolean;
   }[];
   name: string;
 }
@@ -31,12 +34,12 @@ function NewCycleForm() {
       stages: Yup.array().of(Yup.object().shape({
         name: Yup.string().required(t('educationCycleStepNameIsRequired')).min(3, t('educationCycleNameStepTooShort')).max(25, t('educationCycleStepNameTooLong')),
         subjects: Yup.array().of(Yup.object().shape({
-          hoursNo: Yup.number().moreThan(0, t('invalidHoursNumber')).required(),
-          subjectGuid: Yup.string().required()
-        })).min(1).test('unique', t('subjectSelectedMoreThanOnce'), e => {
+          hoursNo: Yup.number().typeError(t('fieldNumberOnly')).moreThan(0, t('invalidHoursNumber')).required(t('fieldRequired')),
+          subjectGuid: Yup.string().required(t('fieldRequired'))
+        })).min(1, t('atLeastOneSubject')).test('unique', t('subjectSelectedMoreThanOnce'), e => {
           return (new Set(e?.map(o => o.subjectGuid))).size === e?.map(o => o.subjectGuid).length;
         })
-      })).min(1)
+      })).min(1, t('atLeastOneStep'))
     }),
     onSubmit: (values) => {
       console.dir(values);
@@ -76,10 +79,8 @@ function NewCycleForm() {
                   }
                 ])
               }}
-              onRemoved={(uuid) => {
-                formik.setFieldValue('stages', [
-                  ...formik.values.stages.filter((e: any) => e.uuid != uuid)
-                ]);
+              onRemoved={(uuid, index) => {
+                formik.setFieldValue('stages', _.remove(formik.values.stages, (el, ind) => ind != index))
               }}
             />
           </Accordion>

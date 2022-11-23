@@ -37,7 +37,8 @@ i18n.init({
       peoplePicker: require('./locales/en/Shared/peoplePicker.json'),
       manageTeachers: require('./locales/en/Dashboard/Manage/ManageTeachers/manageTeachers.json'),
       addNewTeacherModal: require('./locales/en/Dashboard/Manage/ManageTeachers/addNewTeacherModal.json'),
-      person: require('./locales/en/Person/person.json')
+      person: require('./locales/en/Person/person.json'),
+      educationCycle: require('./locales/en/Dashboard/Manage/educationCycle.json')
     },
     pl: {
       common: require('./locales/pl/common.json'),
@@ -69,11 +70,12 @@ i18n.init({
       peoplePicker: require('./locales/pl/Shared/peoplePicker.json'),
       manageTeachers: require('./locales/pl/Dashboard/Manage/ManageTeachers/manageTeachers.json'),
       addNewTeacherModal: require('./locales/pl/Dashboard/Manage/ManageTeachers/addNewTeacherModal.json'),
-      person: require('./locales/pl/Person/person.json')
+      person: require('./locales/pl/Person/person.json'),
+      educationCycle: require('./locales/pl/Dashboard/Manage/educationCycle.json')
     }
   },
   ns: ['common', 'loginForm', 'registerForm', 'activateAccount', 'ActivateStudent', 'header', 'notifications', 'manageTeachers',
-    'dashboardNavigation', 'addNewStudentModal', 'studentsList', 'profile', 'invitations', 'subjects', 'peoplePicker',
+    'dashboardNavigation', 'addNewStudentModal', 'studentsList', 'profile', 'invitations', 'subjects', 'peoplePicker', 'educationCycle',
     'addInvitationModal', 'ActivateAdministrator', 'ActivateAdministratorPerson', 'ActivateAdministratorSchool', 'schoolSelect',
     'schoolsList', "classes", "addNewClassModal", "settings", "permissions", 'personNavigation', 'classIndex', 'addNewSubjectModal',
     'addNewTeacherModal', 'person'],
