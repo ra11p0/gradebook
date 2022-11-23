@@ -16,6 +16,14 @@ public class FoundationPermissionsLogic : IFoundationPermissionsLogic
         _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
     }
 
+    public async Task<bool> CanCreateEducationCycle(Guid schoolGuid)
+    {
+        var personGuid = await _foundationQueries.Service.GetCurrentPersonGuid(schoolGuid);
+        if (!personGuid.Status) throw new Exception("Person does not exist");
+        var permission = await _permissionsQueries.Service.GetPermissionForPerson(personGuid.Response, Common.Permissions.Enums.PermissionEnum.EducationCycles);
+        return permission is Common.Permissions.Enums.PermissionLevelEnum.EducationCycles_CanCreateAndDelete;
+    }
+
     public async Task<bool> CanCreateNewClass(Guid personGuid)
     {
         var permission = await _permissionsQueries.Service.GetPermissionForPerson(personGuid, Common.Permissions.Enums.PermissionEnum.Classes);

@@ -395,4 +395,17 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
             return new StatusResponse($"{addResp.Message}; {removeResp.Message}");
         }
     }
+
+    public async Task<ResponseWithStatus<Guid>> AddNewEducationCycle(EducationCycleCommand command)
+    {
+        var currentPersonGuid = await _foundationQueries.Service.GetCurrentPersonGuid(command.SchoolGuid);
+        if (!currentPersonGuid.Status) return new ResponseWithStatus<Guid>(404, "Person not found");
+        if (!await _foundationPermissions.Service.CanCreateEducationCycle(command.SchoolGuid)) return new ResponseWithStatus<Guid>(403, "Forbidden");
+        command.CreatedDate = Time.UtcNow;
+        command.CreatorGuid = currentPersonGuid.Response;
+        var res = await Repository.AddNewEducationCycle(command);
+        if (!res.Status) return new ResponseWithStatus<Guid>(res.Message);
+        await Repository.SaveChangesAsync();
+        return new ResponseWithStatus<Guid>(res.Response);
+    }
 }

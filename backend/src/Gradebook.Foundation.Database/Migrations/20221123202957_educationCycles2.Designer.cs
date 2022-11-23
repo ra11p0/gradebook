@@ -3,6 +3,7 @@ using System;
 using Gradebook.Foundation.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gradebook.Foundation.Database.Migrations
 {
     [DbContext(typeof(FoundationDatabaseContext))]
-    partial class FoundationDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20221123202957_educationCycles2")]
+    partial class educationCycles2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -391,7 +393,7 @@ namespace Gradebook.Foundation.Database.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<Guid>("SchoolGuid")
+                    b.Property<Guid?>("SchoolGuid")
                         .HasColumnType("char(36)");
 
                     b.HasKey("Guid");
@@ -702,13 +704,9 @@ namespace Gradebook.Foundation.Database.Migrations
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Subject", b =>
                 {
-                    b.HasOne("Gradebook.Foundation.Domain.Models.School", "School")
+                    b.HasOne("Gradebook.Foundation.Domain.Models.School", null)
                         .WithMany("Subjects")
-                        .HasForeignKey("SchoolGuid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("School");
+                        .HasForeignKey("SchoolGuid");
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.SystemInvitation", b =>

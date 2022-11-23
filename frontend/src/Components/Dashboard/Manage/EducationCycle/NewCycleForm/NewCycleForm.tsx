@@ -8,10 +8,14 @@ import NewCycleStepForm from "./NewCycleStepForm";
 import FormikValidationLabel from "../../../../Shared/FormikValidationLabel";
 import * as Yup from 'yup';
 import _ from "lodash";
+import SchoolsProxy from "../../../../../ApiClient/Schools/SchoolsProxy";
+import Notifications from "../../../../../Notifications/Notifications";
 
 export type Stage = {
   uuid: string;
+  guid?: string;
   subjects: {
+    guid?: string;
     uuid: string;
     hoursNo: number;
     subjectGuid: string;
@@ -42,7 +46,7 @@ function NewCycleForm() {
       })).min(1, t('atLeastOneStep'))
     }),
     onSubmit: (values) => {
-      console.dir(values);
+      SchoolsProxy.educationCycles.addEducationCycle(values).then(e => Notifications.showSuccessNotification('success', e.data));
     },
   });
   return (

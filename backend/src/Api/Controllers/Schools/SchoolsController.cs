@@ -219,4 +219,25 @@ public class SchoolsController : ControllerBase
         return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
     }
     #endregion
+
+    #region education cycles
+    [HttpPost]
+    [Route("{schoolGuid}/EducationCycles")]
+    [ProducesResponseType(typeof(Guid), statusCode: 200)]
+    [ProducesResponseType(typeof(string), statusCode: 400)]
+    [ProducesResponseType(typeof(string), statusCode: 403)]
+    [ProducesResponseType(typeof(string), statusCode: 404)]
+    public async Task<IActionResult> AddNewEducationCycle([FromBody] EducationCycleCommand model, [FromRoute] Guid schoolGuid)
+    {
+        model.SchoolGuid = schoolGuid;
+        var res = await _foundationCommands.Service.AddNewEducationCycle(model);
+        return res.StatusCode switch
+        {
+            404 => NotFound(res.Message),
+            403 => Forbid(res.Message),
+            200 => Ok(res.Response),
+            _ => BadRequest(res.Message)
+        };
+    }
+    #endregion
 }
