@@ -239,5 +239,22 @@ public class SchoolsController : ControllerBase
             _ => BadRequest(res.Message)
         };
     }
+    [HttpGet]
+    [Route("{schoolGuid}/EducationCycles")]
+    [ProducesResponseType(typeof(Guid), statusCode: 200)]
+    [ProducesResponseType(typeof(string), statusCode: 400)]
+    [ProducesResponseType(typeof(string), statusCode: 403)]
+    [ProducesResponseType(typeof(string), statusCode: 404)]
+    public async Task<IActionResult> GetEducationCycles([FromRoute] Guid schoolGuid, [FromQuery] int page = 0)
+    {
+        var res = await _foundationQueries.Service.GetEducationCyclesInSchool(schoolGuid, page);
+        return res.StatusCode switch
+        {
+            404 => NotFound(res.Message),
+            403 => Forbid(res.Message),
+            200 => Ok(res.Response),
+            _ => BadRequest(res.Message)
+        };
+    }
     #endregion
 }

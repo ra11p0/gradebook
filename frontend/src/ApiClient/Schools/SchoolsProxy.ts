@@ -15,6 +15,7 @@ import SubjectResponse from "./Definitions/Responses/SubjectResponse";
 import NewSubjectRequest from "./Definitions/Requests/NewSubjectRequest";
 import getCurrentSchoolRedux from "../../Redux/ReduxQueries/account/getCurrentSchoolRedux";
 import NewEducationCycleRequest from "./Definitions/Requests/NewEducationCycleRequest";
+import EducationCycleResponse from './Definitions/Responses/EducationCycleResponse';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -91,7 +92,7 @@ const addEducationCycle = (educationCycle: NewEducationCycleRequest, schoolGuid:
     return axiosApiAuthorized.post(`${API_URL}/schools/${schoolGuid}/educationCycles`, educationCycle);
 }
 
-const getEducationCyclesInSchool = (page: number = 0, schoolGuid: string = getCurrentSchoolRedux()?.schoolGuid!): Promise<AxiosResponse<string>> => {
+const getEducationCyclesInSchool = (page: number = 0, schoolGuid: string = getCurrentSchoolRedux()?.schoolGuid!): Promise<AxiosResponse<EducationCycleResponse[]>> => {
     return axiosApiAuthorized.get(`${API_URL}/schools/${schoolGuid}/educationCycles`, { params: { page } });
 }
 

@@ -551,4 +551,16 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
             ORDER BY Name
          ", new { teacherGuid }, pager);
     }
+
+    public async Task<IPagedList<EducationCycleDto>> GetEducationCyclesInSchool(Guid schoolGuid, Pager pager)
+    {
+        var builder = new SqlBuilder();
+        builder.SELECT("Name, SchoolGuid, Guid, CreatedDate, CreatorGuid");
+        builder.FROM("EducationCycles");
+        builder.WHERE("IsDeleted = 0");
+        builder.WHERE("SchoolGuid = @schoolGuid");
+        builder.ORDER_BY("Name");
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryPagedAsync<EducationCycleDto>(builder.ToString(), new { schoolGuid }, pager);
+    }
 }
