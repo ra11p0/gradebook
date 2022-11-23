@@ -16,9 +16,9 @@ public class EducationCycleStepSubject : BaseDomainModel
 
 
     [ForeignKey("EducationCycleStepGuid")]
-    public virtual EducationCycleStep EducationCycleStep { get; set; } = new();
+    public virtual EducationCycleStep? EducationCycleStep { get; set; }
     [ForeignKey("SubjectGuid")]
-    public virtual Subject Subject { get; set; } = new();
+    public virtual Subject? Subject { get; set; }
 }
 
 

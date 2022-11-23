@@ -9,6 +9,6 @@ public class Subject : BaseDomainModel
     public Guid SchoolGuid { get; set; }
 
     [ForeignKey("SchoolGuid")]
-    public School School { get; set; } = new();
+    public School? School { get; set; }
     public virtual ICollection<Teacher>? Teachers { get; set; }
 }
