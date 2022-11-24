@@ -398,6 +398,7 @@ public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFou
 
     public async Task<ResponseWithStatus<Guid>> AddNewEducationCycle(EducationCycleCommand command)
     {
+        if (!command.IsValid) return new ResponseWithStatus<Guid>("Invalid command");
         var currentPersonGuid = await _foundationQueries.Service.GetCurrentPersonGuid(command.SchoolGuid);
         if (!currentPersonGuid.Status) return new ResponseWithStatus<Guid>(404, "Person not found");
         if (!await _foundationPermissions.Service.CanCreateEducationCycle(command.SchoolGuid)) return new ResponseWithStatus<Guid>(403, "Forbidden");
