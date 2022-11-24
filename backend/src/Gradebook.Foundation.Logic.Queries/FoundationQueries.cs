@@ -28,7 +28,7 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
     public async Task<ResponseWithStatus<ActivationCodeInfoDto>> GetActivationCodeInfo(string activationCode, string method)
     {
         var invitationResponse = await GetInvitationByActivationCode(activationCode);
-        if (!invitationResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto>(message: invitationResponse.Message, statusCode: invitationResponse.StatusCode);
+        if (!invitationResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto>(invitationResponse.StatusCode, invitationResponse.Message);
         if (invitationResponse.Response!.IsUsed) return new ResponseWithStatus<ActivationCodeInfoDto>("Invitation code is used");
         if (invitationResponse.Response!.ExprationDate < Time.UtcNow) return new ResponseWithStatus<ActivationCodeInfoDto>("Invitation code expired");
 

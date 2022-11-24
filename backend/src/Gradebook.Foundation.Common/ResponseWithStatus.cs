@@ -1,3 +1,5 @@
+using System.Net;
+
 namespace Gradebook.Foundation.Common;
 
 public class ResponseWithStatus<R, S> : StatusResponse<S> where S : struct
@@ -66,15 +68,20 @@ public class StatusResponse : StatusResponse<bool>
 
 public class StatusResponse<S> where S : struct
 {
+    private readonly string? _statusMessage;
     public readonly S Status;
-    public readonly int StatusCode;
-    public readonly string? Message;
+    public readonly HttpStatusCode HttpStatusCode;
+    public int StatusCode => (int)HttpStatusCode;
+    public string Message => _statusMessage ?? ((HttpStatusCode)StatusCode).ToString();
 
     public StatusResponse(int statusCode, S status, string? message = null)
     {
         Status = status;
-        Message = message;
-        StatusCode = statusCode;
+        HttpStatusCode = (HttpStatusCode)statusCode;
+        _statusMessage = message;
+    }
+    public StatusResponse(HttpStatusCode statusCode, S status, string? message = null) : this((int)statusCode, status, message)
+    {
     }
     public StatusResponse(S status, string? message = null) : this(default(S).Equals(status) ? 400 : 200, status, message)
     {
