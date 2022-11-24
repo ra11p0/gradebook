@@ -1,6 +1,7 @@
 using AutoMapper;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
+using Gradebook.Foundation.Common.Foundation;
 using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
@@ -13,6 +14,7 @@ namespace Gradebook.Foundation.Logic.Queries;
 public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFoundationQueries
 {
     private readonly ServiceResolver<IIdentityLogic> _identityLogic;
+    private readonly ServiceResolver<IFoundationPermissionsLogic> _foundationPermissionLogic;
     private readonly ServiceResolver<IMapper> _mapper;
     private readonly ServiceResolver<HangfireClient> _hangfireClient;
     public FoundationQueries(IFoundationQueriesRepository repository, IServiceProvider serviceProvider) : base(repository)
@@ -20,12 +22,13 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         _identityLogic = serviceProvider.GetResolver<IIdentityLogic>();
         _mapper = serviceProvider.GetResolver<IMapper>();
         _hangfireClient = serviceProvider.GetResolver<HangfireClient>();
+        _foundationPermissionLogic = serviceProvider.GetResolver<IFoundationPermissionsLogic>();
     }
 
     public async Task<ResponseWithStatus<ActivationCodeInfoDto>> GetActivationCodeInfo(string activationCode, string method)
     {
         var invitationResponse = await GetInvitationByActivationCode(activationCode);
-        if (!invitationResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto>(message: invitationResponse.Message, statusCode: invitationResponse.StatusCode);
+        if (!invitationResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto>(invitationResponse.StatusCode, invitationResponse.Message);
         if (invitationResponse.Response!.IsUsed) return new ResponseWithStatus<ActivationCodeInfoDto>("Invitation code is used");
         if (invitationResponse.Response!.ExprationDate < Time.UtcNow) return new ResponseWithStatus<ActivationCodeInfoDto>("Invitation code expired");
 
@@ -125,6 +128,7 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
 
     public async Task<ResponseWithStatus<IPagedList<EducationCycleDto>>> GetEducationCyclesInSchool(Guid schoolGuid, int page)
     {
+        if (!await _foundationPermissionLogic.Service.CanSeeEducationCycles(schoolGuid)) return new ResponseWithStatus<IPagedList<EducationCycleDto>>(403, "Forbidden");
         var pager = new Pager(page);
         var res = await Repository.GetEducationCyclesInSchool(schoolGuid, pager);
         var resWithCreator = await Task.WhenAll(res.Select(async cycle =>

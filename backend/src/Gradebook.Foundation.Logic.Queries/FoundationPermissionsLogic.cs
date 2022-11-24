@@ -70,4 +70,12 @@ public class FoundationPermissionsLogic : IFoundationPermissionsLogic
         if (!teachersForSubject.Response!.Any()) return false;
         return teachersForSubject.Response!.Any(te => te.Guid == personGuid);
     }
+
+    public async Task<bool> CanSeeEducationCycles(Guid schoolGuid)
+    {
+        var personGuid = await _foundationQueries.Service.GetCurrentPersonGuid(schoolGuid);
+        if (!personGuid.Status) throw new Exception("Person does not exist");
+        var permission = await _permissionsQueries.Service.GetPermissionForPerson(personGuid.Response, Common.Permissions.Enums.PermissionEnum.EducationCycles);
+        return permission is not Common.Permissions.Enums.PermissionLevelEnum.EducationCycles_NoAccess;
+    }
 }

@@ -188,7 +188,7 @@ public class SchoolsController : ControllerBase
         var command = _mapper.Service.Map<NewClassCommand>(model);
         command.SchoolGuid = schoolGuid;
         var resp = await _foundationCommands.Service.AddNewClass(command);
-        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
+        return resp.ObjectResult;
     }
     [HttpGet]
     [Route("{schoolGuid}/Classes")]
@@ -197,7 +197,7 @@ public class SchoolsController : ControllerBase
     public async Task<IActionResult> AddNewClass([FromRoute] Guid schoolGuid, [FromQuery] int page = 1)
     {
         var resp = await _foundationQueries.Service.GetClassesInSchool(schoolGuid, page);
-        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
+        return resp.ObjectResult;
     }
     #endregion
 
@@ -208,7 +208,7 @@ public class SchoolsController : ControllerBase
     public async Task<IActionResult> GetSubjects([FromRoute] Guid schoolGuid, [FromQuery] int? page = 0, [FromQuery] string? query = "")
     {
         var resp = await _foundationQueries.Service.GetSubjectsForSchool(schoolGuid, page ?? 0, query ?? "");
-        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
+        return resp.ObjectResult;
     }
     [HttpPost, Route("{schoolGuid}/subjects")]
     [ProducesResponseType(typeof(Guid), statusCode: 200)]
@@ -216,7 +216,7 @@ public class SchoolsController : ControllerBase
     public async Task<IActionResult> AddSubject([FromBody] NewSubjectCommand command, [FromRoute] Guid schoolGuid)
     {
         var resp = await _foundationCommands.Service.AddSubject(schoolGuid, command);
-        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
+        return resp.ObjectResult;
     }
     #endregion
 
@@ -231,13 +231,7 @@ public class SchoolsController : ControllerBase
     {
         model.SchoolGuid = schoolGuid;
         var res = await _foundationCommands.Service.AddNewEducationCycle(model);
-        return res.StatusCode switch
-        {
-            404 => NotFound(res.Message),
-            403 => Forbid(res.Message),
-            200 => Ok(res.Response),
-            _ => BadRequest(res.Message)
-        };
+        return res.ObjectResult;
     }
     [HttpGet]
     [Route("{schoolGuid}/EducationCycles")]
@@ -248,13 +242,7 @@ public class SchoolsController : ControllerBase
     public async Task<IActionResult> GetEducationCycles([FromRoute] Guid schoolGuid, [FromQuery] int page = 0)
     {
         var res = await _foundationQueries.Service.GetEducationCyclesInSchool(schoolGuid, page);
-        return res.StatusCode switch
-        {
-            404 => NotFound(res.Message),
-            403 => Forbid(res.Message),
-            200 => Ok(res.Response),
-            _ => BadRequest(res.Message)
-        };
+        return res.ObjectResult;
     }
     #endregion
 }

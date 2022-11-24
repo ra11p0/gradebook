@@ -9,9 +9,17 @@ using System.Threading.Tasks;
 
 namespace Gradebook.Foundation.Tests
 {
-
+    internal class FakeClass : Validatable<FakeClass>
+    {
+        public string? Value { get; set; }
+        protected override bool Validate(FakeClass validatable)
+        {
+            return Value != "invalid";
+        }
+    }
     public class CommonTests
     {
+        #region Global time wrapper
         [Test]
         public void ShouldSetFakeTime()
         {
@@ -37,5 +45,27 @@ namespace Gradebook.Foundation.Tests
             Time.Reset();
             Assert.That(Time.UtcNow.Subtract(DateTime.UtcNow), Is.LessThan(TimeSpan.FromMilliseconds(10)));
         }
+        #endregion
+
+        #region Validatable
+
+        [Test]
+        public void ShouldBeValidated()
+        {
+            var fakeClass = new FakeClass()
+            { 
+                Value = "valid"
+            };
+            Assert.That(fakeClass.IsValid);
+            fakeClass = new FakeClass();
+            Assert.That(fakeClass.IsValid);
+            fakeClass = new FakeClass()
+            {
+                Value = "invalid"
+            };
+            Assert.That(!fakeClass.IsValid);
+        }
+
+        #endregion
     }
 }
