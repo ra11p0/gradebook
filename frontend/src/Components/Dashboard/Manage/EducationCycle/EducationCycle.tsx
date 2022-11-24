@@ -5,7 +5,7 @@ import NewCycleForm from "./NewCycleForm/NewCycleForm";
 
 type Props = {};
 
-function EducationCycle({}: Props) {
+function EducationCycle({ }: Props) {
   return (
     <>
       <Routes>

@@ -17,5 +17,8 @@
   "educationCycleStepNameTooLong": "Nazwa etapu zbyt długa",
   "subjectSelectedMoreThanOnce": "Przedmiot wybrany więcej niż jeden raz w etapie",
   "isMandatory": "Czy obowiązkowy?",
-  "canUseGroups": "Zezwalaj na podział na grupy"
+  "canUseGroups": "Zezwalaj na podział na grupy",
+  "educationCycles": "Cykle nauczania",
+  "addNewEducationCycle": "Dodaj nowy cykl nauczania",
+  "showEducationCycle": "Pokaż cykl nauczania"
 }

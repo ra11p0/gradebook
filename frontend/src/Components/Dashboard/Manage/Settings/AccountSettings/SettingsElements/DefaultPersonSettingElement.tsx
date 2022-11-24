@@ -58,7 +58,7 @@ function DefaultPersonSettingElement(props: Props) {
             >
               {people.map((person) => (
                 <MenuItem key={person.guid} value={person.guid} className="row">
-                  <Person guid={person.guid} name={person.name} surname={person.surname} birthday={person.birthday} noLink={true} />
+                  <Person {...person} noLink={true} />
                 </MenuItem>
               ))}
             </Select>

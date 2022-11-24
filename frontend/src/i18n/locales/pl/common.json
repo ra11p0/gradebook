@@ -15,5 +15,10 @@
   "select...": "Wybierz...",
   "noOptions": "Brak wyników",
   "fieldRequired": "Pole wymagane",
-  "fieldNumberOnly": "Pole musi zawierać tylko liczby"
+  "fieldNumberOnly": "Pole musi zawierać tylko liczby",
+  "createdDate": "Data utworzenia",
+  "creator": "Stworzony przez",
+  "Admin": "Administrator",
+  "Teacher": "Nauczyciel",
+  "Student": "Uczeń"
 }

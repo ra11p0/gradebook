@@ -1,6 +1,7 @@
 import SchoolRolesEnum from "../../../../Common/Enums/SchoolRolesEnum";
 
 export default interface EducationCycleResponse {
+    guid: string;
     name: string;
     createdDate: Date;
     creatorGuid: string;

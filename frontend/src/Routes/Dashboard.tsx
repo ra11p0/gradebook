@@ -40,7 +40,7 @@ class Dashboard extends React.Component<DashboardProps> {
             <Route path="absence" element={<Absence />} />
             <Route path="grades" element={<Grades />} />
             <Route
-              path="educationCycle/*"
+              path="educationCycle"
               element={
                 <SchoolSelectedOnly>
                   <EducationCycle />

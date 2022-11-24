@@ -11,7 +11,7 @@ function Header({ }: Props) {
   return (
     <div className="d-flex justify-content-between">
       <div>
-        <h5>{t('educationCycle')}</h5>
+        <h5>{t('educationCycles')}</h5>
       </div>
       <div>
         <Button

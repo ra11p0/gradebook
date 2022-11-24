@@ -15,5 +15,7 @@
   "select...": "Select...",
   "noOptions": "No results",
   "fieldRequired": "Field required",
-  "fieldNumberOnly": "Field must contain digits only"
+  "fieldNumberOnly": "Field must contain digits only",
+  "createdDate": "Created date",
+  "creator": "Creator"
 }

@@ -17,5 +17,8 @@
   "educationCycleStepNameTooLong": "Step name too long",
   "subjectSelectedMoreThanOnce": "Subject selected more than once in step",
   "isMandatory": "Is mandatory?",
-  "canUseGroups": "Allow groups"
+  "canUseGroups": "Allow groups",
+  "educationCycles": "Education cycles",
+  "addNewEducationCycle": "Add new education cycle",
+  "showEducationCycle": "Show education cycle"
 }
