@@ -563,4 +563,37 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
         using var cn = await GetOpenConnectionAsync();
         return await cn.QueryPagedAsync<EducationCycleDto>(builder.ToString(), new { schoolGuid }, pager);
     }
+
+    public async Task<EducationCycleExtendedDto> GetEducationCycle(Guid educationCycleGuid)
+    {
+        var builder = new SqlBuilder();
+        builder.SELECT("Name, SchoolGuid, Guid, CreatedDate, CreatorGuid");
+        builder.FROM("EducationCycles");
+        builder.WHERE("IsDeleted = 0");
+        builder.WHERE("Guid = @educationCycleGuid");
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryFirstOrDefaultAsync<EducationCycleExtendedDto>(builder.ToString(), new { educationCycleGuid });
+    }
+
+    public async Task<IEnumerable<EducationCycleStepDto>> GetStepsForEducationCycle(Guid educationCycleGuid)
+    {
+        var builder = new SqlBuilder();
+        builder.SELECT("Guid, `Order`, Name");
+        builder.FROM("EducationCycleSteps");
+        builder.WHERE("IsDeleted = 0");
+        builder.WHERE("EducationCycleGuid = @educationCycleGuid");
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryAsync<EducationCycleStepDto>(builder.ToString(), new { educationCycleGuid });
+    }
+
+    public async Task<IEnumerable<EducationCycleStepSubjectDto>> GetStepsSubjectsForEducationCycleStep(Guid educationCycleStepGuid)
+    {
+        var builder = new SqlBuilder();
+        builder.SELECT("Guid, SubjectGuid, HoursInStep, IsMandatory, GroupsAllowed");
+        builder.FROM("EducationCycleStepSubjects");
+        builder.WHERE("IsDeleted = 0");
+        builder.WHERE("EducationCycleStepGuid = @educationCycleStepGuid");
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryAsync<EducationCycleStepSubjectDto>(builder.ToString(), new { educationCycleStepGuid });
+    }
 }

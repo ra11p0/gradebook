@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { Nav } from "react-bootstrap";
 import { withTranslation } from "react-i18next";
+import PermissionsBlocker from "../Shared/PermissionsBlocker";
+import PermissionLevelEnum from "../../Common/Enums/Permissions/PermissionLevelEnum";
 
 const mapStateToProps = (state: any) => ({});
 
@@ -69,15 +71,18 @@ class DashboardNavigation extends React.Component<DashboardNavigationProps, Dash
           >
             {t("timetable")}
           </Link>
-          <Link
-            to="/dashboard/educationCycle"
-            className={"btn btn-outline-primary " + (this.state.activeTab == "educationCycle" ? "active" : "")}
-            onClick={() => {
-              this.setActiveTab("educationCycle");
-            }}
-          >
-            {t("educationCycle")}
-          </Link>
+          <PermissionsBlocker allowingPermissions={[PermissionLevelEnum.EducationCycles_CanCreateAndDelete, PermissionLevelEnum.EducationCycles_CanCreateAndDelete]}>
+            <Link
+              to="/dashboard/educationCycle"
+              className={"btn btn-outline-primary " + (this.state.activeTab == "educationCycle" ? "active" : "")}
+              onClick={() => {
+                this.setActiveTab("educationCycle");
+              }}
+            >
+              {t("educationCycle")}
+            </Link>
+          </PermissionsBlocker>
+
           <Link
             to="/dashboard/manageStudents"
             className={"btn btn-outline-primary " + (this.state.activeTab == "manageStudents" ? "active" : "")}

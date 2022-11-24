@@ -122,4 +122,13 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
 
     public Task<IPagedList<EducationCycleDto>> GetEducationCyclesInSchool(Guid schoolGuid, Pager pager)
         => Base.GetEducationCyclesInSchool(schoolGuid, pager);
+
+    public Task<EducationCycleExtendedDto> GetEducationCycle(Guid educationCycleGuid)
+        => Base.GetEducationCycle(educationCycleGuid);
+
+    public Task<IEnumerable<EducationCycleStepDto>> GetStepsForEducationCycle(Guid educationCycleGuid)
+        => Base.GetStepsForEducationCycle(educationCycleGuid);
+
+    public Task<IEnumerable<EducationCycleStepSubjectDto>> GetStepsSubjectsForEducationCycleStep(Guid educationCycleStepGuid)
+        => Base.GetStepsSubjectsForEducationCycleStep(educationCycleStepGuid);
 }

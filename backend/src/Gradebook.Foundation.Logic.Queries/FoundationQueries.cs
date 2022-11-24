@@ -5,7 +5,6 @@ using Gradebook.Foundation.Common.Foundation;
 using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
-using Gradebook.Foundation.Common.SignalR.Notifications;
 using Gradebook.Foundation.Hangfire;
 using Gradebook.Foundation.Hangfire.Messages;
 
@@ -34,7 +33,7 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
 
         var invitation = invitationResponse.Response!;
         var invitedPersonGuid = invitation.InvitedPersonGuid;
-        if (invitedPersonGuid is null) return new ResponseWithStatus<ActivationCodeInfoDto>("There is no information about activation code");
+        if (invitedPersonGuid is null) return new ResponseWithStatus<ActivationCodeInfoDto>(404, "There is no information about activation code");
 
         var response = new ActivationCodeInfoDto();
 
@@ -59,7 +58,7 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
     public async Task<ResponseWithStatus<IEnumerable<StudentDto>, bool>> GetAllAccessibleStudents(Guid schoolGuid)
     {
         var relatedPersonGuid = await GetCurrentPersonGuid(schoolGuid);
-        if (!relatedPersonGuid.Status) return new ResponseWithStatus<IEnumerable<StudentDto>, bool>(message: "Cannot recognise current person", statusCode: 404);
+        if (!relatedPersonGuid.Status) return new ResponseWithStatus<IEnumerable<StudentDto>, bool>(404, "Cannot recognise current person");
         var students = await Repository.GetAllAccessibleStudents(relatedPersonGuid.Response);
         return new ResponseWithStatus<IEnumerable<StudentDto>, bool>(students, true);
     }
@@ -67,7 +66,7 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
     public async Task<ResponseWithStatus<IEnumerable<TeacherDto>, bool>> GetAllAccessibleTeachers(Guid schoolGuid)
     {
         var relatedPersonGuid = await GetCurrentPersonGuid(schoolGuid);
-        if (!relatedPersonGuid.Status) return new ResponseWithStatus<IEnumerable<TeacherDto>, bool>(message: "Cannot recognise current person", statusCode: 404);
+        if (!relatedPersonGuid.Status) return new ResponseWithStatus<IEnumerable<TeacherDto>, bool>(404, "Cannot recognise current person");
         var teachers = await Repository.GetAllAccessibleTeachers(relatedPersonGuid.Response);
         return new ResponseWithStatus<IEnumerable<TeacherDto>, bool>(teachers, true);
     }
@@ -87,7 +86,7 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
     public async Task<ResponseWithStatus<ClassDto, bool>> GetClassByGuid(Guid guid)
     {
         var resp = await Repository.GetClassByGuid(guid);
-        if (resp is null) return new ResponseWithStatus<ClassDto, bool>(null, false, "Class does not exist");
+        if (resp is null) return new ResponseWithStatus<ClassDto, bool>(404, "Class does not exist");
         return new ResponseWithStatus<ClassDto, bool>(resp, true);
     }
 
@@ -110,7 +109,7 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
     public async Task<ResponseWithStatus<Guid, bool>> GetCurrentPersonGuid(Guid schoolGuid)
     {
         var userGuid = await _identityLogic.Service.CurrentUserId();
-        if (!userGuid.Status) return new ResponseWithStatus<Guid, bool>(Guid.Empty, false, "Can't get current user guid");
+        if (!userGuid.Status) return new ResponseWithStatus<Guid, bool>(404, "Can't get current user guid");
         var personGuid = await GetPersonGuidForUser(userGuid.Response!, schoolGuid);
         return personGuid;
     }
@@ -126,9 +125,24 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<Guid>(currentPerson.Response);
     }
 
+    public async Task<ResponseWithStatus<EducationCycleExtendedDto>> GetEducationCycle(Guid educationCycleGuid)
+    {
+        var educationCycle = await Repository.GetEducationCycle(educationCycleGuid);
+        if (educationCycle is null) return new ResponseWithStatus<EducationCycleExtendedDto>(404);
+        if (!await _foundationPermissionLogic.Service.CanSeeEducationCycles(educationCycle.SchoolGuid)) return new ResponseWithStatus<EducationCycleExtendedDto>(403);
+        var stepsInCycle = await Repository.GetStepsForEducationCycle(educationCycleGuid);
+        educationCycle.Stages = (await Task.WhenAll(stepsInCycle.Select(async st =>
+        {
+            if (st.Guid is null) throw new Exception("Stage Guid should not be null here");
+            st.Subjects = (await Repository.GetStepsSubjectsForEducationCycleStep(st.Guid.Value)).ToList();
+            return st;
+        }))).ToList();
+        return new ResponseWithStatus<EducationCycleExtendedDto>(educationCycle);
+    }
+
     public async Task<ResponseWithStatus<IPagedList<EducationCycleDto>>> GetEducationCyclesInSchool(Guid schoolGuid, int page)
     {
-        if (!await _foundationPermissionLogic.Service.CanSeeEducationCycles(schoolGuid)) return new ResponseWithStatus<IPagedList<EducationCycleDto>>(403, "Forbidden");
+        if (!await _foundationPermissionLogic.Service.CanSeeEducationCycles(schoolGuid)) return new ResponseWithStatus<IPagedList<EducationCycleDto>>(403);
         var pager = new Pager(page);
         var res = await Repository.GetEducationCyclesInSchool(schoolGuid, pager);
         var resWithCreator = await Task.WhenAll(res.Select(async cycle =>
@@ -142,7 +156,7 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
     public async Task<ResponseWithStatus<GroupDto, bool>> GetGroupByGuid(Guid guid)
     {
         var resp = await Repository.GetGroupByGuid(guid);
-        if (resp is null) return new ResponseWithStatus<GroupDto, bool>(null, false, "Group does not exist");
+        if (resp is null) return new ResponseWithStatus<GroupDto, bool>(404);
         return new ResponseWithStatus<GroupDto, bool>(resp, true);
     }
 

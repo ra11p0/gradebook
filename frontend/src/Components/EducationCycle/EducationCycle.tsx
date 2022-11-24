@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
+import EducationCyclesProxy from '../../ApiClient/EducationCycles/EducationCyclesProxy';
+import EducationCycleResponse from '../../ApiClient/EducationCycles/Definitions/Responses/EducationCycleResponse';
+import Notifications from '../../Notifications/Notifications';
+import LoadingScreen from '../Shared/LoadingScreen';
 
 type Props = {
     educationCycleGuid?: string;
@@ -9,15 +13,23 @@ type Props = {
 function EducationCycle(props: Props) {
     const { t } = useTranslation("educationCycles");
     const { educationCycleGuid } = useParams();
-    const [educationCycle, setEducationCycle] = useState<any | null>(null);
+    const [educationCycle, setEducationCycle] = useState<EducationCycleResponse | undefined>(undefined);
     useEffect(() => {
-        setEducationCycle(null);
+        const guid = educationCycleGuid ?? props.educationCycleGuid;
+        if (!guid) return;
+        EducationCyclesProxy.getEducationCycle(guid)
+            .then(res => setEducationCycle(res.data))
+            .catch(Notifications.showApiError);
+
+
     }, [
         props.educationCycleGuid,
         educationCycleGuid
     ]);
     return (
-        <div>EducationCycle {`${educationCycleGuid}`}</div>
+        <LoadingScreen isReady={!!educationCycle}>
+            <div>EducationCycle {`${educationCycleGuid}`}</div>
+        </LoadingScreen>
     )
 }
 
