@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 namespace Gradebook.Foundation.Common;
@@ -22,6 +23,7 @@ public class ResponseWithStatus<R, S> : StatusResponse<S> where S : struct
     {
         Response = response;
     }
+    public override sealed ObjectResult ObjectResult => new ObjectResult(StatusCode is 200 ? Response : Message) { StatusCode = StatusCode };
 }
 
 public class ResponseWithStatus<R> : ResponseWithStatus<R, bool>
@@ -89,4 +91,6 @@ public class StatusResponse<S> where S : struct
     public StatusResponse(string? message = null) : this(default, message)
     {
     }
+
+    public virtual ObjectResult ObjectResult => new ObjectResult(Message) { StatusCode = StatusCode };
 }
