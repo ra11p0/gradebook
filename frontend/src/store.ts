@@ -1,9 +1,9 @@
-import { configureStore } from "@reduxjs/toolkit";
-import reducer from "./reducer";
-import { State as commonState } from './Redux/Reducers/accountReducer'
+import { configureStore } from '@reduxjs/toolkit';
+import reducer from './reducer';
+import { State as commonState } from './Redux/Reducers/accountReducer';
 
-export type GlobalState = {
-    common: commonState
+export interface GlobalState {
+  common: commonState;
 }
 
 export const store = configureStore({ reducer });
