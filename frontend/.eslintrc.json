@@ -29,6 +29,8 @@
   "plugins": ["react", "@typescript-eslint"],
   "rules": {
     "@typescript-eslint/no-misused-promises": "off",
-    "@typescript-eslint/strict-boolean-expressions": "off"
+    "@typescript-eslint/strict-boolean-expressions": "off",
+    "@typescript-eslint/consistent-type-assertions": "off",
+    "@typescript-eslint/no-non-null-assertion": "off"
   }
 }

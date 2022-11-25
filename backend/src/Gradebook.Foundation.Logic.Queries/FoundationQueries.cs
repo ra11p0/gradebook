@@ -137,6 +137,8 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
             st.Subjects = (await Repository.GetStepsSubjectsForEducationCycleStep(st.Guid.Value)).ToList();
             return st;
         }))).ToList();
+        var creator = await GetPersonByGuid(educationCycle.CreatorGuid);
+        if (creator.Status) educationCycle.Creator = creator.Response;
         return new ResponseWithStatus<EducationCycleExtendedDto>(educationCycle);
     }
 

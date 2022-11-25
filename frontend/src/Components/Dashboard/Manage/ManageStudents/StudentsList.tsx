@@ -156,7 +156,10 @@ function StudentActions(
           <Button
             variant="outlined"
             color="error"
-            onClick={() => element.removePersonClickHandler(element.guid)}
+            onClick={(evt) => {
+              evt.stopPropagation();
+              element.removePersonClickHandler(element.guid);
+            }}
           >
             <FontAwesomeIcon icon={faTrash} />
           </Button>
