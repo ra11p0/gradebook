@@ -5,7 +5,7 @@ namespace Gradebook.Foundation.Logic.Queries;
 
 public interface IFoundationQueriesRepository : IBaseRepository
 {
-    Task<EducationCycleExtendedDto> GetEducationCycle(Guid educationCycleGuid);
+    Task<EducationCycleExtendedDto?> GetEducationCycle(Guid educationCycleGuid);
     Task<IEnumerable<EducationCycleStepDto>> GetStepsForEducationCycle(Guid educationCycleGuid);
     Task<IEnumerable<EducationCycleStepSubjectDto>> GetStepsSubjectsForEducationCycleStep(Guid educationCycleStepGuid);
     Task<IPagedList<EducationCycleDto>> GetEducationCyclesInSchool(Guid schoolGuid, Pager pager);

@@ -191,7 +191,7 @@ public class Permissions
 
         var result = await foundationCommands!.AddSubject(
             Guid.NewGuid(),
-            new NewSubjectCommand());
+            new NewSubjectCommand() { Name = "fakeName" });
 
         Assert.That(result.Status, Is.False);
         Assert.That(result.StatusCode, Is.EqualTo(403));
@@ -214,7 +214,9 @@ public class Permissions
 
         var result = await foundationCommands!.AddSubject(
             Guid.NewGuid(),
-            new NewSubjectCommand());
+            new NewSubjectCommand() { 
+            Name="fakeName"
+            });
 
         Assert.That(result.Status, Is.True);
         Assert.That(result.StatusCode, Is.EqualTo(200));

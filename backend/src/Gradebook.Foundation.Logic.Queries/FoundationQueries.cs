@@ -286,7 +286,7 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
     public async Task<ResponseWithStatus<SubjectDto>> GetSubject(Guid subjectGuid)
     {
         //  Hangfire and websocket tests
-        _hangfireClient.Service.SendMessage<NotificationsWorkerMessage>(new NotificationsWorkerMessage("jong!"));
+        //_hangfireClient.Service.SendMessage<NotificationsWorkerMessage>(new NotificationsWorkerMessage("jong!"));
 
         //await _notificationsHubWrapper.Service.UserLoggedIn("inLogic!");
         //  end tests

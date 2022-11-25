@@ -1,7 +1,9 @@
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Foundation;
 using Gradebook.Foundation.Common.Foundation.Commands;
+using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
 using Gradebook.Foundation.Common.Foundation.Queries;
+using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 using Gradebook.Foundation.Logic.Commands;
 using Gradebook.Foundation.Logic.Queries;
@@ -11,7 +13,7 @@ using Moq;
 namespace Gradebook.Foundation.Tests;
 
 public class Subjects
-{/*
+{
     private readonly Mock<IFoundationCommandsRepository> foundationCommandsRepository = new();
     private readonly Mock<IFoundationQueriesRepository> foundationQueriesRepository = new();
     private readonly Mock<IIdentityLogic> identityLogic = new();
@@ -34,12 +36,93 @@ public class Subjects
     }
 
     [Test]
-    public async Task CannotCreateInvitation()
+    public async Task ShouldReturnSubjects()
     {
-        foundationQueriesRepository.Setup(e => e.GetPersonGuidForUser(It.IsAny<string>(), It.IsAny<Guid>())).ReturnsAsync(Guid.NewGuid());
-        identityLogic.Setup(e => e.CurrentUserId()).ReturnsAsync(new Common.ResponseWithStatus<string, bool>(default, true));
-        foundationPermissionsLogic.Setup(e => e.CanInviteToSchool(It.IsAny<Guid>())).ReturnsAsync(false);
-        var result = await foundationCommands!.GenerateSystemInvitation(new Guid(), Common.Foundation.Enums.SchoolRoleEnum.Admin, new Guid());
+        foundationQueriesRepository
+            .Setup(e => e.GetSubjectsForSchool(It.IsAny<Guid>(), It.IsAny<Pager>(), It.IsAny<string>()))
+            .ReturnsAsync(new PagedList<SubjectDto>() { new SubjectDto() });
+        identityLogic
+            .Setup(e => e.CurrentUserId())
+            .ReturnsAsync(new ResponseWithStatus<string, bool>(default, true));
+
+        var result = await foundationQueries!.GetSubjectsForSchool(new Guid(), 0, "");
+
+        Assert.That(result.Status, Is.True);
+        Assert.That(result.StatusCode, Is.EqualTo(200));
+    }
+    [Test]
+    public async Task ShouldCreateNewSubject()
+    {
+        identityLogic
+            .Setup(e => e.CurrentUserId())
+            .ReturnsAsync(new ResponseWithStatus<string, bool>(default, true));
+        foundationQueriesRepository
+            .Setup(e => e.GetPersonGuidForUser(It.IsAny<string>(), It.IsAny<Guid>()))
+            .ReturnsAsync(Guid.NewGuid());
+        foundationCommandsRepository
+             .Setup(e => e.AddSubject(It.IsAny<Guid>(), It.IsAny<NewSubjectCommand>()))
+             .ReturnsAsync(new ResponseWithStatus<Guid>(true));
+        foundationPermissionsLogic
+            .Setup(e => e.CanCreateNewSubject(It.IsAny<Guid>()))
+            .ReturnsAsync(true);
+
+        var result = await foundationCommands!.AddSubject(
+            Guid.NewGuid(),
+            new NewSubjectCommand()
+            {
+                Name = "fake name"
+            });
+
+        Assert.That(result.Status, Is.True);
+        Assert.That(result.StatusCode, Is.EqualTo(200));
+    }
+    [Test]
+    public async Task ShouldNotCreateNewSubject_InvalidCommand()
+    {
+        identityLogic
+            .Setup(e => e.CurrentUserId())
+            .ReturnsAsync(new ResponseWithStatus<string, bool>(default, true));
+        foundationQueriesRepository
+            .Setup(e => e.GetPersonGuidForUser(It.IsAny<string>(), It.IsAny<Guid>()))
+            .ReturnsAsync(Guid.NewGuid());
+        foundationCommandsRepository
+             .Setup(e => e.AddSubject(It.IsAny<Guid>(), It.IsAny<NewSubjectCommand>()))
+             .ReturnsAsync(new ResponseWithStatus<Guid>(true));
+        foundationPermissionsLogic
+            .Setup(e => e.CanCreateNewSubject(It.IsAny<Guid>()))
+            .ReturnsAsync(true);
+
+        var result = await foundationCommands!.AddSubject(
+            Guid.NewGuid(),
+            new NewSubjectCommand());
+
         Assert.That(result.Status, Is.False);
-    }*/
+        Assert.That(result.StatusCode, Is.EqualTo(400));
+    }
+    [Test]
+    public async Task ShouldGetCurrentPersonGuidBySubjectGuid()
+    {
+        var schoolGuid = Guid.NewGuid();
+        var currentPersonGuid = Guid.NewGuid();
+        identityLogic
+            .Setup(e => e.CurrentUserId())
+            .ReturnsAsync(new ResponseWithStatus<string, bool>("fakeUserId", true));
+        foundationQueriesRepository
+            .Setup(e => e.GetPersonGuidForUser("fakeUserId", schoolGuid))
+            .ReturnsAsync(currentPersonGuid);
+        foundationQueriesRepository
+            .Setup(e => e.GetSubject(It.IsAny<Guid>()))
+            .ReturnsAsync(new SubjectDto() { 
+                SchoolGuid= schoolGuid
+            });
+        foundationPermissionsLogic
+            .Setup(e => e.CanCreateNewSubject(It.IsAny<Guid>()))
+            .ReturnsAsync(true); 
+
+        var result = await foundationQueries!.GetCurrentPersonGuidBySubjectGuid(Guid.NewGuid());
+
+        Assert.That(result.Status, Is.True);
+        Assert.That(result.Response, Is.EqualTo(currentPersonGuid));
+        Assert.That(result.StatusCode, Is.EqualTo(200));
+    }
 }
