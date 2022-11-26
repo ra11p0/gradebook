@@ -10,6 +10,7 @@ using Moq;
 
 namespace Gradebook.Foundation.Tests;
 
+[Category("Unit")]
 public class FindPersonLogic
 {
     private readonly Mock<IFoundationCommandsRepository> foundationCommandsRepository = new();

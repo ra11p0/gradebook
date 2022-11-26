@@ -9,6 +9,7 @@ using Moq;
 
 namespace Gradebook.Foundation.Tests;
 
+[Category("Unit")]
 public class Permissions
 {
     private readonly Mock<IFoundationCommandsRepository> foundationCommandsRepository = new();
