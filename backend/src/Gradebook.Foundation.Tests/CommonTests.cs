@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Gradebook.Foundation.Tests
 {
-
+    [Category("Unit")]
     public class CommonTests
     {
         [Test]

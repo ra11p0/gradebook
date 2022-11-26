@@ -13,6 +13,7 @@ using Moq;
 
 namespace Gradebook.Foundation.Tests;
 
+[Category("Unit")]
 public class Permissions
 {
     private readonly Mock<IFoundationCommandsRepository> foundationCommandsRepository = new();
@@ -449,13 +450,13 @@ public class Permissions
             .ReturnsAsync(new ResponseWithStatus<string, bool>("fakeUserId", true));
         foundationQueriesRepository
             .Setup(e => e.GetPersonByGuid(It.IsAny<Guid>()))
-            .ReturnsAsync(new PersonDto() { SchoolGuid= schoolGuid });
+            .ReturnsAsync(new PersonDto() { SchoolGuid = schoolGuid });
         foundationQueriesRepository
             .Setup(e => e.GetPersonGuidForUser(It.IsAny<string>(), It.IsAny<Guid>()))
             .ReturnsAsync(Guid.NewGuid());
         foundationQueriesRepository
             .Setup(e => e.GetSchoolsForUser(It.IsAny<string>()))
-            .ReturnsAsync(new SchoolDto[] { new SchoolDto() { Guid=schoolGuid } });
+            .ReturnsAsync(new SchoolDto[] { new SchoolDto() { Guid = schoolGuid } });
         foundationCommandsRepository
             .Setup(e => e.AddTeachersToClass(It.IsAny<Guid>(), It.IsAny<IEnumerable<Guid>>()))
             .ReturnsAsync(new StatusResponse(true));

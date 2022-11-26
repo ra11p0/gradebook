@@ -9,6 +9,7 @@ using Moq;
 
 namespace Gradebook.Permissions.Tests;
 
+[Category("Unit")]
 public class DefaultPermissionsTests
 {
     readonly Mock<IPermissionsQueriesRepository> permissionsQueriesRepository = new();
