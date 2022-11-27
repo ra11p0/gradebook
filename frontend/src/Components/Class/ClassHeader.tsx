@@ -1,15 +1,15 @@
-import React from "react";
-import { Col, ListGroup, ListGroupItem, Row } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
-import StudentInClassResponse from "../../ApiClient/Classes/Definitions/Responses/StudentInClassResponse";
-import TeachersInClassResponse from "../../ApiClient/Classes/Definitions/Responses/TeachersInClassResponse";
-import ClassResponse from "../../ApiClient/Schools/Definitions/Responses/ClassResponse";
-import PersonSmall from "../Shared/PersonSmall";
-import ManageClassOwners from "./ManageClassOwners";
-import ManageStudentsInClass from "./ManageStudentsInClass";
+import React, { ReactElement } from 'react';
+import { Col, Row } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import StudentInClassResponse from '../../ApiClient/Classes/Definitions/Responses/StudentInClassResponse';
+import TeachersInClassResponse from '../../ApiClient/Classes/Definitions/Responses/TeachersInClassResponse';
+import ClassResponse from '../../ApiClient/Schools/Definitions/Responses/ClassResponse';
+import PersonSmall from '../Shared/PersonSmall';
+import ManageClassOwners from './ManageClassOwners';
+import ManageStudentsInClass from './ManageStudentsInClass';
 
-type Props = {
+interface Props {
   class: ClassResponse;
   classGuid: string;
   classOwners: TeachersInClassResponse[];
@@ -17,13 +17,13 @@ type Props = {
   setRefreshKey: (func: (key: any) => void) => void;
   setStudentsInClass: (students: StudentInClassResponse[]) => void;
   setClassOwners: (owners: TeachersInClassResponse[]) => void;
-};
+}
 
-function ClassHeader(props: Props) {
-  const { t } = useTranslation("classIndex");
+function ClassHeader(props: Props): ReactElement {
+  const { t } = useTranslation('classIndex');
   return (
     <Row>
-      <Col xs={"7"}>
+      <Col xs={'7'}>
         <Row>
           <Col>
             <Row>
@@ -38,7 +38,7 @@ function ClassHeader(props: Props) {
           <Col>
             <Row>
               <Col>
-                {t("owners")}:
+                {t('owners')}:
                 <div className="d-flex flex-wrap w-100">
                   {props.classOwners.map((e, i) => (
                     <Link key={i} to={`/person/show/${e.guid}`}>

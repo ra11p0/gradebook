@@ -13,7 +13,7 @@ function LoadingScreen(props: Props) {
         <>{
             props.isReady ?
                 props.children :
-                (<div className='d-flex justify-content-center'>
+                (<div className='d-flex justify-content-center m-1 p-1'>
                     <Spinner animation='border' role='status'>
                         <span className='visually-hidden'>
                             {t('loading')}

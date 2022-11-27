@@ -5,10 +5,12 @@ import { Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-type Props = {
-  mapper: (item: any, index: number) => ReactElement;
-  fetch: (page: number) => Promise<any[]>;
+type Props<T> = {
+  mapper: (item: T, index: number) => ReactElement;
+  wrapper?: (items: ReactElement[]) => ReactElement;
+  fetch: (page: number) => Promise<T[]>;
   effect?: any;
+  scrollableTarget?: string;
 };
 
 function LoadingSpinner() {
@@ -48,7 +50,7 @@ function EndMessage() {
   );
 }
 
-function InfiniteScrollWrapper(props: Props) {
+function InfiniteScrollWrapper<T>(props: Props<T>) {
   const [items, setItems] = useState([]);
   const [itemsCount, setItemsCount] = useState(0);
   const [page, setPage] = useState(1);
@@ -81,13 +83,23 @@ function InfiniteScrollWrapper(props: Props) {
 
   return (
     <InfiniteScroll
+      scrollableTarget={props.scrollableTarget}
       dataLength={itemsCount}
       next={() => fetch(page)}
       hasMore={hasMore}
       loader={<LoadingSpinner />}
       endMessage={itemsCount != 0 && <EndMessage />}
     >
-      {items.map(props.mapper)}
+      {props.wrapper &&
+        <>
+          {props.wrapper(items.map(props.mapper))}
+        </>
+      }
+      {!props.wrapper &&
+        <>
+          {items.map(props.mapper)}
+        </>
+      }
       {itemsCount == 0 && !hasMore && <NoResults />}
       {itemsCount == 0 && hasMore && <LoadingSpinner />}
     </InfiniteScroll>

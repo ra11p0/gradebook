@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { Nav } from "react-bootstrap";
 import { withTranslation } from "react-i18next";
+import PermissionsBlocker from "../Shared/PermissionsBlocker";
+import PermissionLevelEnum from "../../Common/Enums/Permissions/PermissionLevelEnum";
 
 const mapStateToProps = (state: any) => ({});
 
@@ -34,7 +36,7 @@ class DashboardNavigation extends React.Component<DashboardNavigationProps, Dash
       <div>
         <Nav className="d-flex gap-2 justify-content-end">
           <Link
-            to="grades"
+            to="/dashboard/grades"
             className={"btn btn-outline-primary " + (this.state.activeTab == "grades" ? "active" : "")}
             onClick={() => {
               this.setActiveTab("grades");
@@ -43,7 +45,7 @@ class DashboardNavigation extends React.Component<DashboardNavigationProps, Dash
             {t("grades")}
           </Link>
           <Link
-            to="absence"
+            to="/dashboard/absence"
             className={"btn btn-outline-primary " + (this.state.activeTab == "absence" ? "active" : "")}
             onClick={() => {
               this.setActiveTab("absence");
@@ -52,7 +54,7 @@ class DashboardNavigation extends React.Component<DashboardNavigationProps, Dash
             {t("absence")}
           </Link>
           <Link
-            to="manageSubjects"
+            to="/dashboard/manageSubjects"
             className={"btn btn-outline-primary " + (this.state.activeTab == "subject" ? "active" : "")}
             onClick={() => {
               this.setActiveTab("subject");
@@ -61,7 +63,7 @@ class DashboardNavigation extends React.Component<DashboardNavigationProps, Dash
             {t("subjects")}
           </Link>
           <Link
-            to="timetable"
+            to="/dashboard/timetable"
             className={"btn btn-outline-primary " + (this.state.activeTab == "timetable" ? "active" : "")}
             onClick={() => {
               this.setActiveTab("timetable");
@@ -69,17 +71,20 @@ class DashboardNavigation extends React.Component<DashboardNavigationProps, Dash
           >
             {t("timetable")}
           </Link>
+          <PermissionsBlocker allowingPermissions={[PermissionLevelEnum.EducationCycles_CanCreateAndDelete, PermissionLevelEnum.EducationCycles_CanCreateAndDelete]}>
+            <Link
+              to="/dashboard/educationCycle"
+              className={"btn btn-outline-primary " + (this.state.activeTab == "educationCycle" ? "active" : "")}
+              onClick={() => {
+                this.setActiveTab("educationCycle");
+              }}
+            >
+              {t("educationCycle")}
+            </Link>
+          </PermissionsBlocker>
+
           <Link
-            to="educationCycle"
-            className={"btn btn-outline-primary " + (this.state.activeTab == "educationCycle" ? "active" : "")}
-            onClick={() => {
-              this.setActiveTab("educationCycle");
-            }}
-          >
-            {t("educationCycle")}
-          </Link>
-          <Link
-            to="manageStudents"
+            to="/dashboard/manageStudents"
             className={"btn btn-outline-primary " + (this.state.activeTab == "manageStudents" ? "active" : "")}
             onClick={() => {
               this.setActiveTab("manageStudents");
@@ -88,7 +93,7 @@ class DashboardNavigation extends React.Component<DashboardNavigationProps, Dash
             {t("manageStudents")}
           </Link>
           <Link
-            to="manageTeachers"
+            to="/dashboard/manageTeachers"
             className={"btn btn-outline-primary " + (this.state.activeTab == "manageTeachers" ? "active" : "")}
             onClick={() => {
               this.setActiveTab("manageTeachers");
@@ -97,7 +102,7 @@ class DashboardNavigation extends React.Component<DashboardNavigationProps, Dash
             {t("manageTeachers")}
           </Link>
           <Link
-            to="manageClasses"
+            to="/dashboard/manageClasses"
             className={"btn btn-outline-primary " + (this.state.activeTab == "manageClasses" ? "active" : "")}
             onClick={() => {
               this.setActiveTab("manageClasses");
@@ -106,7 +111,7 @@ class DashboardNavigation extends React.Component<DashboardNavigationProps, Dash
             {t("manageClasses")}
           </Link>
           <Link
-            to="manageInvitations"
+            to="/dashboard/manageInvitations"
             className={"btn btn-outline-primary " + (this.state.activeTab == "manageInvitations" ? "active" : "")}
             onClick={() => {
               this.setActiveTab("manageInvitations");
@@ -115,7 +120,7 @@ class DashboardNavigation extends React.Component<DashboardNavigationProps, Dash
             {t("manageInvitations")}
           </Link>
           <Link
-            to="manageSchool"
+            to="/dashboard/manageSchool"
             className={"btn btn-outline-primary " + (this.state.activeTab == "manageSchool" ? "active" : "")}
             onClick={() => {
               this.setActiveTab("manageSchool");
@@ -124,7 +129,7 @@ class DashboardNavigation extends React.Component<DashboardNavigationProps, Dash
             {t("manageSchool")}
           </Link>
           <Link
-            to="settings"
+            to="/dashboard/settings"
             className={"btn btn-outline-primary " + (this.state.activeTab == "settings" ? "active" : "")}
             onClick={() => {
               this.setActiveTab("settings");

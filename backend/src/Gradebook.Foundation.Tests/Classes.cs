@@ -53,5 +53,6 @@ public class Classes
         var result = await foundationCommands!.AddStudentsToClass(classGuid, new List<Guid> { studentGuid });
 
         Assert.That(result.Status, Is.False);
+        Assert.That(result.StatusCode, Is.EqualTo(400));
     }
 }

@@ -49,21 +49,6 @@ namespace Gradebook.Foundation.Database.Migrations
                     b.ToTable("ClassTeacher");
                 });
 
-            modelBuilder.Entity("EducationCycleStepSubject", b =>
-                {
-                    b.Property<Guid>("EducationCycleStepsGuid")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("SubjectsGuid")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("EducationCycleStepsGuid", "SubjectsGuid");
-
-                    b.HasIndex("SubjectsGuid");
-
-                    b.ToTable("EducationCycleStepSubject");
-                });
-
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Class", b =>
                 {
                     b.Property<Guid>("Guid")
@@ -109,6 +94,7 @@ namespace Gradebook.Foundation.Database.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<Guid>("SchoolGuid")
@@ -136,16 +122,55 @@ namespace Gradebook.Foundation.Database.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<int>("Order")
                         .HasColumnType("int");
 
+                    b.Property<Guid?>("SubjectGuid")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("Guid");
 
                     b.HasIndex("EducationCycleGuid");
 
+                    b.HasIndex("SubjectGuid");
+
                     b.ToTable("EducationCycleSteps");
+                });
+
+            modelBuilder.Entity("Gradebook.Foundation.Domain.Models.EducationCycleStepSubject", b =>
+                {
+                    b.Property<Guid>("Guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("EducationCycleStepGuid")
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("GroupsAllowed")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("HoursInStep")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsMandatory")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<Guid>("SubjectGuid")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Guid");
+
+                    b.HasIndex("EducationCycleStepGuid");
+
+                    b.HasIndex("SubjectGuid");
+
+                    b.ToTable("EducationCycleStepSubjects");
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Grade", b =>
@@ -550,21 +575,6 @@ namespace Gradebook.Foundation.Database.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("EducationCycleStepSubject", b =>
-                {
-                    b.HasOne("Gradebook.Foundation.Domain.Models.EducationCycleStep", null)
-                        .WithMany()
-                        .HasForeignKey("EducationCycleStepsGuid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Gradebook.Foundation.Domain.Models.Subject", null)
-                        .WithMany()
-                        .HasForeignKey("SubjectsGuid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Class", b =>
                 {
                     b.HasOne("Gradebook.Foundation.Domain.Models.School", "School")
@@ -598,12 +608,35 @@ namespace Gradebook.Foundation.Database.Migrations
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.EducationCycleStep", b =>
                 {
                     b.HasOne("Gradebook.Foundation.Domain.Models.EducationCycle", "EducationCycle")
-                        .WithMany()
+                        .WithMany("EducationCycleSteps")
                         .HasForeignKey("EducationCycleGuid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Gradebook.Foundation.Domain.Models.Subject", null)
+                        .WithMany("EducationCycleSteps")
+                        .HasForeignKey("SubjectGuid");
+
                     b.Navigation("EducationCycle");
+                });
+
+            modelBuilder.Entity("Gradebook.Foundation.Domain.Models.EducationCycleStepSubject", b =>
+                {
+                    b.HasOne("Gradebook.Foundation.Domain.Models.EducationCycleStep", "EducationCycleStep")
+                        .WithMany("EducationCycleStepSubjects")
+                        .HasForeignKey("EducationCycleStepGuid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Gradebook.Foundation.Domain.Models.Subject", "Subject")
+                        .WithMany()
+                        .HasForeignKey("SubjectGuid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EducationCycleStep");
+
+                    b.Navigation("Subject");
                 });
 
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Grade", b =>
@@ -773,6 +806,16 @@ namespace Gradebook.Foundation.Database.Migrations
                     b.Navigation("ActiveStudents");
                 });
 
+            modelBuilder.Entity("Gradebook.Foundation.Domain.Models.EducationCycle", b =>
+                {
+                    b.Navigation("EducationCycleSteps");
+                });
+
+            modelBuilder.Entity("Gradebook.Foundation.Domain.Models.EducationCycleStep", b =>
+                {
+                    b.Navigation("EducationCycleStepSubjects");
+                });
+
             modelBuilder.Entity("Gradebook.Foundation.Domain.Models.School", b =>
                 {
                     b.Navigation("Classes");
@@ -780,6 +823,11 @@ namespace Gradebook.Foundation.Database.Migrations
                     b.Navigation("People");
 
                     b.Navigation("Subjects");
+                });
+
+            modelBuilder.Entity("Gradebook.Foundation.Domain.Models.Subject", b =>
+                {
+                    b.Navigation("EducationCycleSteps");
                 });
 #pragma warning restore 612, 618
         }

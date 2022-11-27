@@ -1,24 +1,30 @@
-import { Button, Grid, List, ListItem, Stack } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faWindowMaximize } from "@fortawesome/free-solid-svg-icons";
-import Tippy from "@tippyjs/react";
-import Swal from "sweetalert2";
-import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
-import Notifications from "../../../../Notifications/Notifications";
-import { Row } from "react-bootstrap";
-import AccountProxy from "../../../../ApiClient/Accounts/AccountsProxy";
-import getCurrentUserIdReduxProxy from "../../../../Redux/ReduxQueries/account/getCurrentUserIdRedux";
-import getSchoolsListReduxProxy from "../../../../Redux/ReduxQueries/account/getSchoolsListRedux";
-import GetSchoolResponse from "../../../../ApiClient/Schools/Definitions/Responses/GetSchoolResponse";
-import setSchoolsListReduxWrapper, { setSchoolsListAction } from "../../../../Redux/ReduxCommands/account/setSchoolsListRedux";
-import setSchoolReduxWrapper, { setSchoolAction } from "../../../../Redux/ReduxCommands/account/setSchoolRedux";
-import JoinSchoolModal from "./JoinSchoolModal";
-import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxQueries/account/getCurrentSchoolRedux";
-import getCurrentPersonReduxProxy, { CurrentPersonProxyResult } from "../../../../Redux/ReduxQueries/account/getCurrentPersonRedux";
+import React, { ReactElement, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+import Swal from 'sweetalert2';
+import SchoolsProxy from '../../../../ApiClient/Schools/SchoolsProxy';
+import Notifications from '../../../../Notifications/Notifications';
+import AccountProxy from '../../../../ApiClient/Accounts/AccountsProxy';
+import getCurrentUserIdReduxProxy from '../../../../Redux/ReduxQueries/account/getCurrentUserIdRedux';
+import getSchoolsListReduxProxy from '../../../../Redux/ReduxQueries/account/getSchoolsListRedux';
+import GetSchoolResponse from '../../../../ApiClient/Schools/Definitions/Responses/GetSchoolResponse';
+import setSchoolsListReduxWrapper, {
+  setSchoolsListAction,
+} from '../../../../Redux/ReduxCommands/account/setSchoolsListRedux';
+import setSchoolReduxWrapper, {
+  setSchoolAction,
+} from '../../../../Redux/ReduxCommands/account/setSchoolRedux';
+import JoinSchoolModal from './JoinSchoolModal';
+import getCurrentSchoolReduxProxy from '../../../../Redux/ReduxQueries/account/getCurrentSchoolRedux';
+import getCurrentPersonReduxProxy, {
+  CurrentPersonProxyResult,
+} from '../../../../Redux/ReduxQueries/account/getCurrentPersonRedux';
+import { Row, Stack, Table } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import Tippy from '@tippyjs/react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { Button } from '@mui/material';
 
 interface SchoolsListProps {
   userId?: string;
@@ -29,38 +35,50 @@ interface SchoolsListProps {
   currentPerson?: CurrentPersonProxyResult;
 }
 
-function SchoolsList(props: SchoolsListProps) {
-  const { t } = useTranslation("schoolsList");
+function SchoolsList(props: SchoolsListProps): ReactElement {
+  const { t } = useTranslation('schoolsList');
   const [showJoinSchoolModal, setShowJoinSchoolModal] = useState(false);
   const [refreshEffectKey, setRefreshEffectKey] = useState(0);
-
+  const navigate = useNavigate();
   useEffect(() => {
-    AccountProxy.getAccessibleSchools(props.userId!).then((schoolsResponse) => {
-      if (!schoolsResponse.data.map((e) => e.school.guid).includes(props.currentSchoolGuid!)) {
-        if (schoolsResponse.data.length != 0)
-          props.setCurrentSchool!({
-            schoolGuid: schoolsResponse.data[0].school.guid,
-            schoolName: schoolsResponse.data[0].school.name,
-          });
-        else props.setCurrentSchool!({ schoolName: "", schoolGuid: "" });
-      }
-    });
+    if (!props.userId) return;
+    void AccountProxy.getAccessibleSchools(props.userId)
+      .then((schoolsResponse) => {
+        if (!props.currentSchoolGuid) return;
+        if (
+          !schoolsResponse.data
+            .map((e) => e.school.guid)
+            .includes(props.currentSchoolGuid)
+        ) {
+          if (!props.setCurrentSchool) return;
+          if (schoolsResponse.data.length !== 0)
+            props.setCurrentSchool({
+              schoolGuid: schoolsResponse.data[0].school.guid,
+              schoolName: schoolsResponse.data[0].school.name,
+            });
+          else props.setCurrentSchool({ schoolName: '', schoolGuid: '' });
+        }
+      })
+      .catch(Notifications.showApiError);
   }, [showJoinSchoolModal, refreshEffectKey]);
 
-  function removeSchoolClickHandler(schoolGuid: string) {
-    Swal.fire({
-      title: t("removeSchool"),
-      text: t("youSureRemoveSchool"),
+  async function removeSchoolClickHandler(schoolGuid: string): Promise<void> {
+    await Swal.fire({
+      title: t('removeSchool'),
+      text: t('youSureRemoveSchool'),
       showDenyButton: true,
       showCancelButton: false,
-      confirmButtonText: t("yes"),
-      denyButtonText: t("no"),
-      icon: "warning",
+      confirmButtonText: t('yes'),
+      denyButtonText: t('no'),
+      icon: 'warning',
     }).then((result) => {
       if (result.isConfirmed) {
         SchoolsProxy.removeSchool(schoolGuid)
           .then((response) => {
-            Notifications.showSuccessNotification("schoolRemovedNotificationTitle", "schoolRemovedNotificationText");
+            Notifications.showSuccessNotification(
+              'schoolRemovedNotificationTitle',
+              'schoolRemovedNotificationText'
+            );
             setRefreshEffectKey((k) => k + 1);
           })
           .catch((err) => {
@@ -74,7 +92,7 @@ function SchoolsList(props: SchoolsListProps) {
     <div>
       <Stack>
         <div className="d-flex justify-content-between">
-          <h5 className="my-auto">{t("managedSchools")}</h5>
+          <h5 className="my-auto">{t('managedSchools')}</h5>
           <div className="d-flex gap-2">
             <JoinSchoolModal
               show={showJoinSchoolModal}
@@ -83,75 +101,71 @@ function SchoolsList(props: SchoolsListProps) {
               }}
               person={props.currentPerson}
             />
-            <Button className="addSchoolButton" onClick={() => setShowJoinSchoolModal(true)} variant={"outlined"}>
-              {t("addSchool")}
+            <Button
+              className="addSchoolButton"
+              onClick={() => setShowJoinSchoolModal(true)}
+              variant={'outlined'}
+            >
+              {t('addSchool')}
             </Button>
           </div>
         </div>
-        <Stack className={"border rounded-3 my-1 p-3 bg-light"}>
-          <Grid container spacing={2}>
-            <Grid item xs>
-              <div>{t("name")}</div>
-            </Grid>
-            <Grid item xs>
-              <div>{t("address")}</div>
-            </Grid>
-            <Grid item xs>
-              <div>{t("postalCode")}</div>
-            </Grid>
-            <Grid item xs>
-              <div>{t("city")}</div>
-            </Grid>
-            <Grid item xs={1}>
-              <div>{t("actions")}</div>
-            </Grid>
-          </Grid>
-        </Stack>
         <Stack>
-          <List>
-            {props.schoolsList?.map((school, index) => (
-              <ListItem key={index} className={"border rounded-3 my-1 p-3"}>
-                <Grid container spacing={2}>
-                  <Grid item xs className="my-auto">
-                    <div>{school.name}</div>
-                  </Grid>
-                  <Grid item xs className="my-auto">
-                    <Stack>
-                      <div>{school.addressLine1}</div>
-                      {school.addressLine2 && <div>{school.addressLine2}</div>}
-                    </Stack>
-                  </Grid>
-                  <Grid item xs className="my-auto">
-                    <div>{school.postalCode}</div>
-                  </Grid>
-                  <Grid item xs className="my-auto">
-                    <div>{school.city}</div>
-                  </Grid>
-                  <Grid item xs={1} className="my-auto">
+          <Table striped bordered hover responsive>
+            <thead>
+              <tr>
+                <th>{t('name')}</th>
+                <th>{t('address')}</th>
+                <th>{t('postalCode')}</th>
+                <th>{t('city')}</th>
+                <th>{t('actions')}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {props.schoolsList?.map((school, index) => (
+                <tr
+                  className="cursor-pointer"
+                  onClick={() => {
+                    navigate(`/school/show/${school.guid}`);
+                  }}
+                  key={index}
+                >
+                  <td>{school.name}</td>
+                  <td>
+                    <div>{school.addressLine1}</div>
+                    {school.addressLine2 && <div>{school.addressLine2}</div>}
+                  </td>
+                  <td>{school.postalCode}</td>
+                  <td>{school.city}</td>
+                  <td>
                     <div className="d-flex gap-1 flex-wrap">
-                      <Link to={`/school/show/${school.guid}`}>
-                        <Tippy content={t("showSchool")} arrow={true} animation={"scale"}>
-                          <Button variant="outlined">
-                            <FontAwesomeIcon icon={faWindowMaximize} />
-                          </Button>
-                        </Tippy>
-                      </Link>
-                      <Tippy content={t("removeSchool")} arrow={true} animation={"scale"}>
-                        <Button variant="outlined" color="error" onClick={() => removeSchoolClickHandler(school.guid)}>
+                      <Tippy
+                        content={t('removeSchool')}
+                        arrow={true}
+                        animation={'scale'}
+                      >
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          onClick={async (evt) => {
+                            evt.stopPropagation();
+                            await removeSchoolClickHandler(school.guid);
+                          }}
+                        >
                           <FontAwesomeIcon icon={faTrash} />
                         </Button>
                       </Tippy>
                     </div>
-                  </Grid>
-                </Grid>
-              </ListItem>
-            ))}
-            {props.schoolsList?.length == 0 && (
-              <Row className="text-center">
-                <div>{t("noSchoolsManaged")}</div>
-              </Row>
-            )}
-          </List>
+                  </td>
+                </tr>
+              ))}
+              {props.schoolsList?.length === 0 && (
+                <Row className="text-center">
+                  <div>{t('noSchoolsManaged')}</div>
+                </Row>
+              )}
+            </tbody>
+          </Table>
         </Stack>
       </Stack>
     </div>
@@ -166,7 +180,9 @@ export default connect(
     currentPerson: getCurrentPersonReduxProxy(state) ?? undefined,
   }),
   (dispatch: any) => ({
-    setSchoolsList: (action: setSchoolsListAction) => setSchoolsListReduxWrapper(dispatch, action),
-    setCurrentSchool: (action: setSchoolAction) => setSchoolReduxWrapper(dispatch, action),
+    setSchoolsList: (action: setSchoolsListAction) =>
+      setSchoolsListReduxWrapper(dispatch, action),
+    setCurrentSchool: (action: setSchoolAction) =>
+      setSchoolReduxWrapper(dispatch, action),
   })
 )(SchoolsList);

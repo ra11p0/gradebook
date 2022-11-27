@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { ActionMeta, SingleValue } from "react-select";
 import { AsyncPaginate } from "react-select-async-paginate";
 
@@ -12,6 +13,7 @@ interface Props<T> {
 }
 
 function SelectAsyncPaginate<T>(props: Props<T>) {
+  const { t } = useTranslation();
   const loadOptions = async (searchQuery: any, loadedOptions: any, { page }: any) => {
     const response = await props.fetch(searchQuery, page);
     return {
@@ -24,6 +26,9 @@ function SelectAsyncPaginate<T>(props: Props<T>) {
   };
   return (
     <AsyncPaginate
+
+      placeholder={<>{t('select...')}</>}
+      noOptionsMessage={() => { return t('noOptions') }}
       onMenuClose={props.onMenuClose}
       defaultOptions
       value={props.value}

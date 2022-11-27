@@ -20,7 +20,7 @@ function PermissionsBlocker(props: Props) {
     });
     setCanSee(canSee);
   }, [props.currentPermissions]);
-  return <>{canSee && <div>{props.children}</div>}</>;
+  return <>{canSee && <>{props.children}</>}</>;
 }
 
 export default connect(

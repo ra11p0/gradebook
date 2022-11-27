@@ -1,43 +1,75 @@
-import { useFormik } from "formik";
-import React, { useState } from "react";
-import { Accordion, AccordionCollapse, Button, Stack } from "react-bootstrap";
-import AccordionItem from "react-bootstrap/esm/AccordionItem";
-import addStageRedux from '../../../../../Redux/ReduxCommands/newEducationCycleForm/addStageRedux'
-import removeStageRedux from '../../../../../Redux/ReduxCommands/newEducationCycleForm/removeStageRedux'
-import { useTranslation } from "react-i18next";
-import DynamicList from "../../../../Shared/DynamicList";
-import FormikInput from "../../../../Shared/FormikInput";
-import NewCycleStepForm from "./NewCycleStepForm";
-import getStagesRedux from "../../../../../Redux/ReduxQueries/newEducationCycleForm/getStagesRedux";
-import getOpenStagesRedux from '../../../../../Redux/ReduxQueries/newEducationCycleForm/getOpenStagesRedux'
-import { connect } from "react-redux";
-import setOpenStagesRedux from '../../../../../Redux/ReduxCommands/newEducationCycleForm/setOpenStagesRedux';
-import addOpenStageRedux from '../../../../../Redux/ReduxCommands/newEducationCycleForm/addOpenStageRedux';
-import FormikValidationLabel from "../../../../Shared/FormikValidationLabel";
+import { useFormik } from 'formik';
+import React, { ReactElement, useState } from 'react';
+import { Accordion, Button, Stack } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import DynamicList from '../../../../Shared/DynamicList';
+import FormikInput from '../../../../Shared/FormikInput';
+import NewCycleStepForm from './NewCycleStepForm';
+import FormikValidationLabel from '../../../../Shared/FormikValidationLabel';
+import * as Yup from 'yup';
+import _ from 'lodash';
+import SchoolsProxy from '../../../../../ApiClient/Schools/SchoolsProxy';
+import Notifications from '../../../../../Notifications/Notifications';
 
-type Props = {
-  stages: string[],
-  openStages: string[]
-};
+export interface Stage {
+  uuid: string;
+  guid?: string;
+  subjects: Array<{
+    guid?: string;
+    uuid: string;
+    hoursNo: number;
+    subjectGuid: string;
+    isMandatory: boolean;
+    canUseGroups: boolean;
+  }>;
+  name: string;
+}
 
-function NewCycleForm(props: Props) {
-  const { t } = useTranslation("educationCycle");
-  const [validationKey, setValidationKey] = useState(0);
-  const [hasError, setHasError] = useState(false);
+function NewCycleForm(): ReactElement {
+  const [openStages, setOpenStages] = useState<string[]>([]);
+  const { t } = useTranslation('educationCycle');
   const formik = useFormik({
-    initialValues: { name: '' },
-    validate: (vals) => {
-      const errors: any = {};
-
-      if (vals.name.length < 3) errors.name = t('invalidName')
-      const stages = getStagesRedux();
-      if (stages.length < 1) errors.stages = t('invalidStagesCount')
-      return errors;
+    initialValues: {
+      name: '',
+      stages: [] as Stage[],
     },
-    onSubmit: (values) => {
-      setHasError(false);
-      setValidationKey(e => e + 1);
-      if (!hasError) console.dir(values);
+    validationSchema: Yup.object().shape({
+      name: Yup.string()
+        .required(t('educationCycleNameIsRequired'))
+        .min(3, t('educationCycleNameTooShort'))
+        .max(25, t('educationCycleNameTooLong')),
+      stages: Yup.array()
+        .of(
+          Yup.object().shape({
+            name: Yup.string()
+              .required(t('educationCycleStepNameIsRequired'))
+              .min(3, t('educationCycleNameStepTooShort'))
+              .max(25, t('educationCycleStepNameTooLong')),
+            subjects: Yup.array()
+              .of(
+                Yup.object().shape({
+                  hoursNo: Yup.number()
+                    .typeError(t('fieldNumberOnly'))
+                    .moreThan(0, t('invalidHoursNumber'))
+                    .required(t('fieldRequired')),
+                  subjectGuid: Yup.string().required(t('fieldRequired')),
+                })
+              )
+              .min(1, t('atLeastOneSubject'))
+              .test('unique', t('subjectSelectedMoreThanOnce'), (e) => {
+                return (
+                  new Set(e?.map((o) => o.subjectGuid)).size ===
+                  e?.map((o) => o.subjectGuid).length
+                );
+              }),
+          })
+        )
+        .min(1, t('atLeastOneStep')),
+    }),
+    onSubmit: async (values) => {
+      await SchoolsProxy.educationCycles
+        .addEducationCycle(values)
+        .then((e) => Notifications.showSuccessNotification('success', e.data));
     },
   });
   return (
@@ -48,55 +80,58 @@ function NewCycleForm(props: Props) {
         </div>
       </div>
       <form onSubmit={formik.handleSubmit}>
-        <FormikInput name={'name'} label={t('educationCycleName')} formik={formik} />
+        <FormikInput
+          name={'name'}
+          label={t('educationCycleName')}
+          formik={formik}
+        />
         <div>
           <small>{t('educationCycleSteps')}</small>
-
+          <FormikValidationLabel formik={formik} name={`stages`} />
           <Accordion
-            activeKey={props.openStages}
+            activeKey={openStages}
             alwaysOpen
-            onSelect={(ei) => { setOpenStagesRedux(ei as string[]) }}>
+            onSelect={(ei) => {
+              setOpenStages(ei as string[]);
+            }}
+          >
             <DynamicList
-              map={(uuid: string) => {
-                return (
-                  <div className="m-2 p-2 shadow border rounded-3">
-                    <NewCycleStepForm stageUuid={uuid} validationKey={validationKey} onValidation={(isValid) => { if (!isValid) setHasError(!isValid) }} />
-                  </div>
-                )
+              map={(uuid, index) => (
+                <div className="m-2 p-2 shadow border rounded-3">
+                  <NewCycleStepForm
+                    stageUuid={uuid}
+                    index={index}
+                    formik={formik}
+                  />
+                </div>
+              )}
+              list={formik.values.stages.map((e) => e.uuid)}
+              onAdded={async (uuid) => {
+                setOpenStages((e) => [...e, uuid]);
+                await formik.setFieldValue('stages', [
+                  ...formik.values.stages,
+                  {
+                    uuid,
+                    name: '',
+                    subjects: [],
+                  },
+                ]);
               }}
-              list={props.stages}
-              onAdded={(uuid) => {
-                formik.setFieldError('stages', undefined)
-                addStageRedux({ uuid });
-                addOpenStageRedux(uuid);
-              }}
-              onRemoved={(uuid) => {
-                removeStageRedux(uuid);
+              onRemoved={async (uuid, index) => {
+                await formik.setFieldValue(
+                  'stages',
+                  _.remove(formik.values.stages, (el, ind) => ind !== index)
+                );
               }}
             />
-
           </Accordion>
-          <FormikValidationLabel formik={formik} name='stages' showDespiteTouching={true} />
         </div>
         <div className="d-flex justify-content-end m-1 p-1">
-          <Button type="submit">{t("addNewCycle")}</Button>
+          <Button type="submit">{t('addNewCycle')}</Button>
         </div>
       </form>
     </Stack>
   );
 }
 
-export default connect(
-  (state: any) =>
-  (
-    {
-      stages: getStagesRedux(state).map(st => st.uuid),
-      openStages: getOpenStagesRedux(state)
-    }
-  )
-  ,
-  () =>
-  (
-    {}
-  )
-)(NewCycleForm);
+export default NewCycleForm;

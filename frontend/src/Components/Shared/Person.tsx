@@ -1,13 +1,10 @@
-import React, { ReactElement } from "react";
-import { connect } from "react-redux";
-import { useTranslation } from "react-i18next";
-import { Col, Row } from "react-bootstrap";
-import moment from "moment";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
-const mapStateToProps = (state: any) => ({});
-const mapDispatchToProps = (dispatch: any) => ({});
+import React, { ReactElement } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Col, Row } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
+import SchoolRolesEnum from '../../Common/Enums/SchoolRolesEnum';
 interface PersonProps {
   guid: string;
   name: string;
@@ -15,24 +12,33 @@ interface PersonProps {
   birthday: Date;
   className?: string;
   noLink?: boolean;
+  schoolRole: SchoolRolesEnum;
 }
 const Person = (props: PersonProps): ReactElement => {
-  const { t } = useTranslation("person");
+  const { t } = useTranslation('person');
   return (
-    <Link to={props.noLink ? `#` : `/person/show/${props.guid}`} className={`text-reset`}>
-      <div className={`bg-light border rounded-3 m-1 p-2 ${props.className}`}>
-        <Row>
-          <Col xs={2} className="my-auto text-center">
-            <FontAwesomeIcon icon={faUser} />
-          </Col>
-          <Col>
-            <Row>{props.name}</Row>
-            <Row>{props.surname}</Row>
-          </Col>
-          <Col className="my-auto">{moment.utc(props.birthday).local().format("L")}</Col>
-        </Row>
-      </div>
+    <Link
+      to={props.noLink ? `javascript:;` : `/person/show/${props.guid}`}
+      className={`${props.noLink ? 'disabled text-reset' : ''} ${
+        props.className ?? ''
+      } w-100 text-start btn btn-sm btn-outline-secondary`}
+    >
+      <Row>
+        <Col xs={1} className={`my-auto mx-2`}>
+          <FontAwesomeIcon icon={faUser} />
+        </Col>
+        <Col>
+          <Row>
+            <Col>{`${props.name} ${props.surname}`}</Col>
+          </Row>
+          <Row>
+            <Col>
+              <small>{t(SchoolRolesEnum[props.schoolRole])}</small>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
     </Link>
   );
 };
-export default connect(mapStateToProps, mapDispatchToProps)(Person);
+export default Person;

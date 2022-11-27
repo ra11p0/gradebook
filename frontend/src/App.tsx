@@ -23,12 +23,18 @@ import setLogOutReduxWrapper from "./Redux/ReduxCommands/account/setLogOutRedux"
 import setApplicationLanguageReduxWrapper from "./Redux/ReduxCommands/account/setApplicationLanguageRedux";
 import i18n from "./i18n/config";
 import Subject from "./Routes/Subject";
+import EducationCycle from "./Routes/EducationCycle";
+import PermissionLevelEnum from "./Common/Enums/Permissions/PermissionLevelEnum";
+import getHasPermissionRedux from './Redux/ReduxQueries/account/getHasPermissionRedux';
 
 interface AppProps {
   onLoad: (isAppLoaded: boolean) => {};
   appLoaded: boolean;
   isLoggedIn: boolean;
   isUserActivated: boolean;
+  permissions: {
+    canSeeEducationCycleRoute: boolean;
+  }
 }
 
 class App extends React.Component<AppProps> {
@@ -88,6 +94,15 @@ class App extends React.Component<AppProps> {
                     <Route path="/person/*" element={<Person />} />
                     <Route path="/class/*" element={<Class />} />
                     <Route path="/subject/*" element={<Subject />} />
+                    {
+                      this.props.permissions.canSeeEducationCycleRoute && (
+                        <>
+                          <Route path="/educationCycle/*" element={<EducationCycle />} />
+                        </>
+                      )
+                    }
+
+
                   </>
                 )
               }
@@ -104,6 +119,9 @@ export default connect(
     appLoaded: state.common.appLoaded,
     isLoggedIn: getIsLoggedInReduxProxy(state),
     isUserActivated: getIsUserActivatedReduxProxy(state),
+    permissions: {
+      canSeeEducationCycleRoute: getHasPermissionRedux([PermissionLevelEnum.EducationCycles_CanCreateAndDelete, PermissionLevelEnum.EducationCycles_ViewOnly], state)
+    }
   }),
   (dispatch: any) => ({
     onLoad: (isAppLoaded: boolean) => setAppLoadReduxWrapper(dispatch, isAppLoaded),

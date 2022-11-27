@@ -6,5 +6,6 @@ public enum PermissionEnum
     Permissions = 2,
     Classes = 3,
     Subjects = 4,
-    Students = 5
+    Students = 5,
+    EducationCycles = 6
 }

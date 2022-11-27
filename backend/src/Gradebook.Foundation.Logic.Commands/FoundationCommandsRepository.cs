@@ -245,4 +245,30 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
         subject.Teachers!.RemoveRange(teachers);
         return new StatusResponse(true);
     }
+
+    public async Task<ResponseWithStatus<Guid>> AddNewEducationCycle(EducationCycleCommand command)
+    {
+        EducationCycle educationCycle = new()
+        {
+            Name = command.Name,
+            SchoolGuid = command.SchoolGuid,
+            CreatedDate = command.CreatedDate,
+            CreatorGuid = command.CreatorGuid,
+            EducationCycleSteps = command.Stages.Select((step, index) => new EducationCycleStep()
+            {
+                Name = step.Name,
+                Order = index,
+                EducationCycleStepSubjects = step.Subjects.Select(subject => new EducationCycleStepSubject()
+                {
+                    SubjectGuid = subject.SubjectGuid,
+                    HoursInStep = subject.HoursNo,
+                    IsMandatory = subject.IsMandatory,
+                    GroupsAllowed = subject.CanUseGroups,
+                }).ToList()
+            }).ToList()
+        };
+        await Context.AddAsync(educationCycle);
+        return new ResponseWithStatus<Guid>(educationCycle.Guid);
+    }
 }
+

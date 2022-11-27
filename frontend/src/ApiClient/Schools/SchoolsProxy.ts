@@ -13,7 +13,9 @@ import StudentInSchoolResponse from "./Definitions/Responses/StudentInSchoolResp
 import TeacherInSchoolResponse from "./Definitions/Responses/TeacherInSchoolResponse";
 import SubjectResponse from "./Definitions/Responses/SubjectResponse";
 import NewSubjectRequest from "./Definitions/Requests/NewSubjectRequest";
-import getCurrentSchoolReduxProxy from "../../Redux/ReduxQueries/account/getCurrentSchoolRedux";
+import getCurrentSchoolRedux from "../../Redux/ReduxQueries/account/getCurrentSchoolRedux";
+import NewEducationCycleRequest from "./Definitions/Requests/NewEducationCycleRequest";
+import EducationCycleResponse from './Definitions/Responses/EducationCycleResponse';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -78,15 +80,21 @@ const searchPeople = (schoolGuid: string, discriminator: string, query: string, 
     });
 }
 
-const addNewSubject = (newSubjectRequest: NewSubjectRequest, schoolGuid: string = getCurrentSchoolReduxProxy()?.schoolGuid ?? ''): Promise<AxiosResponse<string>> => {
+const addNewSubject = (newSubjectRequest: NewSubjectRequest, schoolGuid: string = getCurrentSchoolRedux()?.schoolGuid ?? ''): Promise<AxiosResponse<string>> => {
     return axiosApiAuthorized.post(API_URL + `/schools/${schoolGuid}/Subjects`, newSubjectRequest);
 }
 
-const getSubjectsInSchool = (page: number, query: string | undefined = undefined, schoolGuid: string = getCurrentSchoolReduxProxy()?.schoolGuid ?? ''): Promise<AxiosResponse<SubjectResponse[]>> => {
+const getSubjectsInSchool = (page: number, query: string | undefined = undefined, schoolGuid: string = getCurrentSchoolRedux()?.schoolGuid ?? ''): Promise<AxiosResponse<SubjectResponse[]>> => {
     return axiosApiAuthorized.get(API_URL + `/schools/${schoolGuid}/Subjects`, { params: { page, query } });
 }
 
+const addEducationCycle = (educationCycle: NewEducationCycleRequest, schoolGuid: string = getCurrentSchoolRedux()?.schoolGuid!): Promise<AxiosResponse<string>> => {
+    return axiosApiAuthorized.post(`${API_URL}/schools/${schoolGuid}/educationCycles`, educationCycle);
+}
 
+const getEducationCyclesInSchool = (page: number = 0, schoolGuid: string = getCurrentSchoolRedux()?.schoolGuid!): Promise<AxiosResponse<EducationCycleResponse[]>> => {
+    return axiosApiAuthorized.get(`${API_URL}/schools/${schoolGuid}/educationCycles`, { params: { page } });
+}
 
 
 export default {
@@ -102,5 +110,9 @@ export default {
     searchPeople,
     getTeachersInSchool,
     addNewTeacher,
-    subjects: { getSubjectsInSchool, addNewSubject }
+    subjects: { getSubjectsInSchool, addNewSubject },
+    educationCycles: {
+        addEducationCycle,
+        getEducationCyclesInSchool
+    }
 }

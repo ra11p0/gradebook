@@ -18,22 +18,20 @@ type Props = {
 function Class(props: Props) {
   const { t } = useTranslation("class");
   return (
-    <>
-      <Link to={props.noLink ? `#` : `/class/show/${props.guid}`} className={`text-reset`}>
-        <div className={`bg-light border rounded-3 m-1 p-2 ${props.className}`}>
-          <Row>
-            <Col xs={2} className="my-auto text-center">
-              <FontAwesomeIcon icon={faChalkboardTeacher} />
-            </Col>
-            <Col>
-              <Row>{props.name}</Row>
-              <Row>{moment.utc(props.createdDate).local().format("Y")}</Row>
-            </Col>
-            <Col className="my-auto">{props.description}</Col>
-          </Row>
-        </div>
-      </Link>
-    </>
+    <Link
+      to={props.noLink ? `javascript:;` : `/class/show/${props.guid}`}
+      className={`${props.noLink ? 'disabled text-reset' : ''} ${props.className ?? ''} w-100 text-start btn btn-sm btn-outline-secondary`}>
+      <Row>
+        <Col xs={2} className="my-auto text-center">
+          <FontAwesomeIcon icon={faChalkboardTeacher} />
+        </Col>
+        <Col>
+          <Row>{props.name}</Row>
+          <Row>{moment.utc(props.createdDate).local().format("Y")}</Row>
+        </Col>
+        <Col className="my-auto">{props.description}</Col>
+      </Row>
+    </Link>
   );
 }
 

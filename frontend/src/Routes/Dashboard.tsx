@@ -16,15 +16,23 @@ import ManageClasses from "../Components/Dashboard/Manage/ManageClasses/ManageCl
 import getIsLoggedInReduxProxy from "../Redux/ReduxQueries/account/getIsLoggedInRedux";
 import SettingsIndex from "../Components/Dashboard/Manage/Settings/SettingsIndex";
 import EducationCycle from "../Components/Dashboard/Manage/EducationCycle/EducationCycle";
+import getHasPermissionRedux from "../Redux/ReduxQueries/account/getHasPermissionRedux";
+import PermissionLevelEnum from "../Common/Enums/Permissions/PermissionLevelEnum";
 
 const mapStateToProps = (state: any) => ({
   isLoggedIn: getIsLoggedInReduxProxy(state),
+  permissions: {
+    hasPermissionToEducatonCycles: getHasPermissionRedux([PermissionLevelEnum.EducationCycles_CanCreateAndDelete, PermissionLevelEnum.EducationCycles_ViewOnly], state)
+  }
 });
 
 const mapDispatchToProps = (dispatch: any) => ({});
 
 interface DashboardProps {
   isLoggedIn?: boolean;
+  permissions: {
+    hasPermissionToEducatonCycles: boolean;
+  }
 }
 
 class Dashboard extends React.Component<DashboardProps> {
@@ -39,14 +47,19 @@ class Dashboard extends React.Component<DashboardProps> {
             <Route path="*" element={<DashboardIndex />} />
             <Route path="absence" element={<Absence />} />
             <Route path="grades" element={<Grades />} />
-            <Route
-              path="educationCycle/*"
-              element={
-                <SchoolSelectedOnly>
-                  <EducationCycle />
-                </SchoolSelectedOnly>
-              }
-            />
+            {
+              this.props.permissions.hasPermissionToEducatonCycles && (
+                <Route
+                  path="educationCycle/*"
+                  element={
+                    <SchoolSelectedOnly>
+                      <EducationCycle />
+                    </SchoolSelectedOnly>
+                  }
+                />
+              )
+            }
+
             <Route
               path="manageSubjects"
               element={

@@ -23,6 +23,7 @@ public class FoundationDatabaseContext : DbContext
     public DbSet<Administrator>? Administrators { get; set; }
     public DbSet<EducationCycle>? EducationCycles { get; set; }
     public DbSet<EducationCycleStep>? EducationCycleSteps { get; set; }
+    public DbSet<EducationCycleStepSubject>? EducationCycleStepSubjects { get; set; }
 
     public FoundationDatabaseContext()
     {

@@ -49,7 +49,7 @@ const AddInvitationModal = (props: AddInvitationModalProps): ReactElement => {
       <Modal.Body>
         <Stack>
           <Stack>
-            <div className="d-flex flex-wrap gap-1 justify-content-center mt-2">
+            <div className="d-flex flex-wrap gap-1 justify-content-center">
               <>
                 {inactiveStudents
                   .filter((student) => selectedStudents.includes(student.guid))
@@ -69,7 +69,7 @@ const AddInvitationModal = (props: AddInvitationModalProps): ReactElement => {
             </div>
           </Stack>
           <Stack>
-            <FormControl>
+            <FormControl className="mt-4">
               <InputLabel>{t("selectPeopleToInvite")}</InputLabel>
               <Select
                 className="selectPeopleToInvite"
@@ -86,7 +86,7 @@ const AddInvitationModal = (props: AddInvitationModalProps): ReactElement => {
               >
                 {inactiveStudents.map((student) => (
                   <MenuItem key={student.guid} value={student.guid} className="row">
-                    <Person guid={student.guid} name={student.name} surname={student.surname} birthday={student.birthday} noLink={true} />
+                    <Person {...student} noLink={true} />
                   </MenuItem>
                 ))}
               </Select>

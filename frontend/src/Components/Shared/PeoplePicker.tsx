@@ -34,8 +34,9 @@ function PeoplePicker(props: Props) {
       <Modal.Header closeButton>{t("peoplePicker")}</Modal.Header>
       <Modal.Body>
         <Input type="text" className="w-100" placeholder={t("searchPeople")} value={query} onChange={(e) => setQuery(e.target.value)} />
-        <div className="vh-50 overflow-scroll">
+        <div id="scrollContainer" className="vh-50 overflow-scroll">
           <InfiniteScrollWrapper
+            scrollableTarget="scrollContainer"
             effect={[query]}
             mapper={(person: PersonResponse, index) => (
               <div
