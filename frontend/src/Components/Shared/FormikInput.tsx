@@ -1,9 +1,9 @@
-import _ from "lodash";
-import React from "react";
-import { Form, Stack } from "react-bootstrap";
-import FormikValidationLabel from './FormikValidationLabel'
+import _ from 'lodash';
+import React, { ReactElement } from 'react';
+import { Form } from 'react-bootstrap';
+import FormikValidationLabel from './FormikValidationLabel';
 
-type Props = {
+interface Props {
   name: string;
   label?: string;
   type?: string;
@@ -16,58 +16,77 @@ type Props = {
   };
   onChange?: (evt: React.ChangeEvent<HTMLInputElement>) => void;
   showErrorsDespiteTouching?: boolean;
-};
+}
 
-function FormikInput(props: Props) {
+function FormikInput(props: Props): ReactElement {
   return (
     <Form.Group className="m-1 p-1">
-      {
-        (() => {
-          switch (props.type) {
-            case 'switch':
-              return (
-                <>
-                  <Form.Check
-                    type="switch"
-                    id={props.name}
-                    name={props.name}
-                    label={props.label ?? props.name}
-                    checked={_.get(props.formik.values, props.name)}
-                    onChange={(evt) => {
-                      props.formik.handleChange(evt)
-                      if (props.onChange) props.onChange(evt);
-                    }}
-                    onBlur={evt => { props.formik.handleBlur(evt) }}
-                    isInvalid={_.get(props.formik.errors, props.name) && _.get(props.formik.touched, props.name)}
-                    isValid={(!_.get(props.formik.errors, props.name) && _.get(props.formik.touched, props.name))}
-                  />
-                </>
-              )
-            default:
-              return (
-                <>
-                  <Form.Label htmlFor={props.name}>{props.label ?? props.name}</Form.Label>
-                  <Form.Control
-                    className="form-control"
-                    id={props.name}
-                    name={props.name}
-                    type={props.type ?? "text"}
-                    onChange={(evt: any) => {
-                      props.formik.handleChange(evt)
-                      if (props.onChange) props.onChange(evt);
-                    }}
-                    isInvalid={_.get(props.formik.errors, props.name) && _.get(props.formik.touched, props.name)}
-                    isValid={(!_.get(props.formik.errors, props.name) && _.get(props.formik.touched, props.name))}
-                    onBlur={(evt: any) => { props.formik.handleBlur(evt) }}
-                    value={_.get(props.formik.values, props.name)}
-                  />
-                </>
-              )
-          }
-        })()
-      }
+      {(() => {
+        switch (props.type) {
+          case 'switch':
+            return (
+              <>
+                <Form.Check
+                  type="switch"
+                  id={props.name}
+                  name={props.name}
+                  label={props.label ?? props.name}
+                  checked={_.get(props.formik.values, props.name)}
+                  onChange={(evt) => {
+                    props.formik.handleChange(evt);
+                    if (props.onChange) props.onChange(evt);
+                  }}
+                  onBlur={(evt) => {
+                    props.formik.handleBlur(evt);
+                  }}
+                  isInvalid={
+                    _.get(props.formik.errors, props.name) &&
+                    _.get(props.formik.touched, props.name)
+                  }
+                  isValid={
+                    !_.get(props.formik.errors, props.name) &&
+                    _.get(props.formik.touched, props.name)
+                  }
+                />
+              </>
+            );
+          default:
+            return (
+              <>
+                <Form.Label htmlFor={props.name}>
+                  {props.label ?? props.name}
+                </Form.Label>
+                <Form.Control
+                  className="form-control"
+                  id={props.name}
+                  name={props.name}
+                  type={props.type ?? 'text'}
+                  onChange={(evt: any) => {
+                    props.formik.handleChange(evt);
+                    if (props.onChange) props.onChange(evt);
+                  }}
+                  isInvalid={
+                    _.get(props.formik.errors, props.name) &&
+                    _.get(props.formik.touched, props.name)
+                  }
+                  isValid={
+                    !_.get(props.formik.errors, props.name) &&
+                    _.get(props.formik.touched, props.name)
+                  }
+                  onBlur={(evt: any) => {
+                    props.formik.handleBlur(evt);
+                  }}
+                  value={_.get(props.formik.values, props.name)}
+                />
+              </>
+            );
+        }
+      })()}
 
-      <FormikValidationLabel {...props} showDespiteTouching={props.showErrorsDespiteTouching} />
+      <FormikValidationLabel
+        {...props}
+        showDespiteTouching={props.showErrorsDespiteTouching}
+      />
     </Form.Group>
   );
 }

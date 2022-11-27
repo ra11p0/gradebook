@@ -1,20 +1,15 @@
-import React, { ReactElement } from "react";
-import { connect } from "react-redux";
-import { useTranslation } from "react-i18next";
-import { Badge } from "react-bootstrap";
-const mapStateToProps = (state: any) => ({});
-const mapDispatchToProps = (dispatch: any) => ({});
+import React, { ReactElement } from 'react';
+import { Badge } from 'react-bootstrap';
 interface PersonProps {
   name: string;
   surname: string;
   className?: string;
 }
 const PersonSmall = (props: PersonProps): ReactElement => {
-  const { t } = useTranslation("person");
   return (
-    <Badge className={`m-1 p-2 ${props.className}`}>
+    <Badge className={`m-1 p-2 ${props.className ?? ''}`}>
       <span>{`${props.name} ${props.surname}`}</span>
     </Badge>
   );
 };
-export default connect(mapStateToProps, mapDispatchToProps)(PersonSmall);
+export default PersonSmall;

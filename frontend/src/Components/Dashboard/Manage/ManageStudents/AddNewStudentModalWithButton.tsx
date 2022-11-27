@@ -1,16 +1,16 @@
-import React from "react";
-import { Button } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
-import NotificationsHub from "../../../../ApiClient/SignalR/NotificationsHub/NotificationsHub";
-import AddNewStudentModal from "./AddNewStudentModal";
+import React, { ReactElement } from 'react';
+import { Button } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import NotificationsHub from '../../../../ApiClient/SignalR/NotificationsHub/NotificationsHub';
+import AddNewStudentModal from './AddNewStudentModal';
 
-type Props = {
+interface Props {
   setShowAddStudentModal: (visible: boolean) => void;
   showAddStudentModal: boolean;
-};
+}
 
-function AddNewStudentModalWithButton(props: Props) {
-  const { t } = useTranslation("studentsList");
+function AddNewStudentModalWithButton(props: Props): ReactElement {
+  const { t } = useTranslation('studentsList');
   return (
     <>
       <AddNewStudentModal
@@ -19,11 +19,14 @@ function AddNewStudentModalWithButton(props: Props) {
           props.setShowAddStudentModal(false);
         }}
       />
-      <Button onClick={() => {
-        props.setShowAddStudentModal(true);
-        NotificationsHub.sendNotification();
-      }} className="addNewStudentButton">
-        {t("addStudent")}
+      <Button
+        onClick={async () => {
+          props.setShowAddStudentModal(true);
+          await NotificationsHub.sendNotification();
+        }}
+        className="addNewStudentButton"
+      >
+        {t('addStudent')}
       </Button>
     </>
   );

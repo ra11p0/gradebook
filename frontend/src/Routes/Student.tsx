@@ -1,16 +1,9 @@
-import { connect } from "react-redux";
-import React from "react";
-import { Route, Routes } from "react-router-dom";
-import StudentIndex from "../Components/Student/StudentIndex";
+import React, { ReactElement } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import StudentIndex from '../Components/Student/StudentIndex';
 
-const mapStateToProps = (state: any) => ({});
-
-const mapDispatchToProps = (dispatch: any) => ({});
-
-interface DashboardProps {}
-
-class Student extends React.Component<DashboardProps> {
-  render() {
+class Student extends React.Component {
+  render(): ReactElement {
     return (
       <div className="m-3 card">
         <div className="card-body">
@@ -23,4 +16,4 @@ class Student extends React.Component<DashboardProps> {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Student);
+export default Student;

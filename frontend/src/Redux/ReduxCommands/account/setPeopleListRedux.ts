@@ -1,14 +1,14 @@
-import GetAccessiblePeopleResponse from "../../../ApiClient/Accounts/Definitions/Responses/GetAccessiblePeopleResponse";
-import ActionTypes from "../../ActionTypes/accountActionTypes";
+import GetAccessiblePeopleResponse from '../../../ApiClient/Accounts/Definitions/Responses/GetAccessiblePeopleResponse';
+import ActionTypes from '../../ActionTypes/accountActionTypes';
 
 const setPeopleList = {
-    type: ActionTypes.SetPeopleList
-}
+  type: ActionTypes.SetPeopleList,
+};
 
 export interface setPeopleListAction {
-    peopleList: GetAccessiblePeopleResponse[]
+  peopleList: GetAccessiblePeopleResponse[];
 }
 
-export default (dispatch: any, action: setPeopleListAction) => {
-    dispatch({ ...setPeopleList, payload: { ...action } })
+export default (dispatch: any, action: setPeopleListAction): void => {
+  dispatch({ ...setPeopleList, payload: { ...action } });
 };

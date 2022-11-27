@@ -1,18 +1,18 @@
 export default interface NewEducationCycleRequest {
-    guid?: string;
-    name: string;
-    stages: EducationCycleStepRequest[];
+  guid?: string;
+  name: string;
+  stages: EducationCycleStepRequest[];
 }
 
 export interface EducationCycleStepRequest {
-    guid?: string;
-    name: string;
-    subjects: EducationCycleStepSubjectRequest[];
+  guid?: string;
+  name: string;
+  subjects: EducationCycleStepSubjectRequest[];
 }
 
 export interface EducationCycleStepSubjectRequest {
-    guid?: string;
-    subjectGuid: string;
-    isMandatory: boolean;
-    canUseGroups: boolean;
+  guid?: string;
+  subjectGuid: string;
+  isMandatory: boolean;
+  canUseGroups: boolean;
 }

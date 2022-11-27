@@ -1,3 +1,4 @@
-import getCurrentSchoolReduxProxy from "./getCurrentSchoolRedux";
+import getCurrentSchoolReduxProxy from './getCurrentSchoolRedux';
 
-export default (state: any): boolean => getCurrentSchoolReduxProxy(state) != null;
+export default (state: any): boolean =>
+  getCurrentSchoolReduxProxy(state) != null;

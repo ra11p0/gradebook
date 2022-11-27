@@ -1,3 +1,3 @@
 export default (state: any): string => {
-    return state.common.language;
-}
+  return state.common.language;
+};

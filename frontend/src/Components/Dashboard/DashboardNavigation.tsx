@@ -1,14 +1,9 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { connect } from "react-redux";
-import { Nav } from "react-bootstrap";
-import { withTranslation } from "react-i18next";
-import PermissionsBlocker from "../Shared/PermissionsBlocker";
-import PermissionLevelEnum from "../../Common/Enums/Permissions/PermissionLevelEnum";
-
-const mapStateToProps = (state: any) => ({});
-
-const mapDispatchToProps = (dispatch: any) => ({});
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Nav } from 'react-bootstrap';
+import { withTranslation } from 'react-i18next';
+import PermissionsBlocker from '../Shared/PermissionsBlocker';
+import PermissionLevelEnum from '../../Common/Enums/Permissions/PermissionLevelEnum';
 
 interface DashboardNavigationProps {
   t: any;
@@ -17,19 +12,24 @@ interface DashboardNavigationState {
   activeTab: string;
 }
 
-class DashboardNavigation extends React.Component<DashboardNavigationProps, DashboardNavigationState> {
+class DashboardNavigation extends React.Component<
+  DashboardNavigationProps,
+  DashboardNavigationState
+> {
   constructor(props: DashboardNavigationProps) {
     super(props);
     this.state = {
-      activeTab: "",
+      activeTab: '',
     };
   }
-  setActiveTab(tab: string) {
+
+  setActiveTab(tab: string): void {
     this.setState({
       ...this.state,
       activeTab: tab,
     });
   }
+
   render(): React.ReactNode {
     const { t } = this.props;
     return (
@@ -37,105 +37,143 @@ class DashboardNavigation extends React.Component<DashboardNavigationProps, Dash
         <Nav className="d-flex gap-2 justify-content-end">
           <Link
             to="/dashboard/grades"
-            className={"btn btn-outline-primary " + (this.state.activeTab == "grades" ? "active" : "")}
+            className={
+              'btn btn-outline-primary ' +
+              (this.state.activeTab === 'grades' ? 'active' : '')
+            }
             onClick={() => {
-              this.setActiveTab("grades");
+              this.setActiveTab('grades');
             }}
           >
-            {t("grades")}
+            {t('grades')}
           </Link>
           <Link
             to="/dashboard/absence"
-            className={"btn btn-outline-primary " + (this.state.activeTab == "absence" ? "active" : "")}
+            className={
+              'btn btn-outline-primary ' +
+              (this.state.activeTab === 'absence' ? 'active' : '')
+            }
             onClick={() => {
-              this.setActiveTab("absence");
+              this.setActiveTab('absence');
             }}
           >
-            {t("absence")}
+            {t('absence')}
           </Link>
           <Link
             to="/dashboard/manageSubjects"
-            className={"btn btn-outline-primary " + (this.state.activeTab == "subject" ? "active" : "")}
+            className={
+              'btn btn-outline-primary ' +
+              (this.state.activeTab === 'subject' ? 'active' : '')
+            }
             onClick={() => {
-              this.setActiveTab("subject");
+              this.setActiveTab('subject');
             }}
           >
-            {t("subjects")}
+            {t('subjects')}
           </Link>
           <Link
             to="/dashboard/timetable"
-            className={"btn btn-outline-primary " + (this.state.activeTab == "timetable" ? "active" : "")}
+            className={
+              'btn btn-outline-primary ' +
+              (this.state.activeTab === 'timetable' ? 'active' : '')
+            }
             onClick={() => {
-              this.setActiveTab("timetable");
+              this.setActiveTab('timetable');
             }}
           >
-            {t("timetable")}
+            {t('timetable')}
           </Link>
-          <PermissionsBlocker allowingPermissions={[PermissionLevelEnum.EducationCycles_CanCreateAndDelete, PermissionLevelEnum.EducationCycles_CanCreateAndDelete]}>
+          <PermissionsBlocker
+            allowingPermissions={[
+              PermissionLevelEnum.EducationCycles_CanCreateAndDelete,
+              PermissionLevelEnum.EducationCycles_CanCreateAndDelete,
+            ]}
+          >
             <Link
               to="/dashboard/educationCycle"
-              className={"btn btn-outline-primary " + (this.state.activeTab == "educationCycle" ? "active" : "")}
+              className={
+                'btn btn-outline-primary ' +
+                (this.state.activeTab === 'educationCycle' ? 'active' : '')
+              }
               onClick={() => {
-                this.setActiveTab("educationCycle");
+                this.setActiveTab('educationCycle');
               }}
             >
-              {t("educationCycle")}
+              {t('educationCycle')}
             </Link>
           </PermissionsBlocker>
 
           <Link
             to="/dashboard/manageStudents"
-            className={"btn btn-outline-primary " + (this.state.activeTab == "manageStudents" ? "active" : "")}
+            className={
+              'btn btn-outline-primary ' +
+              (this.state.activeTab === 'manageStudents' ? 'active' : '')
+            }
             onClick={() => {
-              this.setActiveTab("manageStudents");
+              this.setActiveTab('manageStudents');
             }}
           >
-            {t("manageStudents")}
+            {t('manageStudents')}
           </Link>
           <Link
             to="/dashboard/manageTeachers"
-            className={"btn btn-outline-primary " + (this.state.activeTab == "manageTeachers" ? "active" : "")}
+            className={
+              'btn btn-outline-primary ' +
+              (this.state.activeTab === 'manageTeachers' ? 'active' : '')
+            }
             onClick={() => {
-              this.setActiveTab("manageTeachers");
+              this.setActiveTab('manageTeachers');
             }}
           >
-            {t("manageTeachers")}
+            {t('manageTeachers')}
           </Link>
           <Link
             to="/dashboard/manageClasses"
-            className={"btn btn-outline-primary " + (this.state.activeTab == "manageClasses" ? "active" : "")}
+            className={
+              'btn btn-outline-primary ' +
+              (this.state.activeTab === 'manageClasses' ? 'active' : '')
+            }
             onClick={() => {
-              this.setActiveTab("manageClasses");
+              this.setActiveTab('manageClasses');
             }}
           >
-            {t("manageClasses")}
+            {t('manageClasses')}
           </Link>
           <Link
             to="/dashboard/manageInvitations"
-            className={"btn btn-outline-primary " + (this.state.activeTab == "manageInvitations" ? "active" : "")}
+            className={
+              'btn btn-outline-primary ' +
+              (this.state.activeTab === 'manageInvitations' ? 'active' : '')
+            }
             onClick={() => {
-              this.setActiveTab("manageInvitations");
+              this.setActiveTab('manageInvitations');
             }}
           >
-            {t("manageInvitations")}
+            {t('manageInvitations')}
           </Link>
           <Link
             to="/dashboard/manageSchool"
-            className={"btn btn-outline-primary " + (this.state.activeTab == "manageSchool" ? "active" : "")}
+            className={
+              'btn btn-outline-primary ' +
+              (this.state.activeTab === 'manageSchool' ? 'active' : '')
+            }
             onClick={() => {
-              this.setActiveTab("manageSchool");
+              this.setActiveTab('manageSchool');
             }}
           >
-            {t("manageSchool")}
+            {t('manageSchool')}
           </Link>
           <Link
             to="/dashboard/settings"
-            className={"btn btn-outline-primary " + (this.state.activeTab == "settings" ? "active" : "")}
+            className={
+              'btn btn-outline-primary ' +
+              (this.state.activeTab === 'settings' ? 'active' : '')
+            }
             onClick={() => {
-              this.setActiveTab("settings");
+              this.setActiveTab('settings');
             }}
           >
-            {t("settings")}
+            {t('settings')}
           </Link>
         </Nav>
       </div>
@@ -143,4 +181,4 @@ class DashboardNavigation extends React.Component<DashboardNavigationProps, Dash
   }
 }
 
-export default withTranslation("dashboardNavigation")(connect(mapStateToProps, mapDispatchToProps)(DashboardNavigation));
+export default withTranslation('dashboardNavigation')(DashboardNavigation);

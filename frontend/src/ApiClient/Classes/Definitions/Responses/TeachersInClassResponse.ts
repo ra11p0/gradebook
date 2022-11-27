@@ -1,12 +1,12 @@
-import SchoolRolesEnum from '../../../../Common/Enums/SchoolRolesEnum'
+import SchoolRolesEnum from '../../../../Common/Enums/SchoolRolesEnum';
 
 export default interface TeachersInClassResponse {
-    guid: string;
-    creatorGuid: string;
-    userGuid: string;
-    name: string;
-    surname: string;
-    schoolRole: SchoolRolesEnum;
-    birthday: Date;
-    isActive: boolean;
+  guid: string;
+  creatorGuid: string;
+  userGuid: string;
+  name: string;
+  surname: string;
+  schoolRole: SchoolRolesEnum;
+  birthday: Date;
+  isActive: boolean;
 }

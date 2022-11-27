@@ -1,22 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
-import SchoolsProxy from "../../ApiClient/Schools/SchoolsProxy";
-import TeachersForSubjectResponse from "../../ApiClient/Subjects/Definitions/Responses/TeachersForSubjectResponse";
-import SubjectsProxy from "../../ApiClient/Subjects/SubjectsProxy";
-import Notifications from "../../Notifications/Notifications";
-import PeoplePicker from "../Shared/PeoplePicker";
+import React, { ReactElement, useEffect, useState } from 'react';
+import { Button } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import SchoolsProxy from '../../ApiClient/Schools/SchoolsProxy';
+import TeachersForSubjectResponse from '../../ApiClient/Subjects/Definitions/Responses/TeachersForSubjectResponse';
+import SubjectsProxy from '../../ApiClient/Subjects/SubjectsProxy';
+import Notifications from '../../Notifications/Notifications';
+import PeoplePicker from '../Shared/PeoplePicker';
 
-type Props = {
+interface Props {
   onHide: () => void;
   subjectGuid: string;
-};
+}
 
-function AddTeacherToSubjectModal(props: Props) {
+function AddTeacherToSubjectModal(props: Props): ReactElement {
   const [showPicker, setShowPicker] = useState(false);
-  const [selectedTeachers, setSelectedTeachers] = useState<TeachersForSubjectResponse[]>([]);
+  const [selectedTeachers, setSelectedTeachers] = useState<
+    TeachersForSubjectResponse[]
+  >([]);
   const [refreshKey, setRefreshKey] = useState(0);
-  const { t } = useTranslation("subjects");
+  const { t } = useTranslation('subjects');
   useEffect(() => {
     SubjectsProxy.getTeachersForSubject(props.subjectGuid)
       .then((resp) => setSelectedTeachers(resp.data))
@@ -29,7 +31,7 @@ function AddTeacherToSubjectModal(props: Props) {
           setShowPicker(true);
         }}
       >
-        {t("addTeacherToSubject")}
+        {t('addTeacherToSubject')}
       </Button>
       <PeoplePicker
         selectedPeople={selectedTeachers.map((tea) => tea.guid)}
@@ -47,8 +49,15 @@ function AddTeacherToSubjectModal(props: Props) {
             })
             .catch(Notifications.showApiError);
         }}
-        getPeople={async (schoolGuid: string, schoolRole: string, query: string, page: number) => {
-          return (await SchoolsProxy.searchPeople(schoolGuid, "Teacher", query, page)).data;
+        getPeople={async (
+          schoolGuid: string,
+          schoolRole: string,
+          query: string,
+          page: number
+        ) => {
+          return (
+            await SchoolsProxy.searchPeople(schoolGuid, 'Teacher', query, page)
+          ).data;
         }}
         show={showPicker}
       />

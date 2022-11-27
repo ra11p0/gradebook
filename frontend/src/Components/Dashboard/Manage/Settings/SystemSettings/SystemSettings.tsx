@@ -1,8 +1,6 @@
-import React from "react";
+import React, { ReactElement } from 'react';
 
-type Props = {};
-
-function SystemSettings({}: Props) {
+function SystemSettings(): ReactElement {
   return <div>SystemSettings</div>;
 }
 

@@ -1,3 +1,4 @@
-import PermissionLevelEnum from "../../../Common/Enums/Permissions/PermissionLevelEnum";
+import PermissionLevelEnum from '../../../Common/Enums/Permissions/PermissionLevelEnum';
 
-export default (state: any): PermissionLevelEnum[] => state.common.permissions ?? [];
+export default (state: any): PermissionLevelEnum[] =>
+  state.common.permissions ?? [];

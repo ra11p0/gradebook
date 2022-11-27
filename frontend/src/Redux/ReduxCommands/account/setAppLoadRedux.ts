@@ -1,6 +1,7 @@
-import ActionTypes from "../../ActionTypes/accountActionTypes";
+import ActionTypes from '../../ActionTypes/accountActionTypes';
 
 const appLoad = {
-    type: ActionTypes.AppLoad,
+  type: ActionTypes.AppLoad,
 };
-export default (dispatch: any, isAppLoaded: boolean) => dispatch({ ...appLoad, payload: { isAppLoaded } });
+export default (dispatch: any, isAppLoaded: boolean): void =>
+  dispatch({ ...appLoad, payload: { isAppLoaded } });

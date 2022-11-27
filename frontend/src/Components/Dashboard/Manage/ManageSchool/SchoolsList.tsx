@@ -182,7 +182,7 @@ export default connect(
   (dispatch: any) => ({
     setSchoolsList: (action: setSchoolsListAction) =>
       setSchoolsListReduxWrapper(dispatch, action),
-    setCurrentSchool: (action: setSchoolAction) =>
-      setSchoolReduxWrapper(dispatch, action),
+    setCurrentSchool: async (action: setSchoolAction) =>
+      await setSchoolReduxWrapper(dispatch, action),
   })
 )(SchoolsList);

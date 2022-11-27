@@ -1,23 +1,23 @@
-import React from "react";
-import { Card, ListGroup, ListGroupItem } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router";
-import TeachersForSubjectResponse from "../../ApiClient/Subjects/Definitions/Responses/TeachersForSubjectResponse";
-import SubjectsProxy from "../../ApiClient/Subjects/SubjectsProxy";
-import InfiniteScrollWrapper from "../Shared/InfiniteScrollWrapper";
+import React, { ReactElement } from 'react';
+import { Card, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router';
+import TeachersForSubjectResponse from '../../ApiClient/Subjects/Definitions/Responses/TeachersForSubjectResponse';
+import SubjectsProxy from '../../ApiClient/Subjects/SubjectsProxy';
+import InfiniteScrollWrapper from '../Shared/InfiniteScrollWrapper';
 
-type Props = {
+interface Props {
   subjectGuid: string;
   refreshKey: any;
-};
+}
 
-function TeachersListForSubject(props: Props) {
-  const { t } = useTranslation("subjects");
+function TeachersListForSubject(props: Props): ReactElement {
+  const { t } = useTranslation('subjects');
   const navigate = useNavigate();
   return (
     <Card>
       <Card.Header>
-        <Card.Title>{t("teachersForSubject")}</Card.Title>
+        <Card.Title>{t('teachersForSubject')}</Card.Title>
       </Card.Header>
       <Card.Body>
         <ListGroup>
@@ -33,7 +33,12 @@ function TeachersListForSubject(props: Props) {
               >{`${item.name} ${item.surname}`}</ListGroupItem>
             )}
             fetch={async (page: number) => {
-              return (await SubjectsProxy.getTeachersForSubject(props.subjectGuid, page)).data;
+              return (
+                await SubjectsProxy.getTeachersForSubject(
+                  props.subjectGuid,
+                  page
+                )
+              ).data;
             }}
           />
         </ListGroup>

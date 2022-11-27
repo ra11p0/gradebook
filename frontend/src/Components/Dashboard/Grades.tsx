@@ -1,16 +1,9 @@
-import React from "react";
-import { connect } from "react-redux";
+import React from 'react';
 
-const mapStateToProps = (state: any) => ({});
-
-const mapDispatchToProps = (dispatch: any) => ({});
-
-interface GradesProps {}
-
-class Grades extends React.Component<GradesProps> {
+class Grades extends React.Component {
   render(): React.ReactNode {
     return <div>d-board Grades</div>;
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Grades);
+export default Grades;

@@ -1,28 +1,28 @@
-import React from "react";
-import { Card, Table } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
-import StudentInClassResponse from "../../ApiClient/Classes/Definitions/Responses/StudentInClassResponse";
+import React, { ReactElement } from 'react';
+import { Card, Table } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import StudentInClassResponse from '../../ApiClient/Classes/Definitions/Responses/StudentInClassResponse';
 
-type Props = {
+interface Props {
   studentsInClass: StudentInClassResponse[];
-};
+}
 
-function StudentsInClass(props: Props) {
-  const { t } = useTranslation("classIndex");
+function StudentsInClass(props: Props): ReactElement {
+  const { t } = useTranslation('classIndex');
   const navigate = useNavigate();
   return (
     <Card>
       <Card.Header>
-        <Card.Title>{t("studentsInClass")}</Card.Title>
+        <Card.Title>{t('studentsInClass')}</Card.Title>
       </Card.Header>
       <Card.Body>
         <Table striped bordered hover responsive>
           <thead>
             <tr>
-              <td>{t("index")}</td>
-              <td>{t("name")}</td>
-              <td>{t("surname")}</td>
+              <td>{t('index')}</td>
+              <td>{t('name')}</td>
+              <td>{t('surname')}</td>
             </tr>
           </thead>
           <tbody>
@@ -31,7 +31,7 @@ function StudentsInClass(props: Props) {
                 onClick={() => {
                   navigate(`/person/show/${student.guid}`);
                 }}
-                className={"cursor-pointer"}
+                className={'cursor-pointer'}
                 key={index}
               >
                 <td>{index + 1}.</td>

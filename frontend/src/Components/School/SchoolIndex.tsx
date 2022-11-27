@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Col, Row } from "react-bootstrap";
-import { useParams } from "react-router-dom";
-import GetSchoolResponse from "../../ApiClient/Schools/Definitions/Responses/GetSchoolResponse";
-import SchoolsProxy from "../../ApiClient/Schools/SchoolsProxy";
-import Notifications from "../../Notifications/Notifications";
+import React, { ReactElement, useEffect, useState } from 'react';
+import { Col, Row } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
+import GetSchoolResponse from '../../ApiClient/Schools/Definitions/Responses/GetSchoolResponse';
+import SchoolsProxy from '../../ApiClient/Schools/SchoolsProxy';
+import Notifications from '../../Notifications/Notifications';
 
-type Props = {};
-
-function SchoolIndex(props: Props) {
+function SchoolIndex(): ReactElement {
   const { schoolGuid } = useParams();
   const [school, setSchool] = useState<GetSchoolResponse | null>(null);
   useEffect(() => {
@@ -23,7 +21,7 @@ function SchoolIndex(props: Props) {
     <div>
       <div className="bg-light p-3">
         <Row>
-          <Col xs={"6"}>
+          <Col xs={'6'}>
             <Row>
               <Col className="my-auto">
                 <h2>{school?.name}</h2>

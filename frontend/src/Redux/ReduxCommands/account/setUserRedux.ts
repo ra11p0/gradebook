@@ -1,12 +1,12 @@
-import ActionTypes from "../../ActionTypes/accountActionTypes";
-
+import ActionTypes from '../../ActionTypes/accountActionTypes';
 
 export const setUser = {
-    type: ActionTypes.SetUser
-}
+  type: ActionTypes.SetUser,
+};
 
 export interface setUserAction {
-    userId: string;
+  userId: string;
 }
 
-export default (dispatch: any, action: setUserAction) => dispatch({ ...setUser, payload: { ...action } });
+export default (dispatch: any, action: setUserAction): void =>
+  dispatch({ ...setUser, payload: { ...action } });

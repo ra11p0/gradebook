@@ -1,6 +1,6 @@
-import NotificationsHub from "./NotificationsHub/NotificationsHub";
+import NotificationsHub from './NotificationsHub/NotificationsHub';
 
-function connectAllHubs() {
-    NotificationsHub.connect();
+async function connectAllHubs(): Promise<void> {
+  await NotificationsHub.connect();
 }
 export { connectAllHubs };

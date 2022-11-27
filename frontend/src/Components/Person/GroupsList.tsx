@@ -1,8 +1,6 @@
-import React from "react";
+import React, { ReactElement } from 'react';
 
-type Props = {};
-
-function GroupsList({}: Props) {
+function GroupsList(): ReactElement {
   return <div>GroupsList</div>;
 }
 

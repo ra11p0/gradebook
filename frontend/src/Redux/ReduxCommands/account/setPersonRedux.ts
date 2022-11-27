@@ -1,19 +1,26 @@
-import PeopleProxy from "../../../ApiClient/People/PeopleProxy";
-import ActionTypes from "../../ActionTypes/accountActionTypes";
-import setPermissionsReduxWrapper from "./setPermissionsRedux";
+import PeopleProxy from '../../../ApiClient/People/PeopleProxy';
+import ActionTypes from '../../ActionTypes/accountActionTypes';
+import setPermissionsReduxWrapper from './setPermissionsRedux';
 
 export const setPerson = {
-    type: ActionTypes.SetPerson
-}
+  type: ActionTypes.SetPerson,
+};
 
 export interface setPersonAction {
-    personGuid: string;
-    fullName: string;
+  personGuid: string;
+  fullName: string;
 }
 
-export default (dispatch: any, action: setPersonAction) => {
-    dispatch({ ...setPerson, payload: { ...action } });
-    PeopleProxy.permissions.getPermissions(action.personGuid).then(permissionsResponse => setPermissionsReduxWrapper(dispatch, {
-        permissions: permissionsResponse.data.map(e => e.permissionLevel)
-    }));
+export default async (
+  dispatch: any,
+  action: setPersonAction
+): Promise<void> => {
+  dispatch({ ...setPerson, payload: { ...action } });
+  await PeopleProxy.permissions
+    .getPermissions(action.personGuid)
+    .then((permissionsResponse) =>
+      setPermissionsReduxWrapper(dispatch, {
+        permissions: permissionsResponse.data.map((e) => e.permissionLevel),
+      })
+    );
 };

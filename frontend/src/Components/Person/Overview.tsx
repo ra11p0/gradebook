@@ -1,15 +1,15 @@
-import React from "react";
-import SchoolRolesEnum from "../../Common/Enums/SchoolRolesEnum";
-import GroupsList from "./GroupsList";
-import ManagedClassesList from "./ManagedClassesList";
-import SubjectsForTeacher from "./SubjectsForTeacher";
+import React, { ReactElement } from 'react';
+import SchoolRolesEnum from '../../Common/Enums/SchoolRolesEnum';
+import GroupsList from './GroupsList';
+import ManagedClassesList from './ManagedClassesList';
+import SubjectsForTeacher from './SubjectsForTeacher';
 
-type Props = {
+interface Props {
   schoolRole: SchoolRolesEnum;
   personGuid: string;
-};
+}
 
-function Overview(props: Props) {
+function Overview(props: Props): ReactElement {
   return (
     <div className="d-flex gap-3 m-2 p-2">
       {props.schoolRole === SchoolRolesEnum.Teacher && (

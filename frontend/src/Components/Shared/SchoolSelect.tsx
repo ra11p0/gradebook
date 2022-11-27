@@ -1,47 +1,44 @@
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { ReactElement } from "react";
-import { useTranslation } from "react-i18next";
-import { connect } from "react-redux";
-import GetSchoolResponse from "../../ApiClient/Schools/Definitions/Responses/GetSchoolResponse";
-import getCurrentSchoolReduxProxy from "../../Redux/ReduxQueries/account/getCurrentSchoolRedux";
-import getSchoolsListReduxProxy from "../../Redux/ReduxQueries/account/getSchoolsListRedux";
-import setSchoolsListReduxWrapper, { setSchoolsListAction } from "../../Redux/ReduxCommands/account/setSchoolsListRedux";
-import setSchoolReduxWrapper, { setSchoolAction } from "../../Redux/ReduxCommands/account/setSchoolRedux";
-const mapStateToProps = (state: any) => ({
-  currentSchool: getCurrentSchoolReduxProxy(state),
-  currentUserId: state.common.session.userId,
-  schoolsList: getSchoolsListReduxProxy(state),
-});
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import React, { ReactElement } from 'react';
+import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+import GetSchoolResponse from '../../ApiClient/Schools/Definitions/Responses/GetSchoolResponse';
+import getCurrentSchoolReduxProxy from '../../Redux/ReduxQueries/account/getCurrentSchoolRedux';
+import getSchoolsListReduxProxy from '../../Redux/ReduxQueries/account/getSchoolsListRedux';
+import setSchoolsListReduxWrapper, {
+  setSchoolsListAction,
+} from '../../Redux/ReduxCommands/account/setSchoolsListRedux';
+import setSchoolReduxWrapper, {
+  setSchoolAction,
+} from '../../Redux/ReduxCommands/account/setSchoolRedux';
+import { GlobalState } from '../../store';
 
-const mapDispatchToProps = (dispatch: any) => ({
-  setSchool: (action: setSchoolAction) => setSchoolReduxWrapper(dispatch, action),
-  setSchoolsList: (action: setSchoolsListAction) => setSchoolsListReduxWrapper(dispatch, action),
-});
 interface SchoolSelectProps {
   className?: string;
   currentSchool?: any;
-  currentUserId?: string;
   schoolsList: GetSchoolResponse[] | null;
   setSchool: (action: setSchoolAction) => void;
   setSchoolsList: (action: setSchoolsListAction) => void;
 }
-const SchoolSelect = (props: SchoolSelectProps): ReactElement => {
-  const { t } = useTranslation("schoolSelect");
+function SchoolSelect(props: SchoolSelectProps): ReactElement {
+  const { t } = useTranslation('schoolSelect');
 
   return (
-    <div className={`${props.className}`}>
+    <div className={`${props.className ?? ''}`}>
       <FormControl sx={{ m: 1, minWidth: 380 }}>
-        <InputLabel>{t("selectSchool")}</InputLabel>
+        <InputLabel>{t('selectSchool')}</InputLabel>
         <Select
-          value={props.currentSchool?.schoolGuid ?? ""}
-          label={t("selectSchool")}
+          value={props.currentSchool?.schoolGuid ?? ''}
+          label={t('selectSchool')}
           onChange={(change) => {
-            let selectedSchool = props.schoolsList?.find((school) => change.target.value == school.guid);
+            const selectedSchool = props.schoolsList?.find(
+              (school) => change.target.value === school.guid
+            );
             if (!selectedSchool) {
-              props.setSchool!({ schoolName: "", schoolGuid: "" });
+              props.setSchool({ schoolName: '', schoolGuid: '' });
               return;
             }
-            props.setSchool!({
+            props.setSchool({
               schoolGuid: selectedSchool.guid,
               schoolName: selectedSchool.name,
             });
@@ -56,5 +53,16 @@ const SchoolSelect = (props: SchoolSelectProps): ReactElement => {
       </FormControl>
     </div>
   );
-};
-export default connect(mapStateToProps, mapDispatchToProps)(SchoolSelect);
+}
+export default connect(
+  (state: GlobalState) => ({
+    currentSchool: getCurrentSchoolReduxProxy(state),
+    schoolsList: getSchoolsListReduxProxy(state),
+  }),
+  (dispatch) => ({
+    setSchool: async (action: setSchoolAction) =>
+      await setSchoolReduxWrapper(dispatch, action),
+    setSchoolsList: (action: setSchoolsListAction) =>
+      setSchoolsListReduxWrapper(dispatch, action),
+  })
+)(SchoolSelect);

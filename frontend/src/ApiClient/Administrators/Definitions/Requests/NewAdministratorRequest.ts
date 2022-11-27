@@ -1,5 +1,5 @@
 export default interface NewAdministratorRequest {
-    name: string;
-    surname: string;
-    birthday: Date;
+  name: string;
+  surname: string;
+  birthday: Date;
 }

@@ -1,11 +1,9 @@
-import React from "react";
-import { Route, Routes } from "react-router";
-import CyclesList from "./CyclesList/CyclesList";
-import NewCycleForm from "./NewCycleForm/NewCycleForm";
+import React, { ReactElement } from 'react';
+import { Route, Routes } from 'react-router';
+import CyclesList from './CyclesList/CyclesList';
+import NewCycleForm from './NewCycleForm/NewCycleForm';
 
-type Props = {};
-
-function EducationCycle({ }: Props) {
+function EducationCycle(): ReactElement {
   return (
     <>
       <Routes>

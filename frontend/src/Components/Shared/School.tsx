@@ -1,8 +1,8 @@
-import { faSchool } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
-import { Col, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { faSchool } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { ReactElement } from 'react';
+import { Col, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 interface SchoolProps {
   guid: string;
@@ -11,11 +11,11 @@ interface SchoolProps {
   addresLine: string;
   className?: string;
 }
-function School(props: SchoolProps) {
+function School(props: SchoolProps): ReactElement {
   return (
-    <Link to={`/school/show/${props.guid}`} className={"text-reset"}>
+    <Link to={`/school/show/${props.guid}`} className={'text-reset'}>
       <div
-        className={`bg-light border rounded-3 m-1 p-2 ${props.className ?? ""}`}
+        className={`bg-light border rounded-3 m-1 p-2 ${props.className ?? ''}`}
       >
         <Row>
           <Col xs={2} className="my-auto text-center">

@@ -1,16 +1,9 @@
-import { connect } from "react-redux";
-import React from "react";
-import { Route, Routes } from "react-router-dom";
-import ClassIndex from "../Components/Class/ClassIndex";
+import React, { ReactElement } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import ClassIndex from '../Components/Class/ClassIndex';
 
-const mapStateToProps = (state: any) => ({});
-
-const mapDispatchToProps = (dispatch: any) => ({});
-
-interface Props {}
-
-class Class extends React.Component<Props> {
-  render() {
+class Class extends React.Component {
+  render(): ReactElement {
     return (
       <Routes>
         <Route path="/show/:classGuid" element={<ClassIndex />}></Route>
@@ -19,4 +12,4 @@ class Class extends React.Component<Props> {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Class);
+export default Class;
