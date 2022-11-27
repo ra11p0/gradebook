@@ -27,10 +27,11 @@ export default async (dispatch: any, action: logInAction): Promise<void> => {
           schoolsList: getMeResponse.data.schools,
         });
         const defaultSchool = getMeResponse.data.schools.find(() => true);
-        await setSchoolReduxWrapper(dispatch, {
-          schoolGuid: defaultSchool?.school.guid ?? '',
-          schoolName: defaultSchool?.school.name ?? '',
-        });
+        if (defaultSchool)
+          await setSchoolReduxWrapper(dispatch, {
+            schoolGuid: defaultSchool.school.guid,
+            schoolName: defaultSchool.school.name,
+          });
       })
       .then(async () => {
         await connectAllHubs();
