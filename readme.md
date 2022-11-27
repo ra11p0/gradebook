@@ -1,4 +1,3 @@
-[![Build Status](http://vps-fb077276.vps.ovh.net:8080/buildStatus/icon?job=gradebook-vps)](http://vps-fb077276.vps.ovh.net:8080/job/gradebook-vps/)
 ## Setup
 
 ### Setup MySql on docker
