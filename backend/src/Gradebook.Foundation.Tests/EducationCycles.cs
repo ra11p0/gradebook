@@ -11,6 +11,7 @@ using Gradebook.Foundation.Common;
 
 namespace Gradebook.Foundation.Tests
 {
+    [Category("Unit")]
     internal class EducationCycles
     {
         private readonly Mock<IFoundationCommandsRepository> foundationCommandsRepository = new();

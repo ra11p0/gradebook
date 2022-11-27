@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Gradebook.Foundation.Tests.Validation
 {
+    [Category("Unit")]
     internal class EducationCycleStepCommandValidationTest
     {
         [Test]

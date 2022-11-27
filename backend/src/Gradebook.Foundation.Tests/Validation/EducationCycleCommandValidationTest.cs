@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Gradebook.Foundation.Tests.Validation
 {
+    [Category("Unit")]
     internal class EducationCycleCommandValidationTest
     {
         [Test]
@@ -84,7 +85,7 @@ namespace Gradebook.Foundation.Tests.Validation
             {
                 SchoolGuid = Guid.NewGuid(),
                 Name = "Fake name",
-                Stages = new List<EducationCycleStepCommand> {}
+                Stages = new List<EducationCycleStepCommand> { }
             };
 
             Assert.That(!command.IsValid);

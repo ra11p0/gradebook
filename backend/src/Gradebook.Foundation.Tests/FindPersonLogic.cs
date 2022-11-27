@@ -7,7 +7,6 @@ using Gradebook.Foundation.Logic.Commands;
 using Gradebook.Foundation.Logic.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using MySqlX.XDevAPI.Common;
 
 namespace Gradebook.Foundation.Tests;
 

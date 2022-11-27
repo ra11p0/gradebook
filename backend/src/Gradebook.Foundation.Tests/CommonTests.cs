@@ -1,17 +1,8 @@
 ﻿using Gradebook.Foundation.Common;
-using Gradebook.Foundation.Common.Foundation;
-using Gradebook.Foundation.Logic.Commands;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 #pragma warning disable CS0618
 
@@ -61,7 +52,7 @@ namespace Gradebook.Foundation.Tests
         public void ShouldBeValidated()
         {
             var fakeClass = new FakeValidationClass()
-            { 
+            {
                 Value = "valid"
             };
             Assert.That(fakeClass.IsValid);
@@ -88,7 +79,7 @@ namespace Gradebook.Foundation.Tests
         public void ShouldPerformTransactionOnlyOnce()
         {
             var optionsBuilder = new DbContextOptionsBuilder<DbContext>();
-                optionsBuilder.UseMySql("server=fakeServer;", new MySqlServerVersion(new Version(8, 30, 0)));
+            optionsBuilder.UseMySql("server=fakeServer;", new MySqlServerVersion(new Version(8, 30, 0)));
             Mock<DbContext> mockedDbContext = new(optionsBuilder.Options);
             Mock<DatabaseFacade> mockedDatabaseFacade = new(mockedDbContext.Object);
             Mock<IDbContextTransaction> fakeTransaction = new();

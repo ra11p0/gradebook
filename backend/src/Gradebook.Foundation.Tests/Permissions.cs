@@ -10,7 +10,6 @@ using Gradebook.Foundation.Logic.Commands;
 using Gradebook.Foundation.Logic.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using System.Xml.Linq;
 
 namespace Gradebook.Foundation.Tests;
 
@@ -215,8 +214,9 @@ public class Permissions
 
         var result = await foundationCommands!.AddSubject(
             Guid.NewGuid(),
-            new NewSubjectCommand() { 
-            Name="fakeName"
+            new NewSubjectCommand()
+            {
+                Name = "fakeName"
             });
 
         Assert.That(result.Status, Is.True);
