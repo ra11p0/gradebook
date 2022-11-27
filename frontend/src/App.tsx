@@ -27,6 +27,7 @@ import EducationCycle from './Routes/EducationCycle';
 import PermissionLevelEnum from './Common/Enums/Permissions/PermissionLevelEnum';
 import getHasPermissionRedux from './Redux/ReduxQueries/account/getHasPermissionRedux';
 
+
 interface AppProps {
   onLoad: (isAppLoaded: boolean) => void;
   appLoaded: boolean;
@@ -66,6 +67,12 @@ class App extends React.Component<AppProps> {
   render(): React.ReactNode {
     return (
       <div>
+        {process.env.REACT_APP_BUILD && (
+          <div className='position-fixed'>
+            {process.env.REACT_APP_BUILD}
+          </div>
+        )}
+
         <LoadingScreen isReady={this.props.appLoaded}>
           <BrowserRouter>
             <ReactNotifications />

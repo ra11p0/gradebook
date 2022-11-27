@@ -68,9 +68,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                             to="/account/profile"
                             className="btn btn-outline-primary"
                           >
-                            {`${this.props.currentPerson!.name} ${
-                              this.props.currentPerson!.surname
-                            }`}
+                            {`${this.props.currentPerson!.name} ${this.props.currentPerson!.surname
+                              }`}
                           </Link>
                         </div>
                       </>
