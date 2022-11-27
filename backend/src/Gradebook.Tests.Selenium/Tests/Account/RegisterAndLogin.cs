@@ -2,6 +2,7 @@ using Gradebook.Tests.Selenium.QuickActionsExtensions;
 
 namespace Gradebook.Tests.Selenium.Tests.Account;
 
+[Category("Selenium")]
 [Order(1)]
 public class RegisterAndLogin
 {

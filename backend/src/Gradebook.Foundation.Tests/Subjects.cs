@@ -12,6 +12,7 @@ using Moq;
 
 namespace Gradebook.Foundation.Tests;
 
+[Category("Unit")]
 public class Subjects
 {
     private readonly Mock<IFoundationCommandsRepository> foundationCommandsRepository = new();

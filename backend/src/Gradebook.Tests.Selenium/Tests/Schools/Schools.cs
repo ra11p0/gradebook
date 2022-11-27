@@ -2,6 +2,7 @@ using Gradebook.Tests.Selenium.QuickActionsExtensions;
 
 namespace Gradebook.Tests.Selenium.Tests.Schools;
 
+[Category("Selenium")]
 [Order(2)]
 public class Schools
 {
