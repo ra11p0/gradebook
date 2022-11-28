@@ -11,4 +11,5 @@ public class School : BaseDomainModel
     public string City { get; set; } = string.Empty;
     public virtual ICollection<Person>? People { get; set; }
     public virtual ICollection<Class>? Classes { get; set; }
+    public virtual ICollection<Subject>? Subjects { get; set; }
 }

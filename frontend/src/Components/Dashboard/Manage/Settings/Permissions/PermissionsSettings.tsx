@@ -1,8 +1,6 @@
-import React from "react";
+import React, { ReactElement } from 'react';
 
-type Props = {};
-
-function PermissionsSettings({}: Props) {
+function PermissionsSettings(): ReactElement {
   return <div>PermissionsSettings</div>;
 }
 

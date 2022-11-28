@@ -6,6 +6,9 @@ namespace Gradebook.Foundation.Logic.Commands;
 
 public interface IFoundationCommandsRepository : IBaseRepository
 {
+    Task<ResponseWithStatus<Guid>> AddNewEducationCycle(EducationCycleCommand command);
+    Task<StatusResponse> AddTeachersToSubject(Guid subjectGuid, List<Guid> teachersGuids);
+    Task<StatusResponse> RemoveTeachersFromSubject(Guid subjectGuid, List<Guid> teachersGuids);
     Task<ResponseWithStatus<Guid>> AddNewStudent(NewStudentCommand newStudentDto);
     Task<ResponseWithStatus<Guid, bool>> AddNewTeacher(NewTeacherCommand newTeacherDto);
     Task<ResponseWithStatus<Guid, bool>> AddNewSchool(NewSchoolCommand command);
@@ -25,4 +28,7 @@ public interface IFoundationCommandsRepository : IBaseRepository
     Task<StatusResponse> AddTeachersToClass(Guid classGuid, IEnumerable<Guid> teachersGuids);
     Task<StatusResponse> DeleteStudentsFromClass(Guid classGuid, IEnumerable<Guid> studentsGuids);
     Task<StatusResponse> DeleteTeachersFromClass(Guid classGuid, IEnumerable<Guid> teachersGuids);
+    Task<StatusResponse> SetStudentActiveClass(Guid classGuid, Guid studentGuid);
+    Task<StatusResponse> RemoveStudentActiveClass(Guid studentGuid);
+    Task<ResponseWithStatus<Guid>> AddSubject(Guid schoolGuid, NewSubjectCommand command);
 }

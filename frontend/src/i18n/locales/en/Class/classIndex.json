@@ -1,5 +1,7 @@
 {
-  "addStudentsToClass": "Add students to class",
-  "addClassOwners": "Add class owners",
-  "owners": "Owners"
+  "manageStudentsInClass": "Manage students in class",
+  "manageClassOwners": "Manage class owners",
+  "owners": "Owners",
+  "studentsInClass": "Students in class",
+  "index": "#"
 }

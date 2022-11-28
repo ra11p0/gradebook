@@ -15,6 +15,7 @@ public class PermissionsQueries : BaseLogic<IPermissionsQueriesRepository>, IPer
         _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
     }
 
+    //  Default permission levels for each roles
     public PermissionLevelEnum GetDefaultPermissionLevel(PermissionEnum permission, SchoolRoleEnum schoolRole)
     {
         return permission switch
@@ -40,6 +41,27 @@ public class PermissionsQueries : BaseLogic<IPermissionsQueriesRepository>, IPer
                 SchoolRoleEnum.Admin => PermissionLevelEnum.Classes_CanManageAll,
                 _ => 0,
             },
+            PermissionEnum.Subjects => schoolRole switch
+            {
+                SchoolRoleEnum.Student => PermissionLevelEnum.Subjects_ViewOnly,
+                SchoolRoleEnum.Teacher => PermissionLevelEnum.Subjects_CanManageAssigned,
+                SchoolRoleEnum.Admin => PermissionLevelEnum.Subjects_CanManageAll,
+                _ => 0,
+            },
+            PermissionEnum.Students => schoolRole switch
+            {
+                SchoolRoleEnum.Student => PermissionLevelEnum.Students_ViewOnly,
+                SchoolRoleEnum.Teacher => PermissionLevelEnum.Students_CanCreateAndDelete,
+                SchoolRoleEnum.Admin => PermissionLevelEnum.Students_CanCreateAndDelete,
+                _ => 0,
+            },
+            PermissionEnum.EducationCycles => schoolRole switch
+            {
+                SchoolRoleEnum.Student => PermissionLevelEnum.EducationCycles_NoAccess,
+                SchoolRoleEnum.Teacher => PermissionLevelEnum.EducationCycles_ViewOnly,
+                SchoolRoleEnum.Admin => PermissionLevelEnum.EducationCycles_CanCreateAndDelete,
+                _ => 0,
+            },
             _ => 0,
         };
     }
@@ -54,17 +76,22 @@ public class PermissionsQueries : BaseLogic<IPermissionsQueriesRepository>, IPer
         return (await GetPermissionsForPerson(personGuid))[permissionId];
     }
 
+    //  Permissions in permission group
     public PermissionGroupEnum GetPermissionGroupForPermission(PermissionEnum permission)
     {
         return permission switch
         {
             PermissionEnum.Classes => PermissionGroupEnum.Administration,
             PermissionEnum.Invitations => PermissionGroupEnum.Administration,
+            PermissionEnum.Subjects => PermissionGroupEnum.Administration,
+            PermissionEnum.Students => PermissionGroupEnum.Administration,
+            PermissionEnum.EducationCycles => PermissionGroupEnum.Administration,
             PermissionEnum.Permissions => PermissionGroupEnum.System,
             _ => 0,
         };
     }
 
+    //  Permission levels for permissions (lowest -> highest)
     public PermissionLevelEnum[] GetPermissionLevelsForPermission(PermissionEnum permission)
     {
         return permission switch
@@ -77,10 +104,24 @@ public class PermissionsQueries : BaseLogic<IPermissionsQueriesRepository>, IPer
                 PermissionLevelEnum.Permissions_CannotManagePermissions,
                 PermissionLevelEnum.Permissions_CanManagePermissions
                 },
+            PermissionEnum.Students => new PermissionLevelEnum[] {
+                PermissionLevelEnum.Students_ViewOnly,
+                PermissionLevelEnum.Students_CanCreateAndDelete
+                },
             PermissionEnum.Classes => new PermissionLevelEnum[] {
                 PermissionLevelEnum.Classes_ViewOnly,
                 PermissionLevelEnum.Classes_CanManageOwn,
                 PermissionLevelEnum.Classes_CanManageAll
+                },
+            PermissionEnum.Subjects => new PermissionLevelEnum[] {
+                PermissionLevelEnum.Subjects_ViewOnly,
+                PermissionLevelEnum.Subjects_CanManageAssigned,
+                PermissionLevelEnum.Subjects_CanManageAll
+                },
+            PermissionEnum.EducationCycles => new PermissionLevelEnum[] {
+                PermissionLevelEnum.EducationCycles_NoAccess,
+                PermissionLevelEnum.EducationCycles_ViewOnly,
+                PermissionLevelEnum.EducationCycles_CanCreateAndDelete
                 },
             _ => Array.Empty<PermissionLevelEnum>()
         };

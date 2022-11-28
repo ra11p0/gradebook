@@ -7,7 +7,6 @@ using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Common.Permissions;
 using Gradebook.Foundation.Common.Permissions.Commands;
-using Gradebook.Foundation.Common.Permissions.Enums;
 using Gradebook.Foundation.Common.Permissions.Queries;
 using Gradebook.Foundation.Common.Settings.Enums;
 using Microsoft.AspNetCore.Authorization;
@@ -39,6 +38,13 @@ public class PeopleController : ControllerBase
         /*         _settingsQueries = serviceProvider.GetResolver<ISettingsQueries>();
                 _settingsCommands = serviceProvider.GetResolver<ISettingsCommands>(); */
     }
+    [HttpGet, Route("{teacherGuid}/subjects")]
+    [ProducesResponseType(typeof(PersonDto), statusCode: 200)]
+    public async Task<IActionResult> GetSubjectsForTeacher([FromRoute] Guid teacherGuid, [FromQuery] int page = 0)
+    {
+        var personResponse = await _foundationQueries.Service.GetSubjectsForTeacher(teacherGuid, page);
+        return personResponse.Status ? Ok(personResponse.Response) : BadRequest(personResponse.Message);
+    }
 
     [HttpGet, Route("{personGuid}")]
     [ProducesResponseType(typeof(PersonDto), statusCode: 200)]
@@ -46,6 +52,14 @@ public class PeopleController : ControllerBase
     {
         var personResponse = await _foundationQueries.Service.GetPersonByGuid(personGuid);
         return personResponse.Status ? Ok(personResponse.Response) : BadRequest(personResponse.Message);
+    }
+
+    [HttpGet, Route("{personGuid}/Classes")]
+    [ProducesResponseType(typeof(PagedList<ClassDto>), statusCode: 200)]
+    public async Task<IActionResult> GetManagedClasses([FromRoute] Guid personGuid, [FromQuery] int page = 0)
+    {
+        var classesResponse = await _foundationQueries.Service.GetClassesForPerson(personGuid, page);
+        return classesResponse.Status ? Ok(classesResponse.Response) : BadRequest(classesResponse.Message);
     }
 
 

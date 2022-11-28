@@ -11,6 +11,7 @@ public class FoundationCommandsMappings : Profile
         CreateMap<NewClassCommand, Class>();
         CreateMap<NewStudentCommand, Student>();
         CreateMap<NewTeacherCommand, Teacher>();
+        CreateMap<NewSubjectCommand, Subject>();
         CreateMap<NewSchoolCommand, School>();
         CreateMap<NewPersonCommand, Administrator>();
         CreateMap<NewAdministratorCommand, Administrator>();

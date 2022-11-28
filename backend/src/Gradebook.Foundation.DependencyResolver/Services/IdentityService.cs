@@ -22,7 +22,8 @@ public class IdentityService
             .AddEntityFrameworkStores<ApplicationIdentityDatabaseContext>()
             .AddDefaultTokenProviders();
 
-        services.AddAuthentication(options =>{
+        services.AddAuthentication(options =>
+        {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -44,8 +45,34 @@ public class IdentityService
                 ValidIssuer = configuration["JWT:ValidIssuer"],
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
             };
+            options.Events = new JwtBearerEvents
+            {
+                OnMessageReceived = context =>
+                {
+                    var accessToken = context.Request.Query["access_token"];
+
+                    var path = context.HttpContext.Request.Path;
+                    if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/api/signalr"))
+                    {
+                        context.Token = accessToken;
+                    }
+
+                    return Task.CompletedTask;
+                }
+            };
         });
 
         services.AddScoped<IIdentityLogic, IdentityLogic>();
+
+        services.AddCors(e =>
+        {
+            e.AddDefaultPolicy(p =>
+            {
+                //TODO: move to appsettings.json
+                p.WithOrigins("http://development.gradebook.com", "http://api-tests.gradebook.com")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+            });
+        });
     }
 }

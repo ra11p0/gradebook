@@ -7,5 +7,15 @@
   "schoolIsNotSelected": "School is not selected",
   "selectSchoolToManageStudents": "Select school to manage students",
   "actions": "Actions",
-  "save": "Save"
+  "save": "Save",
+  "name": "Name",
+  "surname": "Surname",
+  "birthday": "Birthday",
+  "isActive": "Is active",
+  "select...": "Select...",
+  "noOptions": "No results",
+  "fieldRequired": "Field required",
+  "fieldNumberOnly": "Field must contain digits only",
+  "createdDate": "Created date",
+  "creator": "Creator"
 }

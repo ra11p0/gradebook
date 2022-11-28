@@ -29,3 +29,16 @@
 .vh-66 {
   height: 66vh !important;
 }
+
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
+.w-33 {
+  width: 33% !important;
+}
+
+.accordion-header-danger > .accordion-button {
+  --bs-bg-opacity: 1;
+  background-color: rgba(var(--bs-danger-rgb), var(--bs-bg-opacity)) !important;
+}

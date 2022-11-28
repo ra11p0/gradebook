@@ -1,3 +1,5 @@
+using Gradebook.Foundation.Common.Foundation;
+using Gradebook.Foundation.Domain;
 using Gradebook.Permissions.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +17,12 @@ public class PermissionsDatabaseContext : DbContext
         : base(options)
     {
 
+    }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+        FoundationModelsMappings.ConfigureModels(builder);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

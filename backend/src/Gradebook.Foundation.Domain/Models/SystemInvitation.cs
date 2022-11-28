@@ -7,8 +7,8 @@ namespace Gradebook.Foundation.Domain.Models;
 
 public class SystemInvitation : BaseDomainModel
 {
-    public DateTime CreatedDate { get; set; } = DateTime.Now;
-    public DateTime ExprationDate { get; set; } = DateTime.Now.AddDays(7);
+    public DateTime CreatedDate { get; set; } = Time.UtcNow;
+    public DateTime ExprationDate { get; set; } = Time.UtcNow.AddDays(7);
     public string InvitationCode { get; set; } = new string("").GetRandom(6);
     public bool IsUsed { get; set; } = false;
 

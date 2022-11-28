@@ -8,6 +8,7 @@ using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 using Gradebook.Foundation.Identity.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -19,14 +20,14 @@ public class IdentityLogic : IIdentityLogic
     private readonly ServiceResolver<ApplicationIdentityDatabaseContext> _identityContext;
     private readonly ServiceResolver<UserManager<ApplicationUser>> _userManager;
     private readonly ServiceResolver<RoleManager<IdentityRole>> _roleManager;
-    private readonly ServiceResolver<IHttpContextAccessor> _httpContextAccessor;
-    public IdentityLogic(IServiceProvider serviceProvider)
+    private readonly Context _context;
+    public IdentityLogic(IServiceProvider serviceProvider, Context context)
     {
         _configuration = serviceProvider.GetResolver<IConfiguration>();
         _userManager = serviceProvider.GetResolver<UserManager<ApplicationUser>>();
         _roleManager = serviceProvider.GetResolver<RoleManager<IdentityRole>>();
         _identityContext = serviceProvider.GetResolver<ApplicationIdentityDatabaseContext>();
-        _httpContextAccessor = serviceProvider.GetResolver<IHttpContextAccessor>();
+        _context = context;
     }
     public JwtSecurityToken CreateToken(List<Claim> authClaims)
     {
@@ -36,7 +37,7 @@ public class IdentityLogic : IIdentityLogic
         var token = new JwtSecurityToken(
             issuer: _configuration.Service["JWT:ValidIssuer"],
             audience: _configuration.Service["JWT:ValidAudience"],
-            expires: DateTime.Now.AddMinutes(tokenValidityInMinutes),
+            expires: Time.UtcNow.AddMinutes(tokenValidityInMinutes),
             claims: authClaims,
             signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
             );
@@ -92,7 +93,7 @@ public class IdentityLogic : IIdentityLogic
     }
     public async Task<ResponseWithStatus<string, bool>> CurrentUserId()
     {
-        var user = await _userManager.Service.FindByNameAsync(_httpContextAccessor.Service.HttpContext.User.Identity!.Name);
+        var user = await _userManager.Service.FindByIdAsync(_context.UserId);
         return user is null ?
             new ResponseWithStatus<string, bool>(null, false) :
             new ResponseWithStatus<string, bool>(user.Id, true);
@@ -118,4 +119,44 @@ public class IdentityLogic : IIdentityLogic
         await EditUserRoles((await GetUserRoles(userGuid)).Response!.Where(e => e.Normalize() != role.Normalize()).ToArray(), userGuid);
         return new StatusResponse<bool>(true);
     }
+
+    public Task<bool> IsValidRefreshTokenForUser(string userId, string refreshToken)
+    {
+        return _identityContext.Service.Sessions.AnyAsync(
+            e => e.UserId == userId &&
+            e.RefreshToken == refreshToken &&
+            e.RefreshTokenExpiryTime >= Time.UtcNow);
+    }
+
+    public async Task RemoveRefreshTokenFromUser(string userId, string refreshToken)
+    {
+        var user = await _identityContext.Service.Users.Include(e => e.Sessions).FirstOrDefaultAsync(e => e.Id == userId);
+        var session = await _identityContext.Service.Sessions.FirstOrDefaultAsync(e => e.RefreshToken == refreshToken);
+        if (user is null || session is null) throw new Exception("user nor session should not be null here");
+        user.Sessions!.Remove(session);
+    }
+
+    public void RemoveAllExpiredTokens()
+    {
+        var expiredTokens = _identityContext.Service.Sessions.Where(e => e.RefreshTokenExpiryTime <= Time.UtcNow);
+        _identityContext.Service.RemoveRange(expiredTokens);
+    }
+
+    public async Task AssignRefreshTokenToUser(string userId, string refreshToken)
+    {
+        var _ = int.TryParse(_configuration.Service["JWT:RefreshTokenValidityInDays"], out int refreshTokenValidityInDays);
+
+        var user = await _identityContext.Service.Users.Include(e => e.Sessions).FirstOrDefaultAsync(e => e.Id == userId);
+        if (user is null) throw new Exception("user should not be null here");
+        await _identityContext.Service.Sessions.AddAsync(new Session()
+        {
+            User = user,
+            RefreshToken = refreshToken,
+            RefreshTokenExpiryTime = Time.UtcNow.AddDays(refreshTokenValidityInDays)
+        });
+    }
+
+    public void SaveDatabaseChanges()
+        => _identityContext.Service.SaveChanges();
+
 }

@@ -1,3 +1,4 @@
+using Gradebook.Foundation.Domain;
 using Gradebook.Foundation.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -20,6 +21,9 @@ public class FoundationDatabaseContext : DbContext
     public DbSet<TeachersAbsence>? TeachersAbsences { get; set; }
     public DbSet<SystemInvitation>? SystemInvitations { get; set; }
     public DbSet<Administrator>? Administrators { get; set; }
+    public DbSet<EducationCycle>? EducationCycles { get; set; }
+    public DbSet<EducationCycleStep>? EducationCycleSteps { get; set; }
+    public DbSet<EducationCycleStepSubject>? EducationCycleStepSubjects { get; set; }
 
     public FoundationDatabaseContext()
     {
@@ -32,6 +36,9 @@ public class FoundationDatabaseContext : DbContext
     }
     protected override void OnModelCreating(ModelBuilder builder)
     {
+
+        base.OnModelCreating(builder);
+        FoundationModelsMappings.ConfigureModels(builder);
     }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

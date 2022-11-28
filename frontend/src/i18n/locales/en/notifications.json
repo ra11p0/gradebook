@@ -4,5 +4,7 @@
   "schoolRemovedNotificationTitle": "School removed",
   "schoolRemovedNotificationText": "School has been removed successfully",
   "personRemovedNotificationTitle": "Person removed",
-  "personRemovedNotificationText": "Person has been removed successfully"
+  "personRemovedNotificationText": "Person has been removed successfully",
+  "success": "Success",
+  "permissionsSaved": "Permissions saved"
 }

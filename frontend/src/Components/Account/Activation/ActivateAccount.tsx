@@ -1,13 +1,13 @@
-import React from "react";
-import { connect } from "react-redux";
-import { withTranslation } from "react-i18next";
-import { Button, Card, Col, Row } from "react-bootstrap";
-import ActivateStudent from "./ActivateStudent";
-import ActivateTeacher from "./ActivateTeacher";
-import ActivateAdministrator from "./ActivateAdministrator";
-import getIsUserActivatedReduxProxy from "../../../Redux/ReduxProxy/getIsUserActivatedReduxProxy";
-import getIsLoggedInReduxProxy from "../../../Redux/ReduxProxy/getIsLoggedInReduxProxy";
-import { ActivateAdministratorPersonValues } from "./ActivateAdministratorPerson";
+import React from 'react';
+import { connect } from 'react-redux';
+import { withTranslation } from 'react-i18next';
+import { Button, Card, Col, Row } from 'react-bootstrap';
+import ActivateStudent from './ActivateStudent';
+import ActivateTeacher from './ActivateTeacher';
+import ActivateAdministrator from './ActivateAdministrator';
+import getIsUserActivatedReduxProxy from '../../../Redux/ReduxQueries/account/getIsUserActivatedRedux';
+import getIsLoggedInReduxProxy from '../../../Redux/ReduxQueries/account/getIsLoggedInRedux';
+import { ActivateAdministratorPersonValues } from './ActivateAdministratorPerson';
 
 interface ActivateAccountProps {
   t: any;
@@ -21,17 +21,21 @@ interface ActivateAccountState {
   role?: string;
 }
 
-class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAccountState> {
+class ActivateAccount extends React.Component<
+  ActivateAccountProps,
+  ActivateAccountState
+> {
   constructor(props: ActivateAccountProps) {
     super(props);
     this.state = {
       role: undefined,
     };
   }
+
   render(): React.ReactNode {
     const { t } = this.props;
 
-    const defaultOnBackHandler = () => {
+    const defaultOnBackHandler = (): void => {
       this.setState({
         ...this.state,
         role: undefined,
@@ -43,14 +47,14 @@ class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAcco
         <Card className="m-3">
           <Card.Body>
             <div>
-              <div className="display-6">{t("activateToUseGradebook")}</div>
+              <div className="display-6">{t('activateToUseGradebook')}</div>
               <Row className="m-3 p-3">
                 <Col lg={1} md={3} />
                 <Col className="text-center">
                   {!this.state.role && (
                     <>
                       <Row className="text-center">
-                        <div>{t("iAmA...")}</div>
+                        <div>{t('iAmA...')}</div>
                       </Row>
                       <Row>
                         <Col>
@@ -60,11 +64,11 @@ class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAcco
                             onClick={() =>
                               this.setState({
                                 ...this.state,
-                                role: "student",
+                                role: 'student',
                               })
                             }
                           >
-                            {t("student")}
+                            {t('student')}
                           </Button>
                           <Button
                             className="fs-3 m-3 p-3 activateTeacher"
@@ -72,11 +76,11 @@ class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAcco
                             onClick={() =>
                               this.setState({
                                 ...this.state,
-                                role: "teacher",
+                                role: 'teacher',
                               })
                             }
                           >
-                            {t("teacher")}
+                            {t('teacher')}
                           </Button>
                           <Button
                             className="fs-3 m-3 p-3 activateAdministrator"
@@ -84,28 +88,34 @@ class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAcco
                             onClick={() =>
                               this.setState({
                                 ...this.state,
-                                role: "administrator",
+                                role: 'administrator',
                               })
                             }
                           >
-                            {t("administrator")}
+                            {t('administrator')}
                           </Button>
                         </Col>
                       </Row>
                     </>
                   )}
-                  {this.state.role === "teacher" && (
-                    <ActivateTeacher defaultOnBackHandler={defaultOnBackHandler} onSubmit={this.props.onSubmit} />
+                  {this.state.role === 'teacher' && (
+                    <ActivateTeacher
+                      defaultOnBackHandler={defaultOnBackHandler}
+                      onSubmit={this.props.onSubmit}
+                    />
                   )}
-                  {this.state.role === "administrator" && (
+                  {this.state.role === 'administrator' && (
                     <ActivateAdministrator
                       defaultOnBackHandler={defaultOnBackHandler}
                       onSubmit={this.props.onSubmit}
                       person={this.props.person}
                     />
                   )}
-                  {this.state.role === "student" && (
-                    <ActivateStudent defaultOnBackHandler={defaultOnBackHandler} onSubmit={this.props.onSubmit} />
+                  {this.state.role === 'student' && (
+                    <ActivateStudent
+                      defaultOnBackHandler={defaultOnBackHandler}
+                      onSubmit={this.props.onSubmit}
+                    />
                   )}
                 </Col>
                 <Col lg={1} md={3} />
@@ -118,7 +128,7 @@ class ActivateAccount extends React.Component<ActivateAccountProps, ActivateAcco
   }
 }
 
-export default withTranslation("activateAccount")(
+export default withTranslation('activateAccount')(
   connect(
     (state: any) => ({
       isUserLoggedIn: getIsLoggedInReduxProxy(state),

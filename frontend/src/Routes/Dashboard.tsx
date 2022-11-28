@@ -1,33 +1,33 @@
-import { connect } from "react-redux";
-import React from "react";
-import { Route, Routes } from "react-router-dom";
-import DashboardIndex from "../Components/Dashboard/DashboardIndex";
-import DashboardNavigation from "../Components/Dashboard/DashboardNavigation";
-import Absence from "../Components/Dashboard/Absence";
-import Grades from "../Components/Dashboard/Grades";
-import Subject from "../Components/Dashboard/Subject";
-import Timetable from "../Components/Dashboard/Timetable";
-import TeachersList from "../Components/Dashboard/Manage/ManageTeachers/TeachersList";
-import Invitations from "../Components/Dashboard/Manage/ManageInvitations/Invitations";
-import StudentsList from "../Components/Dashboard/Manage/ManageStudents/StudentsList";
-import SchoolsList from "../Components/Dashboard/Manage/ManageSchool/SchoolsList";
-import SchoolSelectedOnly from "../Components/Shared/SchoolSelectedOnly";
-import ManageClasses from "../Components/Dashboard/Manage/ManageClasses/ManageClasses";
-import getIsLoggedInReduxProxy from "../Redux/ReduxProxy/getIsLoggedInReduxProxy";
-import SettingsIndex from "../Components/Dashboard/Manage/Settings/SettingsIndex";
-
-const mapStateToProps = (state: any) => ({
-  isLoggedIn: getIsLoggedInReduxProxy(state),
-});
-
-const mapDispatchToProps = (dispatch: any) => ({});
+import { connect } from 'react-redux';
+import React, { ReactElement } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import DashboardIndex from '../Components/Dashboard/DashboardIndex';
+import DashboardNavigation from '../Components/Dashboard/DashboardNavigation';
+import Absence from '../Components/Dashboard/Absence';
+import Grades from '../Components/Dashboard/Grades';
+import Subject from '../Components/Dashboard/Subject';
+import Timetable from '../Components/Dashboard/Timetable';
+import TeachersList from '../Components/Dashboard/Manage/ManageTeachers/TeachersList';
+import Invitations from '../Components/Dashboard/Manage/ManageInvitations/Invitations';
+import StudentsList from '../Components/Dashboard/Manage/ManageStudents/StudentsList';
+import SchoolsList from '../Components/Dashboard/Manage/ManageSchool/SchoolsList';
+import SchoolSelectedOnly from '../Components/Shared/SchoolSelectedOnly';
+import ManageClasses from '../Components/Dashboard/Manage/ManageClasses/ManageClasses';
+import getIsLoggedInReduxProxy from '../Redux/ReduxQueries/account/getIsLoggedInRedux';
+import SettingsIndex from '../Components/Dashboard/Manage/Settings/SettingsIndex';
+import EducationCycle from '../Components/Dashboard/Manage/EducationCycle/EducationCycle';
+import getHasPermissionRedux from '../Redux/ReduxQueries/account/getHasPermissionRedux';
+import PermissionLevelEnum from '../Common/Enums/Permissions/PermissionLevelEnum';
 
 interface DashboardProps {
   isLoggedIn?: boolean;
+  permissions: {
+    hasPermissionToEducatonCycles: boolean;
+  };
 }
 
 class Dashboard extends React.Component<DashboardProps> {
-  render() {
+  render(): ReactElement {
     return (
       <div>
         <div className="p-3 bg-light">
@@ -35,11 +35,29 @@ class Dashboard extends React.Component<DashboardProps> {
         </div>
         <div className="m-4">
           <Routes>
-            <Route path="*" element={<DashboardIndex />}></Route>
-            <Route path="absence" element={<Absence />}></Route>
-            <Route path="grades" element={<Grades />}></Route>
-            <Route path="subject" element={<Subject />}></Route>
-            <Route path="timetable" element={<Timetable />}></Route>
+            <Route path="*" element={<DashboardIndex />} />
+            <Route path="absence" element={<Absence />} />
+            <Route path="grades" element={<Grades />} />
+            {this.props.permissions.hasPermissionToEducatonCycles && (
+              <Route
+                path="educationCycle/*"
+                element={
+                  <SchoolSelectedOnly>
+                    <EducationCycle />
+                  </SchoolSelectedOnly>
+                }
+              />
+            )}
+
+            <Route
+              path="manageSubjects"
+              element={
+                <SchoolSelectedOnly>
+                  <Subject />
+                </SchoolSelectedOnly>
+              }
+            ></Route>
+            <Route path="timetable" element={<Timetable />} />
             <Route
               path="manageStudents/*"
               element={
@@ -47,7 +65,7 @@ class Dashboard extends React.Component<DashboardProps> {
                   <StudentsList />
                 </SchoolSelectedOnly>
               }
-            ></Route>
+            />
             <Route
               path="manageTeachers/*"
               element={
@@ -55,7 +73,7 @@ class Dashboard extends React.Component<DashboardProps> {
                   <TeachersList />
                 </SchoolSelectedOnly>
               }
-            ></Route>
+            />
             <Route
               path="manageInvitations/*"
               element={
@@ -63,7 +81,7 @@ class Dashboard extends React.Component<DashboardProps> {
                   <Invitations />
                 </SchoolSelectedOnly>
               }
-            ></Route>
+            />
             <Route
               path="manageClasses/*"
               element={
@@ -71,9 +89,9 @@ class Dashboard extends React.Component<DashboardProps> {
                   <ManageClasses />
                 </SchoolSelectedOnly>
               }
-            ></Route>
-            <Route path="manageSchool/*" element={<SchoolsList />}></Route>
-            <Route path="settings/*" element={<SettingsIndex />}></Route>
+            />
+            <Route path="manageSchool/*" element={<SchoolsList />} />
+            <Route path="settings/*" element={<SettingsIndex />} />
           </Routes>
         </div>
       </div>
@@ -81,4 +99,18 @@ class Dashboard extends React.Component<DashboardProps> {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+export default connect(
+  (state: any) => ({
+    isLoggedIn: getIsLoggedInReduxProxy(state),
+    permissions: {
+      hasPermissionToEducatonCycles: getHasPermissionRedux(
+        [
+          PermissionLevelEnum.EducationCycles_CanCreateAndDelete,
+          PermissionLevelEnum.EducationCycles_ViewOnly,
+        ],
+        state
+      ),
+    },
+  }),
+  () => ({})
+)(Dashboard);

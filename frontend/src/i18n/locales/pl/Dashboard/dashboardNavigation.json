@@ -2,11 +2,12 @@
   "grades": "Oceny",
   "absence": "Nieobecności",
   "subjects": "Przedmioty",
-  "timetable": "Plan lekcji",
+  "timetable": "Terminarz",
   "manageStudents": "Uczniowie",
   "manageTeachers": "Nauczyciele",
   "manageSchool": "Szkoły",
   "manageInvitations": "Zaproszenia",
   "manageClasses": "Klasy",
-  "settings": "Ustawienia"
+  "settings": "Ustawienia",
+  "educationCycle": "Cykl nauczania"
 }

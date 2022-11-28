@@ -57,7 +57,7 @@ public class AccountController : ControllerBase
             Schools = schools
         });
     }
-    [Authorize]
+    /*[Authorize]
     [HttpPost]
     [Route("revoke/{username}")]
     public async Task<IActionResult> Revoke(string username)
@@ -83,7 +83,7 @@ public class AccountController : ControllerBase
         }
 
         return NoContent();
-    }
+    }*/
 
     [HttpPost]
     [Route("login")]
@@ -96,24 +96,22 @@ public class AccountController : ControllerBase
 
             var authClaims = new List<Claim>
             {
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
             foreach (var userRole in userRoles)
-            {
                 authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-            }
+
 
             var token = _identityLogic.Service.CreateToken(authClaims);
             var refreshToken = _identityLogic.Service.GenerateRefreshToken();
 
-            _ = int.TryParse(_configuration.Service["JWT:RefreshTokenValidityInDays"], out int refreshTokenValidityInDays);
+            await _identityLogic.Service.AssignRefreshTokenToUser(user.Id, refreshToken);
+            _identityLogic.Service.RemoveAllExpiredTokens();
 
-            user.RefreshToken = refreshToken;
-            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(refreshTokenValidityInDays);
-
-            await _userManager.Service.UpdateAsync(user);
+            _identityLogic.Service.SaveDatabaseChanges();
 
             return Ok(new
             {
@@ -154,6 +152,8 @@ public class AccountController : ControllerBase
         string? accessToken = tokenModel.AccessToken;
         string? refreshToken = tokenModel.RefreshToken;
 
+        if (accessToken is null || refreshToken is null) return BadRequest("Invalid access token or refresh token");
+
         var principal = _identityLogic.Service.GetPrincipalFromExpiredToken(accessToken);
         if (principal == null)
         {
@@ -164,7 +164,8 @@ public class AccountController : ControllerBase
 
         var user = await _userManager.Service.FindByNameAsync(username);
 
-        if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+        if (user == null ||
+        !(await _identityLogic.Service.IsValidRefreshTokenForUser(user.Id, refreshToken)))
         {
             return BadRequest("Invalid access token or refresh token");
         }
@@ -172,8 +173,11 @@ public class AccountController : ControllerBase
         var newAccessToken = _identityLogic.Service.CreateToken(principal.Claims.ToList());
         var newRefreshToken = _identityLogic.Service.GenerateRefreshToken();
 
-        user.RefreshToken = newRefreshToken;
-        await _userManager.Service.UpdateAsync(user);
+        await _identityLogic.Service.RemoveRefreshTokenFromUser(user.Id, refreshToken);
+        await _identityLogic.Service.AssignRefreshTokenToUser(user.Id, newRefreshToken);
+        _identityLogic.Service.RemoveAllExpiredTokens();
+
+        _identityLogic.Service.SaveDatabaseChanges();
 
         return new ObjectResult(new
         {

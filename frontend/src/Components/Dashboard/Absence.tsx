@@ -1,16 +1,9 @@
-import React from "react";
-import { connect } from "react-redux";
+import React from 'react';
 
-const mapStateToProps = (state: any) => ({});
-
-const mapDispatchToProps = (dispatch: any) => ({});
-
-interface AbsenceProps {}
-
-class Absence extends React.Component<AbsenceProps> {
+class Absence extends React.Component {
   render(): React.ReactNode {
     return <div>d-board Absence</div>;
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Absence);
+export default Absence;

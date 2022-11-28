@@ -6,7 +6,6 @@ using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace Api.Controllers.Classes;
 

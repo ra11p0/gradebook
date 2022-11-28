@@ -7,5 +7,7 @@
   "School not found": "Szkoła nie została odnaleziona",
   "One or more validation errors occurred.": "Niepoprawne dane zostały wprowadzone",
   "personRemovedNotificationTitle": "Osoba usunięta",
-  "personRemovedNotificationText": "Osoba została pomyślnie usunięta"
+  "personRemovedNotificationText": "Osoba została pomyślnie usunięta",
+  "success": "Sukces",
+  "permissionsSaved": "Uprawnienia zapisane"
 }

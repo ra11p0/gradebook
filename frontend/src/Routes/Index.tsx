@@ -1,7 +1,7 @@
-import React from "react";
-import { Route, Routes } from "react-router-dom";
-import LoginForm from "../Components/Account/Login/LoginForm";
-import RegisterForm from "../Components/Account/Register/RegisterForm";
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+import LoginForm from '../Components/Account/Login/LoginForm';
+import RegisterForm from '../Components/Account/Register/RegisterForm';
 
 class Index extends React.Component {
   render(): React.ReactNode {

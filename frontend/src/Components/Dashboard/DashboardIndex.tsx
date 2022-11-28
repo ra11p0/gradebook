@@ -1,16 +1,9 @@
-import React from "react";
-import { connect } from "react-redux";
+import React from 'react';
 
-const mapStateToProps = (state: any) => ({});
-
-const mapDispatchToProps = (dispatch: any) => ({});
-
-interface DashboardIndexProps {}
-
-class DashboardIndex extends React.Component<DashboardIndexProps> {
+class DashboardIndex extends React.Component {
   render(): React.ReactNode {
     return <div>d-board index</div>;
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DashboardIndex);
+export default DashboardIndex;

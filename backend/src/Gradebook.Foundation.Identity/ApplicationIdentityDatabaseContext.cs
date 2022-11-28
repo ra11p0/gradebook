@@ -5,18 +5,20 @@ using Microsoft.Extensions.Configuration;
 
 namespace Gradebook.Foundation.Identity.Models;
 
-public class ApplicationIdentityDatabaseContext: IdentityDbContext<ApplicationUser>
+public class ApplicationIdentityDatabaseContext : IdentityDbContext<ApplicationUser>
 {
+    public DbSet<Session> Sessions { get; set; }
     public ApplicationIdentityDatabaseContext()
-    {}
+    { }
     public ApplicationIdentityDatabaseContext(
-        DbContextOptions<ApplicationIdentityDatabaseContext> options) 
+        DbContextOptions<ApplicationIdentityDatabaseContext> options)
         : base(options)
     {
     }
-    protected override void OnModelCreating(ModelBuilder modelBuilder) { 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
         modelBuilder.Entity<IdentityUserLogin<string>>().HasNoKey();
-        modelBuilder.Entity<IdentityUserRole<string>>().HasKey(k=>new{k.UserId, k.RoleId});
+        modelBuilder.Entity<IdentityUserRole<string>>().HasKey(k => new { k.UserId, k.RoleId });
         modelBuilder.Entity<IdentityUserToken<string>>().HasNoKey();
     }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -33,7 +35,7 @@ public class ApplicationIdentityDatabaseContext: IdentityDbContext<ApplicationUs
             optionsBuilder.UseMySql(
                 cn,
                 new MySqlServerVersion(new Version(8, 30, 0)),
-                e=>e.MigrationsHistoryTable("__IdentityMigrationsHistory")
+                e => e.MigrationsHistoryTable("__IdentityMigrationsHistory")
             );
         }
     }

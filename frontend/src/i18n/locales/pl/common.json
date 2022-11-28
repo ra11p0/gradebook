@@ -7,5 +7,18 @@
   "schoolIsNotSelected": "Szkoła nie została wybrana",
   "selectSchoolToManageStudents": "Wybierz szkołę by zarządzać uczniami ",
   "actions": "Akcje",
-  "save": "Zapisz"
+  "save": "Zapisz",
+  "name": "Imię",
+  "surname": "Nazwisko",
+  "birthday": "Data urodzenia",
+  "isActive": "Czy aktywny",
+  "select...": "Wybierz...",
+  "noOptions": "Brak wyników",
+  "fieldRequired": "Pole wymagane",
+  "fieldNumberOnly": "Pole musi zawierać tylko liczby",
+  "createdDate": "Data utworzenia",
+  "creator": "Stworzony przez",
+  "Admin": "Administrator",
+  "Teacher": "Nauczyciel",
+  "Student": "Uczeń"
 }

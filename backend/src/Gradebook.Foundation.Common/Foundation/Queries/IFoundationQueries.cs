@@ -4,6 +4,14 @@ namespace Gradebook.Foundation.Common.Foundation.Queries;
 
 public interface IFoundationQueries
 {
+    Task<ResponseWithStatus<EducationCycleExtendedDto>> GetEducationCycle(Guid educationCycleGuid);
+    Task<ResponseWithStatus<IPagedList<EducationCycleDto>>> GetEducationCyclesInSchool(Guid schoolGuid, int page);
+    Task<ResponseWithStatus<IEnumerable<TeacherDto>, bool>> GetAllAccessibleTeachers(Guid schoolGuid);
+    Task<ResponseWithStatus<Guid>> GetCurrentPersonGuidBySubjectGuid(Guid subjectGuid);
+    Task<ResponseWithStatus<IPagedList<SubjectDto>>> GetSubjectsForTeacher(Guid teacherGuid, int page);
+    Task<ResponseWithStatus<IPagedList<TeacherDto>>> GetTeachersForSubject(Guid subjectGuid, int page);
+    Task<ResponseWithStatus<SubjectDto>> GetSubject(Guid subjectGuid);
+    Task<ResponseWithStatus<IPagedList<SubjectDto>>> GetSubjectsForSchool(Guid schoolGuid, int page, string query);
     Task<ResponseWithStatus<IEnumerable<SchoolWithRelatedPersonDto>, bool>> GetSchoolsForUser(string userGuid);
     Task<ResponseWithStatus<IEnumerable<PersonDto>>> GetPeopleByUserGuid(string userGuid);
     Task<ResponseWithStatus<bool>> IsUserActive(string userGuid);
@@ -28,6 +36,7 @@ public interface IFoundationQueries
     Task<ResponseWithStatus<IPagedList<ClassDto>>> GetClassesInSchool(Guid schoolGuid, int page);
     Task<ResponseWithStatus<IPagedList<StudentDto>>> GetStudentsInClass(Guid classGuid, int page);
     Task<ResponseWithStatus<IPagedList<TeacherDto>>> GetTeachersInClass(Guid classGuid, int page);
+    Task<ResponseWithStatus<IPagedList<ClassDto>>> GetClassesForPerson(Guid personGuid, int page);
     Task<ResponseWithStatus<IEnumerable<StudentDto>>> GetAllStudentsInClass(Guid classGuid);
     Task<ResponseWithStatus<IEnumerable<TeacherDto>>> GetAllTeachersInClass(Guid classGuid);
     Task<ResponseWithStatus<bool>> IsClassOwner(Guid classGuid, Guid personGuid);

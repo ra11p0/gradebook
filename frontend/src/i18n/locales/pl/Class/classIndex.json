@@ -1,5 +1,7 @@
 {
-  "addStudentsToClass": "Dodaj uczniów do klasy",
-  "addClassOwners": "Dodaj opiekunów klasy",
-  "owners": "Opiekunowie"
+  "manageStudentsInClass": "Zarządzaj uczniami w klasie",
+  "manageClassOwners": "Zarządzaj opiekunami klasy",
+  "owners": "Opiekunowie",
+  "studentsInClass": "Uczniowie w klasie",
+  "index": "Lp."
 }

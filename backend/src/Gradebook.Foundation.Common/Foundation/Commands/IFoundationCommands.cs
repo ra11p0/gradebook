@@ -6,6 +6,9 @@ namespace Gradebook.Foundation.Common.Foundation.Commands;
 
 public interface IFoundationCommands
 {
+    Task<ResponseWithStatus<Guid>> AddNewEducationCycle(EducationCycleCommand command);
+    Task<StatusResponse> EditTeachersInSubject(Guid subjectGuid, List<Guid> teachersGuids);
+    Task<ResponseWithStatus<Guid>> AddSubject(Guid schoolGuid, NewSubjectCommand command);
     Task<ResponseWithStatus<Guid>> AddNewStudent(NewStudentCommand newStudentDto, Guid schoolGuid);
     Task<StatusResponse<bool>> AddNewTeacher(NewTeacherCommand newTeacherCommand, Guid schoolGuid);
     Task<StatusResponse> DeleteSchool(Guid schoolGuid);

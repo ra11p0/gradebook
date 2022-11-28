@@ -1,5 +1,5 @@
-import PersonResponse from "./PersonResponse";
+import PersonResponse from './PersonResponse';
 
 export interface InvitationDetailsResponse {
-    person: PersonResponse;
+  person: PersonResponse;
 }

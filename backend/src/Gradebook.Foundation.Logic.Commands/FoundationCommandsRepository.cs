@@ -200,4 +200,75 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
         _class.OwnersTeachers!.RemoveRange(teachers);
         return new StatusResponse(true);
     }
+
+    public async Task<StatusResponse> SetStudentActiveClass(Guid classGuid, Guid studentGuid)
+    {
+        var _class = await Context.Classes!.FirstOrDefaultAsync(e => e.Guid == classGuid);
+        var student = await Context.Students!.FirstOrDefaultAsync(e => e.Guid == studentGuid);
+        if (_class is null || student is null) return new StatusResponse(false, _class is null ? "Class not found" : "Student not found");
+        student.CurrentClassGuid = _class.Guid;
+        return new StatusResponse(true);
+    }
+
+    public async Task<StatusResponse> RemoveStudentActiveClass(Guid studentGuid)
+    {
+        var student = await Context.Students!.FirstOrDefaultAsync(e => e.Guid == studentGuid);
+        if (student is null) return new StatusResponse(false, "Class not found");
+        student.CurrentClassGuid = null;
+        return new StatusResponse(true);
+    }
+
+    public async Task<ResponseWithStatus<Guid>> AddSubject(Guid schoolGuid, NewSubjectCommand command)
+    {
+        var school = await Context.Schools!.FirstOrDefaultAsync(s => s.Guid == schoolGuid);
+        if (school is null) return new ResponseWithStatus<Guid>("School does not exist");
+        var subject = _mapper.Map<Subject>(command);
+        subject.School = school;
+        await Context.Subjects!.AddAsync(subject);
+        return new ResponseWithStatus<Guid>(subject.Guid);
+    }
+
+    public async Task<StatusResponse> AddTeachersToSubject(Guid subjectGuid, List<Guid> teachersGuids)
+    {
+        var subject = await Context.Subjects!.Include(sub => sub.Teachers).FirstOrDefaultAsync(sub => sub.Guid == subjectGuid);
+        if (subject is null) return new StatusResponse("Subject not found");
+        var teachers = Context.Teachers!.Where(tea => teachersGuids.Contains(tea.Guid));
+        subject.Teachers!.AddRange(teachers);
+        return new StatusResponse(true);
+    }
+
+    public async Task<StatusResponse> RemoveTeachersFromSubject(Guid subjectGuid, List<Guid> teachersGuids)
+    {
+        var subject = await Context.Subjects!.Include(sub => sub.Teachers).FirstOrDefaultAsync(sub => sub.Guid == subjectGuid);
+        if (subject is null) return new StatusResponse("Subject not found");
+        var teachers = Context.Teachers!.Where(tea => teachersGuids.Contains(tea.Guid));
+        subject.Teachers!.RemoveRange(teachers);
+        return new StatusResponse(true);
+    }
+
+    public async Task<ResponseWithStatus<Guid>> AddNewEducationCycle(EducationCycleCommand command)
+    {
+        EducationCycle educationCycle = new()
+        {
+            Name = command.Name,
+            SchoolGuid = command.SchoolGuid,
+            CreatedDate = command.CreatedDate,
+            CreatorGuid = command.CreatorGuid,
+            EducationCycleSteps = command.Stages.Select((step, index) => new EducationCycleStep()
+            {
+                Name = step.Name,
+                Order = index,
+                EducationCycleStepSubjects = step.Subjects.Select(subject => new EducationCycleStepSubject()
+                {
+                    SubjectGuid = subject.SubjectGuid,
+                    HoursInStep = subject.HoursNo,
+                    IsMandatory = subject.IsMandatory,
+                    GroupsAllowed = subject.CanUseGroups,
+                }).ToList()
+            }).ToList()
+        };
+        await Context.AddAsync(educationCycle);
+        return new ResponseWithStatus<Guid>(educationCycle.Guid);
+    }
 }
+

@@ -37,7 +37,7 @@ public class Activation
         foundationQueriesRepository.Setup(e => e.GetInvitationByActivationCode(It.IsAny<string>()))
         .ReturnsAsync(new InvitationDto()
         {
-            ExprationDate = DateTime.Now.AddMinutes(10),
+            ExprationDate = Time.UtcNow.AddMinutes(10),
             InvitedPersonGuid = Guid.NewGuid(),
             SchoolRole = Common.Foundation.Enums.SchoolRoleEnum.Student
         });
@@ -49,6 +49,7 @@ public class Activation
         var activationCode = "QWERTY";
         var resp = await foundationCommands!.ActivatePerson(activationCode);
         Assert.That(resp.Status, Is.True);
+        Assert.That(resp.StatusCode, Is.EqualTo(200));
     }
     [Test]
     public async Task ShouldNotActivatePerson_ExpiredInvitation()
@@ -58,7 +59,7 @@ public class Activation
         foundationQueriesRepository.Setup(e => e.GetInvitationByActivationCode(It.IsAny<string>()))
         .ReturnsAsync(new InvitationDto()
         {
-            ExprationDate = DateTime.Now.AddMinutes(-10),
+            ExprationDate = Time.UtcNow.AddMinutes(-10),
             InvitedPersonGuid = Guid.NewGuid(),
             SchoolRole = Common.Foundation.Enums.SchoolRoleEnum.Student
         });
@@ -70,6 +71,7 @@ public class Activation
         var activationCode = "QWERTY";
         var resp = await foundationCommands!.ActivatePerson(activationCode);
         Assert.That(resp.Status, Is.False);
+        Assert.That(resp.StatusCode, Is.EqualTo(400));
     }
     [Test]
     public async Task ShouldNotActivatePerson_UsedInvitation()
@@ -80,7 +82,7 @@ public class Activation
         .ReturnsAsync(new InvitationDto()
         {
             IsUsed = true,
-            ExprationDate = DateTime.Now.AddMinutes(10),
+            ExprationDate = Time.UtcNow.AddMinutes(10),
             InvitedPersonGuid = Guid.NewGuid(),
             SchoolRole = Common.Foundation.Enums.SchoolRoleEnum.Student
         });
@@ -92,6 +94,7 @@ public class Activation
         var activationCode = "QWERTY";
         var resp = await foundationCommands!.ActivatePerson(activationCode);
         Assert.That(resp.Status, Is.False);
+        Assert.That(resp.StatusCode, Is.EqualTo(400));
     }
     [Test]
     public async Task ShouldReturnInvitationsInSchool()
@@ -119,5 +122,18 @@ public class Activation
             .ReturnsAsync(fakeInvitedPeople[2]);
         var result = await foundationQueries!.GetInvitationsToSchool(Guid.NewGuid(), 1);
         Assert.That(result.Response!.Select(e => e.InvitedPerson).ToArray(), Is.EquivalentTo(fakeInvitedPeople));
+        Assert.That(result.StatusCode, Is.EqualTo(200));
     }
+    [Test]
+    public async Task ShouldReturnNotFoundActivationCode()
+    {
+        foundationQueriesRepository
+            .Setup(e => e.GetInvitationByActivationCode(It.IsAny<string>()))
+            .ReturnsAsync(default(InvitationDto));
+
+        var info = await foundationQueries!.GetActivationCodeInfo("fakeCode", "student");
+        Assert.That(info.Status, Is.False);
+        Assert.That(info.StatusCode, Is.EqualTo(404));
+    }
+
 }

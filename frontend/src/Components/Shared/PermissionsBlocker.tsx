@@ -1,36 +1,32 @@
-import PermissionLevelEnum from '../../Common/Enums/Permissions/PermissionLevelEnum'
-import getPermissionsReduxProxy from '../../Redux/ReduxProxy/getPermissionsReduxProxy'
-import { connect } from 'react-redux'
+import PermissionLevelEnum from '../../Common/Enums/Permissions/PermissionLevelEnum';
+import getPermissionsReduxProxy from '../../Redux/ReduxQueries/account/getPermissionsRedux';
+import { connect } from 'react-redux';
 
-import React, { useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react';
+import { GlobalState } from '../../store';
 
-type Props = {
-    currentPermissions: PermissionLevelEnum[];
-    permissions: PermissionLevelEnum[];
-    children?: React.ReactNode;
+interface Props {
+  currentPermissions: PermissionLevelEnum[];
+  allowingPermissions: PermissionLevelEnum[];
+  children?: React.ReactNode;
 }
 
-function PermissionsBlocker(props: Props) {
-    const [canSee, setCanSee] = useState<boolean>(false);
-    useEffect(() => {
-        setCanSee(false);
-        let canSee = true;
-        props.permissions.forEach((permission) => {
-            if (!props.currentPermissions.includes(permission)) canSee = false;
-        })
-        setCanSee(canSee);
-    }, [props.currentPermissions]);
-    return (
-        <>
-            {
-                canSee && <div>
-                    {props.children}
-                </div>
-            }
-        </>
-    )
+function PermissionsBlocker(props: Props): ReactElement {
+  const [canSee, setCanSee] = useState<boolean>(false);
+  useEffect(() => {
+    setCanSee(false);
+    let canSee = false;
+    props.currentPermissions.forEach((permission) => {
+      if (props.allowingPermissions.includes(permission)) canSee = true;
+    });
+    setCanSee(canSee);
+  }, [props.currentPermissions]);
+  return <>{canSee && <>{props.children}</>}</>;
 }
 
-export default connect((state) => ({
-    currentPermissions: getPermissionsReduxProxy(state)
-}), () => ({}))(PermissionsBlocker);
+export default connect(
+  (state: GlobalState) => ({
+    currentPermissions: getPermissionsReduxProxy(state),
+  }),
+  () => ({})
+)(PermissionsBlocker);
