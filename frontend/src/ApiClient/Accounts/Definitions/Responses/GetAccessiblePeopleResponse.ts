@@ -1,3 +1,1 @@
-export default interface GetAccessiblePeopleResponse {
-
-}
+export default interface GetAccessiblePeopleResponse {}

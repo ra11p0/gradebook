@@ -1,20 +1,22 @@
-import { AxiosResponse } from "axios";
-import { axiosApiAuthorized } from "../AxiosInterceptor";
-import NewStudentRequest from "../Schools/Definitions/Requests/NewStudentRequest";
-import StudentResponse from "./Definitions/Responses/StudentResponse";
+import { AxiosResponse } from 'axios';
+import { axiosApiAuthorized } from '../AxiosInterceptor';
+import StudentResponse from './Definitions/Responses/StudentResponse';
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL!;
 
-const getAccessibleStudents = (): Promise<AxiosResponse<StudentResponse[]>> => {
-    return axiosApiAuthorized.get(API_URL + '/students');
-}
+const getAccessibleStudents = async (): Promise<
+  AxiosResponse<StudentResponse[]>
+> => {
+  return await axiosApiAuthorized.get(API_URL + '/students');
+};
 
-const getInactiveAccessibleStudents = (): Promise<AxiosResponse<StudentResponse[]>> => {
-    return axiosApiAuthorized.get(API_URL + '/students/inactive');
-}
-
+const getInactiveAccessibleStudents = async (): Promise<
+  AxiosResponse<StudentResponse[]>
+> => {
+  return await axiosApiAuthorized.get(API_URL + '/students/inactive');
+};
 
 export default {
-    getAccessibleStudents,
-    getInactiveAccessibleStudents
-}
+  getAccessibleStudents,
+  getInactiveAccessibleStudents,
+};

@@ -6,19 +6,12 @@ using Gradebook.Foundation.Logic.Commands;
 using Gradebook.Foundation.Logic.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using MySqlX.XDevAPI.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gradebook.Foundation.Tests
 {
     [Category("Unit")]
     public class Schools
     {
-
         private readonly Mock<IFoundationCommandsRepository> foundationCommandsRepository = new();
         private readonly Mock<IFoundationQueriesRepository> foundationQueriesRepository = new();
         private readonly Mock<IIdentityLogic> identityLogic = new Mock<IIdentityLogic>();

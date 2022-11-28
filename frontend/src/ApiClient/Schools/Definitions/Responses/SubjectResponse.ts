@@ -1,5 +1,5 @@
 export default interface SubjectResponse {
-    guid: string;
-    name: string;
-    schoolGuid: string;
+  guid: string;
+  name: string;
+  schoolGuid: string;
 }

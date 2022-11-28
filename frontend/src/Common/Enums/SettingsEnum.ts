@@ -1,4 +1,4 @@
 enum SettingsEnum {
-    DefaultPersonGuid = 0
+  DefaultPersonGuid = 0,
 }
 export default SettingsEnum;

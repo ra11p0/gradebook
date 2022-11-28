@@ -1,25 +1,23 @@
-import React, { ReactElement, useEffect, useState } from "react";
-import { connect } from "react-redux";
-import { useTranslation } from "react-i18next";
-import { Button, Row } from "react-bootstrap";
-import AdministratorsProxy from "../../../ApiClient/Administrators/AdministratorsProxy";
-import Notifications from "../../../Notifications/Notifications";
-import AccountProxy from "../../../ApiClient/Accounts/AccountsProxy";
-import getCurrentUserIdReduxProxy from "../../../Redux/ReduxProxy/getCurrentUserIdReduxProxy";
-import setSchoolsListReduxWrapper, { setSchoolsListAction } from "../../../Redux/ReduxWrappers/setSchoolsListReduxWrapper";
-import ActivateAdministratorPerson, { ActivateAdministratorPersonValues } from "./ActivateAdministratorPerson";
-import ActivateAdministratorSchool, { ActivateAdministratorSchoolValues } from "./ActivateAdministratorSchool";
-import setLoginReduxWrapper from "../../../Redux/ReduxWrappers/setLoginReduxWrapper";
-import { store } from "../../../store";
-import moment from "moment";
-
-const mapStateToProps = (state: any) => ({
-  userId: getCurrentUserIdReduxProxy(state),
-});
-
-const mapDispatchToProps = (dispatch: any) => ({
-  setSchoolsList: (action: setSchoolsListAction) => setSchoolsListReduxWrapper(dispatch, action),
-});
+import React, { ReactElement, useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { Button, Row } from 'react-bootstrap';
+import AdministratorsProxy from '../../../ApiClient/Administrators/AdministratorsProxy';
+import Notifications from '../../../Notifications/Notifications';
+import getCurrentUserIdReduxProxy from '../../../Redux/ReduxQueries/account/getCurrentUserIdRedux';
+import setSchoolsListReduxWrapper, {
+  setSchoolsListAction,
+} from '../../../Redux/ReduxCommands/account/setSchoolsListRedux';
+import ActivateAdministratorPerson, {
+  ActivateAdministratorPersonValues,
+} from './ActivateAdministratorPerson';
+import ActivateAdministratorSchool, {
+  ActivateAdministratorSchoolValues,
+} from './ActivateAdministratorSchool';
+import setLoginReduxWrapper from '../../../Redux/ReduxCommands/account/setLoginRedux';
+import { store } from '../../../store';
+import moment from 'moment';
+import getSessionRedux from '../../../Redux/ReduxQueries/account/getSessionRedux';
 
 interface ActivateAdministratorFormProps {
   defaultOnBackHandler: () => void;
@@ -29,9 +27,12 @@ interface ActivateAdministratorFormProps {
   person?: ActivateAdministratorPersonValues;
 }
 
-const ActivateAdministratorForm = (props: ActivateAdministratorFormProps): ReactElement => {
-  const { t } = useTranslation("ActivateAdministrator");
-  const [person, setPerson] = useState<ActivateAdministratorPersonValues | null>(null);
+const ActivateAdministratorForm = (
+  props: ActivateAdministratorFormProps
+): ReactElement => {
+  const { t } = useTranslation('ActivateAdministrator');
+  const [person, setPerson] =
+    useState<ActivateAdministratorPersonValues | null>(null);
   const [showNewSchoolComponent, setShowNewSchoolComponent] = useState(false);
 
   useEffect(() => {
@@ -41,17 +42,25 @@ const ActivateAdministratorForm = (props: ActivateAdministratorFormProps): React
     }
   }, []);
 
-  const activateWithSchool = (person: ActivateAdministratorPersonValues, school: ActivateAdministratorSchoolValues) => {
-    AdministratorsProxy.newAdministratorWithSchool({ ...person, birthday: moment(person.birthday).utc().toDate() }, school)
-      .then((response) => {
-        setLoginReduxWrapper(store.dispatch, {
-          accessToken: store.getState().common.session.accessToken,
-          refreshToken: store.getState().common.session.refreshToken,
+  function activateWithSchool(
+    person: ActivateAdministratorPersonValues,
+    school: ActivateAdministratorSchoolValues
+  ): void {
+    AdministratorsProxy.newAdministratorWithSchool(
+      { ...person, birthday: moment(person.birthday).utc().toDate() },
+      school
+    )
+      .then(async (response) => {
+        const session = getSessionRedux();
+        if (!session) return;
+        await setLoginReduxWrapper(store.dispatch, {
+          accessToken: session.accessToken,
+          refreshToken: session.refreshToken,
         });
         if (props.onSubmit) props.onSubmit();
       })
       .catch(Notifications.showApiError);
-  };
+  }
 
   return (
     <div className="card m-3 p-3">
@@ -60,12 +69,12 @@ const ActivateAdministratorForm = (props: ActivateAdministratorFormProps): React
           if (showNewSchoolComponent) setShowNewSchoolComponent(false);
           else props.defaultOnBackHandler();
         }}
-        variant={"link"}
+        variant={'link'}
       >
-        {t("back")}
+        {t('back')}
       </Button>
       <Row className="text-center">
-        <div className="h4">{t("ActivateAdministrator")}</div>
+        <div className="h4">{t('ActivateAdministrator')}</div>
       </Row>
       <>
         {!(showNewSchoolComponent && person) ? (
@@ -92,4 +101,12 @@ const ActivateAdministratorForm = (props: ActivateAdministratorFormProps): React
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ActivateAdministratorForm);
+export default connect(
+  (state) => ({
+    userId: getCurrentUserIdReduxProxy(state),
+  }),
+  (dispatch) => ({
+    setSchoolsList: (action: setSchoolsListAction) =>
+      setSchoolsListReduxWrapper(dispatch, action),
+  })
+)(ActivateAdministratorForm);

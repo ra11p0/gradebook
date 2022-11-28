@@ -1,9 +1,9 @@
-import SchoolRolesEnum from "../../../../Common/Enums/SchoolRolesEnum";
+import SchoolRolesEnum from '../../../../Common/Enums/SchoolRolesEnum';
 
 export default interface RelatedPersonResponse {
-    guid: string;
-    surname: string;
-    name: string;
-    schoolRole: SchoolRolesEnum;
-    birthday: Date;
+  guid: string;
+  surname: string;
+  name: string;
+  schoolRole: SchoolRolesEnum;
+  birthday: Date;
 }

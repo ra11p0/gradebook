@@ -1,27 +1,22 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { connect } from "react-redux";
-import AccountProxy from "../../../ApiClient/Accounts/AccountsProxy";
-import { withTranslation } from "react-i18next";
-import { Button } from "react-bootstrap";
-import getIsLoggedInReduxProxy from "../../../Redux/ReduxProxy/getIsLoggedInReduxProxy";
-import getCurrentSchoolReduxProxy from "../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
-import setLoginReduxWrapper, { logInAction } from "../../../Redux/ReduxWrappers/setLoginReduxWrapper";
-import setSchoolsListReduxWrapper, { setSchoolsListAction } from "../../../Redux/ReduxWrappers/setSchoolsListReduxWrapper";
-import setUserReduxWrapper, { setUserAction } from "../../../Redux/ReduxWrappers/setUserReduxWrapper";
-import setAppLoadReduxWrapper from "../../../Redux/ReduxWrappers/setAppLoadReduxWrapper";
-import { store } from "../../../store";
-
-const mapStateToProps = (state: any) => ({
-  isLoggedIn: getIsLoggedInReduxProxy(state),
-  currentSchool: getCurrentSchoolReduxProxy(state),
-});
-
-const mapDispatchToProps = (dispatch: any) => ({
-  logIn: (action: logInAction) => setLoginReduxWrapper(dispatch, action),
-  setSchools: (action: setSchoolsListAction) => setSchoolsListReduxWrapper(dispatch, action),
-  setUser: (action: setUserAction) => setUserReduxWrapper(dispatch, action),
-});
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import AccountProxy from '../../../ApiClient/Accounts/AccountsProxy';
+import { withTranslation } from 'react-i18next';
+import { Button } from 'react-bootstrap';
+import getIsLoggedInReduxProxy from '../../../Redux/ReduxQueries/account/getIsLoggedInRedux';
+import getCurrentSchoolReduxProxy from '../../../Redux/ReduxQueries/account/getCurrentSchoolRedux';
+import setLoginReduxWrapper, {
+  logInAction,
+} from '../../../Redux/ReduxCommands/account/setLoginRedux';
+import setSchoolsListReduxWrapper, {
+  setSchoolsListAction,
+} from '../../../Redux/ReduxCommands/account/setSchoolsListRedux';
+import setUserReduxWrapper, {
+  setUserAction,
+} from '../../../Redux/ReduxCommands/account/setUserRedux';
+import setAppLoadReduxWrapper from '../../../Redux/ReduxCommands/account/setAppLoadRedux';
+import { store } from '../../../store';
 
 interface LogInProps {
   logIn?: (action: logInAction) => void;
@@ -42,23 +37,24 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
   constructor(props: LogInProps) {
     super(props);
     this.state = {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
       loginFailed: false,
     };
   }
 
-
-  onLogIn() {
-    AccountProxy.logIn({ email: this.state.email!, password: this.state.password! })
+  onLogIn(): void {
+    AccountProxy.logIn({
+      email: this.state.email!,
+      password: this.state.password!,
+    })
       .then(async (loginResponse) => {
         setAppLoadReduxWrapper(store.dispatch, false);
         await this.props.logIn!({
           refreshToken: loginResponse.data.refresh_token,
-          accessToken: loginResponse.data.access_token
+          accessToken: loginResponse.data.access_token,
         });
         setAppLoadReduxWrapper(store.dispatch, true);
-
       })
       .catch(() => {
         this.setState({
@@ -74,11 +70,13 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
       <div className="card m-3 p-3">
         <div className="card-body">
           <div className="m-1 p-1 display-6">
-            <label>{t("loging")}</label>
+            <label>{t('loging')}</label>
           </div>
-          {this.state.loginFailed && <div className="m-1 p-1 alert alert-danger">{t("loginFailed")}</div>}
+          {this.state.loginFailed && (
+            <div className="m-1 p-1 alert alert-danger">{t('loginFailed')}</div>
+          )}
           <div className="m-1 p-1">
-            <label>{t("email")}</label>
+            <label>{t('email')}</label>
             <input
               className="form-control"
               name="email"
@@ -92,7 +90,7 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
             ></input>
           </div>
           <div className="m-1 p-1">
-            <label>{t("password")}</label>
+            <label>{t('password')}</label>
             <input
               className="form-control"
               name="password"
@@ -108,12 +106,16 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
           </div>
           <div className="m-1 p-1 d-flex justify-content-between">
             <div className="my-auto d-flex gap-2">
-              <Link to={"register"}>{t("register")}</Link>
-              <Link to={""}>{t("changePassword")}</Link>
-              <Link to={""}>{t("recoverAccess")}</Link>
+              <Link to={'register'}>{t('register')}</Link>
+              <Link to={''}>{t('changePassword')}</Link>
+              <Link to={''}>{t('recoverAccess')}</Link>
             </div>
-            <Button variant="outline-primary" onClick={() => this.onLogIn!()} type="submit">
-              {t("logIn")}
+            <Button
+              variant="outline-primary"
+              onClick={() => this.onLogIn()}
+              type="submit"
+            >
+              {t('logIn')}
             </Button>
           </div>
         </div>
@@ -122,4 +124,18 @@ class LoginForm extends React.Component<LogInProps, LogInState> {
   }
 }
 
-export default withTranslation("loginForm")(connect(mapStateToProps, mapDispatchToProps)(LoginForm));
+export default withTranslation('loginForm')(
+  connect(
+    (state) => ({
+      isLoggedIn: getIsLoggedInReduxProxy(state),
+      currentSchool: getCurrentSchoolReduxProxy(state),
+    }),
+    (dispatch: any) => ({
+      logIn: async (action: logInAction) =>
+        await setLoginReduxWrapper(dispatch, action),
+      setSchools: (action: setSchoolsListAction) =>
+        setSchoolsListReduxWrapper(dispatch, action),
+      setUser: (action: setUserAction) => setUserReduxWrapper(dispatch, action),
+    })
+  )(LoginForm)
+);

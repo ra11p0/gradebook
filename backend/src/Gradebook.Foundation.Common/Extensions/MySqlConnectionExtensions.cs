@@ -15,7 +15,7 @@ public static class MyMySqlConnectionExtensions
         var pagedQuery = pager.Page <= 0 ?
         $@"
             SELECT *
-            FROM ({orderedQuery}) AS _
+            FROM ({orderedQuery}) AS _;
         " :
         $@"
             SELECT *

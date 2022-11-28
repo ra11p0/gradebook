@@ -1,4 +1,4 @@
 export default interface NewClassRequest {
-    name: string;
-    description?: string;
+  name: string;
+  description?: string;
 }

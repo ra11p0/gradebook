@@ -1,19 +1,13 @@
-import React, { ReactElement } from "react";
-import { Link } from "react-router-dom";
-import { connect } from "react-redux";
-import { useFormik } from "formik";
-import { useTranslation } from "react-i18next";
-import { Button } from "react-bootstrap";
-import AccountProxy from "../../../ApiClient/Accounts/AccountsProxy";
-import Swal from "sweetalert2";
-import CommonNotifications from "../../../Notifications/Notifications";
-import getIsLoggedInReduxProxy from "../../../Redux/ReduxProxy/getIsLoggedInReduxProxy";
-
-const mapStateToProps = (state: any) => ({
-  isLoggedIn: getIsLoggedInReduxProxy(state),
-});
-
-const mapDispatchToProps = (dispatch: any) => ({});
+import React, { ReactElement } from 'react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { useFormik } from 'formik';
+import { useTranslation } from 'react-i18next';
+import { Button } from 'react-bootstrap';
+import AccountProxy from '../../../ApiClient/Accounts/AccountsProxy';
+import Swal from 'sweetalert2';
+import CommonNotifications from '../../../Notifications/Notifications';
+import getIsLoggedInReduxProxy from '../../../Redux/ReduxQueries/account/getIsLoggedInRedux';
 
 interface RegisterFormProps {
   onLogIn?: () => {};
@@ -27,37 +21,37 @@ interface RegisterFormValues {
 }
 
 const RegisterForm = (props: RegisterFormProps): ReactElement => {
-  const { t } = useTranslation("registerForm");
+  const { t } = useTranslation('registerForm');
 
-  const validate = (values: RegisterFormValues) => {
+  const validate = (values: RegisterFormValues): any => {
     const errors: any = {};
     if (values.email.length < 5) {
-      errors.email = t("emailInvalid");
+      errors.email = t('emailInvalid');
     }
 
     if (values.password.length < 5) {
-      errors.password = t("passwordTooShort");
+      errors.password = t('passwordTooShort');
     }
 
     if (values.password !== values.password2) {
-      errors.password = t("passwordsNotTheSame");
+      errors.password = t('passwordsNotTheSame');
     }
     return errors;
   };
 
   const formik = useFormik({
     initialValues: {
-      email: "",
-      password: "",
-      password2: "",
+      email: '',
+      password: '',
+      password2: '',
     },
     validate,
     onSubmit: (values: RegisterFormValues) => {
       AccountProxy.register(values)
-        .then(() => {
-          Swal.fire({
-            title: t("userRegisteredAlertTitle"),
-            text: t("userRegisteredAlertText"),
+        .then(async () => {
+          await Swal.fire({
+            title: t('userRegisteredAlertTitle'),
+            text: t('userRegisteredAlertText'),
           });
         })
         .catch(() => {
@@ -71,10 +65,10 @@ const RegisterForm = (props: RegisterFormProps): ReactElement => {
       <div className="card-body">
         <form onSubmit={formik.handleSubmit}>
           <div className="m-1 p-1 display-6">
-            <label>{t("register")}</label>
+            <label>{t('register')}</label>
           </div>
           <div className="m-1 p-1">
-            <label htmlFor="email">{t("email")}</label>
+            <label htmlFor="email">{t('email')}</label>
             <input
               className="form-control"
               id="email"
@@ -83,10 +77,14 @@ const RegisterForm = (props: RegisterFormProps): ReactElement => {
               onChange={formik.handleChange}
               value={formik.values.email}
             />
-            {formik.errors.email && formik.touched.email ? <div className="invalid-feedback d-block">{formik.errors.email}</div> : null}
+            {formik.errors.email && formik.touched.email ? (
+              <div className="invalid-feedback d-block">
+                {formik.errors.email}
+              </div>
+            ) : null}
           </div>
           <div className="m-1 p-1">
-            <label htmlFor="password">{t("password")}</label>
+            <label htmlFor="password">{t('password')}</label>
             <input
               className="form-control"
               id="password"
@@ -96,11 +94,13 @@ const RegisterForm = (props: RegisterFormProps): ReactElement => {
               value={formik.values.password}
             />
             {formik.errors.password && formik.touched.password ? (
-              <div className="invalid-feedback d-block">{formik.errors.password}</div>
+              <div className="invalid-feedback d-block">
+                {formik.errors.password}
+              </div>
             ) : null}
           </div>
           <div className="m-1 p-1">
-            <label htmlFor="password2">{t("confirmPassword")}</label>
+            <label htmlFor="password2">{t('confirmPassword')}</label>
             <input
               className="form-control"
               id="password2"
@@ -110,15 +110,17 @@ const RegisterForm = (props: RegisterFormProps): ReactElement => {
               value={formik.values.password2}
             />
             {formik.errors.password2 && formik.touched.password2 ? (
-              <div className="invalid-feedback d-block">{formik.errors.password2}</div>
+              <div className="invalid-feedback d-block">
+                {formik.errors.password2}
+              </div>
             ) : null}
           </div>
           <div className="m-1 p-1 d-flex justify-content-between">
             <div className="my-auto d-flex gap-2">
-              <Link to={"/"}>{t("goBackToLoginPage")}</Link>
+              <Link to={'/'}>{t('goBackToLoginPage')}</Link>
             </div>
             <Button variant="outline-primary" type="submit">
-              {t("registerButtonLabel")}
+              {t('registerButtonLabel')}
             </Button>
           </div>
         </form>
@@ -127,4 +129,9 @@ const RegisterForm = (props: RegisterFormProps): ReactElement => {
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(RegisterForm);
+export default connect(
+  (state) => ({
+    isLoggedIn: getIsLoggedInReduxProxy(state),
+  }),
+  () => ({})
+)(RegisterForm);

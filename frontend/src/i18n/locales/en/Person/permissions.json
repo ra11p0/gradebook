@@ -25,6 +25,11 @@
   "permissionLevel_11": "View only",
   "permissionLevel_12": "Can create and delete students",
 
+  "permission_6": "Education cycles",
+  "permissionLevel_13": "No access",
+  "permissionLevel_14": "View only",
+  "permissionLevel_15": "Can create and delete education cycles",
+
   "permission_1_description": "Sending invitations to school platform (students, teachers, administrators.).",
   "permission_2_description": "Managing permissions of users on school platform."
 }

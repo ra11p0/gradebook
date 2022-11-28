@@ -1,16 +1,16 @@
-import React from "react";
-import { Col, Row } from "react-bootstrap";
-import PermissionLevelEnum from "../../Common/Enums/Permissions/PermissionLevelEnum";
-import PermissionsBlocker from "../Shared/PermissionsBlocker";
-import AddTeacherToSubjectModal from "./AddTeacherToSubjectModal";
+import React, { ReactElement } from 'react';
+import { Col, Row } from 'react-bootstrap';
+import PermissionLevelEnum from '../../Common/Enums/Permissions/PermissionLevelEnum';
+import PermissionsBlocker from '../Shared/PermissionsBlocker';
+import AddTeacherToSubjectModal from './AddTeacherToSubjectModal';
 
-type Props = {
+interface Props {
   subjectName: string;
   subjectGuid: string;
   setRefreshKey: () => void;
-};
+}
 
-function SubjectHeader(props: Props) {
+function SubjectHeader(props: Props): ReactElement {
   return (
     <div>
       <Row>
@@ -22,7 +22,10 @@ function SubjectHeader(props: Props) {
         <Col>
           <div className="d-flex justify-content-end gap-2">
             <PermissionsBlocker
-              allowingPermissions={[PermissionLevelEnum.Subjects_CanManageAll, PermissionLevelEnum.Subjects_CanManageAssigned]}
+              allowingPermissions={[
+                PermissionLevelEnum.Subjects_CanManageAll,
+                PermissionLevelEnum.Subjects_CanManageAssigned,
+              ]}
             >
               <AddTeacherToSubjectModal
                 onHide={() => {

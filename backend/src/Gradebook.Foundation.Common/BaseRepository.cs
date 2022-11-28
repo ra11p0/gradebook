@@ -9,7 +9,7 @@ public abstract class BaseRepository<T> : BaseRepository where T : DbContext
     protected T Context { get; }
     private IDbContextTransaction? _transaction;
     private int _transactionBlocker;
-    public IDbContextTransaction? Transaction => _transaction;
+    //public IDbContextTransaction? Transaction => _transaction;
 
     protected BaseRepository(T context) : base(context.Database.GetDbConnection().ConnectionString)
     {

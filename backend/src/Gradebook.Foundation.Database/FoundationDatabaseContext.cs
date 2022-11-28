@@ -21,6 +21,9 @@ public class FoundationDatabaseContext : DbContext
     public DbSet<TeachersAbsence>? TeachersAbsences { get; set; }
     public DbSet<SystemInvitation>? SystemInvitations { get; set; }
     public DbSet<Administrator>? Administrators { get; set; }
+    public DbSet<EducationCycle>? EducationCycles { get; set; }
+    public DbSet<EducationCycleStep>? EducationCycleSteps { get; set; }
+    public DbSet<EducationCycleStepSubject>? EducationCycleStepSubjects { get; set; }
 
     public FoundationDatabaseContext()
     {

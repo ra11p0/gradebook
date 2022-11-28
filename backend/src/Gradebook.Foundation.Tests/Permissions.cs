@@ -70,6 +70,12 @@ public class Permissions
         Assert.That(result.StatusCode, Is.EqualTo(403));
     }
     #endregion
+
+    #region Schools
+    //  TODO: Schools permissions test
+
+    #endregion
+
     #region Students
     [Test]
     public async Task CannotCreateNewStudent()
@@ -168,6 +174,7 @@ public class Permissions
         Assert.That(result.StatusCode, Is.EqualTo(200));
     }
     #endregion
+
     #region Subjects
     [Test]
     public async Task CannotCreateNewSubject()
@@ -184,7 +191,7 @@ public class Permissions
 
         var result = await foundationCommands!.AddSubject(
             Guid.NewGuid(),
-            new NewSubjectCommand());
+            new NewSubjectCommand() { Name = "fakeName" });
 
         Assert.That(result.Status, Is.False);
         Assert.That(result.StatusCode, Is.EqualTo(403));
@@ -207,7 +214,10 @@ public class Permissions
 
         var result = await foundationCommands!.AddSubject(
             Guid.NewGuid(),
-            new NewSubjectCommand());
+            new NewSubjectCommand()
+            {
+                Name = "fakeName"
+            });
 
         Assert.That(result.Status, Is.True);
         Assert.That(result.StatusCode, Is.EqualTo(200));
@@ -269,6 +279,7 @@ public class Permissions
     }
 
     #endregion
+
     #region Classes
     [Test]
     public async Task CannotCreateClass()
@@ -517,6 +528,108 @@ public class Permissions
         foundationCommandsRepository.Verify(e => e.DeleteClass(It.IsAny<Guid>()), Times.AtMostOnce());
         Assert.That(result.Status, Is.True);
         Assert.That(result.StatusCode, Is.EqualTo(200));
+    }
+    #endregion
+
+    #region Education cycles
+    [Test]
+    public async Task CannotSeeEducationCycles()
+    {
+        foundationPermissionsLogic
+            .Setup(e => e.CanSeeEducationCycles(It.IsAny<Guid>()))
+            .ReturnsAsync(false);
+
+        var result = await foundationQueries!.GetEducationCyclesInSchool(Guid.NewGuid(), 0);
+
+        Assert.That(result.Status, Is.False);
+        Assert.That(result.StatusCode, Is.EqualTo(403));
+    }
+    [Test]
+    public async Task CanSeeEducationCycles()
+    {
+        foundationPermissionsLogic
+            .Setup(e => e.CanSeeEducationCycles(It.IsAny<Guid>()))
+            .ReturnsAsync(true);
+        foundationQueriesRepository
+            .Setup(e => e.GetEducationCyclesInSchool(It.IsAny<Guid>(), It.IsAny<Pager>()))
+            .ReturnsAsync(new PagedList<EducationCycleDto>());
+
+        var result = await foundationQueries!.GetEducationCyclesInSchool(Guid.NewGuid(), 0);
+
+        Assert.That(result.Status, Is.True);
+        Assert.That(result.StatusCode, Is.EqualTo(200));
+    }
+    [Test]
+    public async Task CanCreateEducationCycle()
+    {
+        foundationPermissionsLogic
+            .Setup(e => e.CanCreateEducationCycle(It.IsAny<Guid>()))
+            .ReturnsAsync(true);
+        foundationQueriesRepository
+            .Setup(e => e.GetPersonGuidForUser(It.IsAny<string>(), It.IsAny<Guid>()))
+            .ReturnsAsync(Guid.NewGuid());
+        foundationCommandsRepository
+            .Setup(e => e.AddNewEducationCycle(It.IsAny<EducationCycleCommand>()))
+            .ReturnsAsync(new ResponseWithStatus<Guid>(Guid.NewGuid()));
+        identityLogic
+            .Setup(e => e.CurrentUserId())
+            .ReturnsAsync(new ResponseWithStatus<string, bool>(default, true));
+
+
+        var result = await foundationCommands!.AddNewEducationCycle(new EducationCycleCommand()
+        {
+            SchoolGuid = Guid.NewGuid(),
+            Name = "Fake name",
+            Stages = new List<EducationCycleStepCommand> {
+            new EducationCycleStepCommand()
+            {
+                Name="Fake name",
+                Subjects = new List<EducationCycleStepSubjectCommand>(){
+                    new EducationCycleStepSubjectCommand(){
+                    SubjectGuid= Guid.NewGuid(),
+                    HoursNo = 40
+                    }
+                }
+            }
+            }
+        });
+
+        Assert.That(result.Status, Is.True);
+        Assert.That(result.StatusCode, Is.EqualTo(200));
+    }
+    [Test]
+    public async Task CannotCreateEducationCycle()
+    {
+        foundationPermissionsLogic
+            .Setup(e => e.CanCreateEducationCycle(It.IsAny<Guid>()))
+            .ReturnsAsync(false);
+        identityLogic
+            .Setup(e => e.CurrentUserId())
+            .ReturnsAsync(new ResponseWithStatus<string, bool>(default, true));
+        foundationQueriesRepository
+            .Setup(e => e.GetPersonGuidForUser(It.IsAny<string>(), It.IsAny<Guid>()))
+            .ReturnsAsync(Guid.NewGuid());
+
+        var result = await foundationCommands!.AddNewEducationCycle(new EducationCycleCommand()
+        {
+            SchoolGuid = Guid.NewGuid(),
+            Name = "Fake name",
+            Stages = new List<EducationCycleStepCommand> {
+            new EducationCycleStepCommand()
+            {
+                Name="Fake name",
+                Subjects = new List<EducationCycleStepSubjectCommand>(){
+                    new EducationCycleStepSubjectCommand(){
+                    SubjectGuid= Guid.NewGuid(),
+                    HoursNo = 40
+                    }
+                }
+            }
+            }
+        });
+
+        Assert.That(result.Status, Is.False);
+        Assert.That(result.StatusCode, Is.EqualTo(403));
     }
     #endregion
 }

@@ -5,10 +5,10 @@ namespace Gradebook.Foundation.Domain.Models;
 
 public class Subject : BaseDomainModel
 {
-    public Guid SchoolGuid { get; set; }
     public string Name { get; set; } = string.Empty;
+    public Guid SchoolGuid { get; set; }
 
     [ForeignKey("SchoolGuid")]
-    public virtual School School { get; set; } = new School();
+    public School? School { get; set; }
     public virtual ICollection<Teacher>? Teachers { get; set; }
 }

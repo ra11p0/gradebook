@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import { Button } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
-import NewSubjectModal from "./NewSubjectModal";
+import React, { ReactElement, useState } from 'react';
+import { Button } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import NewSubjectModal from './NewSubjectModal';
 
-type Props = {
+interface Props {
   onHide: () => void;
-};
+}
 
-function NewSubjectModalWithButton(props: Props) {
+function NewSubjectModalWithButton(props: Props): ReactElement {
   const [showNewSubjectModal, setShowNewSubjectModal] = useState(false);
-  const { t } = useTranslation("subjects");
+  const { t } = useTranslation('subjects');
   return (
     <div>
       <Button
@@ -17,7 +17,7 @@ function NewSubjectModalWithButton(props: Props) {
           setShowNewSubjectModal(true);
         }}
       >
-        {t("newSubject")}
+        {t('newSubject')}
       </Button>
       <NewSubjectModal
         show={showNewSubjectModal}

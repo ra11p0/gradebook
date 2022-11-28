@@ -1,43 +1,51 @@
-import { Button } from "@mui/material";
-import React from "react";
-import { ListGroup } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
-import AccountProxy from "../../../../../ApiClient/Accounts/AccountsProxy";
-import DefaultPersonSettingElement from "./SettingsElements/DefaultPersonSettingElement";
-import { connect } from "react-redux";
-import getCurrentUserIdReduxProxy from "../../../../../Redux/ReduxProxy/getCurrentUserIdReduxProxy";
+import { Button } from '@mui/material';
+import React, { ReactElement } from 'react';
+import { ListGroup } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import AccountProxy from '../../../../../ApiClient/Accounts/AccountsProxy';
+import DefaultPersonSettingElement from './SettingsElements/DefaultPersonSettingElement';
+import { connect } from 'react-redux';
+import getCurrentUserIdReduxProxy from '../../../../../Redux/ReduxQueries/account/getCurrentUserIdRedux';
 
-const mapStateToProps = (state: any) => ({
-  currentUserGuid: getCurrentUserIdReduxProxy(state),
-});
+interface Props {
+  currentUserGuid?: string;
+}
 
-type Props = { currentUserGuid?: string };
-
-function AccountSettingsIndex(props: Props) {
-  const { t } = useTranslation("settings");
+function AccountSettingsIndex(props: Props): ReactElement {
+  const { t } = useTranslation('settings');
   const settings: any = {};
   return (
     <>
       <ListGroup>
         <ListGroup.Item>
-          <DefaultPersonSettingElement onChange={(e) => (settings.defaultPersonGuid = e)} />
+          <DefaultPersonSettingElement
+            onChange={(e) => (settings.defaultPersonGuid = e)}
+          />
         </ListGroup.Item>
       </ListGroup>
       <div className="d-flex justify-content-end m-2 p-2">
         <Button
           className="saveSettingsButton"
           variant="outlined"
-          onClick={() => {
+          onClick={async () => {
             if (!props.currentUserGuid) return;
-            AccountProxy.settings.setSettings(props.currentUserGuid!, settings);
+            await AccountProxy.settings.setSettings(
+              props.currentUserGuid,
+              settings
+            );
             console.dir(settings);
           }}
         >
-          {t("save")}
+          {t('save')}
         </Button>
       </div>
     </>
   );
 }
 
-export default connect(mapStateToProps, () => ({}))(AccountSettingsIndex);
+export default connect(
+  (state) => ({
+    currentUserGuid: getCurrentUserIdReduxProxy(state),
+  }),
+  () => ({})
+)(AccountSettingsIndex);

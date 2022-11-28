@@ -1,16 +1,17 @@
-import PermissionLevelEnum from "../../Common/Enums/Permissions/PermissionLevelEnum";
-import getPermissionsReduxProxy from "../../Redux/ReduxProxy/getPermissionsReduxProxy";
-import { connect } from "react-redux";
+import PermissionLevelEnum from '../../Common/Enums/Permissions/PermissionLevelEnum';
+import getPermissionsReduxProxy from '../../Redux/ReduxQueries/account/getPermissionsRedux';
+import { connect } from 'react-redux';
 
-import React, { useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from 'react';
+import { GlobalState } from '../../store';
 
-type Props = {
+interface Props {
   currentPermissions: PermissionLevelEnum[];
   allowingPermissions: PermissionLevelEnum[];
   children?: React.ReactNode;
-};
+}
 
-function PermissionsBlocker(props: Props) {
+function PermissionsBlocker(props: Props): ReactElement {
   const [canSee, setCanSee] = useState<boolean>(false);
   useEffect(() => {
     setCanSee(false);
@@ -20,11 +21,11 @@ function PermissionsBlocker(props: Props) {
     });
     setCanSee(canSee);
   }, [props.currentPermissions]);
-  return <>{canSee && <div>{props.children}</div>}</>;
+  return <>{canSee && <>{props.children}</>}</>;
 }
 
 export default connect(
-  (state) => ({
+  (state: GlobalState) => ({
     currentPermissions: getPermissionsReduxProxy(state),
   }),
   () => ({})

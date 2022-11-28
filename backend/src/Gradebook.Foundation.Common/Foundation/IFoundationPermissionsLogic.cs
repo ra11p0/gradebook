@@ -9,4 +9,6 @@ public interface IFoundationPermissionsLogic
     Task<bool> CanDeleteStudents(Guid personGuid);
     Task<bool> CanManageSubject(Guid subjectGuid, Guid personGuid);
     Task<bool> CanCreateNewSubject(Guid personGuid);
+    Task<bool> CanCreateEducationCycle(Guid schoolGuid);
+    Task<bool> CanSeeEducationCycles(Guid schoolGuid);
 }

@@ -1,71 +1,95 @@
-import { APP_LOAD, LOG_IN, LOG_OUT, SET_LANGUAGE, SET_PERMISSIONS, SET_PERSON, SET_SCHOOL, SET_SCHOOLS_LIST, SET_USER } from '../../Constraints/actionTypes'
+import ActionType from '../ActionTypes/accountActionTypes';
+
+export interface State {
+  appLoaded: boolean;
+  school?: {
+    schoolGuid: string;
+    schoolName: string;
+  };
+  user?: {
+    userId: string;
+  };
+  person?: {
+    personGuid: string;
+  };
+  session?: {
+    accessToken: string;
+    refreshToken: string;
+  };
+  schoolsList?: [];
+  permissions?: any;
+  language?: string;
+}
 
 const defaultState = {
-    appLoaded: false,
+  appLoaded: false,
 };
 
-export default (state: any = defaultState, action: any) => {
-    switch (action.type) {
-        case APP_LOAD:
-            return {
-                ...state,
-                appLoaded: action.isAppLoaded,
-            };
-        case SET_USER:
-            return {
-                ...state,
-                user: {
-                    userId: action.userId,
-                }
-            }
-        case SET_PERSON:
-            return {
-                ...state,
-                person: {
-                    personGuid: action.personGuid,
-                }
-            }
-        case LOG_IN:
-            return {
-                ...state,
-                session: {
-                    accessToken: action.accessToken,
-                    refreshToken: action.refreshToken,
-                }
-            };
-        case LOG_OUT:
-            return {
-                ...state,
-                session: null,
-                school: null,
-                schoolsList: null,
-                user: null
-            };
-        case SET_SCHOOL:
-            return {
-                ...state,
-                school: {
-                    ...state.school,
-                    schoolGuid: action.schoolGuid,
-                    schoolName: action.schoolName
-                }
-            };
-        case SET_SCHOOLS_LIST:
-            return {
-                ...state,
-                schoolsList: action.schoolsList
-            };
-        case SET_PERMISSIONS:
-            return {
-                ...state,
-                permissions: action.permissions
-            };
-        case SET_LANGUAGE:
-            return {
-                ...state,
-                language: action.language
-            }
-        default:
-            return state;
-    }
-}
+export default (
+  state: State = defaultState,
+  action: { type: ActionType; payload: any }
+): State => {
+  switch (action.type) {
+    case ActionType.AppLoad:
+      return {
+        ...state,
+        appLoaded: action.payload.isAppLoaded,
+      };
+    case ActionType.SetUser:
+      return {
+        ...state,
+        user: {
+          userId: action.payload.userId,
+        },
+      };
+    case ActionType.SetPerson:
+      return {
+        ...state,
+        person: {
+          personGuid: action.payload.personGuid,
+        },
+      };
+    case ActionType.LogIn:
+      return {
+        ...state,
+        session: {
+          accessToken: action.payload.accessToken,
+          refreshToken: action.payload.refreshToken,
+        },
+      };
+    case ActionType.LogOut:
+      return {
+        ...state,
+        session: undefined,
+        school: undefined,
+        schoolsList: undefined,
+        user: undefined,
+      };
+    case ActionType.SetSchool:
+      return {
+        ...state,
+        school: {
+          ...state.school,
+          schoolGuid: action.payload.schoolGuid,
+          schoolName: action.payload.schoolName,
+        },
+      };
+    case ActionType.SetSchoolsList:
+      return {
+        ...state,
+        schoolsList: action.payload.schoolsList,
+      };
+    case ActionType.SetPermissions:
+      return {
+        ...state,
+        permissions: action.payload.permissions,
+      };
+    case ActionType.SetLanguage:
+      return {
+        ...state,
+        language: action.payload.language,
+      };
+    default:
+      return state;
+  }
+};

@@ -1,49 +1,51 @@
-import { Button, Grid, List, ListItem } from "@mui/material";
-import { Stack } from "@mui/system";
-import moment from "moment";
-import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
-import ClassResponse from "../../../../ApiClient/Schools/Definitions/Responses/ClassResponse";
-import InfiniteScrollWrapper from "../../../Shared/InfiniteScrollWrapper";
-import AddClassModal from "./AddClassModal";
-import { connect } from "react-redux";
-import SchoolsProxy from "../../../../ApiClient/Schools/SchoolsProxy";
-import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Tippy from "@tippyjs/react";
-import { faTrash, faWindowMaximize } from "@fortawesome/free-solid-svg-icons";
-import Swal from "sweetalert2";
-import Notifications from "../../../../Notifications/Notifications";
-import ClassesProxy from "../../../../ApiClient/Classes/ClassesProxy";
-import getCurrentSchoolReduxProxy from "../../../../Redux/ReduxProxy/getCurrentSchoolReduxProxy";
-import PermissionsBlocker from "../../../Shared/PermissionsBlocker";
-import PermissionLevelEnum from "../../../../Common/Enums/Permissions/PermissionLevelEnum";
+import { Button } from '@mui/material';
+import { Stack } from '@mui/system';
+import moment from 'moment';
+import React, { ReactElement, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import ClassResponse from '../../../../ApiClient/Schools/Definitions/Responses/ClassResponse';
+import InfiniteScrollWrapper from '../../../Shared/InfiniteScrollWrapper';
+import AddClassModal from './AddClassModal';
+import { connect } from 'react-redux';
+import SchoolsProxy from '../../../../ApiClient/Schools/SchoolsProxy';
+import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Tippy from '@tippyjs/react';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import Swal from 'sweetalert2';
+import Notifications from '../../../../Notifications/Notifications';
+import ClassesProxy from '../../../../ApiClient/Classes/ClassesProxy';
+import getCurrentSchoolReduxProxy from '../../../../Redux/ReduxQueries/account/getCurrentSchoolRedux';
+import PermissionsBlocker from '../../../Shared/PermissionsBlocker';
+import PermissionLevelEnum from '../../../../Common/Enums/Permissions/PermissionLevelEnum';
+import { Table } from 'react-bootstrap';
 
-const mapStateToProps = (state: any) => ({
-  currentSchool: getCurrentSchoolReduxProxy(state),
-});
-type Props = {
+interface Props {
   currentSchool: any;
-};
+}
 
-function ManageClasses(props: Props) {
-  const { t } = useTranslation("classes");
+function ManageClasses(props: Props): ReactElement {
+  const { t } = useTranslation('classes');
   const [showAddClassModal, setShowAddClassModal] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
-  const removeClassClickHandler = (classGuid: string) => {
-    Swal.fire({
-      title: t("removeClass"),
-      text: t("youSureRemoveClass"),
+  const navigate = useNavigate();
+  const removeClassClickHandler = async (classGuid: string): Promise<void> => {
+    await Swal.fire({
+      title: t('removeClass'),
+      text: t('youSureRemoveClass'),
       showDenyButton: true,
       showCancelButton: false,
-      confirmButtonText: t("yes"),
-      denyButtonText: t("no"),
-      icon: "warning",
+      confirmButtonText: t('yes'),
+      denyButtonText: t('no'),
+      icon: 'warning',
     }).then((result) => {
       if (result.isConfirmed) {
         ClassesProxy.removeClass(classGuid)
           .then(() => {
-            Notifications.showSuccessNotification("classRemovedNotificationTitle", "classRemovedNotificationText");
+            Notifications.showSuccessNotification(
+              'classRemovedNotificationTitle',
+              'classRemovedNotificationText'
+            );
             setRefreshKey((k) => k + 1);
           })
           .catch(Notifications.showApiError);
@@ -54,82 +56,103 @@ function ManageClasses(props: Props) {
     <div>
       <Stack>
         <div className="d-flex justify-content-between">
-          <div className="my-auto">{t("classes")}</div>
+          <h5 className="my-auto">{t('classes')}</h5>
           <div>
-            <PermissionsBlocker allowingPermissions={[PermissionLevelEnum.Classes_CanManageOwn, PermissionLevelEnum.Classes_CanManageAll]}>
-              <Button onClick={() => setShowAddClassModal(true)} variant="outlined">
-                {t("addClasses")}
+            <PermissionsBlocker
+              allowingPermissions={[
+                PermissionLevelEnum.Classes_CanManageOwn,
+                PermissionLevelEnum.Classes_CanManageAll,
+              ]}
+            >
+              <Button
+                onClick={() => setShowAddClassModal(true)}
+                variant="outlined"
+              >
+                {t('addClasses')}
               </Button>
-              <AddClassModal show={showAddClassModal} onHide={() => setShowAddClassModal(false)} />
+              <AddClassModal
+                show={showAddClassModal}
+                onHide={() => setShowAddClassModal(false)}
+              />
             </PermissionsBlocker>
           </div>
         </div>
-        <Stack className={"border rounded-3 my-1 p-3 bg-light"}>
-          <Grid container spacing={2}>
-            <Grid item xs>
-              <div>{t("name")}</div>
-            </Grid>
-            <Grid item xs>
-              <div>{t("description")}</div>
-            </Grid>
-            <Grid item xs>
-              <div>{t("createdDate")}</div>
-            </Grid>
-            <Grid item xs={1}>
-              <div>{t("actions")}</div>
-            </Grid>
-          </Grid>
-        </Stack>
         <Stack>
-          <List>
-            <InfiniteScrollWrapper
-              mapper={(element: ClassResponse, index) => (
-                <ListItem key={index} className={"border rounded-3 my-1 p-3"}>
-                  <Grid container spacing={2}>
-                    <Grid item xs className="my-auto">
-                      <div>{element.name}</div>
-                    </Grid>
-                    <Grid item xs className="my-auto">
-                      <div>{element.description}</div>
-                    </Grid>
-                    <Grid item xs className="my-auto">
-                      <div>{moment.utc(element.createdDate).local().format("L")}</div>
-                    </Grid>
-                    <Grid item xs={1} className="my-auto">
-                      <div className="d-flex gap-1 flex-wrap">
-                        <Link to={`/class/show/${element.guid}`}>
-                          <Tippy content={t("showClass")} arrow={true} animation={"scale"}>
-                            <Button variant="outlined">
-                              <FontAwesomeIcon icon={faWindowMaximize} />
-                            </Button>
-                          </Tippy>
-                        </Link>
-                        <PermissionsBlocker
-                          allowingPermissions={[PermissionLevelEnum.Classes_CanManageOwn, PermissionLevelEnum.Classes_CanManageAll]}
-                        >
-                          <Tippy content={t("removeClass")} arrow={true} animation={"scale"}>
-                            <Button variant="outlined" color="error" onClick={() => removeClassClickHandler(element.guid)}>
-                              <FontAwesomeIcon icon={faTrash} />
-                            </Button>
-                          </Tippy>
-                        </PermissionsBlocker>
-                      </div>
-                    </Grid>
-                  </Grid>
-                </ListItem>
-              )}
-              fetch={async (page: number) => {
-                if (!props.currentSchool.schoolGuid) return [];
-                let resp = await SchoolsProxy.getClassesInSchool(props.currentSchool.schoolGuid!, page);
-                return resp.data as [];
-              }}
-              effect={[props.currentSchool.schoolGuid, showAddClassModal, refreshKey]}
-            />
-          </List>
+          <InfiniteScrollWrapper
+            wrapper={(items) => (
+              <Table striped bordered hover responsive>
+                <thead>
+                  <tr>
+                    <th>{t('name')}</th>
+                    <th>{t('description')}</th>
+                    <th>{t('createdDate')}</th>
+                    <th>{t('actions')}</th>
+                  </tr>
+                </thead>
+                <tbody>{items}</tbody>
+              </Table>
+            )}
+            mapper={(element: ClassResponse, index) => (
+              <tr
+                className="cursor-pointer"
+                onClick={() => {
+                  navigate(`/class/show/${element.guid}`);
+                }}
+                key={index}
+              >
+                <td>{element.name}</td>
+                <td>{element.description}</td>
+                <td>{moment.utc(element.createdDate).local().format('L')}</td>
+                <td className="d-flex gap-1 flex-wrap">
+                  <PermissionsBlocker
+                    allowingPermissions={[
+                      PermissionLevelEnum.Classes_CanManageOwn,
+                      PermissionLevelEnum.Classes_CanManageAll,
+                    ]}
+                  >
+                    <Tippy
+                      content={t('removeClass')}
+                      arrow={true}
+                      animation={'scale'}
+                    >
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        onClick={async (evt) => {
+                          evt.stopPropagation();
+                          await removeClassClickHandler(element.guid);
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faTrash} />
+                      </Button>
+                    </Tippy>
+                  </PermissionsBlocker>
+                </td>
+              </tr>
+            )}
+            fetch={async (page: number) => {
+              if (!props.currentSchool.schoolGuid) return [];
+              const resp = await SchoolsProxy.getClassesInSchool(
+                props.currentSchool.schoolGuid,
+                page
+              );
+              return resp.data as [];
+            }}
+            effect={[
+              props.currentSchool.schoolGuid,
+              showAddClassModal,
+              refreshKey,
+            ]}
+          />
         </Stack>
       </Stack>
     </div>
   );
 }
 
-export default connect(mapStateToProps, () => ({}))(ManageClasses);
+export default connect(
+  (state: any) => ({
+    currentSchool: getCurrentSchoolReduxProxy(state),
+  }),
+  () => ({})
+)(ManageClasses);

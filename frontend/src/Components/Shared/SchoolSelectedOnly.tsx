@@ -1,13 +1,7 @@
-import React from "react";
-import { connect } from "react-redux";
-import { t } from "i18next";
-import getIsLoggedInReduxProxy from "../../Redux/ReduxProxy/getIsSchoolSelectedReduxProxy";
-
-const mapStateToProps = (state: any) => ({
-  isSchoolSelected: getIsLoggedInReduxProxy(state),
-});
-
-const mapDispatchToProps = (dispatch: any) => ({});
+import React from 'react';
+import { connect } from 'react-redux';
+import { t } from 'i18next';
+import getIsLoggedInReduxProxy from '../../Redux/ReduxQueries/account/getIsSchoolSelectedRedux';
 
 interface Props {
   isSchoolSelected?: boolean;
@@ -25,10 +19,10 @@ class SchoolSelectedOnly extends React.Component<Props> {
             <div className="text-center">
               <>
                 <div className="display-6 ">
-                  <>{t("schoolIsNotSelected")} </>
+                  <>{t('schoolIsNotSelected')} </>
                 </div>
                 <div>
-                  <>{t("selectSchoolToManageStudents")}</>
+                  <>{t('selectSchoolToManageStudents')}</>
                 </div>
               </>
             </div>
@@ -39,4 +33,9 @@ class SchoolSelectedOnly extends React.Component<Props> {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SchoolSelectedOnly);
+export default connect(
+  (state: any) => ({
+    isSchoolSelected: getIsLoggedInReduxProxy(state),
+  }),
+  () => ({})
+)(SchoolSelectedOnly);

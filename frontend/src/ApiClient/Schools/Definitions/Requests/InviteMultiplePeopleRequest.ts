@@ -1,6 +1,6 @@
-import SchoolRolesEnum from "../../../../Common/Enums/SchoolRolesEnum";
+import SchoolRolesEnum from '../../../../Common/Enums/SchoolRolesEnum';
 
 export default interface InviteMultiplePeopleRequest {
-    invitedPersonGuidArray: string[];
-    role: SchoolRolesEnum;
+  invitedPersonGuidArray: string[];
+  role: SchoolRolesEnum;
 }

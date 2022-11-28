@@ -1,16 +1,14 @@
-import React, { useState } from "react";
-import { Col, ListGroup, ListGroupItem, Row } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
-import SubjectResponse from "../../ApiClient/Schools/Definitions/Responses/SubjectResponse";
-import SchoolsProxy from "../../ApiClient/Schools/SchoolsProxy";
-import PermissionLevelEnum from "../../Common/Enums/Permissions/PermissionLevelEnum";
-import InfiniteScrollWrapper from "../Shared/InfiniteScrollWrapper";
-import PermissionsBlocker from "../Shared/PermissionsBlocker";
-import NewSubjectModalWithButton from "./Manage/ManageSubjects/NewSubjectModalWithButton";
+import React, { ReactElement, useState } from 'react';
+import { Col, ListGroup, ListGroupItem, Row } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import SubjectResponse from '../../ApiClient/Schools/Definitions/Responses/SubjectResponse';
+import SchoolsProxy from '../../ApiClient/Schools/SchoolsProxy';
+import PermissionLevelEnum from '../../Common/Enums/Permissions/PermissionLevelEnum';
+import InfiniteScrollWrapper from '../Shared/InfiniteScrollWrapper';
+import PermissionsBlocker from '../Shared/PermissionsBlocker';
+import NewSubjectModalWithButton from './Manage/ManageSubjects/NewSubjectModalWithButton';
 
-type Props = {};
-
-function Subject({}: Props) {
+function Subject(): ReactElement {
   const [refreshKey, setRefreshKey] = useState(0);
   const navigate = useNavigate();
   return (
@@ -19,7 +17,10 @@ function Subject({}: Props) {
         <Col>
           <div className="d-flex justify-content-end gap-2">
             <PermissionsBlocker
-              allowingPermissions={[PermissionLevelEnum.Subjects_CanManageAssigned, PermissionLevelEnum.Subjects_CanManageAll]}
+              allowingPermissions={[
+                PermissionLevelEnum.Subjects_CanManageAssigned,
+                PermissionLevelEnum.Subjects_CanManageAll,
+              ]}
             >
               <NewSubjectModalWithButton
                 onHide={() => {
@@ -46,7 +47,8 @@ function Subject({}: Props) {
                 </ListGroupItem>
               )}
               fetch={async (page: number) => {
-                return (await SchoolsProxy.subjects.getSubjectsInSchool(page)).data;
+                return (await SchoolsProxy.subjects.getSubjectsInSchool(page))
+                  .data;
               }}
               effect={[refreshKey]}
             />

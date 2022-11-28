@@ -24,6 +24,11 @@
   "permissionLevel_11": "Tylko wyświetlanie",
   "permissionLevel_12": "Może tworzyć i usuwać uczniów",
 
+  "permission_6": "Cykle nauczania",
+  "permissionLevel_13": "Brak dostępu",
+  "permissionLevel_14": "Tylko wyświetlanie",
+  "permissionLevel_15": "Może tworzyć i usuwać cykle nauczania",
+
   "permission_1_description": "Wysyłanie zaproszeń do platformy szkoły (dla uczniów, nauczycieli, i administratorów.).",
   "permission_2_description": "Zarządzanie uprawnieniami użytkowników na platformie szkoły."
 }
