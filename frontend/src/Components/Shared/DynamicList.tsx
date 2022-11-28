@@ -45,6 +45,7 @@ function DynamicList(props: Props): ReactElement {
       <Row>
         <Col className="d-flex justify-content-end">
           <Button
+            data-testid="dynamicListAddNewButton"
             variant="success"
             onClick={async () => {
               await add();

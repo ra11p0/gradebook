@@ -9,7 +9,7 @@ import FormikValidationLabel from '../../../../Shared/FormikValidationLabel';
 import * as Yup from 'yup';
 import _ from 'lodash';
 import SchoolsProxy from '../../../../../ApiClient/Schools/SchoolsProxy';
-import Notifications from '../../../../../Notifications/Notifications';
+import { useNavigate } from 'react-router';
 
 export interface Stage {
   uuid: string;
@@ -28,6 +28,7 @@ export interface Stage {
 function NewCycleForm(): ReactElement {
   const [openStages, setOpenStages] = useState<string[]>([]);
   const { t } = useTranslation('educationCycle');
+  const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -67,9 +68,9 @@ function NewCycleForm(): ReactElement {
         .min(1, t('atLeastOneStep')),
     }),
     onSubmit: async (values) => {
-      await SchoolsProxy.educationCycles
-        .addEducationCycle(values)
-        .then((e) => Notifications.showSuccessNotification('success', e.data));
+      await SchoolsProxy.educationCycles.addEducationCycle(values).then((e) => {
+        navigate(`/educationCycle/show/${e.data}`);
+      });
     },
   });
   return (
@@ -79,8 +80,9 @@ function NewCycleForm(): ReactElement {
           <h5>{t('addNewCycleForm')}</h5>
         </div>
       </div>
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={formik.handleSubmit} data-testid="newEducationCycleForm">
         <FormikInput
+          testId="educationCycleName"
           name={'name'}
           label={t('educationCycleName')}
           formik={formik}
@@ -127,7 +129,9 @@ function NewCycleForm(): ReactElement {
           </Accordion>
         </div>
         <div className="d-flex justify-content-end m-1 p-1">
-          <Button type="submit">{t('addNewCycle')}</Button>
+          <Button type="submit" data-testid="submit">
+            {t('addNewCycle')}
+          </Button>
         </div>
       </form>
     </Stack>

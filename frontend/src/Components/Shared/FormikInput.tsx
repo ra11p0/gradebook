@@ -4,6 +4,7 @@ import { Form } from 'react-bootstrap';
 import FormikValidationLabel from './FormikValidationLabel';
 
 interface Props {
+  testId?: string;
   name: string;
   label?: string;
   type?: string;
@@ -27,6 +28,7 @@ function FormikInput(props: Props): ReactElement {
             return (
               <>
                 <Form.Check
+                  data-testid={props.testId}
                   type="switch"
                   id={props.name}
                   name={props.name}
@@ -57,6 +59,7 @@ function FormikInput(props: Props): ReactElement {
                   {props.label ?? props.name}
                 </Form.Label>
                 <Form.Control
+                  data-testid={props.testId}
                   className="form-control"
                   id={props.name}
                   name={props.name}

@@ -2,6 +2,8 @@ import React from 'react';
 import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
+import PermissionLevelEnum from '../../../../../Common/Enums/Permissions/PermissionLevelEnum';
+import PermissionsBlocker from '../../../../Shared/PermissionsBlocker';
 
 function Header(): React.ReactElement {
   const { t } = useTranslation('educationCycle');
@@ -12,13 +14,20 @@ function Header(): React.ReactElement {
         <h5>{t('educationCycles')}</h5>
       </div>
       <div>
-        <Button
-          onClick={() => {
-            navigate('new');
-          }}
+        <PermissionsBlocker
+          allowingPermissions={[
+            PermissionLevelEnum.EducationCycles_CanCreateAndDelete,
+          ]}
         >
-          {t('addNewEducationCycle')}
-        </Button>
+          <Button
+            data-testid="addNewEducationCycleButton"
+            onClick={() => {
+              navigate('new');
+            }}
+          >
+            {t('addNewEducationCycle')}
+          </Button>
+        </PermissionsBlocker>
       </div>
     </div>
   );

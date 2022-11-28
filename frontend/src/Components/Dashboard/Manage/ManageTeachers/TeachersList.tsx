@@ -93,6 +93,7 @@ const TeachersList = (props: ManageTeachersProps): ReactElement => {
                 onClick={() => {
                   navigate(`/person/show/${element.guid}`);
                 }}
+                key={index}
               >
                 <td>{element.name}</td>
                 <td>{element.surname}</td>

@@ -98,6 +98,7 @@ function ManageClasses(props: Props): ReactElement {
                 onClick={() => {
                   navigate(`/class/show/${element.guid}`);
                 }}
+                key={index}
               >
                 <td>{element.name}</td>
                 <td>{element.description}</td>

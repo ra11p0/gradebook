@@ -3,6 +3,7 @@ import getPermissionsReduxProxy from '../../Redux/ReduxQueries/account/getPermis
 import { connect } from 'react-redux';
 
 import React, { ReactElement, useEffect, useState } from 'react';
+import { GlobalState } from '../../store';
 
 interface Props {
   currentPermissions: PermissionLevelEnum[];
@@ -24,7 +25,7 @@ function PermissionsBlocker(props: Props): ReactElement {
 }
 
 export default connect(
-  (state) => ({
+  (state: GlobalState) => ({
     currentPermissions: getPermissionsReduxProxy(state),
   }),
   () => ({})

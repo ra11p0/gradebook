@@ -53,6 +53,7 @@ function NewCycleStepForm(props: Props): JSX.Element {
               <Col>
                 <FormikInput
                   name={`stages.${props.index}.name`}
+                  testId="stepName"
                   label={t('stepName')}
                   formik={props.formik}
                 />

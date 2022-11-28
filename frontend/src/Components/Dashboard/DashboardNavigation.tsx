@@ -86,10 +86,11 @@ class DashboardNavigation extends React.Component<
           <PermissionsBlocker
             allowingPermissions={[
               PermissionLevelEnum.EducationCycles_CanCreateAndDelete,
-              PermissionLevelEnum.EducationCycles_CanCreateAndDelete,
+              PermissionLevelEnum.EducationCycles_ViewOnly,
             ]}
           >
             <Link
+              data-testid="educationCycleButton"
               to="/dashboard/educationCycle"
               className={
                 'btn btn-outline-primary ' +

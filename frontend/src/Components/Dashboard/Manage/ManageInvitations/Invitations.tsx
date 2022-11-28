@@ -60,7 +60,7 @@ const Invitations = (props: InvitationsProps): ReactElement => {
                 </Table>
               )}
               mapper={(invitation: InvitationResponse, index) => (
-                <tr>
+                <tr key={index}>
                   <td>{invitation.invitationCode}</td>
                   <td>
                     <FontAwesomeIcon

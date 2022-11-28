@@ -5,7 +5,7 @@ import { store } from '../store';
 i18n.init({
   fallbackNS: 'common',
   fallbackLng: 'en',
-  lng: 'pl',
+  lng: 'en',
   resources: {
     en: {
       common: require('./locales/en/common.json'),
