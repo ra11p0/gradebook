@@ -12,7 +12,6 @@ import GetAccessibleSchoolsResponse from '../../../ApiClient/Accounts/Definition
 import getCurrentUserIdReduxProxy from '../../../Redux/ReduxQueries/account/getCurrentUserIdRedux';
 import setSchoolsListReduxWrapper from '../../../Redux/ReduxCommands/account/setSchoolsListRedux';
 import setLoginReduxWrapper from '../../../Redux/ReduxCommands/account/setLoginRedux';
-import { store } from '../../../store';
 import getSessionRedux from '../../../Redux/ReduxQueries/account/getSessionRedux';
 
 interface ActivateStudentFormProps {
@@ -53,7 +52,7 @@ const ActivateStudentForm = (props: ActivateStudentFormProps): ReactElement => {
             (schoolsResponse) => {
               const session = getSessionRedux();
               if (!session) return;
-              void setLoginReduxWrapper(store.dispatch, {
+              void setLoginReduxWrapper({
                 accessToken: session.accessToken,
                 refreshToken: session.refreshToken,
               });

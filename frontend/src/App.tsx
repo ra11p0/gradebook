@@ -27,7 +27,6 @@ import EducationCycle from './Routes/EducationCycle';
 import PermissionLevelEnum from './Common/Enums/Permissions/PermissionLevelEnum';
 import getHasPermissionRedux from './Redux/ReduxQueries/account/getHasPermissionRedux';
 
-
 interface AppProps {
   onLoad: (isAppLoaded: boolean) => void;
   appLoaded: boolean;
@@ -50,7 +49,7 @@ class App extends React.Component<AppProps> {
     if (access && refresh) {
       AccountProxy.refreshAccessToken(access, refresh)
         .then(async (refreshAccessTokenResponse) => {
-          await setLoginReduxWrapper(store.dispatch, {
+          await setLoginReduxWrapper({
             accessToken: refreshAccessTokenResponse.data.access_token,
             refreshToken: refreshAccessTokenResponse.data.refresh_token,
           });
@@ -68,9 +67,7 @@ class App extends React.Component<AppProps> {
     return (
       <div>
         {process.env.REACT_APP_BUILD && (
-          <div className='position-fixed'>
-            {process.env.REACT_APP_BUILD}
-          </div>
+          <div className="position-fixed">{process.env.REACT_APP_BUILD}</div>
         )}
 
         <LoadingScreen isReady={this.props.appLoaded}>

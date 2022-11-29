@@ -15,7 +15,6 @@ import ActivateAdministratorSchool, {
   ActivateAdministratorSchoolValues,
 } from './ActivateAdministratorSchool';
 import setLoginReduxWrapper from '../../../Redux/ReduxCommands/account/setLoginRedux';
-import { store } from '../../../store';
 import moment from 'moment';
 import getSessionRedux from '../../../Redux/ReduxQueries/account/getSessionRedux';
 
@@ -53,7 +52,7 @@ const ActivateAdministratorForm = (
       .then(async (response) => {
         const session = getSessionRedux();
         if (!session) return;
-        await setLoginReduxWrapper(store.dispatch, {
+        await setLoginReduxWrapper({
           accessToken: session.accessToken,
           refreshToken: session.refreshToken,
         });

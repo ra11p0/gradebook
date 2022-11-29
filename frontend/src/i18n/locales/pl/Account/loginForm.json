@@ -6,5 +6,8 @@
   "password": "Hasło",
   "register": "Rejestracja",
   "changePassword": "Zmień hasło",
-  "recoverAccess": "Przywróć dostęp"
+  "recoverAccess": "Przywróć dostęp",
+  "emailFieldRequired": "Email wymagany",
+  "passwordFieldRequired": "Hasło wymagane",
+  "wrongEmailAddress": "Niepoprawny adres email"
 }
