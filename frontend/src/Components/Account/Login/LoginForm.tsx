@@ -67,6 +67,7 @@ function LoginForm(): ReactElement {
             )}
             <FormikInput name="email" label={t('email')} formik={formik} />
             <FormikInput
+              testId="password"
               name="password"
               type="password"
               label={t('password')}
