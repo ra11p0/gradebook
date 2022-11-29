@@ -72,11 +72,20 @@ function LoginForm(): ReactElement {
               label={t('password')}
               formik={formik}
             />
-            <div className="m-1 p-1 d-flex justify-content-between">
+            <div className="m-1 p-1 d-flex flex-wrap justify-content-between">
               <div className="my-auto d-flex gap-2">
-                <Link to={'register'}>{t('register')}</Link>
-                <Link to={''}>{t('changePassword')}</Link>
-                <Link to={''}>{t('recoverAccess')}</Link>
+                <Link
+                  className="btn btn-sm btn-outline-secondary h-100 my-auto"
+                  to={'register'}
+                >
+                  {t('register')}
+                </Link>
+                <Link className="btn btn-sm btn-outline-secondary" to={''}>
+                  {t('changePassword')}
+                </Link>
+                <Link className="btn btn-sm btn-outline-secondary" to={''}>
+                  {t('recoverAccess')}
+                </Link>
               </div>
               <LoadingButton
                 size="small"
