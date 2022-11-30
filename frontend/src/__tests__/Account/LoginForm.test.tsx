@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, getByTestId } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from '../../store';
@@ -26,10 +26,11 @@ jest.mock('axios', () => ({
 
 describe('<LoginForm/>', () => {
   it('Should disable login button while logging in', async () => {
-    jest.spyOn(AccountsProxy, 'logIn').mockImplementationOnce(() => {
-      return new Promise(async (res, rej) => {
-        await new Promise((res) => setTimeout(res, 1000));
-        rej({});
+    jest.spyOn(AccountsProxy, 'logIn').mockImplementationOnce(async () => {
+      return await new Promise((resolve, reject) => {
+        void new Promise((resolve) => setTimeout(resolve, 1000)).then(() =>
+          reject(new Error())
+        );
       });
     });
 

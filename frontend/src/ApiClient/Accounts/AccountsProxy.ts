@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from 'axios';
-import SettingsEnum from '../../Common/Enums/SettingsEnum';
 import { axiosApiAuthorized } from '../AxiosInterceptor';
 import GetAccessibleSchoolsResponse from './Definitions/Responses/GetAccessibleSchoolsResponse';
 import LoginRequest from './Definitions/Requests/LoginRequest';
@@ -9,6 +8,7 @@ import RefreshTokenResponse from './Definitions/Responses/RefreshTokenResponse';
 import RegisterRequest from './Definitions/Requests/RegisterRequest';
 import RelatedPersonResponse from './Definitions/Responses/RelatedPersonResponse';
 import SettingsRequest from './Definitions/Requests/SettingsRequest';
+import UserSettings from './Definitions/Responses/UserSettings';
 
 const API_URL = process.env.REACT_APP_API_URL!;
 
@@ -54,32 +54,28 @@ const getRelatedPeople = async (
 
 // #region settings
 
-const getDefaultPerson = async (
-  userGuid: string
-): Promise<AxiosResponse<string>> => {
-  return await axiosApiAuthorized.get(
-    API_URL + `/account/${userGuid}/settings/${SettingsEnum.DefaultPersonGuid}`
-  );
+async function getUserSettings(): Promise<AxiosResponse<UserSettings>> {
+  return await axiosApiAuthorized.get(API_URL + `/account/settings`);
+}
+
+const getDefaultPerson = async (): Promise<string> => {
+  return (await getUserSettings()).data.defaultPersonGuid;
 };
 
 const setDefaultPerson = async (
-  userGuid: string,
   defaultPersonGuid: string
 ): Promise<AxiosResponse> => {
-  return await axiosApiAuthorized.post(
-    API_URL + `/account/${userGuid}/settings/${SettingsEnum.DefaultPersonGuid}`,
-    { defaultPersonGuid }
-  );
+  return await setSettings({ defaultPersonGuid });
+};
+
+const setLanguage = async (language: string): Promise<AxiosResponse> => {
+  return await setSettings({ language });
 };
 
 const setSettings = async (
-  userGuid: string,
   settings: SettingsRequest
 ): Promise<AxiosResponse> => {
-  return await axiosApiAuthorized.post(
-    API_URL + `/account/${userGuid}/settings`,
-    settings
-  );
+  return await axiosApiAuthorized.post(API_URL + `/account/settings`, settings);
 };
 
 // #endregion settings
@@ -92,8 +88,10 @@ export default {
   refreshAccessToken,
   register,
   settings: {
+    setLanguage,
     setSettings,
-    getDefaultPerson,
     setDefaultPerson,
+    getUserSettings,
+    getDefaultPerson,
   },
 };

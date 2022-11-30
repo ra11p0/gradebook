@@ -19,15 +19,15 @@ export default async (
   action: logInAction,
   dispatch: any = store.dispatch
 ): Promise<void> => {
-  return await new Promise((resolve) => {
+  return await new Promise((resolve, reject) => {
     localStorage.setItem('access_token', action.accessToken);
     localStorage.setItem('refresh_token', action.refreshToken);
 
     dispatch({ ...logIn, payload: { ...action } });
     void AccountsProxy.getMe()
       .then(async (getMeResponse) => {
-        setUserReduxWrapper(dispatch, { userId: getMeResponse.data.userId });
-        setSchoolsListReduxWrapper(dispatch, {
+        await setUserReduxWrapper({ userId: getMeResponse.data.userId });
+        await setSchoolsListReduxWrapper(dispatch, {
           schoolsList: getMeResponse.data.schools,
         });
         const defaultSchool = getMeResponse.data.schools.find(() => true);
@@ -40,6 +40,7 @@ export default async (
       .then(async () => {
         await connectAllHubs();
       })
-      .then(resolve);
+      .then(resolve)
+      .catch(reject);
   });
 };

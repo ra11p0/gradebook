@@ -2,16 +2,16 @@ import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import React, { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import GetSchoolResponse from '../../ApiClient/Schools/Definitions/Responses/GetSchoolResponse';
-import getCurrentSchoolReduxProxy from '../../Redux/ReduxQueries/account/getCurrentSchoolRedux';
-import getSchoolsListReduxProxy from '../../Redux/ReduxQueries/account/getSchoolsListRedux';
+import GetSchoolResponse from '../../../ApiClient/Schools/Definitions/Responses/GetSchoolResponse';
+import getCurrentSchoolReduxProxy from '../../../Redux/ReduxQueries/account/getCurrentSchoolRedux';
+import getSchoolsListReduxProxy from '../../../Redux/ReduxQueries/account/getSchoolsListRedux';
 import setSchoolsListReduxWrapper, {
   setSchoolsListAction,
-} from '../../Redux/ReduxCommands/account/setSchoolsListRedux';
+} from '../../../Redux/ReduxCommands/account/setSchoolsListRedux';
 import setSchoolReduxWrapper, {
   setSchoolAction,
-} from '../../Redux/ReduxCommands/account/setSchoolRedux';
-import { GlobalState } from '../../store';
+} from '../../../Redux/ReduxCommands/account/setSchoolRedux';
+import { GlobalState } from '../../../store';
 
 interface SchoolSelectProps {
   className?: string;
