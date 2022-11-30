@@ -54,9 +54,6 @@ function LoginForm(): ReactElement {
         <div className="card-body">
           <div className="m-1 p-1 text-center text-secondary">
             <b>{t('loging')}</b>
-            <p>
-              <small>{t('loginHint')}</small>
-            </p>
           </div>
           <form onSubmit={formik.handleSubmit}>
             <Form.Group>

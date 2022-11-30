@@ -12,5 +12,10 @@
   "goBackToLoginPage": "Wróć do strony logowania",
   "oneNumber": "Hasło musi zawierać jedną cyfrę",
   "oneUppercase": "Hasło musi zawierać jedną wielką litere",
-  "oneSpecialCharacter": "Hasło musi zawierać jeden znak specjalny"
+  "oneSpecialCharacter": "Hasło musi zawierać jeden znak specjalny",
+  "freeSignUp": "Darmowa rejestracja",
+  "alreadyHaveAccount": "Masz już konto?",
+  "login": "Zaloguj się!",
+  "termsConditionsRequired": "Akceptacja zasad i warunków wymagana",
+  "termsAndConditions": "Akceptuję zasady i warunki."
 }

@@ -18,9 +18,11 @@ function RegisterForm(): ReactElement {
       email: '',
       password: '',
       password2: '',
+      termsAndConditions: false,
     },
     validationSchema: yup.object().shape({
       email: yup.string().required(t('fieldRequired')).email(t('emailInvalid')),
+      termsAndConditions: yup.boolean().isTrue(t('termsConditionsRequired')),
       password: yup
         .string()
         .required(t('fieldRequired'))
@@ -50,42 +52,55 @@ function RegisterForm(): ReactElement {
   });
 
   return (
-    <div className="card m-3 p-3">
-      <div className="card-body">
-        <form onSubmit={formik.handleSubmit}>
-          <div className="m-1 p-1 display-6">
-            <label>{t('register')}</label>
-          </div>
-          <FormikInput name="email" formik={formik} label={t('email')} />
-          <FormikInput
-            name="password"
-            formik={formik}
-            label={t('password')}
-            type="password"
-          />
-          <FormikInput
-            name="password2"
-            type="password"
-            label={t('confirmPassword')}
-            formik={formik}
-          />
-          <div className="m-1 p-1 d-flex justify-content-between">
-            <div className="my-auto d-flex gap-2">
-              <Link to={'/'}>{t('goBackToLoginPage')}</Link>
+    <>
+      <div className="card m-3 p-3">
+        <div className="card-body">
+          <form onSubmit={formik.handleSubmit}>
+            <div className="m-1 p-1 text-center text-secondary">
+              <b>{t('freeSignUp')}</b>
             </div>
-            <LoadingButton
-              size="small"
-              loading={isRegistering}
-              variant="outlined"
-              type="submit"
-              disabled={isRegistering}
-            >
-              {t('registerButtonLabel')}
-            </LoadingButton>
-          </div>
-        </form>
+            <FormikInput name="email" formik={formik} label={t('email')} />
+            <FormikInput
+              testId="password"
+              name="password"
+              formik={formik}
+              label={t('password')}
+              type="password"
+            />
+            <FormikInput
+              testId="password2"
+              name="password2"
+              type="password"
+              label={t('confirmPassword')}
+              formik={formik}
+            />
+            <FormikInput
+              name="termsAndConditions"
+              type="switch"
+              label={t('termsAndConditions')}
+              formik={formik}
+            />
+            <div className="m-1 p-1 d-flex justify-content-center">
+              <LoadingButton
+                size="small"
+                loading={isRegistering}
+                variant="outlined"
+                type="submit"
+                disabled={isRegistering}
+              >
+                {t('registerButtonLabel')}
+              </LoadingButton>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+      <p className="text-center ">
+        {t('alreadyHaveAccount')} &nbsp;
+        <Link className="text-secondary" to={'/'}>
+          {t('login')}
+        </Link>
+      </p>
+    </>
   );
 }
 

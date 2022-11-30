@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import React, { ReactElement } from 'react';
+import { Collapse } from 'react-bootstrap';
 
 interface Props {
   name: string;
@@ -10,21 +11,18 @@ interface Props {
   showDespiteTouching?: boolean;
 }
 function FormikValidationLabel(props: Props): ReactElement {
+  const isOpen = (): boolean =>
+    !!(
+      _.get(props.formik.errors, props.name) &&
+      (props.showDespiteTouching ?? _.get(props.formik.touched, props.name))
+    );
   return (
-    <>
-      {_.get(props.formik.errors, props.name) &&
-      (props.showDespiteTouching ?? _.get(props.formik.touched, props.name)) ? (
-        <div className="invalid-feedback d-block">
-          {typeof _.get(props.formik.errors, props.name) === 'string' ? (
-            _.get(props.formik.errors, props.name)
-          ) : (
-            <></>
-          )}
-        </div>
-      ) : (
-        <></>
-      )}
-    </>
+    <Collapse in={isOpen()}>
+      <div className="invalid-feedback d-block">
+        {typeof _.get(props.formik.errors, props.name) === 'string' &&
+          isOpen() && <> {_.get(props.formik.errors, props.name)}</>}
+      </div>
+    </Collapse>
   );
 }
 

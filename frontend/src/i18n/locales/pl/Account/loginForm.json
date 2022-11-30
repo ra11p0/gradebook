@@ -1,13 +1,14 @@
 {
-  "logIn": "Login",
+  "logIn": "Zaloguj",
   "loging": "Logowanie",
   "loginFailed": "Logowanie nieudane",
   "email": "Email",
   "password": "Hasło",
-  "register": "Rejestracja",
-  "changePassword": "Zmień hasło",
+  "register": "Zarejestruj się!",
+  "forgotPassword": "Nie pamiętam hasła",
   "recoverAccess": "Przywróć dostęp",
   "emailFieldRequired": "Email wymagany",
   "passwordFieldRequired": "Hasło wymagane",
-  "wrongEmailAddress": "Niepoprawny adres email"
+  "wrongEmailAddress": "Niepoprawny adres email",
+  "dontHaveAccount": "Nie masz jeszcze konta?"
 }
