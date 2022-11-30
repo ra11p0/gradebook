@@ -10,25 +10,17 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import AccountsProxy from '../../ApiClient/Accounts/AccountsProxy';
 import LanguageSelect from '../../Components/Shared/Header/LanguageSelect';
-
-jest.mock('axios', () => ({
-  create: () => ({
-    interceptors: {
-      response: {
-        use: () => ({}),
-      },
-      request: {
-        use: () => ({}),
-      },
-    },
-  }),
-}));
+import * as setApplicationLanguageRedux from '../../Redux/ReduxCommands/account/setApplicationLanguageRedux';
+import { AxiosResponse } from 'axios';
 
 describe('<LanguageSelect/>', () => {
   it('Should send request with language changed', async () => {
     const setLanguageMock = jest
       .spyOn(AccountsProxy.settings, 'setLanguage')
-      .mockResolvedValue({});
+      .mockResolvedValueOnce({} as AxiosResponse);
+    const setLanguageReduxMock = jest
+      .spyOn(setApplicationLanguageRedux, 'default')
+      .mockResolvedValueOnce();
 
     await act(() => {
       render(
@@ -50,5 +42,6 @@ describe('<LanguageSelect/>', () => {
       );
     });
     expect(setLanguageMock).toBeCalledTimes(1);
+    expect(setLanguageReduxMock).toBeCalledTimes(1);
   });
 });

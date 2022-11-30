@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, getByTestId } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from '../../store';
@@ -13,25 +13,13 @@ import AccountsProxy from '../../ApiClient/Accounts/AccountsProxy';
 import Notifications from '../../Notifications/Notifications';
 import { ReactNotifications } from 'react-notifications-component';
 
-jest.mock('axios', () => ({
-  create: () => ({
-    interceptors: {
-      response: {
-        use: () => ({}),
-      },
-      request: {
-        use: () => ({}),
-      },
-    },
-  }),
-}));
-
 describe('<RegisterForm/>', () => {
   it('Should disable register button while registering', async () => {
-    jest.spyOn(AccountsProxy, 'register').mockImplementationOnce(() => {
-      return new Promise(async (res, rej) => {
-        await new Promise((res) => setTimeout(res, 1000));
-        rej({});
+    jest.spyOn(AccountsProxy, 'register').mockImplementationOnce(async () => {
+      return await new Promise((resolve, reject) => {
+        void new Promise((resolve) => setTimeout(resolve, 1000)).then(() => {
+          reject(new Error());
+        });
       });
     });
 

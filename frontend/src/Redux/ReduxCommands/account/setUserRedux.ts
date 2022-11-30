@@ -17,6 +17,7 @@ export default async (
 ): Promise<void> => {
   dispatch({ ...setUser, payload: { ...action } });
   const userSettings = (await AccountsProxy.settings.getUserSettings()).data;
+
   if (userSettings.language)
     await setApplicationLanguageRedux(userSettings.language);
 };
