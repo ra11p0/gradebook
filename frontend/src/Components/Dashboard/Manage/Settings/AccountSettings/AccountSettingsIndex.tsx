@@ -3,7 +3,6 @@ import React, { ReactElement } from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import AccountProxy from '../../../../../ApiClient/Accounts/AccountsProxy';
-import DefaultPersonSettingElement from './SettingsElements/DefaultPersonSettingElement';
 import { connect } from 'react-redux';
 import getCurrentUserIdReduxProxy from '../../../../../Redux/ReduxQueries/account/getCurrentUserIdRedux';
 
@@ -17,11 +16,7 @@ function AccountSettingsIndex(props: Props): ReactElement {
   return (
     <>
       <ListGroup>
-        <ListGroup.Item>
-          <DefaultPersonSettingElement
-            onChange={(e) => (settings.defaultPersonGuid = e)}
-          />
-        </ListGroup.Item>
+        <ListGroup.Item></ListGroup.Item>
       </ListGroup>
       <div className="d-flex justify-content-end m-2 p-2">
         <Button
@@ -29,10 +24,7 @@ function AccountSettingsIndex(props: Props): ReactElement {
           variant="outlined"
           onClick={async () => {
             if (!props.currentUserGuid) return;
-            await AccountProxy.settings.setSettings(
-              props.currentUserGuid,
-              settings
-            );
+            await AccountProxy.settings.setSettings(settings);
             console.dir(settings);
           }}
         >

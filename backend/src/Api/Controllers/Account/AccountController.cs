@@ -28,6 +28,7 @@ public class AccountController : ControllerBase
     private readonly ServiceResolver<IFoundationQueries> _foundationQueries;
     private readonly ServiceResolver<ISettingsQueries> _settingsQueries;
     private readonly ServiceResolver<ISettingsCommands> _settingsCommands;
+    private readonly ServiceResolver<Context> _context;
     public AccountController(IServiceProvider serviceProvider)
     {
         _userManager = serviceProvider.GetResolver<UserManager<ApplicationUser>>();
@@ -36,6 +37,7 @@ public class AccountController : ControllerBase
         _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
         _settingsCommands = serviceProvider.GetResolver<ISettingsCommands>();
         _settingsQueries = serviceProvider.GetResolver<ISettingsQueries>();
+        _context = serviceProvider.GetResolver<Context>();
     }
 
     #region authorization authentication
@@ -231,73 +233,24 @@ public class AccountController : ControllerBase
     #endregion
 
     #region settings
-    [HttpGet]
-    [Route("{userGuid}/Settings/{settingEnum}")]
-    [Authorize]
-    public async Task<IActionResult> GetSetting([FromRoute] string userGuid, [FromRoute] SettingEnum settingEnum)
-    {
-        object? setting;
-        switch (settingEnum)
-        {
-            case SettingEnum.DefaultPersonGuid:
-                var resp = await _settingsQueries.Service.GetDefaultPersonGuid(userGuid);
-                setting = resp == default ? null : resp;
-                break;
-            default:
-                return BadRequest();
-        }
-
-        return setting is null ? NoContent() : Ok(setting);
-    }
     [HttpPost]
-    [Route("{userGuid}/Settings/{settingEnum}")]
-    [Authorize]
-    public async Task<IActionResult> SetSetting([FromRoute] string userGuid, [FromRoute] SettingEnum settingEnum, [FromBody] string jsonString)
-    {
-        switch (settingEnum)
-        {
-            case SettingEnum.DefaultPersonGuid:
-                await _settingsCommands.Service.SetDefaultPersonGuid(userGuid, JsonConvert.DeserializeObject<Guid>($"\"{jsonString}\""));
-                break;
-            default:
-                return BadRequest();
-        }
-        return Ok();
-    }
-    [HttpPost]
-    [Route("{userGuid}/Settings")]
+    [Route("Settings")]
     [Authorize]
     [ProducesResponseType(typeof(string), statusCode: 400)]
-    public async Task<IActionResult> SetSettings([FromRoute] string userGuid, [FromBody] SettingsCommand settings)
+    public async Task<IActionResult> SetSettings([FromBody] SettingsCommand settings)
     {
-        var resp = await _settingsCommands.Service.SetAccountSettings(userGuid, settings);
-        return resp.Status ? Ok() : BadRequest(resp.Message);
+        var resp = await _settingsCommands.Service.SetAccountSettings(settings);
+        return resp.ObjectResult;
     }
     [HttpGet]
-    [Route("{userGuid}/Settings")]
+    [Route("Settings")]
     [Authorize]
     [ProducesResponseType(typeof(SettingsDto), statusCode: 200)]
     [ProducesResponseType(typeof(string), statusCode: 400)]
-    public async Task<IActionResult> GetSettings([FromRoute] string userGuid)
+    public async Task<IActionResult> GetSettings()
     {
-        var resp = await _settingsQueries.Service.GetAccountSettings(userGuid);
-        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
-    }
-    [HttpGet]
-    [Route("{userGuid}/Settings/DefaultPerson")]
-    [ProducesResponseType(typeof(PersonDto), statusCode: 200)]
-    [ProducesResponseType(typeof(string), statusCode: 400)]
-    [Authorize]
-    public async Task<IActionResult> GetDefaultPerson([FromRoute] string userGuid)
-    {
-        var defaultPersonGuid = await _settingsQueries.Service.GetDefaultPersonGuid(userGuid);
-        if (defaultPersonGuid == Guid.Empty)
-        {
-            var relatedPeople = await _foundationQueries.Service.GetSchoolsForUser(userGuid);
-            return relatedPeople.Status ? Ok(relatedPeople.Response?.FirstOrDefault()?.Person) : BadRequest(relatedPeople.Message);
-        }
-        var personResponse = await _foundationQueries.Service.GetPersonByGuid(defaultPersonGuid);
-        return personResponse.Status ? Ok(personResponse.Response) : BadRequest(personResponse.Message);
+        var resp = await _settingsQueries.Service.GetAccountSettings();
+        return resp.ObjectResult;
     }
     #endregion
 }

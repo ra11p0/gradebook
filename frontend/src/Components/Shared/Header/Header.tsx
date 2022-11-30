@@ -1,19 +1,17 @@
-import { faCheck, faLanguage } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
-import { Dropdown } from 'react-bootstrap';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import getApplicationLanguageReduxProxy from '../../Redux/ReduxQueries/account/getApplicationLanguageRedux';
+import getApplicationLanguageReduxProxy from '../../../Redux/ReduxQueries/account/getApplicationLanguageRedux';
 import getCurrentPersonReduxProxy, {
   CurrentPersonProxyResult,
-} from '../../Redux/ReduxQueries/account/getCurrentPersonRedux';
-import getIsLoggedInReduxProxy from '../../Redux/ReduxQueries/account/getIsLoggedInRedux';
-import getIsUserActivatedReduxProxy from '../../Redux/ReduxQueries/account/getIsUserActivatedRedux';
-import setLogOutReduxWrapper from '../../Redux/ReduxCommands/account/setLogOutRedux';
-import LoadingScreen from './LoadingScreen';
+} from '../../../Redux/ReduxQueries/account/getCurrentPersonRedux';
+import getIsLoggedInReduxProxy from '../../../Redux/ReduxQueries/account/getIsLoggedInRedux';
+import getIsUserActivatedReduxProxy from '../../../Redux/ReduxQueries/account/getIsUserActivatedRedux';
+import setLogOutReduxWrapper from '../../../Redux/ReduxCommands/account/setLogOutRedux';
+import LoadingScreen from '../LoadingScreen';
 import SchoolSelect from './SchoolSelect';
+import LanguageSelect from './LanguageSelect';
 
 interface HeaderProps {
   isLoggedIn?: boolean;
@@ -42,7 +40,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   }
 
   render(): React.ReactNode {
-    const { i18n, t } = this.props;
+    const { t } = this.props;
     return (
       <header className="p-4 bg-grey-light bg-gradient">
         <div className="d-flex justify-content-between">
@@ -68,8 +66,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                             to="/account/profile"
                             className="btn btn-outline-primary"
                           >
-                            {`${this.props.currentPerson!.name} ${this.props.currentPerson!.surname
-                              }`}
+                            {`${this.props.currentPerson!.name} ${
+                              this.props.currentPerson!.surname
+                            }`}
                           </Link>
                         </div>
                       </>
@@ -93,25 +92,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               </div>
             )}
             <div className="d-flex gap-2 my-auto">
-              <Dropdown>
-                <Dropdown.Toggle variant="outline-secondary">
-                  <FontAwesomeIcon icon={faLanguage} />
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item onClick={() => i18n.changeLanguage('pl')}>
-                    {t('polish')} (Polish)
-                    {this.props.language === 'pl' && (
-                      <FontAwesomeIcon icon={faCheck} />
-                    )}
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={() => i18n.changeLanguage('en')}>
-                    {t('english')} (English)
-                    {this.props.language === 'en' && (
-                      <FontAwesomeIcon icon={faCheck} />
-                    )}
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
+              <LanguageSelect />
             </div>
           </div>
         </div>

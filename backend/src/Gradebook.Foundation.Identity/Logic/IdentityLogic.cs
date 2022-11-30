@@ -122,7 +122,7 @@ public class IdentityLogic : IIdentityLogic
 
     public Task<bool> IsValidRefreshTokenForUser(string userId, string refreshToken)
     {
-        return _identityContext.Service.Sessions.AnyAsync(
+        return _identityContext.Service.Sessions!.AnyAsync(
             e => e.UserId == userId &&
             e.RefreshToken == refreshToken &&
             e.RefreshTokenExpiryTime >= Time.UtcNow);
@@ -131,14 +131,14 @@ public class IdentityLogic : IIdentityLogic
     public async Task RemoveRefreshTokenFromUser(string userId, string refreshToken)
     {
         var user = await _identityContext.Service.Users.Include(e => e.Sessions).FirstOrDefaultAsync(e => e.Id == userId);
-        var session = await _identityContext.Service.Sessions.FirstOrDefaultAsync(e => e.RefreshToken == refreshToken);
+        var session = await _identityContext.Service.Sessions!.FirstOrDefaultAsync(e => e.RefreshToken == refreshToken);
         if (user is null || session is null) throw new Exception("user nor session should not be null here");
         user.Sessions!.Remove(session);
     }
 
     public void RemoveAllExpiredTokens()
     {
-        var expiredTokens = _identityContext.Service.Sessions.Where(e => e.RefreshTokenExpiryTime <= Time.UtcNow);
+        var expiredTokens = _identityContext.Service.Sessions!.Where(e => e.RefreshTokenExpiryTime <= Time.UtcNow);
         _identityContext.Service.RemoveRange(expiredTokens);
     }
 
@@ -148,7 +148,7 @@ public class IdentityLogic : IIdentityLogic
 
         var user = await _identityContext.Service.Users.Include(e => e.Sessions).FirstOrDefaultAsync(e => e.Id == userId);
         if (user is null) throw new Exception("user should not be null here");
-        await _identityContext.Service.Sessions.AddAsync(new Session()
+        await _identityContext.Service.Sessions!.AddAsync(new Session()
         {
             User = user,
             RefreshToken = refreshToken,

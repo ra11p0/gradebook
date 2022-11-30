@@ -564,7 +564,7 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
         return await cn.QueryPagedAsync<EducationCycleDto>(builder.ToString(), new { schoolGuid }, pager);
     }
 
-    public async Task<EducationCycleExtendedDto> GetEducationCycle(Guid educationCycleGuid)
+    public async Task<EducationCycleExtendedDto?> GetEducationCycle(Guid educationCycleGuid)
     {
         var builder = new SqlBuilder();
         builder.SELECT("Name, SchoolGuid, Guid, CreatedDate, CreatorGuid");
