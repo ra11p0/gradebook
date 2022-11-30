@@ -11,6 +11,7 @@ import '@testing-library/jest-dom';
 import AccountsProxy from '../../ApiClient/Accounts/AccountsProxy';
 import LanguageSelect from '../../Components/Shared/Header/LanguageSelect';
 import * as setApplicationLanguageRedux from '../../Redux/ReduxCommands/account/setApplicationLanguageRedux';
+import * as getIsLoggedInRedux from '../../Redux/ReduxQueries/account/getIsLoggedInRedux';
 import { AxiosResponse } from 'axios';
 
 describe('<LanguageSelect/>', () => {
@@ -21,7 +22,9 @@ describe('<LanguageSelect/>', () => {
     const setLanguageReduxMock = jest
       .spyOn(setApplicationLanguageRedux, 'default')
       .mockResolvedValueOnce();
-
+    const getIsLoggedInReduxMock = jest
+      .spyOn(getIsLoggedInRedux, 'default')
+      .mockReturnValueOnce(true);
     await act(() => {
       render(
         <Provider store={store}>
@@ -42,6 +45,40 @@ describe('<LanguageSelect/>', () => {
       );
     });
     expect(setLanguageMock).toBeCalledTimes(1);
+    expect(setLanguageReduxMock).toBeCalledTimes(1);
+    expect(getIsLoggedInReduxMock).toBeCalledTimes(1);
+  });
+  it('Should not send request, only local change - user not logged in', async () => {
+    const setLanguageMock = jest
+      .spyOn(AccountsProxy.settings, 'setLanguage')
+      .mockResolvedValueOnce({} as AxiosResponse);
+    const setLanguageReduxMock = jest
+      .spyOn(setApplicationLanguageRedux, 'default')
+      .mockResolvedValueOnce();
+    const getIsLoggedInReduxMock = jest
+      .spyOn(getIsLoggedInRedux, 'default')
+      .mockReturnValueOnce(false);
+    await act(() => {
+      render(
+        <Provider store={store}>
+          <BrowserRouter>
+            <I18nextProvider i18n={i18n}>
+              <LanguageSelect />
+            </I18nextProvider>
+          </BrowserRouter>
+        </Provider>
+      );
+    });
+    await act(async () => {
+      userEvent.click(screen.getByRole('button'));
+    });
+    await act(async () => {
+      await userEvent.click(
+        await screen.findByRole('button', { name: 'Polish (Polish)' })
+      );
+    });
+    expect(getIsLoggedInReduxMock).toBeCalledTimes(1);
+    expect(setLanguageMock).toBeCalledTimes(0);
     expect(setLanguageReduxMock).toBeCalledTimes(1);
   });
 });

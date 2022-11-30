@@ -19,7 +19,8 @@ function LanguageSelect(props: Props): ReactElement {
   const { t } = useTranslation('header');
   const setLanguage = async (language: string): Promise<void> => {
     await setApplicationLanguageRedux(language);
-    await AccountsProxy.settings.setLanguage(language);
+    if (props.isUserLoggedIn)
+      await AccountsProxy.settings.setLanguage(language);
   };
   return (
     <>
