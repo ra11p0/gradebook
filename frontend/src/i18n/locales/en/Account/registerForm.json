@@ -9,5 +9,8 @@
   "register": "Register",
   "password": "Password",
   "confirmPassword": "Confirm password",
-  "goBackToLoginPage": "Go back to login page"
+  "goBackToLoginPage": "Go back to login page",
+  "oneNumber": "Password must contain one digit",
+  "oneUppercase": "Password must contain one uppercase letter",
+  "oneSpecialCharacter": "Password must contain one special character"
 }

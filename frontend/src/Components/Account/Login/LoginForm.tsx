@@ -49,59 +49,61 @@ function LoginForm(): ReactElement {
     },
   });
   return (
-    <div className="card m-3 p-3">
-      <div className="card-body">
-        <div className="m-1 p-1 display-6">
-          <label>{t('loging')}</label>
-        </div>
-        <form onSubmit={formik.handleSubmit}>
-          <Form.Group>
-            {loginFailed && (
-              <Alert
-                variant="danger"
-                onClose={() => setLoginFailed(false)}
-                dismissible
-              >
-                {t('loginFailed')}
-              </Alert>
-            )}
-            <FormikInput name="email" label={t('email')} formik={formik} />
-            <FormikInput
-              testId="password"
-              name="password"
-              type="password"
-              label={t('password')}
-              formik={formik}
-            />
-            <div className="m-1 p-1 d-flex flex-wrap justify-content-between">
-              <div className="my-auto d-flex gap-2">
-                <Link
-                  className="btn btn-sm btn-outline-secondary h-100 my-auto"
-                  to={'register'}
+    <>
+      <div className="card m-3 p-3">
+        <div className="card-body">
+          <div className="m-1 p-1 text-center text-secondary">
+            <b>{t('loging')}</b>
+            <p>
+              <small>{t('loginHint')}</small>
+            </p>
+          </div>
+          <form onSubmit={formik.handleSubmit}>
+            <Form.Group>
+              {loginFailed && (
+                <Alert
+                  variant="danger"
+                  onClose={() => setLoginFailed(false)}
+                  dismissible
                 >
-                  {t('register')}
-                </Link>
-                <Link className="btn btn-sm btn-outline-secondary" to={''}>
-                  {t('changePassword')}
-                </Link>
-                <Link className="btn btn-sm btn-outline-secondary" to={''}>
-                  {t('recoverAccess')}
+                  {t('loginFailed')}
+                </Alert>
+              )}
+              <FormikInput name="email" label={t('email')} formik={formik} />
+              <FormikInput
+                testId="password"
+                name="password"
+                type="password"
+                label={t('password')}
+                formik={formik}
+              />
+              <div className="text-end fs-7">
+                <Link className="text-secondary" to={''}>
+                  {t('forgotPassword')}
                 </Link>
               </div>
-              <LoadingButton
-                size="small"
-                loading={isLoggingIn}
-                variant="outlined"
-                type="submit"
-                disabled={isLoggingIn}
-              >
-                {t('logIn')}
-              </LoadingButton>
-            </div>
-          </Form.Group>
-        </form>
+              <div className="text-center">
+                <LoadingButton
+                  size="small"
+                  loading={isLoggingIn}
+                  variant="outlined"
+                  type="submit"
+                  disabled={isLoggingIn}
+                >
+                  {t('logIn')}
+                </LoadingButton>
+              </div>
+            </Form.Group>
+          </form>
+        </div>
       </div>
-    </div>
+      <p className="text-center ">
+        {t('dontHaveAccount')} &nbsp;
+        <Link className="text-secondary" to={'register'}>
+          {t('register')}
+        </Link>
+      </p>
+    </>
   );
 }
 

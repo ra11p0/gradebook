@@ -7,9 +7,9 @@ class Index extends React.Component {
   render(): React.ReactNode {
     return (
       <div>
-        <div className="App row m-md-2 gap-md-2 border rounded-3">
+        <div className="App row m-md-2 gap-md-2 ">
           <div className="col-md"></div>
-          <div className="col-md-6 p-md-3">
+          <div className="col-md-5 p-md-3">
             <Routes>
               <Route path="*" element={<LoginForm />} />
               <Route path="register" element={<RegisterForm />} />
