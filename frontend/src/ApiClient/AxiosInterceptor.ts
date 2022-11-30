@@ -1,7 +1,6 @@
 import axios from 'axios';
 import getSessionRedux from '../Redux/ReduxQueries/account/getSessionRedux';
 import setLoginReduxWrapper from '../Redux/ReduxCommands/account/setLoginRedux';
-import { store } from '../store';
 import AccountProxy from './Accounts/AccountsProxy';
 
 const axiosApiAuthorized = axios.create();
@@ -46,7 +45,7 @@ async function refreshAccessToken(): Promise<string> {
     session.accessToken,
     session.refreshToken
   );
-  await setLoginReduxWrapper(store.dispatch, {
+  await setLoginReduxWrapper({
     accessToken: refreshResponse.data.access_token,
     refreshToken: refreshResponse.data.refresh_token,
   });

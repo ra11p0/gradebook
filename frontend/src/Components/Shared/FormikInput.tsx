@@ -17,6 +17,7 @@ interface Props {
   };
   onChange?: (evt: React.ChangeEvent<HTMLInputElement>) => void;
   showErrorsDespiteTouching?: boolean;
+  hideValidation?: boolean;
 }
 
 function FormikInput(props: Props): ReactElement {
@@ -85,11 +86,12 @@ function FormikInput(props: Props): ReactElement {
             );
         }
       })()}
-
-      <FormikValidationLabel
-        {...props}
-        showDespiteTouching={props.showErrorsDespiteTouching}
-      />
+      {!props.hideValidation && (
+        <FormikValidationLabel
+          {...props}
+          showDespiteTouching={props.showErrorsDespiteTouching}
+        />
+      )}
     </Form.Group>
   );
 }

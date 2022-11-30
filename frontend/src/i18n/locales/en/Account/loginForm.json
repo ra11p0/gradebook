@@ -4,7 +4,11 @@
   "loginFailed": "Login failed",
   "email": "Email",
   "password": "Password",
-  "register": "Register",
-  "changePassword": "Change password",
-  "recoverAccess": "Recover access"
+  "register": "Sign up now!",
+  "forgotPassword": "Forgot password",
+  "recoverAccess": "Recover access",
+  "emailFieldRequired": "Email field required",
+  "passwordFieldRequired": "Password field required",
+  "wrongEmailAddress": "Invalid email address",
+  "dontHaveAccount": "Don't have accout?"
 }

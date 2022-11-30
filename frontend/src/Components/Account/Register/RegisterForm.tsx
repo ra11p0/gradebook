@@ -1,137 +1,107 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
-import { Button } from 'react-bootstrap';
 import AccountProxy from '../../../ApiClient/Accounts/AccountsProxy';
 import Swal from 'sweetalert2';
-import CommonNotifications from '../../../Notifications/Notifications';
-import getIsLoggedInReduxProxy from '../../../Redux/ReduxQueries/account/getIsLoggedInRedux';
+import * as yup from 'yup';
+import FormikInput from '../../Shared/FormikInput';
+import { LoadingButton } from '@mui/lab';
+import Notifications from '../../../Notifications/Notifications';
 
-interface RegisterFormProps {
-  onLogIn?: () => {};
-  isLoggedIn: boolean;
-}
-
-interface RegisterFormValues {
-  email: string;
-  password: string;
-  password2: string;
-}
-
-const RegisterForm = (props: RegisterFormProps): ReactElement => {
+function RegisterForm(): ReactElement {
   const { t } = useTranslation('registerForm');
-
-  const validate = (values: RegisterFormValues): any => {
-    const errors: any = {};
-    if (values.email.length < 5) {
-      errors.email = t('emailInvalid');
-    }
-
-    if (values.password.length < 5) {
-      errors.password = t('passwordTooShort');
-    }
-
-    if (values.password !== values.password2) {
-      errors.password = t('passwordsNotTheSame');
-    }
-    return errors;
-  };
+  const [isRegistering, setIsRegistering] = useState(false);
 
   const formik = useFormik({
     initialValues: {
       email: '',
       password: '',
       password2: '',
+      termsAndConditions: false,
     },
-    validate,
-    onSubmit: (values: RegisterFormValues) => {
-      AccountProxy.register(values)
+    validationSchema: yup.object().shape({
+      email: yup.string().required(t('fieldRequired')).email(t('emailInvalid')),
+      termsAndConditions: yup.boolean().isTrue(t('termsConditionsRequired')),
+      password: yup
+        .string()
+        .required(t('fieldRequired'))
+        .max(20, t('passwordTooLong'))
+        .min(8, t('passwordTooShort'))
+        .matches(/^(?=.*[0-9])/, t('oneNumber'))
+        .matches(/^(?=.*[A-Z])/, t('oneUppercase'))
+        .matches(/^(?=.*[a-z])/, t('oneLowercase'))
+        .matches(/^(?=.*[!@#\\$%\\^&\\*])/, t('oneSpecialCharacter')),
+      password2: yup
+        .string()
+        .required(t('fieldRequired'))
+        .oneOf([yup.ref('password')], t('passwordsNotTheSame')),
+    }),
+    onSubmit: async (values) => {
+      setIsRegistering(true);
+      await AccountProxy.register(values)
         .then(async () => {
           await Swal.fire({
             title: t('userRegisteredAlertTitle'),
             text: t('userRegisteredAlertText'),
           });
         })
-        .catch(() => {
-          CommonNotifications.showCommonError();
-        });
+        .catch(Notifications.showApiError);
+      setIsRegistering(false);
     },
   });
 
   return (
-    <div className="card m-3 p-3">
-      <div className="card-body">
-        <form onSubmit={formik.handleSubmit}>
-          <div className="m-1 p-1 display-6">
-            <label>{t('register')}</label>
-          </div>
-          <div className="m-1 p-1">
-            <label htmlFor="email">{t('email')}</label>
-            <input
-              className="form-control"
-              id="email"
-              name="email"
-              type="email"
-              onChange={formik.handleChange}
-              value={formik.values.email}
-            />
-            {formik.errors.email && formik.touched.email ? (
-              <div className="invalid-feedback d-block">
-                {formik.errors.email}
-              </div>
-            ) : null}
-          </div>
-          <div className="m-1 p-1">
-            <label htmlFor="password">{t('password')}</label>
-            <input
-              className="form-control"
-              id="password"
+    <>
+      <div className="card m-3 p-3">
+        <div className="card-body">
+          <form onSubmit={formik.handleSubmit}>
+            <div className="m-1 p-1 text-center text-secondary">
+              <b>{t('freeSignUp')}</b>
+            </div>
+            <FormikInput name="email" formik={formik} label={t('email')} />
+            <FormikInput
+              testId="password"
               name="password"
+              formik={formik}
+              label={t('password')}
               type="password"
-              onChange={formik.handleChange}
-              value={formik.values.password}
             />
-            {formik.errors.password && formik.touched.password ? (
-              <div className="invalid-feedback d-block">
-                {formik.errors.password}
-              </div>
-            ) : null}
-          </div>
-          <div className="m-1 p-1">
-            <label htmlFor="password2">{t('confirmPassword')}</label>
-            <input
-              className="form-control"
-              id="password2"
+            <FormikInput
+              testId="password2"
               name="password2"
               type="password"
-              onChange={formik.handleChange}
-              value={formik.values.password2}
+              label={t('confirmPassword')}
+              formik={formik}
             />
-            {formik.errors.password2 && formik.touched.password2 ? (
-              <div className="invalid-feedback d-block">
-                {formik.errors.password2}
-              </div>
-            ) : null}
-          </div>
-          <div className="m-1 p-1 d-flex justify-content-between">
-            <div className="my-auto d-flex gap-2">
-              <Link to={'/'}>{t('goBackToLoginPage')}</Link>
+            <FormikInput
+              name="termsAndConditions"
+              type="switch"
+              label={t('termsAndConditions')}
+              formik={formik}
+            />
+            <div className="m-1 p-1 d-flex justify-content-center">
+              <LoadingButton
+                size="small"
+                loading={isRegistering}
+                variant="outlined"
+                type="submit"
+                disabled={isRegistering}
+              >
+                {t('registerButtonLabel')}
+              </LoadingButton>
             </div>
-            <Button variant="outline-primary" type="submit">
-              {t('registerButtonLabel')}
-            </Button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
+      <p className="text-center ">
+        {t('alreadyHaveAccount')} &nbsp;
+        <Link className="text-secondary" to={'/'}>
+          {t('login')}
+        </Link>
+      </p>
+    </>
   );
-};
+}
 
-export default connect(
-  (state) => ({
-    isLoggedIn: getIsLoggedInReduxProxy(state),
-  }),
-  () => ({})
-)(RegisterForm);
+export default RegisterForm;

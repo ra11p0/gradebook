@@ -1,5 +1,6 @@
 import AccountsProxy from '../../../ApiClient/Accounts/AccountsProxy';
 import { connectAllHubs } from '../../../ApiClient/SignalR/HubsResolver';
+import { store } from '../../../store';
 import ActionTypes from '../../ActionTypes/accountActionTypes';
 import setSchoolReduxWrapper from './setSchoolRedux';
 import setSchoolsListReduxWrapper from './setSchoolsListRedux';
@@ -14,7 +15,10 @@ export interface logInAction {
   refreshToken: string;
 }
 
-export default async (dispatch: any, action: logInAction): Promise<void> => {
+export default async (
+  action: logInAction,
+  dispatch: any = store.dispatch
+): Promise<void> => {
   return await new Promise((resolve) => {
     localStorage.setItem('access_token', action.accessToken);
     localStorage.setItem('refresh_token', action.refreshToken);

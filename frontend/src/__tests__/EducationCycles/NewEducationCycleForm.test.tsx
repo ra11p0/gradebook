@@ -1,15 +1,5 @@
 import React from 'react';
-import {
-  render,
-  screen,
-  fireEvent,
-  getByTestId,
-  waitFor,
-  findByTestId,
-  findByText,
-  findByDisplayValue,
-  findByLabelText,
-} from '@testing-library/react';
+import { render, screen, fireEvent, getByTestId } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
@@ -45,11 +35,9 @@ describe('<NewCycleForm />', () => {
       if (!nameField) throw new Error('nameField is undefined');
       fireEvent.click(getByTestId(form, 'submit'));
     });
-    await waitFor(() => {
-      expect(screen.getByTestId('educationCycleName')).toHaveClass(
-        'is-invalid'
-      );
-    });
+    await expect(await screen.findByTestId('educationCycleName')).toHaveClass(
+      'is-invalid'
+    );
   });
 
   it('Should validate name length', async () => {
@@ -72,11 +60,9 @@ describe('<NewCycleForm />', () => {
       const nameField = screen.getByTestId('educationCycleName');
       userEvent.type(nameField, 're{enter}');
     });
-    await waitFor(() => {
-      expect(screen.getByTestId('educationCycleName')).toHaveClass(
-        'is-invalid'
-      );
-    });
+    await expect(await screen.findByTestId('educationCycleName')).toHaveClass(
+      'is-invalid'
+    );
   });
 
   it('Should validate at least one stage', async () => {
@@ -100,8 +86,8 @@ describe('<NewCycleForm />', () => {
       const submit = getByTestId(form, 'submit');
       fireEvent.click(submit);
     });
-    await waitFor(() => {
-      expect(screen.getByText('At least one step required')).toBeTruthy();
-    });
+    await expect(
+      await screen.findByText('At least one step required')
+    ).toBeTruthy();
   });
 });
