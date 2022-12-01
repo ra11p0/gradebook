@@ -9,6 +9,8 @@ using Gradebook.Foundation.Common.Permissions;
 using Gradebook.Foundation.Common.Permissions.Commands;
 using Gradebook.Foundation.Common.Permissions.Queries;
 using Gradebook.Foundation.Common.Settings.Enums;
+using Gradebook.Foundation.Mailservice;
+using Gradebook.Foundation.Mailservice.MailTypes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,9 +26,8 @@ public class PeopleController : ControllerBase
     private readonly ServiceResolver<IPermissionsQueries> _permissionsQueries;
     private readonly ServiceResolver<IFoundationQueries> _foundationQueries;
     private readonly ServiceResolver<IFoundationPermissionsLogic> _foundationPermissionsLogic;
+    private readonly ServiceResolver<IMailClient> _mailClient;
     private readonly ServiceResolver<IPermissionsPermissionsLogic> _permissionsPermissionsLogic;
-    /*     private readonly ServiceResolver<ISettingsQueries> _settingsQueries;
-        private readonly ServiceResolver<ISettingsCommands> _settingsCommands; */
     public PeopleController(IServiceProvider serviceProvider)
     {
         _foundationCommands = serviceProvider.GetResolver<IFoundationCommands>();
@@ -35,8 +36,7 @@ public class PeopleController : ControllerBase
         _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
         _foundationPermissionsLogic = serviceProvider.GetResolver<IFoundationPermissionsLogic>();
         _permissionsPermissionsLogic = serviceProvider.GetResolver<IPermissionsPermissionsLogic>();
-        /*         _settingsQueries = serviceProvider.GetResolver<ISettingsQueries>();
-                _settingsCommands = serviceProvider.GetResolver<ISettingsCommands>(); */
+        _mailClient = serviceProvider.GetResolver<IMailClient>();
     }
     [HttpGet, Route("{teacherGuid}/subjects")]
     [ProducesResponseType(typeof(PersonDto), statusCode: 200)]
@@ -50,6 +50,7 @@ public class PeopleController : ControllerBase
     [ProducesResponseType(typeof(PersonDto), statusCode: 200)]
     public async Task<IActionResult> GetPerson([FromRoute] Guid personGuid)
     {
+        await _mailClient.Service.SendMail(new ActivateAccountMailType());
         var personResponse = await _foundationQueries.Service.GetPersonByGuid(personGuid);
         return personResponse.Status ? Ok(personResponse.Response) : BadRequest(personResponse.Message);
     }

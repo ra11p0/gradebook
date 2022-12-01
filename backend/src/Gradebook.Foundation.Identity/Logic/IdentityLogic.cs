@@ -159,4 +159,8 @@ public class IdentityLogic : IIdentityLogic
     public void SaveDatabaseChanges()
         => _identityContext.Service.SaveChanges();
 
+    public async Task<string?> GetEmailForUser(string userId)
+    {
+        return (await _identityContext.Service.Users.FirstOrDefaultAsync(e => e.Id == userId))?.Email;
+    }
 }

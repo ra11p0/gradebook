@@ -16,6 +16,7 @@ public class DependencyInjector
         SwaggerService.Inject(services, configuration);
         SignalRService.Inject(services, configuration);
         HangfireService.Inject(services, configuration);
+        MailService.Inject(services, configuration);
     }
 }
 

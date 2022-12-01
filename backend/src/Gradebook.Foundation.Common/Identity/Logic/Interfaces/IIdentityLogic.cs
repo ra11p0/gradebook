@@ -16,6 +16,7 @@ public interface IIdentityLogic
     Task<bool> IsValidRefreshTokenForUser(string userId, string refreshToken);
     Task RemoveRefreshTokenFromUser(string userId, string refreshToken);
     Task AssignRefreshTokenToUser(string userId, string refreshToken);
+    Task<string?> GetEmailForUser(string userId);
     void RemoveAllExpiredTokens();
     void SaveDatabaseChanges();
 }
