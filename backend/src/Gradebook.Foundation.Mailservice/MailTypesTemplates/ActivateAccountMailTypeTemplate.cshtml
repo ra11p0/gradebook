@@ -1,7 +1,7 @@
-@namespace Gradebook.Foundation.Mailservice
 @using Gradebook.Foundation.Mailservice.MailTypesModels
-@using Microsoft.AspNetCore.Mvc.Localization
-@inject IViewLocalizer Localizer
+@using Gradebook.Foundation.Mailservice.MailTypes
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<ActivateAccountMailType> Localizer
 @model ActivateAccountMailTypeModel
 @{
     Layout="~/SharedMailLayout.cshtml";
