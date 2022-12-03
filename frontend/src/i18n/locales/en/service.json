@@ -1,0 +1,6 @@
+{
+  "userActivationSuccessAlertTitle": "Verificated!",
+  "userActivationSuccessAlertText": "Now you can log in to your Gradebook account.",
+  "userActivationFailedAlertTitle": "Not verificated.",
+  "userActivationFailedAlertText": "Verification link is invalid."
+}

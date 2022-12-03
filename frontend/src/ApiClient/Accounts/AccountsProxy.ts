@@ -30,6 +30,15 @@ async function register(request: RegisterRequest): Promise<AxiosResponse<any>> {
   });
 }
 
+async function verifyEmailAddress(
+  userId: string,
+  activationCode: string
+): Promise<AxiosResponse<LoginResponse>> {
+  return await axios.post(
+    `${API_URL}/Account/${userId}/emailActivation/${activationCode}`
+  );
+}
+
 async function refreshAccessToken(
   accessToken: string,
   refreshToken: string
@@ -85,6 +94,7 @@ const setSettings = async (
 // #endregion settings
 
 export default {
+  verifyEmailAddress,
   getRelatedPeople,
   getMe,
   getAccessibleSchools,

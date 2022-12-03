@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Gradebook.Foundation.Common.Identity.Responses;
 
 namespace Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 
@@ -18,6 +19,8 @@ public interface IIdentityLogic
     Task AssignRefreshTokenToUser(string userId, string refreshToken);
     Task<string?> GetEmailForUser(string userId);
     Task<StatusResponse> RegisterUser(string email, string password, string language);
+    Task<ResponseWithStatus<LogInResponse>> LoginUser(string email, string password);
+    Task<StatusResponse> VerifyUserEmail(string userId, string code);
     void RemoveAllExpiredTokens();
     void SaveDatabaseChanges();
 }

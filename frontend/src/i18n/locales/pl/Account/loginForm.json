@@ -10,5 +10,6 @@
   "emailFieldRequired": "Email wymagany",
   "passwordFieldRequired": "Hasło wymagane",
   "wrongEmailAddress": "Niepoprawny adres email",
-  "dontHaveAccount": "Nie masz jeszcze konta?"
+  "dontHaveAccount": "Nie masz jeszcze konta?",
+  "activateYourAccountToLogIn": "Aktywuj swoje konto by się zalogować. Mail z linkiem aktywującym został właśnie wysłany. Link aktywacyjny jest ważny przez 30 minut."
 }

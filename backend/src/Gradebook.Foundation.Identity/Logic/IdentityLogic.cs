@@ -5,6 +5,7 @@ using System.Text;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
+using Gradebook.Foundation.Common.Identity.Responses;
 using Gradebook.Foundation.Common.Mailservice;
 using Gradebook.Foundation.Common.Settings.Commands;
 using Gradebook.Foundation.Identity.Models;
@@ -181,7 +182,87 @@ public class IdentityLogic : IIdentityLogic
         var result = await _userManager.Service.CreateAsync(user, password);
         if (!result.Succeeded) return new StatusResponse(400);
         await _settingsCommands.Service.SetLanguage(user.Id, language);
-        await _mailClient.Service.SendMail(new ActivateAccountMailMessage(user.Id, language, authCode.Code));
+        await _mailClient.Service.SendMail(new ActivateAccountMailMessage(user.Id, authCode.Code));
+        return new StatusResponse(true);
+    }
+    public async Task<ResponseWithStatus<LogInResponse>> LoginUser(string email, string password)
+    {
+        var user = await _userManager.Service.FindByNameAsync(email);
+        if (!(user != null && await _userManager.Service.CheckPasswordAsync(user, password)))
+            return new ResponseWithStatus<LogInResponse>(403);
+        if (!user.EmailConfirmed)
+        {
+            var code = await CreateAuthCodeForUser(user.Id);
+            if (!code.Status) return new ResponseWithStatus<LogInResponse>(code.StatusCode);
+            SaveDatabaseChanges();
+            await _mailClient.Service.SendMail(new ActivateAccountMailMessage(user.Id, code.Response!));
+            return new ResponseWithStatus<LogInResponse>(302, "Email not confirmed");
+        }
+        var userRoles = await _userManager.Service.GetRolesAsync(user);
+
+        var authClaims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            };
+
+        foreach (var userRole in userRoles)
+            authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+
+        var token = CreateToken(authClaims);
+        var refreshToken = GenerateRefreshToken();
+
+        await AssignRefreshTokenToUser(user.Id, refreshToken);
+        RemoveAllExpiredTokens();
+
+        SaveDatabaseChanges();
+        return new ResponseWithStatus<LogInResponse>(new LogInResponse()
+        {
+            access_token = new JwtSecurityTokenHandler().WriteToken(token),
+            refresh_token = refreshToken,
+            expires_in = int.Parse(_configuration.Service["JWT:TokenValidityInMinutes"]) * 60,
+        });
+    }
+    private async Task<ResponseWithStatus<string>> CreateAuthCodeForUser(string userId)
+    {
+        var token = new AuthorizationCode();
+        var user = await _identityContext.Service.Users.FirstOrDefaultAsync(e => e.Id == userId);
+        if (user is null) return new ResponseWithStatus<string>(404);
+        token.User = user;
+        await _identityContext.Service.AuthorizationCodes!.AddAsync(token);
+        return new ResponseWithStatus<string>(response: token.Code);
+    }
+    private async Task<StatusResponse> UseAuthCode(string userId, string code)
+    {
+        var isCodeValid = await IsAuthCodeValid(userId, code);
+        if (!isCodeValid.Status) return isCodeValid;
+        var authCode = await _identityContext.Service.AuthorizationCodes!.FirstAsync(e =>
+            e.UserId == userId &&
+            e.Code == code &&
+            !e.IsUsed &&
+            e.AuthorizationCodeValidUntil < Time.UtcNow);
+        authCode.IsUsed = true;
+        return new StatusResponse(true);
+    }
+    private async Task<StatusResponse> IsAuthCodeValid(string userId, string code)
+    {
+        var authCode = await _identityContext.Service.AuthorizationCodes!.FirstOrDefaultAsync(e =>
+            e.UserId == userId &&
+            e.Code == code &&
+            !e.IsUsed &&
+            e.AuthorizationCodeValidUntil > Time.UtcNow);
+        if (authCode is null) return new StatusResponse(404);
+        return new StatusResponse(true);
+    }
+    public async Task<StatusResponse> VerifyUserEmail(string userId, string code)
+    {
+        var useAuthCode = await UseAuthCode(userId, code);
+        if (!useAuthCode.Status) return useAuthCode;
+        var user = await _identityContext.Service.Users.FirstOrDefaultAsync(e => e.Id == userId);
+        if (user is null) return new StatusResponse(404);
+        user.EmailConfirmed = true;
+        SaveDatabaseChanges();
         return new StatusResponse(true);
     }
 }
