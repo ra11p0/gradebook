@@ -33,7 +33,7 @@ public abstract class MailTypeBase<Message, Model> : IMailType<Model> where Mess
         var nameOfTemplate = this.GetType().Name;
 
         var viewbag = new Dictionary<string, object>();
-        viewbag["baseUrl"] = _config.Service["Urls"];
+        viewbag["baseUrl"] = _config.Service["TargetUrl"];
         viewbag["targetEmail"] = targetEmail.Address;
 
         var html = await _razorTemplateEngine.Service.RenderAsync($"~/MailTypesTemplates/{nameOfTemplate}Template.cshtml", model, viewbag);
