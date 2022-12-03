@@ -5,7 +5,10 @@ using System.Text;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
+using Gradebook.Foundation.Common.Mailservice;
+using Gradebook.Foundation.Common.Settings.Commands;
 using Gradebook.Foundation.Identity.Models;
+using Gradebook.Foundation.Mailservice.MailMessages;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +23,8 @@ public class IdentityLogic : IIdentityLogic
     private readonly ServiceResolver<ApplicationIdentityDatabaseContext> _identityContext;
     private readonly ServiceResolver<UserManager<ApplicationUser>> _userManager;
     private readonly ServiceResolver<RoleManager<IdentityRole>> _roleManager;
+    private readonly ServiceResolver<ISettingsCommands> _settingsCommands;
+    private readonly ServiceResolver<IMailClient> _mailClient;
     private readonly Context _context;
     public IdentityLogic(IServiceProvider serviceProvider, Context context)
     {
@@ -27,6 +32,8 @@ public class IdentityLogic : IIdentityLogic
         _userManager = serviceProvider.GetResolver<UserManager<ApplicationUser>>();
         _roleManager = serviceProvider.GetResolver<RoleManager<IdentityRole>>();
         _identityContext = serviceProvider.GetResolver<ApplicationIdentityDatabaseContext>();
+        _settingsCommands = serviceProvider.GetResolver<ISettingsCommands>();
+        _mailClient = serviceProvider.GetResolver<IMailClient>();
         _context = context;
     }
     public JwtSecurityToken CreateToken(List<Claim> authClaims)
@@ -119,7 +126,6 @@ public class IdentityLogic : IIdentityLogic
         await EditUserRoles((await GetUserRoles(userGuid)).Response!.Where(e => e.Normalize() != role.Normalize()).ToArray(), userGuid);
         return new StatusResponse<bool>(true);
     }
-
     public Task<bool> IsValidRefreshTokenForUser(string userId, string refreshToken)
     {
         return _identityContext.Service.Sessions!.AnyAsync(
@@ -127,7 +133,6 @@ public class IdentityLogic : IIdentityLogic
             e.RefreshToken == refreshToken &&
             e.RefreshTokenExpiryTime >= Time.UtcNow);
     }
-
     public async Task RemoveRefreshTokenFromUser(string userId, string refreshToken)
     {
         var user = await _identityContext.Service.Users.Include(e => e.Sessions).FirstOrDefaultAsync(e => e.Id == userId);
@@ -135,13 +140,11 @@ public class IdentityLogic : IIdentityLogic
         if (user is null || session is null) throw new Exception("user nor session should not be null here");
         user.Sessions!.Remove(session);
     }
-
     public void RemoveAllExpiredTokens()
     {
         var expiredTokens = _identityContext.Service.Sessions!.Where(e => e.RefreshTokenExpiryTime <= Time.UtcNow);
         _identityContext.Service.RemoveRange(expiredTokens);
     }
-
     public async Task AssignRefreshTokenToUser(string userId, string refreshToken)
     {
         var _ = int.TryParse(_configuration.Service["JWT:RefreshTokenValidityInDays"], out int refreshTokenValidityInDays);
@@ -155,12 +158,30 @@ public class IdentityLogic : IIdentityLogic
             RefreshTokenExpiryTime = Time.UtcNow.AddDays(refreshTokenValidityInDays)
         });
     }
-
     public void SaveDatabaseChanges()
         => _identityContext.Service.SaveChanges();
-
     public async Task<string?> GetEmailForUser(string userId)
     {
         return (await _identityContext.Service.Users.FirstOrDefaultAsync(e => e.Id == userId))?.Email;
+    }
+    public async Task<StatusResponse> RegisterUser(string email, string password, string language)
+    {
+        var userExists = await _userManager.Service.FindByNameAsync(email);
+        if (userExists != null)
+            return new StatusResponse("User already exists");
+        var authCode = new AuthorizationCode();
+        ApplicationUser user = new()
+        {
+            Email = email,
+            SecurityStamp = Guid.NewGuid().ToString(),
+            UserName = email,
+            EmailConfirmed = false,
+            AuthorizationCodes = new AuthorizationCode[] { authCode }
+        };
+        var result = await _userManager.Service.CreateAsync(user, password);
+        if (!result.Succeeded) return new StatusResponse(400);
+        await _settingsCommands.Service.SetLanguage(user.Id, language);
+        await _mailClient.Service.SendMail(new ActivateAccountMailMessage(user.Id, language, authCode.Code));
+        return new StatusResponse(true);
     }
 }

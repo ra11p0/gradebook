@@ -8,13 +8,11 @@ using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 using Gradebook.Foundation.Common.Settings.Commands;
 using Gradebook.Foundation.Common.Settings.Commands.Definitions;
-using Gradebook.Foundation.Common.Settings.Enums;
 using Gradebook.Foundation.Common.Settings.Queries.Definitions;
 using Gradebook.Foundation.Identity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace Api.Controllers.Account;
 
@@ -129,21 +127,9 @@ public class AccountController : ControllerBase
     [Route("register")]
     public async Task<IActionResult> Register([FromBody] RegisterModel model, [FromQuery] string language)
     {
-        var userExists = await _userManager.Service.FindByNameAsync(model.Email);
-        if (userExists != null)
-            return StatusCode(400, new LoginRegisterResponse { Status = "Error", Message = "User already exists!" });
-
-        ApplicationUser user = new()
-        {
-            Email = model.Email,
-            SecurityStamp = Guid.NewGuid().ToString(),
-            UserName = model.Email
-        };
-        var result = await _userManager.Service.CreateAsync(user, model.Password);
-        if (!result.Succeeded)
-            return StatusCode(400, new LoginRegisterResponse { Status = "Error", Message = "User creation failed! Please check user details and try again." });
-        await _settingsCommands.Service.SetLanguage(user.Id, language);
-        return Ok(new LoginRegisterResponse { Status = "Success", Message = "User created successfully!" });
+        if (!ModelState.IsValid) return BadRequest();
+        var res = await _identityLogic.Service.RegisterUser(model.Email!, model.Password!, language);
+        return res.ObjectResult;
     }
 
     [HttpPost]

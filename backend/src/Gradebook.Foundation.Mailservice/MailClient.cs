@@ -3,6 +3,7 @@ using System.Net.Mail;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
+using Gradebook.Foundation.Common.Mailservice;
 using Gradebook.Foundation.Common.Settings.Commands;
 
 namespace Gradebook.Foundation.Mailservice;
@@ -31,9 +32,9 @@ public class MailClient : IMailClient
     public async Task SendMail<Model>(MailMessageBase<Model> mailMessage)
     {
         var mailType = _serviceProvider.GetResolver<IMailType<Model>>().Service;
-        var htmlString = await mailType.RenderBody(mailMessage);
-        if (string.IsNullOrEmpty(mailMessage.TargetGuid)) throw new Exception("Target not specified");
         var targetEmail = await GetTargetEmail(mailMessage.TargetGuid);
+        var htmlString = await mailType.RenderBody(mailMessage, targetEmail);
+        if (string.IsNullOrEmpty(mailMessage.TargetGuid)) throw new Exception("Target not specified");
         var message = new MailMessage(
                Sender,
                targetEmail

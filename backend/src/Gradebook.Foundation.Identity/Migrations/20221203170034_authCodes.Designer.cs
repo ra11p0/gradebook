@@ -3,6 +3,7 @@ using System;
 using Gradebook.Foundation.Identity.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gradebook.Foundation.Identity.Migrations
 {
     [DbContext(typeof(ApplicationIdentityDatabaseContext))]
-    partial class ApplicationIdentityDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20221203170034_authCodes")]
+    partial class authCodes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

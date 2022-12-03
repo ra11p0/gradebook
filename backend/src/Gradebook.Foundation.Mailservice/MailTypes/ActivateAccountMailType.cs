@@ -12,9 +12,14 @@ public class ActivateAccountMailType : MailTypeBase<ActivateAccountMailMessage, 
         _localizer = localizer;
     }
 
-    protected async override Task<ActivateAccountMailTypeModel> PrepareModel(ActivateAccountMailMessage message)
+    public override string Subject { get => _localizer["Subject"]; }
+
+    protected override ActivateAccountMailTypeModel PrepareModel(ActivateAccountMailMessage message)
     {
-        var str = _localizer["hello"];
-        return new ActivateAccountMailTypeModel() { Name = "hejka!" };
+        return new ActivateAccountMailTypeModel()
+        {
+            AuthCode = message.AuthCode,
+            AccountGuid = message.TargetGuid
+        };
     }
 }

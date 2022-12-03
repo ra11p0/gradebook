@@ -117,8 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="hello" xml:space="preserve">
-    <value>polskiu !</value>
+  <data name="Subject" xml:space="preserve">
+    <value>Aktywuj swoje konto w Gradebook. </value>
+    <comment/>
+  </data>
+  <data name="YourActivationCode" xml:space="preserve">
+    <value>Twój link aktywacji: </value>
+    <comment/>
+  </data>
+  <data name="ActivationCodeInstruction" xml:space="preserve">
+    <value>Wejdź w niego by aktywować swoje konto i uzyskać dostęp do swojego konta Gradebook.</value>
+    <comment/>
+  </data>
+  <data name="ConfirmMyEmail" xml:space="preserve">
+    <value>Potwierdź adres Email</value>
     <comment/>
   </data>
 </root>

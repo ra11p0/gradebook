@@ -117,20 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Subject" xml:space="preserve">
-    <value>Activate your Gradebook account. </value>
-    <comment/>
-  </data>
-  <data name="YourActivationCode" xml:space="preserve">
-    <value>Your activation link:</value>
-    <comment/>
-  </data>
-  <data name="ActivationCodeInstruction" xml:space="preserve">
-    <value>Click it to activate your account and gain access to your Gradebook account.</value>
-    <comment/>
-  </data>
-  <data name="ConfirmMyEmail" xml:space="preserve">
-    <value>Confirm Email address</value>
+  <data name="DoNotReply" xml:space="preserve">
+    <value>This email was sent automatically to: {0}. There is no need to reply.</value>
     <comment/>
   </data>
 </root>

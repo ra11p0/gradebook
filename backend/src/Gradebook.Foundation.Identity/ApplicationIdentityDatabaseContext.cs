@@ -8,6 +8,7 @@ namespace Gradebook.Foundation.Identity.Models;
 public class ApplicationIdentityDatabaseContext : IdentityDbContext<ApplicationUser>
 {
     public DbSet<Session>? Sessions { get; set; }
+    public DbSet<AuthorizationCode>? AuthorizationCodes { get; set; }
     public ApplicationIdentityDatabaseContext()
     { }
     public ApplicationIdentityDatabaseContext(

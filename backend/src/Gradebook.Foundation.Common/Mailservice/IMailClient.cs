@@ -1,4 +1,4 @@
-namespace Gradebook.Foundation.Mailservice;
+namespace Gradebook.Foundation.Common.Mailservice;
 
 public interface IMailClient
 {

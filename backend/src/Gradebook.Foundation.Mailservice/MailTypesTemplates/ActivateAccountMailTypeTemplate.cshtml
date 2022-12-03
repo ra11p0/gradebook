@@ -6,4 +6,13 @@
 @{
     Layout="~/SharedMailLayout.cshtml";
 }
-<p>@Localizer["hello"], @Model.Name </p>
+<div class="fs-4 border-bottom mb-2">
+    @Localizer["Subject"]
+</div>
+<div>
+    @Localizer["YourActivationCode"]
+</div>
+<a href='@ViewBag.baseUrl/service/account/@Model.AccountGuid/activation/@Model.AuthCode' class="btn btn-link">@Localizer["ConfirmMyEmail"]</a>
+<div>
+    @Localizer["ActivationCodeInstruction"]
+</div>

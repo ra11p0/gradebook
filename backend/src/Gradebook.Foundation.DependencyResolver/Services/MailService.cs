@@ -1,3 +1,4 @@
+using Gradebook.Foundation.Common.Mailservice;
 using Gradebook.Foundation.Mailservice;
 using Gradebook.Foundation.Mailservice.MailTypes;
 using Gradebook.Foundation.Mailservice.MailTypesModels;
@@ -22,11 +23,13 @@ public class MailService
         );
         });
 
-        //services.AddRazorPages().AddViewLocalization();
+        //  services.AddRazorPages().AddViewLocalization();
         services.AddRazorTemplating();
 
-        //  mail types
+        #region mail types
 
         services.AddScoped<IMailType<ActivateAccountMailTypeModel>, ActivateAccountMailType>();
+
+        #endregion
     }
 }

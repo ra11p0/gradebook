@@ -34,7 +34,11 @@ public class HangfireService
 
         services.AddScoped<HangfireClient>();
 
+        #region workers 
+
         services.AddScoped<BaseHangfireWorker<NotificationsWorkerMessage>, NotificationsWorker>();
+
+        #endregion
     }
     public static void MapHangfireEndpoint(WebApplication app)
     {
