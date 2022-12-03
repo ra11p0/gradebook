@@ -241,7 +241,7 @@ public class IdentityLogic : IIdentityLogic
             e.UserId == userId &&
             e.Code == code &&
             !e.IsUsed &&
-            e.AuthorizationCodeValidUntil < Time.UtcNow);
+            e.AuthorizationCodeValidUntil > Time.UtcNow);
         authCode.IsUsed = true;
         return new StatusResponse(true);
     }
