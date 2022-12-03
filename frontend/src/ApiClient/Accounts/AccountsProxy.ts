@@ -9,6 +9,7 @@ import RegisterRequest from './Definitions/Requests/RegisterRequest';
 import RelatedPersonResponse from './Definitions/Responses/RelatedPersonResponse';
 import SettingsRequest from './Definitions/Requests/SettingsRequest';
 import UserSettings from './Definitions/Responses/UserSettings';
+import getApplicationLanguageRedux from '../../Redux/ReduxQueries/account/getApplicationLanguageRedux';
 
 const API_URL = process.env.REACT_APP_API_URL!;
 
@@ -23,7 +24,10 @@ async function logIn(
 }
 
 async function register(request: RegisterRequest): Promise<AxiosResponse<any>> {
-  return await axios.post(API_URL + '/Account/register', request);
+  const language = getApplicationLanguageRedux();
+  return await axios.post(API_URL + '/Account/register', request, {
+    params: { language },
+  });
 }
 
 async function refreshAccessToken(

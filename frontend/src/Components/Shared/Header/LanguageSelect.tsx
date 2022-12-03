@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 
 interface Props {
   isUserLoggedIn: boolean;
-  language: string;
+  language?: string;
 }
 
 function LanguageSelect(props: Props): ReactElement {

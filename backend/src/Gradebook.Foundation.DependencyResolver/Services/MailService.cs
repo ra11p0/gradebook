@@ -1,4 +1,6 @@
 using Gradebook.Foundation.Mailservice;
+using Gradebook.Foundation.Mailservice.MailTypes;
+using Gradebook.Foundation.Mailservice.MailTypesModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,5 +21,12 @@ public class MailService
             configuration["smtp:password"]
         );
         });
+
+        //services.AddRazorPages().AddViewLocalization();
+        services.AddRazorTemplating();
+
+        //  mail types
+
+        services.AddScoped<IMailType<ActivateAccountMailTypeModel>, ActivateAccountMailType>();
     }
 }

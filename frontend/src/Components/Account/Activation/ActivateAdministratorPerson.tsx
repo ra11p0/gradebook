@@ -6,6 +6,7 @@ import { Button } from 'react-bootstrap';
 import ReactDatePicker from 'react-datepicker';
 import getApplicationLanguageReduxProxy from '../../../Redux/ReduxQueries/account/getApplicationLanguageRedux';
 import moment from 'moment';
+import { GlobalState } from '../../../store';
 interface ActivateAdministratorPersonProps {
   onSubmit: (values: ActivateAdministratorPersonValues) => void;
   name?: string;
@@ -96,7 +97,7 @@ const ActivateAdministratorPerson = (
   );
 };
 export default connect(
-  (state) => ({
+  (state: GlobalState) => ({
     locale: getApplicationLanguageReduxProxy(state),
   }),
   () => ({})

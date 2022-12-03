@@ -1,9 +1,9 @@
-using System.ComponentModel;
 using System.Net;
 using System.Net.Mail;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
+using Gradebook.Foundation.Common.Settings.Commands;
 
 namespace Gradebook.Foundation.Mailservice;
 
@@ -14,27 +14,33 @@ public class MailClient : IMailClient
     private readonly string? _senderName;
     private MailAddress Sender => new MailAddress(_sender, _senderName);
     private readonly ServiceResolver<IIdentityLogic> _identityLogic;
+    private readonly ServiceResolver<ISettingsQueries> _settingsQueries;
+    private readonly IServiceProvider _serviceProvider;
     public MailClient(IServiceProvider provider, string host, int port, string sender, string? senderName, string? username, string? password)
     {
         _identityLogic = provider.GetResolver<IIdentityLogic>();
+        _settingsQueries = provider.GetResolver<ISettingsQueries>();
         SmtpClient client = new SmtpClient(host, port);
         if (username is not null && password is not null)
             client.Credentials = new NetworkCredential(username, password);
         _client = client;
         _sender = sender;
         _senderName = senderName;
+        _serviceProvider = provider;
     }
-    public async Task SendMail<T>(T mail) where T : IMailBase
+    public async Task SendMail<Model>(MailMessageBase<Model> mailMessage)
     {
-        var htmlString = await mail.RenderBody();
-        var targetEmail = await GetTargetEmail(mail.TargetUserGuid);
+        var mailType = _serviceProvider.GetResolver<IMailType<Model>>().Service;
+        var htmlString = await mailType.RenderBody(mailMessage);
+        if (string.IsNullOrEmpty(mailMessage.TargetGuid)) throw new Exception("Target not specified");
+        var targetEmail = await GetTargetEmail(mailMessage.TargetGuid);
         var message = new MailMessage(
                Sender,
                targetEmail
                )
         {
             Body = htmlString,
-            Subject = mail.Subject,
+            Subject = mailType.Subject,
             IsBodyHtml = true
         };
         _client.Send(message);
@@ -44,10 +50,6 @@ public class MailClient : IMailClient
         var userEmail = await _identityLogic.Service.GetEmailForUser(userGuid);
         if (userEmail is null) throw new Exception("User email should not be null");
         return new MailAddress(userEmail);
-    }
-    private void SetUserLanguage(string userGuid)
-    {
-
     }
 
 }

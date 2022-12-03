@@ -1,13 +1,20 @@
+using Gradebook.Foundation.Mailservice.MailMessages;
 using Gradebook.Foundation.Mailservice.MailTypesModels;
+using Microsoft.Extensions.Localization;
 
 namespace Gradebook.Foundation.Mailservice.MailTypes;
 
-public class ActivateAccountMailType : MailBase<ActivateAccountMailTypeModel>
+public class ActivateAccountMailType : MailTypeBase<ActivateAccountMailMessage, ActivateAccountMailTypeModel>
 {
-    public override string Subject => "super temat";
-    public override string TargetUserGuid => "22b0e151-9558-4dad-87d1-948859c9ac62";
-    public ActivateAccountMailType()
+    private readonly IStringLocalizer<ActivateAccountMailType> _localizer;
+    public ActivateAccountMailType(IServiceProvider provider, IStringLocalizer<ActivateAccountMailType> localizer) : base(provider)
     {
-        Model.Name = "hello!";
+        _localizer = localizer;
+    }
+
+    protected async override Task<ActivateAccountMailTypeModel> PrepareModel(ActivateAccountMailMessage message)
+    {
+        var str = _localizer["hello"];
+        return new ActivateAccountMailTypeModel() { Name = "hejka!" };
     }
 }

@@ -2,7 +2,6 @@ import React from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import getApplicationLanguageReduxProxy from '../../../Redux/ReduxQueries/account/getApplicationLanguageRedux';
 import getCurrentPersonReduxProxy, {
   CurrentPersonProxyResult,
 } from '../../../Redux/ReduxQueries/account/getCurrentPersonRedux';
@@ -12,6 +11,7 @@ import setLogOutReduxWrapper from '../../../Redux/ReduxCommands/account/setLogOu
 import LoadingScreen from '../LoadingScreen';
 import SchoolSelect from './SchoolSelect';
 import LanguageSelect from './LanguageSelect';
+import { GlobalState } from '../../../store';
 
 interface HeaderProps {
   isLoggedIn?: boolean;
@@ -20,7 +20,6 @@ interface HeaderProps {
   isActive: boolean;
   i18n: any;
   t: any;
-  language: string;
 }
 
 interface HeaderState {
@@ -103,11 +102,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
 export default withTranslation('header')(
   connect(
-    (state) => ({
+    (state: GlobalState) => ({
       isLoggedIn: getIsLoggedInReduxProxy(state),
       currentPerson: getCurrentPersonReduxProxy(state),
       isActive: getIsUserActivatedReduxProxy(state),
-      language: getApplicationLanguageReduxProxy(state),
     }),
     (dispatch) => ({
       logOutHandler: () => setLogOutReduxWrapper(dispatch),

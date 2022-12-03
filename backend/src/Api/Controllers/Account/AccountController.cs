@@ -127,7 +127,7 @@ public class AccountController : ControllerBase
 
     [HttpPost]
     [Route("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterModel model)
+    public async Task<IActionResult> Register([FromBody] RegisterModel model, [FromQuery] string language)
     {
         var userExists = await _userManager.Service.FindByNameAsync(model.Email);
         if (userExists != null)
@@ -142,7 +142,7 @@ public class AccountController : ControllerBase
         var result = await _userManager.Service.CreateAsync(user, model.Password);
         if (!result.Succeeded)
             return StatusCode(400, new LoginRegisterResponse { Status = "Error", Message = "User creation failed! Please check user details and try again." });
-
+        await _settingsCommands.Service.SetLanguage(user.Id, language);
         return Ok(new LoginRegisterResponse { Status = "Success", Message = "User created successfully!" });
     }
 

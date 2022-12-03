@@ -1,4 +1,4 @@
-using Receipts.Foundation.DependencyResolver;
+using Gradebook.Foundation.DependencyResolver;
 using Gradebook.Foundation.SignalR;
 using Gradebook.Foundation.DependencyResolver.Services;
 
