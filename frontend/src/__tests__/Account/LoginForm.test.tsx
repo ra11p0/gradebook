@@ -10,6 +10,7 @@ import LoginForm from '../../Components/Account/Login/LoginForm';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import AccountsProxy from '../../ApiClient/Accounts/AccountsProxy';
+import Swal from 'sweetalert2';
 
 jest.mock('axios', () => ({
   create: () => ({
@@ -100,8 +101,10 @@ describe('<LoginForm/>', () => {
   });
 
   it('Should show login failed', async () => {
-    jest.spyOn(AccountsProxy, 'logIn').mockRejectedValueOnce({});
-
+    jest
+      .spyOn(AccountsProxy, 'logIn')
+      .mockRejectedValueOnce({ response: { status: 400 } });
+    const swalMock = jest.spyOn(Swal, 'fire').mockRejectedValueOnce(undefined);
     await act(() => {
       render(
         <Provider store={store}>
@@ -113,7 +116,7 @@ describe('<LoginForm/>', () => {
         </Provider>
       );
     });
-    await act(() => {
+    await act(async () => {
       userEvent.type(
         screen.getByRole('textbox', { name: 'Email' }),
         'fake@email.on'
@@ -121,6 +124,7 @@ describe('<LoginForm/>', () => {
       userEvent.type(screen.getByTestId('password'), 'fake@email.on');
       fireEvent.click(screen.getByRole('button', { name: 'Login' }));
     });
-    expect(await screen.findByText('Login failed')).toBeTruthy();
+
+    expect(swalMock).toBeCalledTimes(1);
   });
 });
