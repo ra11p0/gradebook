@@ -1,18 +1,15 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import * as routerDom from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from '../../store';
 import { act } from 'react-dom/test-utils';
 import i18n from '../../i18n/config';
 import { I18nextProvider } from 'react-i18next';
-import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import AccountsProxy from '../../ApiClient/Accounts/AccountsProxy';
 import Swal from 'sweetalert2';
 import EmailActivation from '../../Components/Service/EmailActivation';
-import { wait } from '@testing-library/user-event/dist/utils';
-import { assert } from 'console';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
