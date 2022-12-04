@@ -20,7 +20,7 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGet("/", () => "Hello World!");
+app.MapGet("/", () => "Hello!");
 
 app.MapDefaultControllerRoute();
 
