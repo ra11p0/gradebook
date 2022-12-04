@@ -14,11 +14,13 @@
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
     <PackageReference Include="NUnit.Analyzers" Version="3.3.0" />
     <PackageReference Include="coverlet.collector" Version="3.1.2" />
+    <PackageReference Include="Razor.Templating.Core" Version="1.8.*" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gradebook.Foundation.Logic.Commands\Gradebook.Foundation.Logic.Commands.csproj" />
     <ProjectReference Include="..\Gradebook.Foundation.Common\Gradebook.Foundation.Common.csproj" />
     <ProjectReference Include="..\Gradebook.Foundation.Identity\Gradebook.Foundation.Identity.csproj" />
     <ProjectReference Include="..\Gradebook.Foundation.Logic.Queries\Gradebook.Foundation.Logic.Queries.csproj" />
+    <ProjectReference Include="..\Gradebook.Foundation.Mailservice\Gradebook.Foundation.Mailservice.csproj" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,3 @@
-using System.Net;
 using System.Net.Mail;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
@@ -10,21 +9,18 @@ namespace Gradebook.Foundation.Mailservice;
 
 public class MailClient : IMailClient
 {
-    private readonly SmtpClient _client;
+    private readonly ServiceResolver<ISmtpClient> _client;
     private readonly string _sender;
     private readonly string? _senderName;
     private MailAddress Sender => new MailAddress(_sender, _senderName);
     private readonly ServiceResolver<IIdentityLogic> _identityLogic;
     private readonly ServiceResolver<ISettingsQueries> _settingsQueries;
     private readonly IServiceProvider _serviceProvider;
-    public MailClient(IServiceProvider provider, string host, int port, string sender, string? senderName, string? username, string? password)
+    public MailClient(IServiceProvider provider, string sender, string? senderName = null)
     {
         _identityLogic = provider.GetResolver<IIdentityLogic>();
         _settingsQueries = provider.GetResolver<ISettingsQueries>();
-        SmtpClient client = new SmtpClient(host, port);
-        if (username is not null && password is not null)
-            client.Credentials = new NetworkCredential(username, password);
-        _client = client;
+        _client = provider.GetResolver<ISmtpClient>();
         _sender = sender;
         _senderName = senderName;
         _serviceProvider = provider;
@@ -44,7 +40,7 @@ public class MailClient : IMailClient
             Subject = mailType.Subject,
             IsBodyHtml = true
         };
-        _client.Send(message);
+        _client.Service.Send(message);
     }
     private async Task<MailAddress> GetTargetEmail(string userGuid)
     {

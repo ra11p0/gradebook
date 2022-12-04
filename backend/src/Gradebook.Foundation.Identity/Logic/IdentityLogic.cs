@@ -27,7 +27,7 @@ public class IdentityLogic : IIdentityLogic
     private readonly ServiceResolver<ISettingsCommands> _settingsCommands;
     private readonly ServiceResolver<IMailClient> _mailClient;
     private readonly Context _context;
-    public IdentityLogic(IServiceProvider serviceProvider, Context context)
+    public IdentityLogic(IServiceProvider serviceProvider)
     {
         _configuration = serviceProvider.GetResolver<IConfiguration>();
         _userManager = serviceProvider.GetResolver<UserManager<ApplicationUser>>();
@@ -35,7 +35,7 @@ public class IdentityLogic : IIdentityLogic
         _identityContext = serviceProvider.GetResolver<ApplicationIdentityDatabaseContext>();
         _settingsCommands = serviceProvider.GetResolver<ISettingsCommands>();
         _mailClient = serviceProvider.GetResolver<IMailClient>();
-        _context = context;
+        _context = serviceProvider.GetResolver<Context>().Service;
     }
     public JwtSecurityToken CreateToken(List<Claim> authClaims)
     {
@@ -167,6 +167,7 @@ public class IdentityLogic : IIdentityLogic
     }
     public async Task<StatusResponse> RegisterUser(string email, string password, string language)
     {
+        _identityContext.Service.Database.BeginTransaction();
         var userExists = await _userManager.Service.FindByNameAsync(email);
         if (userExists != null)
             return new StatusResponse("User already exists");
@@ -182,6 +183,7 @@ public class IdentityLogic : IIdentityLogic
         var result = await _userManager.Service.CreateAsync(user, password);
         if (!result.Succeeded) return new StatusResponse(400);
         await _settingsCommands.Service.SetLanguage(user.Id, language);
+        _identityContext.Service.Database.CommitTransaction();
         await _mailClient.Service.SendMail(new ActivateAccountMailMessage(user.Id, authCode.Code));
         return new StatusResponse(true);
     }
@@ -192,9 +194,11 @@ public class IdentityLogic : IIdentityLogic
             return new ResponseWithStatus<LogInResponse>(403);
         if (!user.EmailConfirmed)
         {
+            _identityContext.Service.Database.BeginTransaction();
             var code = await CreateAuthCodeForUser(user.Id);
             if (!code.Status) return new ResponseWithStatus<LogInResponse>(code.StatusCode);
             SaveDatabaseChanges();
+            _identityContext.Service.Database.CommitTransaction();
             await _mailClient.Service.SendMail(new ActivateAccountMailMessage(user.Id, code.Response!));
             return new ResponseWithStatus<LogInResponse>(302, "Email not confirmed");
         }
@@ -224,16 +228,17 @@ public class IdentityLogic : IIdentityLogic
             expires_in = int.Parse(_configuration.Service["JWT:TokenValidityInMinutes"]) * 60,
         });
     }
-    private async Task<ResponseWithStatus<string>> CreateAuthCodeForUser(string userId)
+    public async Task<ResponseWithStatus<string>> CreateAuthCodeForUser(string userId)
     {
         var token = new AuthorizationCode();
         var user = await _identityContext.Service.Users.FirstOrDefaultAsync(e => e.Id == userId);
         if (user is null) return new ResponseWithStatus<string>(404);
         token.User = user;
         await _identityContext.Service.AuthorizationCodes!.AddAsync(token);
+        SaveDatabaseChanges();
         return new ResponseWithStatus<string>(response: token.Code);
     }
-    private async Task<StatusResponse> UseAuthCode(string userId, string code)
+    public async Task<StatusResponse> UseAuthCode(string userId, string code)
     {
         var isCodeValid = await IsAuthCodeValid(userId, code);
         if (!isCodeValid.Status) return isCodeValid;
@@ -243,9 +248,10 @@ public class IdentityLogic : IIdentityLogic
             !e.IsUsed &&
             e.AuthorizationCodeValidUntil > Time.UtcNow);
         authCode.IsUsed = true;
+        SaveDatabaseChanges();
         return new StatusResponse(true);
     }
-    private async Task<StatusResponse> IsAuthCodeValid(string userId, string code)
+    public async Task<StatusResponse> IsAuthCodeValid(string userId, string code)
     {
         var authCode = await _identityContext.Service.AuthorizationCodes!.FirstOrDefaultAsync(e =>
             e.UserId == userId &&
@@ -259,10 +265,10 @@ public class IdentityLogic : IIdentityLogic
     {
         var useAuthCode = await UseAuthCode(userId, code);
         if (!useAuthCode.Status) return useAuthCode;
-        var user = await _identityContext.Service.Users.FirstOrDefaultAsync(e => e.Id == userId);
+        var user = await _userManager.Service.FindByIdAsync(userId);
         if (user is null) return new StatusResponse(404);
         user.EmailConfirmed = true;
-        SaveDatabaseChanges();
+        await _userManager.Service.UpdateAsync(user);
         return new StatusResponse(true);
     }
 }

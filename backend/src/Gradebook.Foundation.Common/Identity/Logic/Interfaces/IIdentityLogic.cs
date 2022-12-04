@@ -21,6 +21,9 @@ public interface IIdentityLogic
     Task<StatusResponse> RegisterUser(string email, string password, string language);
     Task<ResponseWithStatus<LogInResponse>> LoginUser(string email, string password);
     Task<StatusResponse> VerifyUserEmail(string userId, string code);
+    Task<ResponseWithStatus<string>> CreateAuthCodeForUser(string userId);
+    Task<StatusResponse> UseAuthCode(string userId, string code);
+    Task<StatusResponse> IsAuthCodeValid(string userId, string code);
     void RemoveAllExpiredTokens();
     void SaveDatabaseChanges();
 }

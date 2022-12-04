@@ -7,6 +7,8 @@ namespace Gradebook.Foundation.Common;
 public class Context
 {
     public string? UserId { get; set; }
+    public Context()
+    { }
     public Context(IHttpContextAccessor httpContextAccessor)
     {
         if (httpContextAccessor is not null && httpContextAccessor.HttpContext is not null)
