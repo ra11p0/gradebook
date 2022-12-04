@@ -104,7 +104,45 @@ describe('<LoginForm/>', () => {
     jest
       .spyOn(AccountsProxy, 'logIn')
       .mockRejectedValueOnce({ response: { status: 400 } });
-    const swalMock = jest.spyOn(Swal, 'fire').mockRejectedValueOnce(undefined);
+    const swalMock = jest
+      .spyOn(Swal, 'fire')
+      .mockImplementation(async (e: any) => {
+        expect(e.icon).toEqual('error');
+        return await Promise.resolve({} as any);
+      });
+    await act(() => {
+      render(
+        <Provider store={store}>
+          <BrowserRouter>
+            <I18nextProvider i18n={i18n}>
+              <LoginForm />
+            </I18nextProvider>
+          </BrowserRouter>
+        </Provider>
+      );
+    });
+    await act(async () => {
+      userEvent.type(
+        screen.getByRole('textbox', { name: 'Email' }),
+        'fake@email.on'
+      );
+      userEvent.type(screen.getByTestId('password'), 'fake@email.on');
+      fireEvent.click(screen.getByRole('button', { name: 'Login' }));
+    });
+
+    expect(swalMock).toBeCalledTimes(1);
+  });
+
+  it('Should show account inactive', async () => {
+    jest
+      .spyOn(AccountsProxy, 'logIn')
+      .mockRejectedValueOnce({ response: { status: 302 } });
+    const swalMock = jest
+      .spyOn(Swal, 'fire')
+      .mockImplementation(async (e: any) => {
+        expect(e.icon).toEqual('warning');
+        return await Promise.resolve({} as any);
+      });
     await act(() => {
       render(
         <Provider store={store}>
