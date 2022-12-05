@@ -13,11 +13,15 @@ proxy.on('UserLoggedIn', (username: string) => {
   );
 });
 
-async function connect(): Promise<void> {
-  await proxy.connect(HUB_URL);
-}
-
 async function sendNotification(): Promise<void> {
   await proxy.send('SentSomething', 'hello');
 }
-export default { connect, sendNotification };
+export default {
+  connect: async () => {
+    await proxy.connect(HUB_URL);
+  },
+  disconnect: async () => {
+    await proxy.disconnect();
+  },
+  sendNotification,
+};

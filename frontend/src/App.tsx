@@ -55,15 +55,11 @@ class App extends React.Component<AppProps> {
             refreshToken: refreshAccessTokenResponse.data.refresh_token,
           });
         })
-        .then(() => {
-          this.onLoad(true);
-        })
-        .catch(() => {
-          setLogOutReduxWrapper();
+        .catch(async () => {
+          await setLogOutReduxWrapper();
         });
-    } else {
-      this.onLoad(true);
     }
+    this.onLoad(true);
   }
 
   render(): React.ReactNode {
