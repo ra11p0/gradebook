@@ -1,5 +1,5 @@
 enum SettingsEnum {
-  DefaultPersonGuid = 0,
   Language = 1,
+  DefaultSchool = 2,
 }
 export default SettingsEnum;

@@ -2,6 +2,6 @@ namespace Gradebook.Foundation.Common.Settings.Enums;
 
 public enum SettingEnum
 {
-    DefaultPersonGuid = 0,
-    Language = 1
+    Language = 1,
+    DefaultSchool = 2
 }

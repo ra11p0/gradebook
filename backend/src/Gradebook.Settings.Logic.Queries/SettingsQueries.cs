@@ -17,10 +17,10 @@ public class SettingsQueries : BaseLogic<ISettingsQueriesRepository>, ISettingsQ
         _context = serviceProvider.GetResolver<Context>();
     }
 
-    public async Task<Guid> GetDefaultPersonGuid(string userGuid)
+    public async Task<Guid> GetDefaultSchoolGuid(string userGuid)
     {
-        var resp = await Repository.GetSettingForUserAsync<Guid>(userGuid, SettingEnum.DefaultPersonGuid);
-        if (resp == default) return (await _foundationQueries.Service.GetPeopleByUserGuid(userGuid)).Response!.Select(e => e.Guid).FirstOrDefault();
+        var resp = await Repository.GetSettingForUserAsync<Guid>(userGuid, SettingEnum.DefaultSchool);
+        if (resp == default) return (await _foundationQueries.Service.GetSchoolsForUser(userGuid)).Response!.Select(e => e.School.Guid).FirstOrDefault();
         return resp;
     }
 
@@ -30,7 +30,7 @@ public class SettingsQueries : BaseLogic<ISettingsQueriesRepository>, ISettingsQ
         if (userGuid is null) return new ResponseWithStatus<SettingsDto>(401);
         var settings = new SettingsDto()
         {
-            DefaultPersonGuid = await GetDefaultPersonGuid(userGuid),
+            DefaultSchool = await GetDefaultSchoolGuid(userGuid),
             Language = await GetUserLanguage(userGuid)
         };
         return new ResponseWithStatus<SettingsDto>(settings);

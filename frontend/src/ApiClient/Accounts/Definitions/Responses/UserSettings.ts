@@ -1,4 +1,4 @@
 export default interface UserSettings {
-  defaultPersonGuid: string;
+  defaultSchool: string;
   language?: string;
 }
