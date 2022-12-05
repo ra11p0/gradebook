@@ -4,5 +4,6 @@
   "student": "Student",
   "teacher": "Teacher",
   "schoolAdmin": "School Admin",
-  "activateToUseGradebook": "Activate your account to use gradebook."
+  "joinSchool": "Join school",
+  "activateToUseGradebook": "Set up your account."
 }
