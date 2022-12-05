@@ -25,8 +25,7 @@ public class PeopleController : ControllerBase
     private readonly ServiceResolver<IFoundationQueries> _foundationQueries;
     private readonly ServiceResolver<IFoundationPermissionsLogic> _foundationPermissionsLogic;
     private readonly ServiceResolver<IPermissionsPermissionsLogic> _permissionsPermissionsLogic;
-    /*     private readonly ServiceResolver<ISettingsQueries> _settingsQueries;
-        private readonly ServiceResolver<ISettingsCommands> _settingsCommands; */
+    private readonly ServiceResolver<Context> _context;
     public PeopleController(IServiceProvider serviceProvider)
     {
         _foundationCommands = serviceProvider.GetResolver<IFoundationCommands>();
@@ -35,8 +34,7 @@ public class PeopleController : ControllerBase
         _foundationQueries = serviceProvider.GetResolver<IFoundationQueries>();
         _foundationPermissionsLogic = serviceProvider.GetResolver<IFoundationPermissionsLogic>();
         _permissionsPermissionsLogic = serviceProvider.GetResolver<IPermissionsPermissionsLogic>();
-        /*         _settingsQueries = serviceProvider.GetResolver<ISettingsQueries>();
-                _settingsCommands = serviceProvider.GetResolver<ISettingsCommands>(); */
+        _context = serviceProvider.GetResolver<Context>();
     }
     [HttpGet, Route("{teacherGuid}/subjects")]
     [ProducesResponseType(typeof(PersonDto), statusCode: 200)]

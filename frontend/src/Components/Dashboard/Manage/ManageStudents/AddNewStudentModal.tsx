@@ -11,6 +11,7 @@ import ReactDatePicker from 'react-datepicker';
 import getApplicationLanguageReduxProxy from '../../../../Redux/ReduxQueries/account/getApplicationLanguageRedux';
 import moment from 'moment';
 import FormikInput from '../../../Shared/FormikInput';
+import { GlobalState } from '../../../../store';
 
 interface formValues {
   name: string;
@@ -96,7 +97,7 @@ const AddNewStudentModal = (props: AddNewStudentModalProps): ReactElement => {
   );
 };
 export default connect(
-  (state) => ({
+  (state: GlobalState) => ({
     currentSchool: getCurrentSchoolReduxProxy(state),
     locale: getApplicationLanguageReduxProxy(state),
   }),

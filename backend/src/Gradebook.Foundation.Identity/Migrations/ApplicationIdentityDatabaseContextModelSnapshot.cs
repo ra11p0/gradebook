@@ -71,6 +71,33 @@ namespace Gradebook.Foundation.Identity.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Gradebook.Foundation.Identity.Models.AuthorizationCode", b =>
+                {
+                    b.Property<Guid>("Guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("AuthorizationCodeValidUntil")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Guid");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AuthorizationCodes");
+                });
+
             modelBuilder.Entity("Gradebook.Foundation.Identity.Models.Session", b =>
                 {
                     b.Property<Guid>("Guid")
@@ -201,6 +228,17 @@ namespace Gradebook.Foundation.Identity.Migrations
                     b.ToTable("UserTokens");
                 });
 
+            modelBuilder.Entity("Gradebook.Foundation.Identity.Models.AuthorizationCode", b =>
+                {
+                    b.HasOne("Gradebook.Foundation.Identity.Models.ApplicationUser", "User")
+                        .WithMany("AuthorizationCodes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Gradebook.Foundation.Identity.Models.Session", b =>
                 {
                     b.HasOne("Gradebook.Foundation.Identity.Models.ApplicationUser", "User")
@@ -214,6 +252,8 @@ namespace Gradebook.Foundation.Identity.Migrations
 
             modelBuilder.Entity("Gradebook.Foundation.Identity.Models.ApplicationUser", b =>
                 {
+                    b.Navigation("AuthorizationCodes");
+
                     b.Navigation("Sessions");
                 });
 #pragma warning restore 612, 618

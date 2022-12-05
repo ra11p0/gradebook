@@ -10,5 +10,7 @@
   "emailFieldRequired": "Email field required",
   "passwordFieldRequired": "Password field required",
   "wrongEmailAddress": "Invalid email address",
-  "dontHaveAccount": "Don't have accout?"
+  "dontHaveAccount": "Don't have accout?",
+  "activateYourAccountToLogIn": "Activate your account to log in. Email with activation code was just sent. Activation link is valid for 30 minutes.",
+  "couldNotLoginWithTypedCredentials": "Wrong email or password"
 }

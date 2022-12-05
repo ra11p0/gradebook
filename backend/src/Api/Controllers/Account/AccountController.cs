@@ -8,13 +8,11 @@ using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 using Gradebook.Foundation.Common.Settings.Commands;
 using Gradebook.Foundation.Common.Settings.Commands.Definitions;
-using Gradebook.Foundation.Common.Settings.Enums;
 using Gradebook.Foundation.Common.Settings.Queries.Definitions;
 using Gradebook.Foundation.Identity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace Api.Controllers.Account;
 
@@ -91,59 +89,25 @@ public class AccountController : ControllerBase
     [Route("login")]
     public async Task<IActionResult> Login([FromForm] LoginModel model)
     {
-        var user = await _userManager.Service.FindByNameAsync(model.Email);
-        if (user != null && await _userManager.Service.CheckPasswordAsync(user, model.Password))
-        {
-            var userRoles = await _userManager.Service.GetRolesAsync(user);
-
-            var authClaims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            };
-
-            foreach (var userRole in userRoles)
-                authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-
-
-            var token = _identityLogic.Service.CreateToken(authClaims);
-            var refreshToken = _identityLogic.Service.GenerateRefreshToken();
-
-            await _identityLogic.Service.AssignRefreshTokenToUser(user.Id, refreshToken);
-            _identityLogic.Service.RemoveAllExpiredTokens();
-
-            _identityLogic.Service.SaveDatabaseChanges();
-
-            return Ok(new
-            {
-                access_token = new JwtSecurityTokenHandler().WriteToken(token),
-                refresh_token = refreshToken,
-                expires_in = int.Parse(_configuration.Service["JWT:TokenValidityInMinutes"]) * 60,
-            });
-        }
-        return Unauthorized();
+        if (!ModelState.IsValid) return BadRequest();
+        var resp = await _identityLogic.Service.LoginUser(model.Email!, model.Password!);
+        return resp.ObjectResult;
     }
 
     [HttpPost]
-    [Route("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterModel model)
+    [Route("{userGuid}/emailActivation/{code}")]
+    public async Task<IActionResult> Activate([FromRoute] string userGuid, [FromRoute] string code)
     {
-        var userExists = await _userManager.Service.FindByNameAsync(model.Email);
-        if (userExists != null)
-            return StatusCode(400, new LoginRegisterResponse { Status = "Error", Message = "User already exists!" });
-
-        ApplicationUser user = new()
-        {
-            Email = model.Email,
-            SecurityStamp = Guid.NewGuid().ToString(),
-            UserName = model.Email
-        };
-        var result = await _userManager.Service.CreateAsync(user, model.Password);
-        if (!result.Succeeded)
-            return StatusCode(400, new LoginRegisterResponse { Status = "Error", Message = "User creation failed! Please check user details and try again." });
-
-        return Ok(new LoginRegisterResponse { Status = "Success", Message = "User created successfully!" });
+        var res = await _identityLogic.Service.VerifyUserEmail(userGuid, code);
+        return res.ObjectResult;
+    }
+    [HttpPost]
+    [Route("register")]
+    public async Task<IActionResult> Register([FromBody] RegisterModel model, [FromQuery] string language)
+    {
+        if (!ModelState.IsValid) return BadRequest();
+        var res = await _identityLogic.Service.RegisterUser(model.Email!, model.Password!, language);
+        return res.ObjectResult;
     }
 
     [HttpPost]
@@ -195,8 +159,9 @@ public class AccountController : ControllerBase
     [Route("{userGuid}/roles")]
     public async Task<IActionResult> PostRoles([FromRoute] string userGuid, [FromBody] string[] roles)
     {
-        await _identityLogic.Service.EditUserRoles(roles, userGuid);
-        return Ok();
+        return NotFound();
+        /*await _identityLogic.Service.EditUserRoles(roles, userGuid);
+        return Ok();*/
     }
     #endregion
 

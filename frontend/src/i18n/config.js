@@ -37,6 +37,7 @@ i18n.init({
       addNewTeacherModal: require('./locales/en/Dashboard/Manage/ManageTeachers/addNewTeacherModal.json'),
       person: require('./locales/en/Person/person.json'),
       educationCycle: require('./locales/en/Dashboard/Manage/educationCycle.json'),
+      service: require('./locales/en/service.json'),
     },
     pl: {
       common: require('./locales/pl/common.json'),
@@ -70,6 +71,7 @@ i18n.init({
       addNewTeacherModal: require('./locales/pl/Dashboard/Manage/ManageTeachers/addNewTeacherModal.json'),
       person: require('./locales/pl/Person/person.json'),
       educationCycle: require('./locales/pl/Dashboard/Manage/educationCycle.json'),
+      service: require('./locales/pl/service.json'),
     },
   },
   ns: [
@@ -104,6 +106,7 @@ i18n.init({
     'addNewSubjectModal',
     'addNewTeacherModal',
     'person',
+    'service',
   ],
   defaultNS: 'common',
 });

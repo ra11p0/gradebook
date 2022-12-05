@@ -10,6 +10,7 @@ import LoginForm from '../../Components/Account/Login/LoginForm';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import AccountsProxy from '../../ApiClient/Accounts/AccountsProxy';
+import Swal from 'sweetalert2';
 
 jest.mock('axios', () => ({
   create: () => ({
@@ -100,8 +101,15 @@ describe('<LoginForm/>', () => {
   });
 
   it('Should show login failed', async () => {
-    jest.spyOn(AccountsProxy, 'logIn').mockRejectedValueOnce({});
-
+    jest
+      .spyOn(AccountsProxy, 'logIn')
+      .mockRejectedValueOnce({ response: { status: 400 } });
+    const swalMock = jest
+      .spyOn(Swal, 'fire')
+      .mockImplementation(async (e: any) => {
+        expect(e.icon).toEqual('error');
+        return await Promise.resolve({} as any);
+      });
     await act(() => {
       render(
         <Provider store={store}>
@@ -113,7 +121,7 @@ describe('<LoginForm/>', () => {
         </Provider>
       );
     });
-    await act(() => {
+    await act(async () => {
       userEvent.type(
         screen.getByRole('textbox', { name: 'Email' }),
         'fake@email.on'
@@ -121,6 +129,40 @@ describe('<LoginForm/>', () => {
       userEvent.type(screen.getByTestId('password'), 'fake@email.on');
       fireEvent.click(screen.getByRole('button', { name: 'Login' }));
     });
-    expect(await screen.findByText('Login failed')).toBeTruthy();
+
+    expect(swalMock).toBeCalledTimes(1);
+  });
+
+  it('Should show account inactive', async () => {
+    jest
+      .spyOn(AccountsProxy, 'logIn')
+      .mockRejectedValueOnce({ response: { status: 302 } });
+    const swalMock = jest
+      .spyOn(Swal, 'fire')
+      .mockImplementation(async (e: any) => {
+        expect(e.icon).toEqual('warning');
+        return await Promise.resolve({} as any);
+      });
+    await act(() => {
+      render(
+        <Provider store={store}>
+          <BrowserRouter>
+            <I18nextProvider i18n={i18n}>
+              <LoginForm />
+            </I18nextProvider>
+          </BrowserRouter>
+        </Provider>
+      );
+    });
+    await act(async () => {
+      userEvent.type(
+        screen.getByRole('textbox', { name: 'Email' }),
+        'fake@email.on'
+      );
+      userEvent.type(screen.getByTestId('password'), 'fake@email.on');
+      fireEvent.click(screen.getByRole('button', { name: 'Login' }));
+    });
+
+    expect(swalMock).toBeCalledTimes(1);
   });
 });

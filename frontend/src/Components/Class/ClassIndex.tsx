@@ -14,6 +14,7 @@ import getApplicationLanguageReduxProxy from '../../Redux/ReduxQueries/account/g
 import StudentInClassResponse from '../../ApiClient/Classes/Definitions/Responses/StudentInClassResponse';
 import StudentsInClass from './StudentsInClass';
 import ClassHeader from './ClassHeader';
+import { GlobalState } from '../../store';
 
 interface Props {
   localization: string;
@@ -73,7 +74,7 @@ function ClassIndex(props: Props): ReactElement {
 }
 
 export default connect(
-  (state) => ({
+  (state: GlobalState) => ({
     localization: getApplicationLanguageReduxProxy(state),
   }),
   () => ({})

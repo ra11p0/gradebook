@@ -28,5 +28,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gradebook.Foundation.Common\Gradebook.Foundation.Common.csproj" />
+    <ProjectReference Include="..\Gradebook.Foundation.Mailservice\Gradebook.Foundation.Mailservice.csproj" />
   </ItemGroup>
 </Project>

@@ -25,6 +25,7 @@ import Subject from './Routes/Subject';
 import EducationCycle from './Routes/EducationCycle';
 import PermissionLevelEnum from './Common/Enums/Permissions/PermissionLevelEnum';
 import getHasPermissionRedux from './Redux/ReduxQueries/account/getHasPermissionRedux';
+import Service from './Routes/Service';
 
 interface AppProps {
   onLoad: (isAppLoaded: boolean) => void;
@@ -85,6 +86,7 @@ class App extends React.Component<AppProps> {
                       path="/account/register"
                       element={<RegisterForm />}
                     />
+                    <Route path="/Service/*" element={<Service />} />
                     <Route path="*" element={<Index />} />
                   </>
                 )

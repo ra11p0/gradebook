@@ -5,7 +5,7 @@
   "emailInvalid": "Email address invalid!",
   "registerButtonLabel": "Register",
   "userRegisteredAlertTitle": "User registered!",
-  "userRegisteredAlertText": "Now you can log in and activate your account.",
+  "userRegisteredAlertText": "Activation link was just sent to your Email inbox!",
   "register": "Register",
   "password": "Password",
   "confirmPassword": "Confirm password",

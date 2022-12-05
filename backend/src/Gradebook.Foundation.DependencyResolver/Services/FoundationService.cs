@@ -33,5 +33,7 @@ public class FoundationService
         services.AddScoped<IFoundationPermissionsLogic, FoundationPermissionsLogic>();
 
         services.AddScoped<Context>();
+
+        services.AddLocalization(options => options.ResourcesPath = "Resources");
     }
 }

@@ -2,7 +2,7 @@ import React, { ReactElement, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AccountProxy from '../../../ApiClient/Accounts/AccountsProxy';
 import { useTranslation } from 'react-i18next';
-import { Form, Alert } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import setLoginReduxWrapper from '../../../Redux/ReduxCommands/account/setLoginRedux';
 import setAppLoadReduxWrapper from '../../../Redux/ReduxCommands/account/setAppLoadRedux';
 import { store } from '../../../store';
@@ -10,10 +10,10 @@ import { useFormik } from 'formik';
 import FormikInput from '../../Shared/FormikInput';
 import * as yup from 'yup';
 import LoadingButton from '@mui/lab/LoadingButton';
+import Swal from 'sweetalert2';
 
 function LoginForm(): ReactElement {
   const { t } = useTranslation('loginForm');
-  const [loginFailed, setLoginFailed] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const formik = useFormik({
     initialValues: {
@@ -41,9 +41,16 @@ function LoginForm(): ReactElement {
           });
           setAppLoadReduxWrapper(store.dispatch, true);
         })
-        .catch(() => {
-          setLoginFailed(true);
-          formik.resetForm();
+        .catch(async (resp) => {
+          await Swal.fire({
+            icon: resp.response.status === 302 ? 'warning' : 'error',
+            title: t('loginFailed'),
+            text:
+              resp.response.status === 302
+                ? t('activateYourAccountToLogIn')
+                : t('couldNotLoginWithTypedCredentials'),
+          });
+          await formik.setFieldValue('password', '');
         });
       setIsLoggingIn(false);
     },
@@ -57,15 +64,6 @@ function LoginForm(): ReactElement {
           </div>
           <form onSubmit={formik.handleSubmit}>
             <Form.Group>
-              {loginFailed && (
-                <Alert
-                  variant="danger"
-                  onClose={() => setLoginFailed(false)}
-                  dismissible
-                >
-                  {t('loginFailed')}
-                </Alert>
-              )}
               <FormikInput name="email" label={t('email')} formik={formik} />
               <FormikInput
                 testId="password"
