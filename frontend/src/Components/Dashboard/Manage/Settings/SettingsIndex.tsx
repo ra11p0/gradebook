@@ -39,7 +39,12 @@ function SettingsIndex(): ReactElement {
           <Formik
             initialValues={{ ...settings }}
             onSubmit={async (values) => {
-              await AccountsProxy.settings.setSettings(values);
+              await AccountsProxy.settings
+                .setSettings(values)
+                .then(() => {
+                  Notifications.showChangesSavedNotification();
+                })
+                .catch(Notifications.showApiError);
             }}
           >
             {(formik) => (
@@ -66,12 +71,7 @@ function SettingsIndex(): ReactElement {
                     loading={savingSettings}
                     onClick={async () => {
                       setSavingSettings(true);
-                      await formik
-                        .submitForm()
-                        .then(() => {
-                          Notifications.showChangesSavedNotification();
-                        })
-                        .catch(Notifications.showApiError);
+                      await formik.submitForm();
 
                       setSavingSettings(false);
                     }}
