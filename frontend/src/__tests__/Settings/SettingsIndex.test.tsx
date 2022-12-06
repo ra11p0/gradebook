@@ -13,7 +13,7 @@ import SettingsIndex from '../../Components/Dashboard/Manage/Settings/SettingsIn
 import { ReactNotifications } from 'react-notifications-component';
 
 describe('<SettingsIndex/>', () => {
-  it('Should send request with settings changed', async () => {
+  it('Should send request with settings', async () => {
     const setSettingsMock = jest
       .spyOn(AccountsProxy.settings, 'setSettings')
       .mockResolvedValueOnce({} as AxiosResponse);
@@ -37,6 +37,7 @@ describe('<SettingsIndex/>', () => {
     await act(() => {
       fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
     });
+    expect(setSettingsMock).toBeCalledWith({ defaultSchool: 'ds' });
     expect(setSettingsMock).toBeCalledTimes(1);
   });
 });
