@@ -5,9 +5,6 @@ import { Button, Row } from 'react-bootstrap';
 import AdministratorsProxy from '../../../ApiClient/Administrators/AdministratorsProxy';
 import Notifications from '../../../Notifications/Notifications';
 import getCurrentUserIdReduxProxy from '../../../Redux/ReduxQueries/account/getCurrentUserIdRedux';
-import setSchoolsListReduxWrapper, {
-  setSchoolsListAction,
-} from '../../../Redux/ReduxCommands/account/setSchoolsListRedux';
 import ActivateAdministratorPerson, {
   ActivateAdministratorPersonValues,
 } from './ActivateAdministratorPerson';
@@ -21,7 +18,6 @@ import getSessionRedux from '../../../Redux/ReduxQueries/account/getSessionRedux
 interface ActivateAdministratorFormProps {
   defaultOnBackHandler: () => void;
   userId: string;
-  setSchoolsList: (action: setSchoolsListAction) => void;
   onSubmit?: () => void;
   person?: ActivateAdministratorPersonValues;
 }
@@ -104,8 +100,5 @@ export default connect(
   (state) => ({
     userId: getCurrentUserIdReduxProxy(state),
   }),
-  (dispatch) => ({
-    setSchoolsList: (action: setSchoolsListAction) =>
-      setSchoolsListReduxWrapper(dispatch, action),
-  })
+  () => ({})
 )(ActivateAdministratorForm);

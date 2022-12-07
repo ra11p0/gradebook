@@ -2,6 +2,7 @@ import AccountsProxy from '../../../ApiClient/Accounts/AccountsProxy';
 import { store } from '../../../store';
 import ActionTypes from '../../ActionTypes/accountActionTypes';
 import setApplicationLanguageRedux from './setApplicationLanguageRedux';
+import setSchoolRedux from './setSchoolRedux';
 
 export const setUser = {
   type: ActionTypes.SetUser,
@@ -20,4 +21,6 @@ export default async (
 
   if (userSettings.language)
     await setApplicationLanguageRedux(userSettings.language);
+  if (userSettings.defaultSchool)
+    await setSchoolRedux(userSettings.defaultSchool);
 };

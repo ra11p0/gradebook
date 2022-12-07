@@ -7,15 +7,15 @@ import getCurrentPersonReduxProxy, {
 } from '../../../Redux/ReduxQueries/account/getCurrentPersonRedux';
 import getIsLoggedInReduxProxy from '../../../Redux/ReduxQueries/account/getIsLoggedInRedux';
 import getIsUserActivatedReduxProxy from '../../../Redux/ReduxQueries/account/getIsUserActivatedRedux';
-import setLogOutReduxWrapper from '../../../Redux/ReduxCommands/account/setLogOutRedux';
 import LoadingScreen from '../LoadingScreen';
 import SchoolSelect from './SchoolSelect';
 import LanguageSelect from './LanguageSelect';
 import { GlobalState } from '../../../store';
+import setLogOutRedux from '../../../Redux/ReduxCommands/account/setLogOutRedux';
+import { Container, Nav, Navbar } from 'react-bootstrap';
 
 interface HeaderProps {
   isLoggedIn?: boolean;
-  logOutHandler?: () => void;
   currentPerson?: CurrentPersonProxyResult;
   isActive: boolean;
   i18n: any;
@@ -34,68 +34,66 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     };
   }
 
-  logOut(): void {
-    this.props.logOutHandler!();
+  async logOut(): Promise<void> {
+    await setLogOutRedux();
   }
 
   render(): React.ReactNode {
     const { t } = this.props;
     return (
-      <header className="p-4 bg-grey-light bg-gradient">
-        <div className="d-flex justify-content-between">
-          <Link
-            to="/"
-            className="text-dark display-6 text-decoration-none my-auto"
-          >
-            Gradebook
-          </Link>
-          <div className="my-auto d-flex gap-2">
-            {this.props.isLoggedIn && (
-              <div className="d-flex gap-2">
-                {this.props.isActive && (
+      <div className="py-4 px-2 bg-grey-light bg-gradient">
+        <Navbar expand="lg">
+          <Container fluid>
+            <Navbar.Brand>
+              <Link to="/" className="text-reset">
+                Gradebook
+              </Link>
+            </Navbar.Brand>
+            <Navbar.Toggle aria-controls="navbarScroll" />
+            <Navbar.Collapse id="navbarScroll" className="">
+              <Nav>
+                {this.props.isLoggedIn && (
                   <>
-                    <LoadingScreen isReady={!!this.props.currentPerson}>
+                    {this.props.isActive && (
                       <>
-                        <div>
-                          <SchoolSelect />
-                        </div>
+                        <LoadingScreen isReady={!!this.props.currentPerson}>
+                          <>
+                            <Link to="/account/profile" className="nav-link">
+                              {`${this.props.currentPerson!.name} ${
+                                this.props.currentPerson!.surname
+                              }`}
+                            </Link>
+                          </>
+                        </LoadingScreen>
 
-                        <div className="my-auto">
-                          <Link
-                            to="/account/profile"
-                            className="btn btn-outline-primary"
-                          >
-                            {`${this.props.currentPerson!.name} ${
-                              this.props.currentPerson!.surname
-                            }`}
-                          </Link>
-                        </div>
+                        <Link to="/dashboard" className="nav-link">
+                          {t('dashboard')}
+                        </Link>
                       </>
-                    </LoadingScreen>
-
-                    <div className="my-auto">
-                      <Link to="/dashboard" className="btn btn-outline-primary">
-                        {t('dashboard')}
-                      </Link>
-                    </div>
+                    )}
+                    <Nav.Link
+                      className="text-danger"
+                      onClick={async () => await this.logOut()}
+                    >
+                      {t('logout')}
+                    </Nav.Link>
                   </>
                 )}
-                <div className="my-auto">
-                  <a
-                    className="btn btn-outline-primary logoutButton"
-                    onClick={() => this.logOut()}
-                  >
-                    {t('logout')}
-                  </a>
+              </Nav>
+              <div className="ms-auto d-flex justify-content-center flex-wrap gap-3">
+                {this.props.isLoggedIn && this.props.isActive && (
+                  <div className="w-auto">
+                    <SchoolSelect />
+                  </div>
+                )}
+                <div>
+                  <LanguageSelect />
                 </div>
               </div>
-            )}
-            <div className="d-flex gap-2 my-auto">
-              <LanguageSelect />
-            </div>
-          </div>
-        </div>
-      </header>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
+      </div>
     );
   }
 }
@@ -107,8 +105,6 @@ export default withTranslation('header')(
       currentPerson: getCurrentPersonReduxProxy(state),
       isActive: getIsUserActivatedReduxProxy(state),
     }),
-    (dispatch) => ({
-      logOutHandler: () => setLogOutReduxWrapper(dispatch),
-    })
+    () => ({})
   )(Header)
 );

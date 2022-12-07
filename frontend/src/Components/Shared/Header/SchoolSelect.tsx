@@ -1,57 +1,41 @@
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import React, { ReactElement } from 'react';
-import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import GetSchoolResponse from '../../../ApiClient/Schools/Definitions/Responses/GetSchoolResponse';
-import getCurrentSchoolReduxProxy from '../../../Redux/ReduxQueries/account/getCurrentSchoolRedux';
+import getCurrentSchoolReduxProxy, {
+  GetCurrentSchoolReduxProxyResult,
+} from '../../../Redux/ReduxQueries/account/getCurrentSchoolRedux';
 import getSchoolsListReduxProxy from '../../../Redux/ReduxQueries/account/getSchoolsListRedux';
-import setSchoolsListReduxWrapper, {
-  setSchoolsListAction,
-} from '../../../Redux/ReduxCommands/account/setSchoolsListRedux';
-import setSchoolReduxWrapper, {
-  setSchoolAction,
-} from '../../../Redux/ReduxCommands/account/setSchoolRedux';
+import setSchoolRedux from '../../../Redux/ReduxCommands/account/setSchoolRedux';
 import { GlobalState } from '../../../store';
+import ReactSelect from 'react-select';
 
 interface SchoolSelectProps {
-  className?: string;
-  currentSchool?: any;
-  schoolsList: GetSchoolResponse[] | null;
-  setSchool: (action: setSchoolAction) => void;
-  setSchoolsList: (action: setSchoolsListAction) => void;
+  currentSchool?: GetCurrentSchoolReduxProxyResult;
+  schoolsList: GetSchoolResponse[] | undefined;
 }
 function SchoolSelect(props: SchoolSelectProps): ReactElement {
-  const { t } = useTranslation('schoolSelect');
-
   return (
-    <div className={`${props.className ?? ''}`}>
-      <FormControl sx={{ m: 1, minWidth: 380 }}>
-        <InputLabel>{t('selectSchool')}</InputLabel>
-        <Select
-          value={props.currentSchool?.schoolGuid ?? ''}
-          label={t('selectSchool')}
-          onChange={(change) => {
-            const selectedSchool = props.schoolsList?.find(
-              (school) => change.target.value === school.guid
-            );
-            if (!selectedSchool) {
-              props.setSchool({ schoolName: '', schoolGuid: '' });
-              return;
-            }
-            props.setSchool({
-              schoolGuid: selectedSchool.guid,
-              schoolName: selectedSchool.name,
-            });
-          }}
-        >
-          {props.schoolsList?.map((school) => (
-            <MenuItem value={school.guid} key={school.guid}>
-              {school.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </div>
+    <ReactSelect
+      isSearchable={false}
+      isLoading={!props.schoolsList}
+      onChange={async (e): Promise<void> => {
+        if (!e!.value) return;
+        await setSchoolRedux(e!.value);
+      }}
+      value={(() => {
+        if (!props.schoolsList) return;
+        const school = props.schoolsList.find(
+          (e) => e.guid === props.currentSchool?.schoolGuid
+        );
+        if (!school) return;
+
+        return { label: school.name, value: school.guid };
+      })()}
+      options={props.schoolsList?.map((e) => ({
+        label: e.name,
+        value: e.guid,
+      }))}
+    />
   );
 }
 export default connect(
@@ -59,10 +43,5 @@ export default connect(
     currentSchool: getCurrentSchoolReduxProxy(state),
     schoolsList: getSchoolsListReduxProxy(state),
   }),
-  (dispatch) => ({
-    setSchool: async (action: setSchoolAction) =>
-      await setSchoolReduxWrapper(dispatch, action),
-    setSchoolsList: (action: setSchoolsListAction) =>
-      setSchoolsListReduxWrapper(dispatch, action),
-  })
+  () => ({})
 )(SchoolSelect);

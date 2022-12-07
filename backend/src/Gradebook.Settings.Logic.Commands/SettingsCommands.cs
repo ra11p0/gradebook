@@ -14,9 +14,9 @@ public class SettingsCommands : BaseLogic<ISettingsCommandsRepository>, ISetting
         _context = serviceProvider.GetResolver<Context>();
     }
 
-    public async Task SetDefaultPersonGuid(string userGuid, Guid defaultPersonGuid)
+    public async Task SetDefaultSchoolGuid(string userGuid, Guid schoolGuid)
     {
-        await Repository.SetSettingForUserAsync(userGuid, SettingEnum.DefaultPersonGuid, defaultPersonGuid);
+        await Repository.SetSettingForUserAsync(userGuid, SettingEnum.DefaultSchool, schoolGuid);
         await Repository.SaveChangesAsync();
     }
 
@@ -24,7 +24,7 @@ public class SettingsCommands : BaseLogic<ISettingsCommandsRepository>, ISetting
     {
         string? userGuid = _context.Service.UserId;
         if (userGuid is null) return new StatusResponse(401);
-        if (settings.DefaultPersonGuid.HasValue) await SetDefaultPersonGuid(userGuid, settings.DefaultPersonGuid.Value);
+        if (settings.DefaultSchool.HasValue) await SetDefaultSchoolGuid(userGuid, settings.DefaultSchool.Value);
         if (settings.Language is not null) await SetLanguage(userGuid, settings.Language);
         return new StatusResponse(true);
     }

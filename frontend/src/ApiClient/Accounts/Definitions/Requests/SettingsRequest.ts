@@ -1,4 +1,4 @@
 export default interface SettingsRequest {
-  defaultPersonGuid?: string;
+  defaultSchool?: string;
   language?: string;
 }

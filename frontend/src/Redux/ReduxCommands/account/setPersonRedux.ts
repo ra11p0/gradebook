@@ -16,11 +16,11 @@ export default async (
   action: setPersonAction
 ): Promise<void> => {
   dispatch({ ...setPerson, payload: { ...action } });
-  await PeopleProxy.permissions
-    .getPermissions(action.personGuid)
-    .then((permissionsResponse) =>
-      setPermissionsReduxWrapper(dispatch, {
-        permissions: permissionsResponse.data.map((e) => e.permissionLevel),
-      })
-    );
+  const permissionsResponse = await PeopleProxy.permissions.getPermissions(
+    action.personGuid
+  );
+
+  setPermissionsReduxWrapper(dispatch, {
+    permissions: permissionsResponse.data.map((e) => e.permissionLevel),
+  });
 };

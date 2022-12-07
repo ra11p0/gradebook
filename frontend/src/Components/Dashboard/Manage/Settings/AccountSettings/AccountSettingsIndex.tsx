@@ -1,36 +1,33 @@
-import { Button } from '@mui/material';
 import React, { ReactElement } from 'react';
-import { ListGroup } from 'react-bootstrap';
+import { Col, ListGroup, Row } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import AccountProxy from '../../../../../ApiClient/Accounts/AccountsProxy';
 import { connect } from 'react-redux';
 import getCurrentUserIdReduxProxy from '../../../../../Redux/ReduxQueries/account/getCurrentUserIdRedux';
+import DefaultSchoolSetting from './Settings/DefaultSchoolSetting';
 
 interface Props {
   currentUserGuid?: string;
+  formik: any;
 }
 
 function AccountSettingsIndex(props: Props): ReactElement {
   const { t } = useTranslation('settings');
-  const settings: any = {};
+
   return (
     <>
       <ListGroup>
-        <ListGroup.Item></ListGroup.Item>
+        <ListGroup.Item>
+          <Row>
+            <Col className="my-auto">
+              <div className="">{t('defaultSchool')}</div>
+            </Col>
+            <Col>{t('defaultSchoolDescription')}</Col>
+            <Col>
+              <DefaultSchoolSetting formik={props.formik} />
+            </Col>
+          </Row>
+        </ListGroup.Item>
       </ListGroup>
-      <div className="d-flex justify-content-end m-2 p-2">
-        <Button
-          className="saveSettingsButton"
-          variant="outlined"
-          onClick={async () => {
-            if (!props.currentUserGuid) return;
-            await AccountProxy.settings.setSettings(settings);
-            console.dir(settings);
-          }}
-        >
-          {t('save')}
-        </Button>
-      </div>
     </>
   );
 }

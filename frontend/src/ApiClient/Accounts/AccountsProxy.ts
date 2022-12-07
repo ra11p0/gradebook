@@ -10,6 +10,7 @@ import RelatedPersonResponse from './Definitions/Responses/RelatedPersonResponse
 import SettingsRequest from './Definitions/Requests/SettingsRequest';
 import UserSettings from './Definitions/Responses/UserSettings';
 import getApplicationLanguageRedux from '../../Redux/ReduxQueries/account/getApplicationLanguageRedux';
+import getCurrentUserIdRedux from '../../Redux/ReduxQueries/account/getCurrentUserIdRedux';
 
 const API_URL = process.env.REACT_APP_API_URL!;
 
@@ -50,7 +51,7 @@ async function refreshAccessToken(
 }
 
 const getAccessibleSchools = async (
-  userGuid: string
+  userGuid: string = getCurrentUserIdRedux()
 ): Promise<AxiosResponse<GetAccessibleSchoolsResponse[]>> => {
   return await axiosApiAuthorized.get(API_URL + `/account/${userGuid}/schools`);
 };
@@ -71,14 +72,14 @@ async function getUserSettings(): Promise<AxiosResponse<UserSettings>> {
   return await axiosApiAuthorized.get(API_URL + `/account/settings`);
 }
 
-const getDefaultPerson = async (): Promise<string> => {
-  return (await getUserSettings()).data.defaultPersonGuid;
+const getDefaultSchool = async (): Promise<string> => {
+  return (await getUserSettings()).data.defaultSchool;
 };
 
-const setDefaultPerson = async (
-  defaultPersonGuid: string
+const setDefaultSchool = async (
+  defaultSchool: string
 ): Promise<AxiosResponse> => {
-  return await setSettings({ defaultPersonGuid });
+  return await setSettings({ defaultSchool });
 };
 
 const setLanguage = async (language: string): Promise<AxiosResponse> => {
@@ -104,8 +105,8 @@ export default {
   settings: {
     setLanguage,
     setSettings,
-    setDefaultPerson,
+    setDefaultSchool,
     getUserSettings,
-    getDefaultPerson,
+    getDefaultSchool,
   },
 };
