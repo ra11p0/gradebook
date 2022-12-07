@@ -1,17 +1,18 @@
-import { store } from '../../../store';
-import getCurrentSchoolRedux from './getCurrentSchoolRedux';
+import { GlobalState, store } from '../../../store';
 
 export default (
-  state: any = store.getState()
+  state: GlobalState = store.getState()
 ): CurrentPersonProxyResult | undefined => {
-  const currentSchool = getCurrentSchoolRedux(state);
-  if (!currentSchool) return undefined;
-  const peopleArr = state.common.schoolsList.filter(
-    (schoolPerson: any) =>
-      schoolPerson.school.guid === currentSchool?.schoolGuid
+  const currentPersonGuid = state.common.person?.personGuid;
+  if (!currentPersonGuid) return undefined;
+  if (!state.common.schoolsList) throw new Error('schools list not set ');
+  const schoolPerson = state.common.schoolsList.find(
+    (schoolPerson: any) => schoolPerson.person.guid === currentPersonGuid
   );
-  if (peopleArr.length === 0) return undefined;
-  return peopleArr[0].person;
+  if (!schoolPerson)
+    throw new Error('person not linked to any avaliable school');
+
+  return schoolPerson.person;
 };
 
 export interface CurrentPersonProxyResult {

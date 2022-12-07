@@ -24,7 +24,7 @@ function LanguageSelect(props: Props): ReactElement {
   };
   return (
     <>
-      <Dropdown>
+      <Dropdown drop="start">
         <Dropdown.Toggle variant="outline-secondary">
           <FontAwesomeIcon icon={faLanguage} />
         </Dropdown.Toggle>

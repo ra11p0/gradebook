@@ -28,7 +28,7 @@ import { Button } from '@mui/material';
 
 interface SchoolsListProps {
   userId?: string;
-  schoolsList: GetSchoolResponse[] | null;
+  schoolsList: GetSchoolResponse[] | undefined;
   currentSchoolGuid?: string;
   setSchoolsList?: (action: setSchoolsListAction) => void;
   setCurrentSchool?: (action: setSchoolAction) => void;
