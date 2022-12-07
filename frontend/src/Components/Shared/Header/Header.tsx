@@ -12,7 +12,7 @@ import SchoolSelect from './SchoolSelect';
 import LanguageSelect from './LanguageSelect';
 import { GlobalState } from '../../../store';
 import setLogOutRedux from '../../../Redux/ReduxCommands/account/setLogOutRedux';
-import { Container, Nav, Navbar, Row, Col } from 'react-bootstrap';
+import { Container, Nav, Navbar } from 'react-bootstrap';
 
 interface HeaderProps {
   isLoggedIn?: boolean;
@@ -41,52 +41,59 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   render(): React.ReactNode {
     const { t } = this.props;
     return (
-      <Navbar className="p-4 bg-grey-light bg-gradient" expand="md">
-        <Container fluid>
-          <Navbar.Brand>
-            <Link to="/" className="text-reset">
-              Gradebook
-            </Link>
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls="navbarScroll" />
-          <Navbar.Collapse id="navbarScroll">
-            <Nav>
-              {this.props.isLoggedIn && (
-                <>
-                  {this.props.isActive && (
-                    <>
-                      <LoadingScreen isReady={!!this.props.currentPerson}>
-                        <>
-                          <Link to="/account/profile" className="nav-link">
-                            {`${this.props.currentPerson!.name} ${
-                              this.props.currentPerson!.surname
-                            }`}
-                          </Link>
-                        </>
-                      </LoadingScreen>
+      <div className="d-flex justify-content-between py-4 px-2 bg-grey-light bg-gradient">
+        <Navbar className="" expand="lg">
+          <Container fluid>
+            <Navbar.Brand>
+              <Link to="/" className="text-reset">
+                Gradebook
+              </Link>
+            </Navbar.Brand>
+            <Navbar.Toggle aria-controls="navbarScroll" />
+            <Navbar.Collapse id="navbarScroll">
+              <Nav>
+                {this.props.isLoggedIn && (
+                  <>
+                    {this.props.isActive && (
+                      <>
+                        <LoadingScreen isReady={!!this.props.currentPerson}>
+                          <>
+                            <Link to="/account/profile" className="nav-link">
+                              {`${this.props.currentPerson!.name} ${
+                                this.props.currentPerson!.surname
+                              }`}
+                            </Link>
+                          </>
+                        </LoadingScreen>
 
-                      <Link to="/dashboard" className="nav-link">
-                        {t('dashboard')}
-                      </Link>
-                    </>
-                  )}
-                  <Nav.Link onClick={async () => await this.logOut()}>
-                    {t('logout')}
-                  </Nav.Link>
-                </>
-              )}
-            </Nav>
-          </Navbar.Collapse>
-          <Row className="">
-            <Col>
+                        <Link to="/dashboard" className="nav-link">
+                          {t('dashboard')}
+                        </Link>
+                      </>
+                    )}
+                    <Nav.Link
+                      className="text-danger"
+                      onClick={async () => await this.logOut()}
+                    >
+                      {t('logout')}
+                    </Nav.Link>
+                  </>
+                )}
+              </Nav>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
+        <div className="d-flex gap-3">
+          {this.props.isLoggedIn && this.props.isActive && (
+            <div>
               <SchoolSelect />
-            </Col>
-            <Col lg={2} md={12} className="mx-auto">
-              <LanguageSelect />
-            </Col>
-          </Row>
-        </Container>
-      </Navbar>
+            </div>
+          )}
+          <div>
+            <LanguageSelect />
+          </div>
+        </div>
+      </div>
     );
   }
 }
