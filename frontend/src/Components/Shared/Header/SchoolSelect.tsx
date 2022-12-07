@@ -16,6 +16,7 @@ interface SchoolSelectProps {
 function SchoolSelect(props: SchoolSelectProps): ReactElement {
   return (
     <ReactSelect
+      isSearchable={false}
       isLoading={!props.schoolsList}
       onChange={async (e): Promise<void> => {
         if (!e!.value) return;

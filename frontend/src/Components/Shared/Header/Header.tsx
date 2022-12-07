@@ -41,8 +41,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   render(): React.ReactNode {
     const { t } = this.props;
     return (
-      <div className="d-flex justify-content-between py-4 px-2 bg-grey-light bg-gradient">
-        <Navbar className="" expand="lg">
+      <div className="py-4 px-2 bg-grey-light bg-gradient">
+        <Navbar expand="lg">
           <Container fluid>
             <Navbar.Brand>
               <Link to="/" className="text-reset">
@@ -50,7 +50,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               </Link>
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="navbarScroll" />
-            <Navbar.Collapse id="navbarScroll">
+            <Navbar.Collapse id="navbarScroll" className="">
               <Nav>
                 {this.props.isLoggedIn && (
                   <>
@@ -80,19 +80,19 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                   </>
                 )}
               </Nav>
+              <div className="ms-auto d-flex justify-content-center flex-wrap gap-3">
+                {this.props.isLoggedIn && this.props.isActive && (
+                  <div className="w-auto">
+                    <SchoolSelect />
+                  </div>
+                )}
+                <div>
+                  <LanguageSelect />
+                </div>
+              </div>
             </Navbar.Collapse>
           </Container>
         </Navbar>
-        <div className="d-flex gap-3">
-          {this.props.isLoggedIn && this.props.isActive && (
-            <div>
-              <SchoolSelect />
-            </div>
-          )}
-          <div>
-            <LanguageSelect />
-          </div>
-        </div>
       </div>
     );
   }
