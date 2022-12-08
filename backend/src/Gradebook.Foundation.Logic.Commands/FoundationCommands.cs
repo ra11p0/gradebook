@@ -8,10 +8,11 @@ using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 using Gradebook.Foundation.Identity.Models;
+using Gradebook.Foundation.Logic.Commands.Repositories;
 
 namespace Gradebook.Foundation.Logic.Commands;
 
-public class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFoundationCommands
+public partial class FoundationCommands : BaseLogic<IFoundationCommandsRepository>, IFoundationCommands
 {
     private readonly ServiceResolver<IIdentityLogic> _identityLogic;
     private readonly ServiceResolver<IFoundationQueries> _foundationQueries;

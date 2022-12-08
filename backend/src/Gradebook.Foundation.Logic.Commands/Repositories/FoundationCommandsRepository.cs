@@ -7,9 +7,9 @@ using Gradebook.Foundation.Database;
 using Gradebook.Foundation.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Gradebook.Foundation.Logic.Commands;
+namespace Gradebook.Foundation.Logic.Commands.Repositories;
 
-public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseContext>, IFoundationCommandsRepository
+public partial class FoundationCommandsRepository : BaseRepository<FoundationDatabaseContext>, IFoundationCommandsRepository
 {
     private readonly IMapper _mapper;
     public FoundationCommandsRepository(FoundationDatabaseContext context, IMapper mapper) : base(context)

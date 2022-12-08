@@ -2,7 +2,7 @@ using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
 using Gradebook.Foundation.Common.Foundation.Enums;
 
-namespace Gradebook.Foundation.Logic.Commands;
+namespace Gradebook.Foundation.Logic.Commands.Repositories;
 
 public class FoundationCommandsRepositoryCached : BaseRepositoryCached<FoundationCommandsRepository, object>, IFoundationCommandsRepository
 {
@@ -108,4 +108,10 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
 
     public Task<ResponseWithStatus<Guid>> AddNewEducationCycle(EducationCycleCommand command)
         => Base.AddNewEducationCycle(command);
+
+    public Task<StatusResponse> SetActiveEducationCycleToClasses(IEnumerable<Guid> classesGuid, Guid educationCycleGuid)
+        => Base.SetActiveEducationCycleToClasses(classesGuid, educationCycleGuid);
+
+    public Task<StatusResponse> DeleteActiveEducationCycleFromClasses(IEnumerable<Guid> classesGuids)
+        => Base.DeleteActiveEducationCycleFromClasses(classesGuids);
 }
