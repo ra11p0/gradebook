@@ -16,13 +16,15 @@ function EducationCycleAssignedClasses(props: Props): ReactElement {
       <div>
         <div>{props.educationCycleGuid}</div>
         <ClassPicker
-          selected={(async () => {
-            return (
+          selected={async () => {
+            const guids = (
               await EducationCyclesProxy.getClassesForEducationCycle(
                 props.educationCycleGuid
               )
             ).data.map((e) => e.guid);
-          })()}
+            console.dir(guids);
+            return guids;
+          }}
           onClassesSelected={async (guids: string[]) => {
             await EducationCyclesProxy.editClassesInEducationCycle(
               props.educationCycleGuid,

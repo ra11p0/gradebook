@@ -10,7 +10,7 @@ interface Props {
   isModalVisible: boolean;
   onHide: () => void;
   onClassesSelected: (selectedClassesGuids: string[]) => void;
-  selected?: string[] | Promise<string[]>;
+  selected?: () => string[] | Promise<string[]>;
 }
 
 function ClassPickerModal(props: Props): ReactElement {
@@ -19,8 +19,10 @@ function ClassPickerModal(props: Props): ReactElement {
   const [query, setQuery] = useState<string>('');
   useEffect(() => {
     void (async () => {
-      const selected = await props.selected;
-      setSelectedClasses(selected ?? []);
+      if (props.selected) {
+        const selected = await props.selected();
+        setSelectedClasses(selected ?? []);
+      }
     })();
   }, []);
   return (
