@@ -39,7 +39,6 @@ function LoginForm(): ReactElement {
             refreshToken: loginResponse.data.refresh_token,
             accessToken: loginResponse.data.access_token,
           });
-          setAppLoadReduxWrapper(store.dispatch, true);
         })
         .catch(async (resp) => {
           await Swal.fire({
@@ -52,6 +51,7 @@ function LoginForm(): ReactElement {
           });
           await formik.setFieldValue('password', '');
         });
+      setAppLoadReduxWrapper(store.dispatch, true);
       setIsLoggingIn(false);
     },
   });

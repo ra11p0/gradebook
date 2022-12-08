@@ -10,6 +10,7 @@ export const setUser = {
 
 export interface setUserAction {
   userId: string;
+  isActive: boolean;
 }
 
 export default async (
@@ -21,6 +22,8 @@ export default async (
 
   if (userSettings.language)
     await setApplicationLanguageRedux(userSettings.language);
-  if (userSettings.defaultSchool)
-    await setSchoolRedux(userSettings.defaultSchool);
+  if (action.isActive) {
+    if (userSettings.defaultSchool)
+      await setSchoolRedux(userSettings.defaultSchool);
+  }
 };

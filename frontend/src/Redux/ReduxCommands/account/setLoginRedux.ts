@@ -28,7 +28,9 @@ export default async (
     schoolsList: getMeResponse.data.schools,
   });
 
-  await setUserReduxWrapper({ userId: getMeResponse.data.userId });
+  await setUserReduxWrapper({
+    ...getMeResponse.data,
+  });
 
   await connectAllHubs();
 };

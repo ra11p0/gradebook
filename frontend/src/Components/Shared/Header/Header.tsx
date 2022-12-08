@@ -12,7 +12,7 @@ import SchoolSelect from './SchoolSelect';
 import LanguageSelect from './LanguageSelect';
 import { GlobalState } from '../../../store';
 import setLogOutRedux from '../../../Redux/ReduxCommands/account/setLogOutRedux';
-import { Container, Nav, Navbar } from 'react-bootstrap';
+import { Button, Container, Nav, Navbar } from 'react-bootstrap';
 
 interface HeaderProps {
   isLoggedIn?: boolean;
@@ -56,6 +56,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                   <>
                     {this.props.isActive && (
                       <>
+                        <Link to="/dashboard" className="nav-link">
+                          {t('dashboard')}
+                        </Link>
                         <LoadingScreen isReady={!!this.props.currentPerson}>
                           <>
                             <Link to="/account/profile" className="nav-link">
@@ -65,18 +68,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                             </Link>
                           </>
                         </LoadingScreen>
-
-                        <Link to="/dashboard" className="nav-link">
-                          {t('dashboard')}
-                        </Link>
                       </>
                     )}
-                    <Nav.Link
-                      className="text-danger"
-                      onClick={async () => await this.logOut()}
-                    >
-                      {t('logout')}
-                    </Nav.Link>
                   </>
                 )}
               </Nav>
@@ -89,6 +82,16 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 <div>
                   <LanguageSelect />
                 </div>
+                {this.props.isLoggedIn && (
+                  <div className="w-auto">
+                    <Button
+                      variant="outline-danger"
+                      onClick={async () => await this.logOut()}
+                    >
+                      {t('logout')}
+                    </Button>
+                  </div>
+                )}
               </div>
             </Navbar.Collapse>
           </Container>
