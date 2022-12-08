@@ -10,7 +10,7 @@ public partial class FoundationQueriesRepository
     {
         var builder = new SqlBuilder();
         builder.SELECT("Guid");
-        builder.FROM("EducationCycles");
+        builder.FROM("Classes");
         builder.WHERE("IsDeleted = 0");
         builder.WHERE("ActiveEducationCycleGuid = @educationCycleGuid");
         builder.ORDER_BY("CreatedDate");

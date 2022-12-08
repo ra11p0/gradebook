@@ -1,5 +1,5 @@
 import { Checkbox, Input } from '@mui/material';
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import SchoolsProxy from '../../../ApiClient/Schools/SchoolsProxy';
@@ -10,15 +10,19 @@ interface Props {
   isModalVisible: boolean;
   onHide: () => void;
   onClassesSelected: (selectedClassesGuids: string[]) => void;
-  selected?: string[];
+  selected?: string[] | Promise<string[]>;
 }
 
 function ClassPickerModal(props: Props): ReactElement {
   const { t } = useTranslation('classPicker');
-  const [selectedClasses, setSelectedClasses] = useState<string[]>(
-    props.selected ?? []
-  );
+  const [selectedClasses, setSelectedClasses] = useState<string[]>([]);
   const [query, setQuery] = useState<string>('');
+  useEffect(() => {
+    void (async () => {
+      const selected = await props.selected;
+      setSelectedClasses(selected ?? []);
+    })();
+  }, []);
   return (
     <Modal show={props.isModalVisible} onHide={props.onHide}>
       <Modal.Header closeButton>{t('selectClasses')}</Modal.Header>
