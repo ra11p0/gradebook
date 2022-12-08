@@ -26,7 +26,6 @@ namespace Gradebook.Foundation.Database.Migrations
                 table: "Classes",
                 type: "char(36)",
                 nullable: true,
-                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"),
                 collation: "ascii_general_ci");
 
             migrationBuilder.CreateIndex(
