@@ -6,11 +6,11 @@ using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 using Gradebook.Foundation.Hangfire;
-using Gradebook.Foundation.Hangfire.Messages;
+using Gradebook.Foundation.Logic.Queries.Repositories;
 
 namespace Gradebook.Foundation.Logic.Queries;
 
-public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFoundationQueries
+public partial class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFoundationQueries
 {
     private readonly ServiceResolver<IIdentityLogic> _identityLogic;
     private readonly ServiceResolver<IFoundationPermissionsLogic> _foundationPermissionLogic;

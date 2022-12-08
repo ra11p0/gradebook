@@ -5,9 +5,9 @@ using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Database;
 
-namespace Gradebook.Foundation.Logic.Queries;
+namespace Gradebook.Foundation.Logic.Queries.Repositories;
 
-public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseContext>, IFoundationQueriesRepository
+public partial class FoundationQueriesRepository : BaseRepository<FoundationDatabaseContext>, IFoundationQueriesRepository
 {
     public FoundationQueriesRepository(FoundationDatabaseContext context) : base(context)
     {

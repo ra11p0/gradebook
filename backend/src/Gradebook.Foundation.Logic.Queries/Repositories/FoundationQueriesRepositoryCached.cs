@@ -1,7 +1,7 @@
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 
-namespace Gradebook.Foundation.Logic.Queries;
+namespace Gradebook.Foundation.Logic.Queries.Repositories;
 
 public class FoundationQueriesRepositoryCached : BaseRepositoryCached<FoundationQueriesRepository, object>, IFoundationQueriesRepository
 {
@@ -131,4 +131,7 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
 
     public Task<IEnumerable<EducationCycleStepSubjectDto>> GetStepsSubjectsForEducationCycleStep(Guid educationCycleStepGuid)
         => Base.GetStepsSubjectsForEducationCycleStep(educationCycleStepGuid);
+
+    public Task<IPagedList<Guid>> GetClassesGuidsForEducationCycle(Guid educationCycle, Pager pager)
+        => Base.GetClassesGuidsForEducationCycle(educationCycle, pager);
 }

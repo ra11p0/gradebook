@@ -1,7 +1,7 @@
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 
-namespace Gradebook.Foundation.Logic.Queries;
+namespace Gradebook.Foundation.Logic.Queries.Repositories;
 
 public interface IFoundationQueriesRepository : IBaseRepository
 {
@@ -41,4 +41,5 @@ public interface IFoundationQueriesRepository : IBaseRepository
     Task<bool> IsClassOwner(Guid classGuid, Guid personGuid);
     Task<bool> IsUserActive(string userGuid);
     Task<bool> IsStudentInAnyClass(Guid studentGuid);
+    Task<IPagedList<Guid>> GetClassesGuidsForEducationCycle(Guid educationCycle, Pager pager);
 }

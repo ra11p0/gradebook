@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Common;
+using Gradebook.Foundation.Logic.Commands.Repositories;
+using Gradebook.Foundation.Logic.Queries.Repositories;
 
 namespace Gradebook.Foundation.Tests
 {

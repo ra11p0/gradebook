@@ -46,4 +46,5 @@ public interface IFoundationQueries
     Task<ResponseWithStatus<Guid>> RecogniseCurrentPersonBySchoolGuid(Guid schoolGuid);
     Task<ResponseWithStatus<Guid>> RecogniseCurrentPersonByClassGuid(Guid classGuid);
     Task<ResponseWithStatus<bool>> IsStudentInAnyClass(Guid studentGuid);
+    Task<ResponseWithStatus<IPagedList<Guid>>> GetClassesGuidsForEducationCycle(Guid educationCycle, int page);
 }
