@@ -56,10 +56,23 @@ public class FoundationDatabaseContext : DbContext
                 new MySqlServerVersion(new Version(8, 30, 0)),
                 e => e.MigrationsHistoryTable("__FoundationMigrationsHistory")
             );
-            Database.BeginTransaction();
-            Database.Migrate();
-            if (Database.GetPendingMigrations().Any()) Database.RollbackTransaction();
-            Database.CommitTransaction();
+
+            var pendingMigrations = Database.GetPendingMigrations();
+            if (pendingMigrations.Any())
+            {
+                pendingMigrations.ToList().ForEach(m => Console.WriteLine(m));
+                Database.BeginTransaction();
+                Database.Migrate();
+                if (Database.GetPendingMigrations().Any())
+                {
+                    Console.WriteLine("failed to migrate:");
+                    Database.GetPendingMigrations().ToList().ForEach(m => Console.WriteLine(m));
+                    Database.RollbackTransaction();
+                }
+                else
+                    Database.CommitTransaction();
+            }
+
         }
     }
 }
