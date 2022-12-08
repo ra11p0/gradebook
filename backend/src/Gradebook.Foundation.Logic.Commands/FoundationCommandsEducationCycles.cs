@@ -11,7 +11,6 @@ public partial class FoundationCommands
         if (!currentAssignedClasses.Status) return new StatusResponse(currentAssignedClasses.StatusCode);
 
 
-
         await Repository.SaveChangesAsync();
         Repository.CommitTransaction();
         return new StatusResponse(200);
