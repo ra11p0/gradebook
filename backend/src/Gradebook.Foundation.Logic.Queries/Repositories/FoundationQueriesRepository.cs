@@ -77,20 +77,6 @@ public partial class FoundationQueriesRepository : BaseRepository<FoundationData
         });
     }
 
-    public async Task<ClassDto> GetClassByGuid(Guid guid)
-    {
-        using var cn = await GetOpenConnectionAsync();
-        return await cn.QueryFirstOrDefaultAsync<ClassDto>(@"
-                SELECT Name, CreatedDate, Description, Guid, SchoolGuid
-                FROM Classes
-                WHERE Guid like @guid
-                    AND IsDeleted = 0
-            ", new
-        {
-            guid
-        });
-    }
-
     public async Task<IPagedList<ClassDto>> GetClassesInSchool(Guid schoolGuid, Pager pager)
     {
         using var cn = await GetOpenConnectionAsync();

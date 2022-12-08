@@ -18,7 +18,7 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
     public Task<IEnumerable<StudentDto>> GetAllInactiveAccessibleStudents(Guid schoolGuid)
         => Base.GetAllInactiveAccessibleStudents(schoolGuid);
 
-    public Task<ClassDto> GetClassByGuid(Guid guid)
+    public Task<ClassDto?> GetClassByGuid(Guid guid)
         => Base.GetClassByGuid(guid);
 
     public Task<GroupDto> GetGroupByGuid(Guid guid)
@@ -134,4 +134,7 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
 
     public Task<IPagedList<Guid>> GetClassesGuidsForEducationCycle(Guid educationCycle, Pager pager)
         => Base.GetClassesGuidsForEducationCycle(educationCycle, pager);
+
+    public Task<IEnumerable<ClassDto>> GetClassesByGuids(IEnumerable<Guid> guids)
+        => Base.GetClassesByGuids(guids);
 }
