@@ -28,12 +28,7 @@ import groovy.json.*
 //	smtp default friendly name (ex. Gradebook)
 //SMTP_DEFAULT_SENDER_NAME = ''
 
-
-
-
-
-def jsonSlurpLaxWithoutSerializationTroubles(String jsonText)
-{
+def jsonSlurpLax(String jsonText){
     return new JsonSlurperClassic().parseText(
         new JsonBuilder(
             new JsonSlurper()
@@ -46,13 +41,17 @@ def jsonSlurpLaxWithoutSerializationTroubles(String jsonText)
 
 def prepareAppSettings() {
     def appsettingsTemplateText = new File(env.WORKSPACE+"/ci/appsettings.template.json").text
+
     println appsettingsTemplateText
-    appSettings = jsonSlurpLaxWithoutSerializationTroubles(appsettingsTemplateText)
+
+    appSettings = jsonSlurpLax(appsettingsTemplateText)
+
     appSettings.ConnectionStrings.DefaultAppDatabase =  params.dbConnectionString
     appSettings.Urls = params.applicationUrl + ":" + params.apiPort
     appSettings.JWT.ValidAudience = params.targetUrl
     appSettings.JWT.ValidIssuer = params.targetUrl
     appSettings.JWT.Secret = params.jwtSecret.encryptedValue
+
     //  smtp configuration
     appSettings.smtp.host = params.smtpHost
     appSettings.smtp.port = params.smtpPort
@@ -61,6 +60,7 @@ def prepareAppSettings() {
     appSettings.smtp.defaultSender = params.smtpDefaultSender
     appSettings.smtp.defaultSenderName = params.defaultSenderName
     appSettings.TargetUrl = params.targetUrl
+
     def jsonPrepared = new JsonBuilder(appSettings).toPrettyString()
 
     println jsonPrepared
@@ -68,11 +68,13 @@ def prepareAppSettings() {
     
     def envFileText = new File(env.WORKSPACE + '/ci/.env.template').text
     
-    envFileText = envFileText.replace('''{apiUrl}''', params.nodeApiUrl)
+    envFileText = envFileText.replace('{apiUrl}', params.nodeApiUrl)
     envFileText = envFileText.replace("{environment}", params.environment)
     envFileText = envFileText.replace("{port}", params.apiPort)
     envFileText = envFileText.replace("{build}", env.BUILD_TAG)
+
     println envFileText
+
     writeFile(file:'ci/.env', text: envFileText)
 }
 pipeline{        
@@ -91,7 +93,7 @@ pipeline{
                 prepareAppSettings()
                 
                 sh 'cp -f ./ci/.env ./frontend/'
-                sh '''cp -f ./ci/appsettings.Production.json ./backend/src/Api/appsettings.Production.json'''
+                sh 'cp -f ./ci/appsettings.Production.json ./backend/src/Api/appsettings.Production.json'
                 sh 'cp -f ./ci/appsettings.Production.json ./backend/src/Gradebook.Foundation.Identity/appsettings.json'
                 sh 'cp -f ./ci/appsettings.Production.json ./backend/src/Gradebook.Foundation.Database/appsettings.json'
                 sh 'cp -f ./ci/appsettings.Production.json ./backend/src/Gradebook.Permissions.Database/appsettings.json'
@@ -149,7 +151,7 @@ pipeline{
             steps{
                 sh 'rm -fr release; mkdir release;'
                 sh 'cp -r frontend/build/ release/public'
-                sh '''cp -r backend/src/Api/bin/Release/net6.0/ release/api'''
+                sh 'cp -r backend/src/Api/bin/Release/net6.0/ release/api'
                 sh 'sudo systemctl start kestrel-${JOB_NAME}'
             }
         }
