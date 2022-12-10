@@ -73,7 +73,6 @@ def prepareAppSettings() {
     writeFile(file:'ci/.env', text: envFileText)
 }
 
-pipeline {
     agent any
     stages {
         stage('prepare') {
@@ -152,5 +151,3 @@ pipeline {
             }
         }
     }
-}
-
