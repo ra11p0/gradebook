@@ -24,6 +24,9 @@ public class FoundationDatabaseContext : DbContext
     public DbSet<EducationCycle>? EducationCycles { get; set; }
     public DbSet<EducationCycleStep>? EducationCycleSteps { get; set; }
     public DbSet<EducationCycleStepSubject>? EducationCycleStepSubjects { get; set; }
+    public DbSet<EducationCycleInstance>? EducationCycleInstances { get; set; }
+    public DbSet<EducationCycleStepInstance>? EducationCycleStepInstance { get; set; }
+    public DbSet<EducationCycleStepSubjectInstance>? EducationCycleStepSubjectInstance { get; set; }
 
     public FoundationDatabaseContext()
     {
