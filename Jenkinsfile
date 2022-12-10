@@ -65,7 +65,7 @@ def prepareAppSettings() {
     
     def envFileText = new File(env.WORKSPACE + '/ci/.env.template').text
     
-    envFileText = envFileText.replace("{apiUrl}", params.nodeApiUrl)
+    envFileText = envFileText.replace('''{apiUrl}''', params.nodeApiUrl)
     envFileText = envFileText.replace("{environment}", params.environment)
     envFileText = envFileText.replace("{port}", params.apiPort)
     envFileText = envFileText.replace("{build}", env.BUILD_TAG)
@@ -88,7 +88,7 @@ def prepareAppSettings() {
                 prepareAppSettings()
                 
                 sh 'cp -f ./ci/.env ./frontend/'
-                sh 'cp -f ./ci/appsettings.Production.json ./backend/src/Api/appsettings.Production.json'
+                sh '''cp -f ./ci/appsettings.Production.json ./backend/src/Api/appsettings.Production.json'''
                 sh 'cp -f ./ci/appsettings.Production.json ./backend/src/Gradebook.Foundation.Identity/appsettings.json'
                 sh 'cp -f ./ci/appsettings.Production.json ./backend/src/Gradebook.Foundation.Database/appsettings.json'
                 sh 'cp -f ./ci/appsettings.Production.json ./backend/src/Gradebook.Permissions.Database/appsettings.json'
@@ -146,7 +146,7 @@ def prepareAppSettings() {
             steps{
                 sh 'rm -fr release; mkdir release;'
                 sh 'cp -r frontend/build/ release/public'
-                sh 'cp -r backend/src/Api/bin/Release/net6.0/ release/api'
+                sh '''cp -r backend/src/Api/bin/Release/net6.0/ release/api'''
                 sh 'sudo systemctl start kestrel-${JOB_NAME}'
             }
         }
