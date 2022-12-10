@@ -150,7 +150,7 @@ pipeline{
                 sh 'cd backend/src/Gradebook.Permissions.Database; ~/.dotnet/tools/dotnet-ef database update;'
                 sh 'cd backend/src/Gradebook.Settings.Database; ~/.dotnet/tools/dotnet-ef database update;'
                 script{
-                currentBuild.result = "FAILURE"
+                    currentBuild.result = "FAILURE"
                 }
             }
             post{
