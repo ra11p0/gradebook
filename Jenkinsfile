@@ -149,13 +149,11 @@ pipeline{
                 sh 'cd backend/src/Gradebook.Foundation.Database; ~/.dotnet/tools/dotnet-ef database update;'
                 sh 'cd backend/src/Gradebook.Permissions.Database; ~/.dotnet/tools/dotnet-ef database update;'
                 sh 'cd backend/src/Gradebook.Settings.Database; ~/.dotnet/tools/dotnet-ef database update;'
-                script{
-                    currentBuild.result = "FAILURE"
-                }
             }
             post{
                 failure{
                     sh "cat ${params.dbName}-${BUILD_TAG}-bak.sql | sudo docker exec -i mysql /usr/bin/mysql -u ${params.dbUid} --password="+params.dbPassword.plainText+"  ${params.dbName}"
+                    sh 'sudo systemctl start kestrel-${JOB_NAME}'
                 }
             }
         }
