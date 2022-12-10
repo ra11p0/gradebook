@@ -75,8 +75,8 @@ def prepareAppSettings() {
     println envFileText
     writeFile(file:'ci/.env', text: envFileText)
 }
-
-    stages {
+pipeline{
+stages {
         stage('prepare') {
             steps {
                 script {
@@ -153,3 +153,5 @@ def prepareAppSettings() {
             }
         }
     }
+}
+    
