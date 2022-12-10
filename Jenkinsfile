@@ -75,8 +75,9 @@ def prepareAppSettings() {
     println envFileText
     writeFile(file:'ci/.env', text: envFileText)
 }
-pipeline{
-stages {
+pipeline{        
+    agent any;
+    stages {
         stage('prepare') {
             steps {
                 script {
@@ -97,7 +98,7 @@ stages {
                 sh 'cp -f ./ci/appsettings.Production.json ./backend/src/Gradebook.Settings.Database/appsettings.json '
             }
         }
-       
+    
         stage('frontend install dependencies'){
             steps {
                 sh 'cd frontend; npm cache clean -f; '
@@ -106,7 +107,7 @@ stages {
         }
         stage('tests') {
             parallel{
-                 stage('backend unit tests') {
+                stage('backend unit tests') {
                     steps {
                         sh 'cd backend; dotnet test --filter TestCategory=Unit'
                     }
@@ -128,7 +129,7 @@ stages {
                 }
                 stage('build backend'){
                     steps {
-                         sh 'cd backend; dotnet build -c Release'
+                        sh 'cd backend; dotnet build -c Release'
                     }
                 }
             }
@@ -138,10 +139,10 @@ stages {
         stage('migrate databases'){
             steps {
                 sh 'sudo systemctl stop kestrel-${JOB_NAME}'
-                 sh 'cd backend/src/Gradebook.Foundation.Identity; ~/.dotnet/tools/dotnet-ef database update;'
-                 sh 'cd backend/src/Gradebook.Foundation.Database; ~/.dotnet/tools/dotnet-ef database update;'
-                 sh 'cd backend/src/Gradebook.Permissions.Database; ~/.dotnet/tools/dotnet-ef database update;'
-                 sh 'cd backend/src/Gradebook.Settings.Database; ~/.dotnet/tools/dotnet-ef database update;'
+                sh 'cd backend/src/Gradebook.Foundation.Identity; ~/.dotnet/tools/dotnet-ef database update;'
+                sh 'cd backend/src/Gradebook.Foundation.Database; ~/.dotnet/tools/dotnet-ef database update;'
+                sh 'cd backend/src/Gradebook.Permissions.Database; ~/.dotnet/tools/dotnet-ef database update;'
+                sh 'cd backend/src/Gradebook.Settings.Database; ~/.dotnet/tools/dotnet-ef database update;'
             }
         }
         stage('deploy'){
