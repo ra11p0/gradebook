@@ -83,29 +83,6 @@ public partial class FoundationQueries : BaseLogic<IFoundationQueriesRepository>
         return new ResponseWithStatus<IEnumerable<TeacherDto>>(resp, true);
     }
 
-    public async Task<ResponseWithStatus<ClassDto, bool>> GetClassByGuid(Guid guid)
-    {
-        var resp = await Repository.GetClassByGuid(guid);
-        if (resp is null) return new ResponseWithStatus<ClassDto, bool>(404, "Class does not exist");
-        return new ResponseWithStatus<ClassDto, bool>(resp, true);
-    }
-
-    public async Task<ResponseWithStatus<IPagedList<ClassDto>>> GetClassesForPerson(Guid personGuid, int page)
-    {
-        var pager = new Pager(page);
-        var resp = await Repository.GetClassesForPerson(personGuid, pager);
-        if (resp is null) return new ResponseWithStatus<IPagedList<ClassDto>>(404);
-        return new ResponseWithStatus<IPagedList<ClassDto>>(resp, true);
-    }
-
-    public async Task<ResponseWithStatus<IPagedList<ClassDto>>> GetClassesInSchool(Guid schoolGuid, int page)
-    {
-        var pager = new Pager(page);
-        var resp = await Repository.GetClassesInSchool(schoolGuid, pager);
-        if (resp is null) return new ResponseWithStatus<IPagedList<ClassDto>>(404);
-        return new ResponseWithStatus<IPagedList<ClassDto>>(resp, true);
-    }
-
     public async Task<ResponseWithStatus<Guid, bool>> GetCurrentPersonGuid(Guid schoolGuid)
     {
         var userGuid = await _identityLogic.Service.CurrentUserId();

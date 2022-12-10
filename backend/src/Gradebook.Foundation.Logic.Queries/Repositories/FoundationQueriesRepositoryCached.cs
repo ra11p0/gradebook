@@ -72,8 +72,8 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
     public Task<IPagedList<InvitationDto>> GetInvitationsToSchool(Guid schoolGuid, Pager pager)
         => Base.GetInvitationsToSchool(schoolGuid, pager);
 
-    public Task<IPagedList<ClassDto>> GetClassesInSchool(Guid schoolGuid, Pager pager)
-        => Base.GetClassesInSchool(schoolGuid, pager);
+    public Task<IPagedList<ClassDto>> GetClassesInSchool(Guid schoolGuid, Pager pager, string? query = "")
+        => Base.GetClassesInSchool(schoolGuid, pager, query);
 
     public Task<IPagedList<StudentDto>> GetStudentsInClass(Guid schoolGuid, Pager pager)
         => Base.GetStudentsInClass(schoolGuid, pager);
@@ -132,8 +132,8 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
     public Task<IEnumerable<EducationCycleStepSubjectDto>> GetStepsSubjectsForEducationCycleStep(Guid educationCycleStepGuid)
         => Base.GetStepsSubjectsForEducationCycleStep(educationCycleStepGuid);
 
-    public Task<IPagedList<Guid>> GetClassesGuidsForEducationCycle(Guid educationCycle, Pager pager)
-        => Base.GetClassesGuidsForEducationCycle(educationCycle, pager);
+    public Task<IPagedList<Guid>> GetClassesGuidsForEducationCycle(Guid educationCycle, string? query, Pager pager)
+        => Base.GetClassesGuidsForEducationCycle(educationCycle, query, pager);
 
     public Task<IEnumerable<ClassDto>> GetClassesByGuids(IEnumerable<Guid> guids)
         => Base.GetClassesByGuids(guids);

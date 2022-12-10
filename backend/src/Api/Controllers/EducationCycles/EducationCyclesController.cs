@@ -28,9 +28,9 @@ public class EducationCyclesController : ControllerBase
     }
     [HttpGet]
     [Route("{educationCycleGuid}/Classes")]
-    public async Task<ObjectResult> GetClassesInEducationCycle([FromRoute] Guid educationCycleGuid, [FromQuery] int page = 0)
+    public async Task<ObjectResult> GetClassesInEducationCycle([FromRoute] Guid educationCycleGuid, [FromQuery] int? page = 0, [FromQuery] string? query = "")
     {
-        var resp = await _foundationQueries.Service.GetClassesForEducationCycle(educationCycleGuid, page);
+        var resp = await _foundationQueries.Service.GetClassesForEducationCycle(educationCycleGuid, page ?? 0, query);
         return resp.ObjectResult;
     }
     [HttpPost]

@@ -30,7 +30,7 @@ public interface IFoundationQueriesRepository : IBaseRepository
     Task<IEnumerable<ClassDto>> GetClassesByGuids(IEnumerable<Guid> guids);
     Task<SchoolDto> GetSchoolByGuid(Guid guid);
     Task<IPagedList<StudentDto>> GetStudentsInSchool(Guid schoolGuid, Pager pager);
-    Task<IPagedList<ClassDto>> GetClassesInSchool(Guid schoolGuid, Pager pager);
+    Task<IPagedList<ClassDto>> GetClassesInSchool(Guid schoolGuid, Pager pager, string? query = "");
     Task<IPagedList<ClassDto>> GetClassesForPerson(Guid personGuid, Pager pager);
     Task<IPagedList<StudentDto>> GetStudentsInClass(Guid classGuid, Pager pager);
     Task<IPagedList<TeacherDto>> GetTeachersInClass(Guid classGuid, Pager pager);
@@ -42,5 +42,5 @@ public interface IFoundationQueriesRepository : IBaseRepository
     Task<bool> IsClassOwner(Guid classGuid, Guid personGuid);
     Task<bool> IsUserActive(string userGuid);
     Task<bool> IsStudentInAnyClass(Guid studentGuid);
-    Task<IPagedList<Guid>> GetClassesGuidsForEducationCycle(Guid educationCycle, Pager pager);
+    Task<IPagedList<Guid>> GetClassesGuidsForEducationCycle(Guid educationCycle, string? query, Pager pager);
 }

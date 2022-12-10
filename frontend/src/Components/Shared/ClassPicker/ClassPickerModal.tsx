@@ -83,6 +83,7 @@ function ClassPickerModal(props: Props): ReactElement {
         <Button
           onClick={() => {
             props.onClassesSelected(selectedClasses);
+            props.onHide();
           }}
         >
           {t('confirm')}

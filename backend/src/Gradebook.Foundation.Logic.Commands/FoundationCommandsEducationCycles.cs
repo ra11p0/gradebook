@@ -11,7 +11,7 @@ public partial class FoundationCommands
         if (!currentAssignedClasses.Status) return new StatusResponse(currentAssignedClasses.StatusCode);
 
         var classesToAdd = classesGuids.Where(e => !currentAssignedClasses.Response!.Contains(e));
-        var classesToRemove = classesGuids.Where(e => currentAssignedClasses.Response!.Contains(e));
+        var classesToRemove = currentAssignedClasses.Response!.Where(e => !classesGuids.Contains(e));
 
         await Repository.SetActiveEducationCycleToClasses(classesToAdd, educationCycleGuid);
         await Repository.DeleteActiveEducationCycleFromClasses(classesToRemove);

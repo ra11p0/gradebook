@@ -77,16 +77,19 @@ public partial class FoundationQueriesRepository : BaseRepository<FoundationData
         });
     }
 
-    public async Task<IPagedList<ClassDto>> GetClassesInSchool(Guid schoolGuid, Pager pager)
+    public async Task<IPagedList<ClassDto>> GetClassesInSchool(Guid schoolGuid, Pager pager, string? query = "")
     {
+        var builder = new SqlBuilder();
+        builder.SELECT("Name, Description, CreatedDate, Guid");
+        builder.FROM("Classes");
+        builder.WHERE("IsDeleted = 0");
+        builder.WHERE("SchoolGuid = @schoolGuid");
+        if (!string.IsNullOrEmpty(query))
+            builder.WHERE("Name like @query");
+        builder.ORDER_BY("CreatedDate DESC");
+
         using var cn = await GetOpenConnectionAsync();
-        return await cn.QueryPagedAsync<ClassDto>(@"
-            SELECT Name, Description, CreatedDate, Guid
-            FROM Classes
-            WHERE IsDeleted = 0 
-                AND SchoolGuid = @schoolGuid
-            ORDER BY CreatedDate DESC
-         ", new { schoolGuid }, pager);
+        return await cn.QueryPagedAsync<ClassDto>(builder.ToString(), new { schoolGuid, query = $"%{query}%" }, pager);
     }
 
     public async Task<GroupDto> GetGroupByGuid(Guid guid)
@@ -496,7 +499,7 @@ public partial class FoundationQueriesRepository : BaseRepository<FoundationData
         builder.WHERE("SchoolGuid = @schoolGuid");
 
         if (!string.IsNullOrEmpty(query))
-            builder.WHERE("CONCAT(Name) like @query");
+            builder.WHERE("Name like @query");
         builder.ORDER_BY("Name");
         using var cn = await GetOpenConnectionAsync();
         return await cn.QueryPagedAsync<SubjectDto>(builder.ToString(), new { schoolGuid, query = $"%{query}%", }, pager);
