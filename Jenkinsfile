@@ -1,14 +1,6 @@
 //	database connection string (mysql)
 //DEFAULT_DB_CONNECTION_STRING =""
-//	api url
-//APPLICATION_URL =""
-//	api port
-//API_PORT = ''
-//	jwt secret
-//JWT_SECRET= ""
-//TARGET_URL = ''
-//	public url to api (ex. http://{url}/api)
-//NODE_API_URL = ""
+
 //	environment (BETA, DEV, PROD)
 //NODE_ENVIRONMENT = ''
 //  smtp configuration
@@ -46,7 +38,7 @@ def prepareAppSettings() {
     println appsettingsTemplateText
     appSettings = jsonSlurpLaxWithoutSerializationTroubles(appsettingsTemplateText)
     appSettings.ConnectionStrings.DefaultAppDatabase =  params.dbConnectionString
-    //appSettings.Urls = params.applicationUrl + ":" + params.apiPort
+
     appSettings.JWT.ValidAudience = params.targetUrl
     appSettings.JWT.ValidIssuer = params.targetUrl
     appSettings.JWT.Secret = params.jwtSecret.encryptedValue
@@ -65,9 +57,9 @@ def prepareAppSettings() {
     
     def envFileText = new File(env.WORKSPACE + '/ci/.env.template').text
     
-    //envFileText = envFileText.replace('''{apiUrl}''', params.nodeApiUrl)
+
     envFileText = envFileText.replace("{environment}", params.environment)
-    //envFileText = envFileText.replace("{port}", params.apiPort)
+
     envFileText = envFileText.replace("{build}", env.BUILD_TAG)
     println envFileText
     writeFile(file:'ci/.env', text: envFileText)
