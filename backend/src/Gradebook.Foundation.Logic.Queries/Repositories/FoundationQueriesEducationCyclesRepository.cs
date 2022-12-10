@@ -24,7 +24,7 @@ public partial class FoundationQueriesRepository
     public async Task<IEnumerable<EducationCycleInstanceDto>> GetEducationCycleInstancesByGuids(IEnumerable<Guid> guids)
     {
         var builder = new SqlBuilder();
-        builder.SELECT("eci.Guid, EducationCycleGuid, EducationCycleName, DateSince, DateUntil, eci.CreatorGuid");
+        builder.SELECT("eci.Guid, EducationCycleGuid, ec.Name as EducationCycleName, DateSince, DateUntil, eci.CreatorGuid");
         builder.FROM("EducationCycleInstances eci");
         builder.JOIN("EducationCycles ec ON ec.Guid = eci.EducationCycleGuid");
         builder.WHERE("eci.IsDeleted = 0");
@@ -37,13 +37,13 @@ public partial class FoundationQueriesRepository
     public async Task<IEnumerable<EducationCycleStepInstanceDto>> GetEducationCycleStepInstancesByEducationCycleInstancesGuids(IEnumerable<Guid> guids)
     {
         var builder = new SqlBuilder();
-        builder.SELECT("DateSince, DateUntil, ecsi.Guid, Order, EducationCycleInstanceGuid");
+        builder.SELECT("DateSince, DateUntil, ecsi.Guid, `Order`, EducationCycleInstanceGuid");
         builder.FROM("EducationCycleStepInstances ecsi");
         builder.JOIN("EducationCycleSteps ecs ON ecs.Guid = ecsi.EducationCycleStepGuid");
         builder.WHERE("ecsi.IsDeleted = 0");
         builder.WHERE("ecsi.EducationCycleInstanceGuid IN (@guids)");
 
-        builder.ORDER_BY("Order");
+        builder.ORDER_BY("`Order`");
         using var cn = await GetOpenConnectionAsync();
         return await cn.QueryAsync<EducationCycleStepInstanceDto>(builder.ToString(), new { guids });
     }
@@ -52,8 +52,8 @@ public partial class FoundationQueriesRepository
         var builder = new SqlBuilder();
         builder.SELECT(@"ecssi.Guid, 
             AssignedTeacherGuid, 
-            s.Name as TeacherName, 
-            s.Surname = TeacherLastName, 
+            p.Name as TeacherName, 
+            p.Surname as TeacherLastName, 
             SubjectGuid, 
             s.Name as SubjectName,
             HoursInStep,
@@ -68,9 +68,17 @@ public partial class FoundationQueriesRepository
         builder.JOIN("Person p ON p.Guid = ecssi.AssignedTeacherGuid");
         builder.WHERE("ecssi.IsDeleted = 0");
         builder.WHERE("ecssi.Guid IN (@guids)");
-
-        builder.ORDER_BY("Order");
         using var cn = await GetOpenConnectionAsync();
         return await cn.QueryAsync<EducationCycleStepSubjectInstanceDto>(builder.ToString(), new { guids });
+    }
+    public async Task<IPagedList<EducationCycleExtendedDto>> GetEducationCyclesByGuids(IEnumerable<Guid> guids, Pager pager)
+    {
+        var builder = new SqlBuilder();
+        builder.SELECT("Name, SchoolGuid, Guid, CreatedDate, CreatorGuid");
+        builder.FROM("EducationCycles");
+        builder.WHERE("IsDeleted = 0");
+        builder.WHERE("Guid in (@guids)");
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryPagedAsync<EducationCycleExtendedDto>(builder.ToString(), new { guids }, pager);
     }
 }

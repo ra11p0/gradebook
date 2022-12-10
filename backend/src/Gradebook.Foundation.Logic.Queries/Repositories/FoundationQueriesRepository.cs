@@ -554,15 +554,7 @@ public partial class FoundationQueriesRepository : BaseRepository<FoundationData
     }
 
     public async Task<EducationCycleExtendedDto?> GetEducationCycle(Guid educationCycleGuid)
-    {
-        var builder = new SqlBuilder();
-        builder.SELECT("Name, SchoolGuid, Guid, CreatedDate, CreatorGuid");
-        builder.FROM("EducationCycles");
-        builder.WHERE("IsDeleted = 0");
-        builder.WHERE("Guid = @educationCycleGuid");
-        using var cn = await GetOpenConnectionAsync();
-        return await cn.QueryFirstOrDefaultAsync<EducationCycleExtendedDto>(builder.ToString(), new { educationCycleGuid });
-    }
+        => (await GetEducationCyclesByGuids(educationCycleGuid.AsEnumerable(), new Pager(0))).FirstOrDefault();
 
     public async Task<IEnumerable<EducationCycleStepDto>> GetStepsForEducationCycle(Guid educationCycleGuid)
     {

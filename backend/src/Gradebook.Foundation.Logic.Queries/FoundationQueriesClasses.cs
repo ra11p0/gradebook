@@ -48,9 +48,10 @@ public partial class FoundationQueries
             await Repository.GetEducationCycleStepSubjectInstancesByEducationCycleStepInstancesGuids(educationCycleStepsInstances.Select(e => e.Guid).Distinct());
 
         EducationCyclesForClassDto educationCyclesForClassDto = new();
-
+        if (activeEducationCycleGuid.HasValue)
+            educationCyclesForClassDto.ActiveEducationCycle = (await GetEducationCycle(activeEducationCycleGuid.Value)).Response;
         educationCyclesForClassDto.ActiveEducationCycleInstance = educationCycles.FirstOrDefault(e => e.Guid == activeEducationCycleGuid);
-        educationCyclesForClassDto.EducationCycles = educationCycles.Select(e =>
+        educationCyclesForClassDto.EducationCyclesInstances = educationCycles.Select(e =>
         {
             e.EducationCycleStepInstances = educationCycleStepsInstances.Where(si => si.EducationCycleInstanceGuid == e.Guid).Select(ecsi =>
             {

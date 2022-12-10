@@ -51,7 +51,7 @@ public partial class FoundationQueriesRepository
 
         builder.SELECT("Guid");
         builder.FROM("Classes");
-        builder.WHERE("ClassGuid = @classGuid");
+        builder.WHERE("Guid = @classGuid");
         builder.WHERE("IsDeleted = 0");
 
         using var cn = await GetOpenConnectionAsync();
