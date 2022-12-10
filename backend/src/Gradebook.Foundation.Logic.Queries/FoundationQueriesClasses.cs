@@ -49,7 +49,7 @@ public partial class FoundationQueries
 
         EducationCyclesForClassDto educationCyclesForClassDto = new();
 
-        educationCyclesForClassDto.ActiveEducationCycle = educationCycles.FirstOrDefault(e => e.Guid == activeEducationCycleGuid);
+        educationCyclesForClassDto.ActiveEducationCycleInstance = educationCycles.FirstOrDefault(e => e.Guid == activeEducationCycleGuid);
         educationCyclesForClassDto.EducationCycles = educationCycles.Select(e =>
         {
             e.EducationCycleStepInstances = educationCycleStepsInstances.Where(si => si.EducationCycleInstanceGuid == e.Guid).Select(ecsi =>
