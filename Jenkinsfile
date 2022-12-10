@@ -28,53 +28,8 @@
 
 import groovy.json.JsonSlurperClassic
 import groovy.json.*
-import jenkins.model.*
-jenkins = Jenkins.instance
 
 
-def jsonSlurpLaxWithoutSerializationTroubles(String jsonText)
-{
-    return new JsonSlurperClassic().parseText(
-        new JsonBuilder(
-            new JsonSlurper()
-                .setType(JsonParserType.LAX)
-                .parseText(jsonText)
-        )
-        .toString()
-    )
-}
-
-def prepareAppSettings() {
-    def appsettingsTemplateText = new File(env.WORKSPACE+"/ci/appsettings.template.json").text
-    println appsettingsTemplateText
-    appSettings = jsonSlurpLaxWithoutSerializationTroubles(appsettingsTemplateText)
-    appSettings.ConnectionStrings.DefaultAppDatabase =  params.dbConnectionString
-    appSettings.Urls = params.applicationUrl + ":" + params.apiPort
-    appSettings.JWT.ValidAudience = params.targetUrl
-    appSettings.JWT.ValidIssuer = params.targetUrl
-    appSettings.JWT.Secret = params.jwtSecret.encryptedValue
-    //  smtp configuration
-    appSettings.smtp.host = params.smtpHost
-    appSettings.smtp.port = params.smtpPort
-    appSettings.smtp.username = params.smtpUsername
-    appSettings.smtp.password = params.smtpPassword.plainText
-    appSettings.smtp.defaultSender = params.smtpDefaultSender
-    appSettings.smtp.defaultSenderName = params.defaultSenderName
-    appSettings.TargetUrl = params.targetUrl
-    def jsonPrepared = new JsonBuilder(appSettings).toPrettyString()
-
-    println jsonPrepared
-    writeFile(file:'ci/appsettings.Production.json', text: jsonPrepared)
-    
-    def envFileText = new File(env.WORKSPACE + '/ci/.env.template').text
-    
-    envFileText = envFileText.replace('''{apiUrl}''', params.nodeApiUrl)
-    envFileText = envFileText.replace("{environment}", params.environment)
-    envFileText = envFileText.replace("{port}", params.apiPort)
-    envFileText = envFileText.replace("{build}", env.BUILD_TAG)
-    println envFileText
-    writeFile(file:'ci/.env', text: envFileText)
-}
 pipeline{        
     agent any;
     stages {
