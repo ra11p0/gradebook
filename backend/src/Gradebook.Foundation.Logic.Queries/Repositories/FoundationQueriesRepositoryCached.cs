@@ -137,4 +137,22 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
 
     public Task<IEnumerable<ClassDto>> GetClassesByGuids(IEnumerable<Guid> guids)
         => Base.GetClassesByGuids(guids);
+
+    public Task<IEnumerable<EducationCycleInstanceDto>> GetEducationCycleInstancesByGuids(IEnumerable<Guid> guids)
+        => Base.GetEducationCycleInstancesByGuids(guids);
+
+    public Task<IEnumerable<EducationCycleStepInstanceDto>> GetEducationCycleStepInstancesByEducationCycleInstancesGuids(IEnumerable<Guid> guids)
+        => Base.GetEducationCycleStepInstancesByEducationCycleInstancesGuids(guids);
+
+    public Task<IEnumerable<EducationCycleStepSubjectInstanceDto>> GetEducationCycleStepSubjectInstancesByEducationCycleStepInstancesGuids(IEnumerable<Guid> guids)
+        => Base.GetEducationCycleStepSubjectInstancesByEducationCycleStepInstancesGuids(guids);
+
+    public Task<Guid?> GetActiveEducationCycleGuidByClassGuid(Guid classGuid)
+        => Base.GetActiveEducationCycleGuidByClassGuid(classGuid);
+
+    public Task<IPagedList<Guid>> GetEducationCycleInstancesGuidsByClassGuid(Guid classGuid, Pager pager)
+        => Base.GetEducationCycleInstancesGuidsByClassGuid(classGuid, pager);
+
+    public Task<Guid?> GetEducationCycleInstanceForClass(Guid classGuid, Guid educationCycleGuid)
+        => Base.GetEducationCycleInstanceForClass(classGuid, educationCycleGuid);
 }

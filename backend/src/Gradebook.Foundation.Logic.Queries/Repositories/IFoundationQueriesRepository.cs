@@ -43,4 +43,10 @@ public interface IFoundationQueriesRepository : IBaseRepository
     Task<bool> IsUserActive(string userGuid);
     Task<bool> IsStudentInAnyClass(Guid studentGuid);
     Task<IPagedList<Guid>> GetClassesGuidsForEducationCycle(Guid educationCycle, string? query, Pager pager);
+    Task<IEnumerable<EducationCycleInstanceDto>> GetEducationCycleInstancesByGuids(IEnumerable<Guid> guids);
+    Task<IEnumerable<EducationCycleStepInstanceDto>> GetEducationCycleStepInstancesByEducationCycleInstancesGuids(IEnumerable<Guid> guids);
+    Task<IEnumerable<EducationCycleStepSubjectInstanceDto>> GetEducationCycleStepSubjectInstancesByEducationCycleStepInstancesGuids(IEnumerable<Guid> guids);
+    Task<Guid?> GetActiveEducationCycleGuidByClassGuid(Guid classGuid);
+    Task<IPagedList<Guid>> GetEducationCycleInstancesGuidsByClassGuid(Guid classGuid, Pager pager);
+    Task<Guid?> GetEducationCycleInstanceForClass(Guid classGuid, Guid educationCycleGuid);
 }
