@@ -76,7 +76,6 @@ def prepareAppSettings() {
     writeFile(file:'ci/.env', text: envFileText)
 }
 
-    agent any
     stages {
         stage('prepare') {
             steps {
