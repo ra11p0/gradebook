@@ -144,7 +144,7 @@ pipeline{
         stage('migrate databases'){
             steps {
                 sh 'sudo systemctl stop kestrel-${JOB_NAME}'
-                sh "sudo docker exec mysql /usr/bin/mysqldump -u ${params.dbUid} --password=${params.dbPassword.plainText} ${params.dbName} > ${params.dbName}-${BUILD_TAG}-bak.sql"
+                sh "sudo docker exec mysql /usr/bin/mysqldump -u ${params.dbUid} --password="+params.dbPassword.plainText+" ${params.dbName} > ${params.dbName}-${BUILD_TAG}-bak.sql"
                 sh 'cd backend/src/Gradebook.Foundation.Identity; ~/.dotnet/tools/dotnet-ef database update;'
                 sh 'cd backend/src/Gradebook.Foundation.Database; ~/.dotnet/tools/dotnet-ef database update;'
                 sh 'cd backend/src/Gradebook.Permissions.Database; ~/.dotnet/tools/dotnet-ef database update;'
@@ -152,7 +152,7 @@ pipeline{
             }
             post{
                 failure{
-                    sh "cat ${params.dbName}-${BUILD_TAG}-bak.sql | sudo docker exec -i mysql /usr/bin/mysql -u ${params.dbUid} --password=${params.dbPassword.plainText} ${params.dbName}"
+                    sh "cat ${params.dbName}-${BUILD_TAG}-bak.sql | sudo docker exec -i mysql /usr/bin/mysql -u ${params.dbUid} --password="+params.dbPassword.plainText+"  ${params.dbName}"
                 }
             }
         }
