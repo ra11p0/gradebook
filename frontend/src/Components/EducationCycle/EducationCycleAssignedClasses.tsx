@@ -15,6 +15,7 @@ function EducationCycleAssignedClasses(props: Props): ReactElement {
   const { t } = useTranslation('educationCycle');
   const [refreshKey, setRefreshKey] = useState(0);
   const navigate = useNavigate();
+
   return (
     <Stack>
       <div>
@@ -58,7 +59,6 @@ function EducationCycleAssignedClasses(props: Props): ReactElement {
                 props.educationCycleGuid
               )
             ).data.map((e) => e.guid);
-            console.dir(guids);
             return guids;
           }}
           onClassesSelected={async (guids: string[]) => {
