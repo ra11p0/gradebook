@@ -4,6 +4,7 @@ using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Foundation.Commands;
+using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 
 namespace Api.Controllers.EducationCycles;
 
@@ -21,6 +22,7 @@ public class EducationCyclesController : ControllerBase
     }
     [HttpGet]
     [Route("{educationCycleGuid}")]
+    [ProducesResponseType(typeof(EducationCycleExtendedDto), statusCode: 200)]
     public async Task<ObjectResult> GetActivationCodeInfo([FromRoute] Guid educationCycleGuid)
     {
         var resp = await _foundationQueries.Service.GetEducationCycle(educationCycleGuid);
@@ -28,6 +30,7 @@ public class EducationCyclesController : ControllerBase
     }
     [HttpGet]
     [Route("{educationCycleGuid}/Classes")]
+    [ProducesResponseType(typeof(IPagedList<ClassDto>), statusCode: 200)]
     public async Task<ObjectResult> GetClassesInEducationCycle([FromRoute] Guid educationCycleGuid, [FromQuery] int? page = 0, [FromQuery] string? query = "")
     {
         var resp = await _foundationQueries.Service.GetClassesForEducationCycle(educationCycleGuid, page ?? 0, query);
@@ -35,6 +38,7 @@ public class EducationCyclesController : ControllerBase
     }
     [HttpPost]
     [Route("{educationCycleGuid}/Classes")]
+    [ProducesResponseType(typeof(StatusResponse), statusCode: 200)]
     public async Task<ObjectResult> EditClassesInEducationCycle([FromRoute] Guid educationCycleGuid, [FromBody] Guid[] classesGuids)
     {
         var resp = await _foundationCommands.Service.EditClassesAssignedToEducationCycle(classesGuids, educationCycleGuid);
@@ -42,6 +46,7 @@ public class EducationCyclesController : ControllerBase
     }
     [HttpPut]
     [Route("{educationCycleGuid}/Classes/{classGuid}")]
+    [ProducesResponseType(typeof(StatusResponse), statusCode: 200)]
     public async Task<ObjectResult> AddClassToEducationCycle([FromRoute] Guid educationCycleGuid, [FromRoute] Guid classGuid)
     {
         var resp = await _foundationCommands.Service.SetActiveEducationCycleToClass(classGuid, educationCycleGuid);

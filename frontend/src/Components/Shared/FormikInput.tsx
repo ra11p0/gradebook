@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import React, { ReactElement } from 'react';
 import { Form } from 'react-bootstrap';
+import FormikDatePicker from './FormikDatePicker';
 import FormikValidationLabel from './FormikValidationLabel';
 
 interface Props {
@@ -9,6 +10,7 @@ interface Props {
   label?: string;
   type?: string;
   formik: {
+    setFieldValue: (fieldName: string, value: any) => void;
     handleChange: (evt: React.ChangeEvent<any>) => void;
     handleBlur: (evt: React.ChangeEvent<any>) => void;
     values: any;
@@ -53,6 +55,13 @@ function FormikInput(props: Props): ReactElement {
                 />
               </>
             );
+          case 'date':
+            return (
+              <>
+                <small>{props.label ?? props.name}</small>
+                <FormikDatePicker {...props} />
+              </>
+            );
           default:
             return (
               <>
@@ -80,7 +89,7 @@ function FormikInput(props: Props): ReactElement {
                   onBlur={(evt: any) => {
                     props.formik.handleBlur(evt);
                   }}
-                  value={_.get(props.formik.values, props.name)}
+                  value={_.get(props.formik.values, props.name) ?? ''}
                 />
               </>
             );

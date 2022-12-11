@@ -1,12 +1,13 @@
 import { faWarning } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { ReactElement, useEffect, useState } from 'react';
-import { Alert, Button, Card, Col, Row } from 'react-bootstrap';
+import { Alert, Card } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import ClassesProxy from '../../ApiClient/Classes/ClassesProxy';
 import EducationCyclesInClassResponse from '../../ApiClient/Classes/Definitions/Responses/EducationCyclesInClassResponse';
 import EducationCyclesProxy from '../../ApiClient/EducationCycles/EducationCyclesProxy';
 import Notifications from '../../Notifications/Notifications';
+import ConfigureEducationCycle from '../EducationCycle/ConfigureEducationCycle/ConfigureEducationCycle';
 import EducationCyclePicker from '../Shared/EducationCyclePicker/EducationCyclePicker';
 import LoadingScreen from '../Shared/LoadingScreen';
 
@@ -48,24 +49,16 @@ function EducationCycle({ classGuid }: Props): ReactElement {
                   <>
                     <Alert variant="warning">
                       <div className="d-flex justify-content-between">
-                        <Row>
-                          <Col>
-                            <div>{t('educationCycleNotConfigured')}</div>
-                          </Col>
-                          <Col></Col>
-                        </Row>
-                        <div>
-                          <Row>
-                            <Col className="text-end">
-                              <FontAwesomeIcon icon={faWarning} />
-                            </Col>
-                          </Row>
-                          <Row>
-                            <Col>
-                              <Button>{t('configureEducationCycle')}</Button>
-                            </Col>
-                          </Row>
-                        </div>
+                        <div>{t('educationCycleNotConfigured')}</div>
+                        <FontAwesomeIcon icon={faWarning} />
+                      </div>
+                      <div className="d-flex justify-content-end">
+                        <ConfigureEducationCycle
+                          onSubmit={() => {}}
+                          educationCycleGuid={
+                            educationCycle.activeEducationCycle.guid
+                          }
+                        />
                       </div>
                     </Alert>
                   </>
@@ -75,35 +68,22 @@ function EducationCycle({ classGuid }: Props): ReactElement {
               <>
                 <Alert variant="warning">
                   <div className="d-flex justify-content-between">
-                    <Row>
-                      <Col>
-                        <div>{t('educationCycleNotAttached')}</div>
-                      </Col>
-                      <Col></Col>
-                    </Row>
-                    <div>
-                      <Row>
-                        <Col className="text-end">
-                          <FontAwesomeIcon icon={faWarning} />
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col>
-                          <EducationCyclePicker
-                            onCyclesSelected={async (selected) => {
-                              const selectedOne = selected.find(() => true);
-                              if (!selectedOne) return;
-                              await EducationCyclesProxy.setEducationCycleForClass(
-                                selectedOne,
-                                classGuid
-                              );
-                              setRefreshKey((e) => e + 1);
-                            }}
-                            onlyOne={true}
-                          />
-                        </Col>
-                      </Row>
-                    </div>
+                    <div>{t('educationCycleNotAttached')}</div>
+                    <FontAwesomeIcon icon={faWarning} />
+                  </div>
+                  <div className="d-flex justify-content-end">
+                    <EducationCyclePicker
+                      onCyclesSelected={async (selected) => {
+                        const selectedOne = selected.find(() => true);
+                        if (!selectedOne) return;
+                        await EducationCyclesProxy.setEducationCycleForClass(
+                          selectedOne,
+                          classGuid
+                        );
+                        setRefreshKey((e) => e + 1);
+                      }}
+                      onlyOne={true}
+                    />
                   </div>
                 </Alert>
               </>
