@@ -83,7 +83,7 @@ namespace Gradebook.Foundation.Tests
                 .Setup(e => e.GetPersonGuidForUser(It.IsAny<string>(), It.IsAny<Guid>()))
                 .ReturnsAsync(Guid.NewGuid());
             foundationQueriesRepository
-                .Setup(e => e.GetEducationCyclesInSchool(It.IsAny<Guid>(), It.IsAny<Pager>()))
+                .Setup(e => e.GetEducationCyclesInSchool(It.IsAny<Guid>(), It.IsAny<Pager>(), It.IsAny<string>()))
                 .ReturnsAsync(new PagedList<EducationCycleDto>() { });
             identityLogic
                 .Setup(e => e.CurrentUserId())
@@ -92,7 +92,7 @@ namespace Gradebook.Foundation.Tests
                 .Setup(e => e.CanSeeEducationCycles(It.IsAny<Guid>()))
                 .ReturnsAsync(true);
 
-            var result = await foundationQueries!.GetEducationCyclesInSchool(new Guid(), 0);
+            var result = await foundationQueries!.GetEducationCyclesInSchool(new Guid(), 0, "");
 
             Assert.That(result.Status, Is.True);
             Assert.That(result.StatusCode, Is.EqualTo(200));

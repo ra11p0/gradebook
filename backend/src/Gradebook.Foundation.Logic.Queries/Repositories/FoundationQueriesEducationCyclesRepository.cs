@@ -28,7 +28,7 @@ public partial class FoundationQueriesRepository
         builder.FROM("EducationCycleInstances eci");
         builder.JOIN("EducationCycles ec ON ec.Guid = eci.EducationCycleGuid");
         builder.WHERE("eci.IsDeleted = 0");
-        builder.WHERE("eci.Guid IN (@guids)");
+        builder.WHERE("eci.Guid IN @guids");
 
         builder.ORDER_BY("DateSince");
         using var cn = await GetOpenConnectionAsync();
@@ -41,7 +41,7 @@ public partial class FoundationQueriesRepository
         builder.FROM("EducationCycleStepInstances ecsi");
         builder.JOIN("EducationCycleSteps ecs ON ecs.Guid = ecsi.EducationCycleStepGuid");
         builder.WHERE("ecsi.IsDeleted = 0");
-        builder.WHERE("ecsi.EducationCycleInstanceGuid IN (@guids)");
+        builder.WHERE("ecsi.EducationCycleInstanceGuid IN @guids");
 
         builder.ORDER_BY("`Order`");
         using var cn = await GetOpenConnectionAsync();
@@ -67,7 +67,7 @@ public partial class FoundationQueriesRepository
         builder.JOIN("Subjects s ON s.Guid = ecss.SubjectGuid");
         builder.JOIN("Person p ON p.Guid = ecssi.AssignedTeacherGuid");
         builder.WHERE("ecssi.IsDeleted = 0");
-        builder.WHERE("ecssi.Guid IN (@guids)");
+        builder.WHERE("ecssi.Guid IN @guids");
         using var cn = await GetOpenConnectionAsync();
         return await cn.QueryAsync<EducationCycleStepSubjectInstanceDto>(builder.ToString(), new { guids });
     }
@@ -77,7 +77,7 @@ public partial class FoundationQueriesRepository
         builder.SELECT("Name, SchoolGuid, Guid, CreatedDate, CreatorGuid");
         builder.FROM("EducationCycles");
         builder.WHERE("IsDeleted = 0");
-        builder.WHERE("Guid in (@guids)");
+        builder.WHERE("Guid in @guids");
         using var cn = await GetOpenConnectionAsync();
         return await cn.QueryPagedAsync<EducationCycleExtendedDto>(builder.ToString(), new { guids }, pager);
     }

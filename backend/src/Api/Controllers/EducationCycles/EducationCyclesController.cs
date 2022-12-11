@@ -40,4 +40,11 @@ public class EducationCyclesController : ControllerBase
         var resp = await _foundationCommands.Service.EditClassesAssignedToEducationCycle(classesGuids, educationCycleGuid);
         return resp.ObjectResult;
     }
+    [HttpPut]
+    [Route("{educationCycleGuid}/Classes/{classGuid}")]
+    public async Task<ObjectResult> AddClassToEducationCycle([FromRoute] Guid educationCycleGuid, [FromRoute] Guid classGuid)
+    {
+        var resp = await _foundationCommands.Service.SetActiveEducationCycleToClass(classGuid, educationCycleGuid);
+        return resp.ObjectResult;
+    }
 }

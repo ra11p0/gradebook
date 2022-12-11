@@ -32,8 +32,18 @@ const editClassesInEducationCycle = async (
   );
 };
 
+const setEducationCycleForClass = async (
+  educationCycleGuid: string,
+  classGuids: string
+): Promise<AxiosResponse> => {
+  return await axiosApiAuthorized.put(
+    API_URL + `/educationCycles/${educationCycleGuid}/Classes/${classGuids}`
+  );
+};
+
 export default {
   getEducationCycle,
   getClassesForEducationCycle,
   editClassesInEducationCycle,
+  setEducationCycleForClass,
 };

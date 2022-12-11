@@ -141,7 +141,6 @@ public class AccountController : ControllerBase
 
         await _identityLogic.Service.RemoveRefreshTokenFromUser(user.Id, refreshToken);
         await _identityLogic.Service.AssignRefreshTokenToUser(user.Id, newRefreshToken);
-        _identityLogic.Service.RemoveAllExpiredTokens();
 
         _identityLogic.Service.SaveDatabaseChanges();
 

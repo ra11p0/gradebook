@@ -16,7 +16,7 @@ public partial class FoundationQueriesRepository
         return await cn.QueryAsync<ClassDto>(@"
                 SELECT Name, CreatedDate, Description, Guid, SchoolGuid
                 FROM Classes
-                WHERE Guid IN (@guids)
+                WHERE Guid IN @guids
                     AND IsDeleted = 0
             ", new
         {

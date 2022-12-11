@@ -8,7 +8,7 @@ public interface IFoundationQueriesRepository : IBaseRepository
     Task<EducationCycleExtendedDto?> GetEducationCycle(Guid educationCycleGuid);
     Task<IEnumerable<EducationCycleStepDto>> GetStepsForEducationCycle(Guid educationCycleGuid);
     Task<IEnumerable<EducationCycleStepSubjectDto>> GetStepsSubjectsForEducationCycleStep(Guid educationCycleStepGuid);
-    Task<IPagedList<EducationCycleDto>> GetEducationCyclesInSchool(Guid schoolGuid, Pager pager);
+    Task<IPagedList<EducationCycleDto>> GetEducationCyclesInSchool(Guid schoolGuid, Pager pager, string query);
     Task<IPagedList<SubjectDto>> GetSubjectsForTeacher(Guid teacherGuid, Pager pager);
     Task<IPagedList<TeacherDto>> GetTeachersForSubject(Guid subjectGuid, Pager pager);
     Task<SubjectDto> GetSubject(Guid subjectGuid);

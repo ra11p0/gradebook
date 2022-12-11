@@ -119,19 +119,6 @@ public partial class FoundationQueries : BaseLogic<IFoundationQueriesRepository>
         return new ResponseWithStatus<EducationCycleExtendedDto>(educationCycle);
     }
 
-    public async Task<ResponseWithStatus<IPagedList<EducationCycleDto>>> GetEducationCyclesInSchool(Guid schoolGuid, int page)
-    {
-        if (!await _foundationPermissionLogic.Service.CanSeeEducationCycles(schoolGuid)) return new ResponseWithStatus<IPagedList<EducationCycleDto>>(403);
-        var pager = new Pager(page);
-        var res = await Repository.GetEducationCyclesInSchool(schoolGuid, pager);
-        var resWithCreator = await Task.WhenAll(res.Select(async cycle =>
-        {
-            cycle.Creator = (await GetPersonByGuid(cycle.CreatorGuid)).Response;
-            return cycle;
-        }));
-        return new ResponseWithStatus<IPagedList<EducationCycleDto>>(resWithCreator.ToPagedList(res));
-    }
-
     public async Task<ResponseWithStatus<GroupDto, bool>> GetGroupByGuid(Guid guid)
     {
         var resp = await Repository.GetGroupByGuid(guid);

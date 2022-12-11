@@ -541,7 +541,7 @@ public class Permissions
             .Setup(e => e.CanSeeEducationCycles(It.IsAny<Guid>()))
             .ReturnsAsync(false);
 
-        var result = await foundationQueries!.GetEducationCyclesInSchool(Guid.NewGuid(), 0);
+        var result = await foundationQueries!.GetEducationCyclesInSchool(Guid.NewGuid(), 0, "");
 
         Assert.That(result.Status, Is.False);
         Assert.That(result.StatusCode, Is.EqualTo(403));
@@ -553,10 +553,10 @@ public class Permissions
             .Setup(e => e.CanSeeEducationCycles(It.IsAny<Guid>()))
             .ReturnsAsync(true);
         foundationQueriesRepository
-            .Setup(e => e.GetEducationCyclesInSchool(It.IsAny<Guid>(), It.IsAny<Pager>()))
+            .Setup(e => e.GetEducationCyclesInSchool(It.IsAny<Guid>(), It.IsAny<Pager>(), It.IsAny<string>()))
             .ReturnsAsync(new PagedList<EducationCycleDto>());
 
-        var result = await foundationQueries!.GetEducationCyclesInSchool(Guid.NewGuid(), 0);
+        var result = await foundationQueries!.GetEducationCyclesInSchool(Guid.NewGuid(), 0, "");
 
         Assert.That(result.Status, Is.True);
         Assert.That(result.StatusCode, Is.EqualTo(200));

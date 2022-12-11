@@ -5,6 +5,6 @@ public class EducationCyclesForClassDto
     public EducationCycleInstanceDto? ActiveEducationCycleInstance { get; set; }
     public EducationCycleDto? ActiveEducationCycle { get; set; }
     public Guid? ActiveEducationCycleGuid { get; set; }
-    public bool HasPreparedAcriveEducationCycle => ActiveEducationCycleGuid.HasValue && ActiveEducationCycle is not null;
+    public bool HasPreparedActiveEducationCycle => ActiveEducationCycleGuid.HasValue && ActiveEducationCycle is not null;
     public List<EducationCycleInstanceDto>? EducationCyclesInstances { get; set; }
 }

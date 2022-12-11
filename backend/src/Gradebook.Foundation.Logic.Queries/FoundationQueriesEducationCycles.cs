@@ -19,4 +19,16 @@ public partial class FoundationQueries
         var classes = await Repository.GetClassesByGuids(classesGuids.Response!);
         return new ResponseWithStatus<IPagedList<ClassDto>>(classes.ToPagedList(classesGuids.Response!));
     }
+    public async Task<ResponseWithStatus<IPagedList<EducationCycleDto>>> GetEducationCyclesInSchool(Guid schoolGuid, int page, string query)
+    {
+        if (!await _foundationPermissionLogic.Service.CanSeeEducationCycles(schoolGuid)) return new ResponseWithStatus<IPagedList<EducationCycleDto>>(403);
+        var pager = new Pager(page);
+        var res = await Repository.GetEducationCyclesInSchool(schoolGuid, pager, query);
+        var resWithCreator = await Task.WhenAll(res.Select(async cycle =>
+        {
+            cycle.Creator = (await GetPersonByGuid(cycle.CreatorGuid)).Response;
+            return cycle;
+        }));
+        return new ResponseWithStatus<IPagedList<EducationCycleDto>>(resWithCreator.ToPagedList(res));
+    }
 }
