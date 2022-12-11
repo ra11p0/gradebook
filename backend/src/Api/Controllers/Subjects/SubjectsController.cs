@@ -32,9 +32,9 @@ public class SubjectsController : ControllerBase
     [Route("{subjectGuid}/teachers")]
     [ProducesResponseType(typeof(IPagedList<TeacherDto>), statusCode: 200)]
     [ProducesResponseType(typeof(string), statusCode: 400)]
-    public async Task<IActionResult> GetTeachersForSubject([FromRoute] Guid subjectGuid, [FromQuery] int page = 0)
+    public async Task<IActionResult> GetTeachersForSubject([FromRoute] Guid subjectGuid, [FromQuery] int? page = 0, [FromQuery] string? query = "")
     {
-        var resp = await _foundationQueries.Service.GetTeachersForSubject(subjectGuid, page);
+        var resp = await _foundationQueries.Service.GetTeachersForSubject(subjectGuid, page ?? 0, query);
         return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
     }
     [HttpPost]

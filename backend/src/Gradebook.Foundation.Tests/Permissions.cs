@@ -260,7 +260,7 @@ public class Permissions
             .Setup(e => e.GetSubject(It.IsAny<Guid>()))
             .ReturnsAsync(new SubjectDto());
         foundationQueriesRepository
-            .Setup(e => e.GetTeachersForSubject(It.IsAny<Guid>(), It.IsAny<Pager>()))
+            .Setup(e => e.GetTeachersForSubject(It.IsAny<Guid>(), It.IsAny<Pager>(), It.IsAny<string>()))
             .ReturnsAsync(new PagedList<TeacherDto>() { new TeacherDto() });
         foundationCommandsRepository
             .Setup(e => e.AddTeachersToSubject(It.IsAny<Guid>(), It.IsAny<List<Guid>>()))

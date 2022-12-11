@@ -58,7 +58,9 @@ function FormikInput(props: Props): ReactElement {
           case 'date':
             return (
               <>
-                <small>{props.label ?? props.name}</small>
+                <Form.Label htmlFor={props.name}>
+                  {props.label ?? props.name}
+                </Form.Label>
                 <FormikDatePicker {...props} />
               </>
             );

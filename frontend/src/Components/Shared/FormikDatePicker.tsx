@@ -25,10 +25,22 @@ function FormikDatePicker({ formik, locale, name }: Props): ReactElement {
   return (
     <>
       <ReactDatePicker
+        name={name}
         selected={_.get(formik.values, name)}
-        className="form-control"
+        className={`form-control ${
+          _.get(formik.errors, name) && _.get(formik.touched, name)
+            ? 'is-invalid'
+            : ''
+        } ${
+          !_.get(formik.errors, name) && _.get(formik.touched, name)
+            ? 'is-valid'
+            : ''
+        }`}
         onChange={(evt) => {
           formik.setFieldValue(name, evt);
+        }}
+        onBlur={(evt) => {
+          formik.handleBlur(evt);
         }}
         locale={locale}
         dateFormat="P"
@@ -36,6 +48,7 @@ function FormikDatePicker({ formik, locale, name }: Props): ReactElement {
     </>
   );
 }
+
 export default connect(
   (state: GlobalState) => ({
     locale: getApplicationLanguageRedux(state),

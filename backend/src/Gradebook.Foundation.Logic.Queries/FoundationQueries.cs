@@ -283,10 +283,10 @@ public partial class FoundationQueries : BaseLogic<IFoundationQueriesRepository>
         return new ResponseWithStatus<TeacherDto, bool>(resp, true);
     }
 
-    public async Task<ResponseWithStatus<IPagedList<TeacherDto>>> GetTeachersForSubject(Guid subjectGuid, int page)
+    public async Task<ResponseWithStatus<IPagedList<TeacherDto>>> GetTeachersForSubject(Guid subjectGuid, int page, string? query)
     {
         var pager = new Pager(page);
-        var response = await Repository.GetTeachersForSubject(subjectGuid, pager);
+        var response = await Repository.GetTeachersForSubject(subjectGuid, pager, query);
         return new ResponseWithStatus<IPagedList<TeacherDto>>(response, true);
     }
 
