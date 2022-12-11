@@ -103,12 +103,12 @@ function validate(values: FormikProps, t: TFunction): any {
     });
   });
 
-  let dateThatShouldNotBeLater = values.dateSince!;
+  let dateThatShouldNotBeLater: Date | undefined;
   //  validate outer order
   stagesWithBothDates
     .sort((a, b) => a.order - b.order)
     .forEach((el) => {
-      if (dateThatShouldNotBeLater > el.dateSince!)
+      if (dateThatShouldNotBeLater && dateThatShouldNotBeLater > el.dateSince!)
         _.set(errors, `stages.${el.order}.dateSince`, t('wrongDatesOrder'));
       dateThatShouldNotBeLater = el.dateSince!;
     });
@@ -137,13 +137,17 @@ function ConfigureEducationCycleForm(props: Props): ReactElement {
       <LoadingScreen isReady={!!educationCycle}>
         <Formik
           validationSchema={yup.object().shape({
-            dateSince: yup.date().required(),
+            dateSince: yup.date().required(t('fieldRequired')),
             dateUntil: yup
               .date()
-              .required()
+              .required(t('fieldRequired'))
               .when('dateSince', (dateSince) => {
-                if (dateSince) return yup.date().required().min(dateSince);
-                return yup.date().required();
+                if (dateSince)
+                  return yup
+                    .date()
+                    .required(t('fieldRequired'))
+                    .min(dateSince, t('shouldNotBeBeforeCycleDateSince'));
+                return yup.date().required(t('fieldRequired'));
               }),
             stages: yup.array().of(
               yup.object().shape({
@@ -151,7 +155,7 @@ function ConfigureEducationCycleForm(props: Props): ReactElement {
                 dateUntil: yup.date(),
                 subjects: yup.array().of(
                   yup.object().shape({
-                    teacher: yup.object().required(),
+                    teacher: yup.object().required(t('fieldRequired')),
                   })
                 ),
               })

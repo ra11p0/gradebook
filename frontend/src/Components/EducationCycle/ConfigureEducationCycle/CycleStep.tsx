@@ -14,7 +14,7 @@ function CycleStep({ stageKey, stage, formik }: Props): ReactElement {
   const { t } = useTranslation('educationCycles');
   return (
     <>
-      <Stack>
+      <Stack className="border rounded-2 shadow mx-1 my-2 p-1">
         <small>{`${stage.order + 1}. ${stage.name}`}</small>
         <Row>
           <Col>
@@ -41,7 +41,6 @@ function CycleStep({ stageKey, stage, formik }: Props): ReactElement {
             {...{ subject, stageKey, subjectKey, formik }}
           />
         ))}
-        <hr />
       </Stack>
     </>
   );

@@ -38,6 +38,9 @@ i18n.init({
       person: require('./locales/en/Person/person.json'),
       educationCycle: require('./locales/en/Dashboard/Manage/educationCycle.json'),
       service: require('./locales/en/service.json'),
+      configureEducationCycleForm: require('./locales/en/EducationCycle/configureEducationCycleForm.json'),
+      educationCycles: require('./locales/en/EducationCycle/educationCycles.json'),
+      educationCyclesPicker: require('./locales/en/EducationCycle/educationCyclesPicker.json'),
     },
     pl: {
       common: require('./locales/pl/common.json'),
@@ -72,6 +75,9 @@ i18n.init({
       person: require('./locales/pl/Person/person.json'),
       educationCycle: require('./locales/pl/Dashboard/Manage/educationCycle.json'),
       service: require('./locales/pl/service.json'),
+      configureEducationCycleForm: require('./locales/pl/EducationCycle/configureEducationCycleForm.json'),
+      educationCycles: require('./locales/pl/EducationCycle/educationCycles.json'),
+      educationCyclesPicker: require('./locales/pl/EducationCycle/educationCyclesPicker.json'),
     },
   },
   ns: [
@@ -107,6 +113,9 @@ i18n.init({
     'addNewTeacherModal',
     'person',
     'service',
+    'configureEducationCycleForm',
+    'educationCycles',
+    'educationCyclesPicker',
   ],
   defaultNS: 'common',
 });

@@ -16,7 +16,7 @@ interface Props {
 }
 
 function EducationCycle({ classGuid }: Props): ReactElement {
-  const { t } = useTranslation('educationCycle');
+  const { t } = useTranslation('educationCycles');
   const [refreshKey, setRefreshKey] = useState(0);
   const [educationCycle, setEducationCycle] = useState<
     EducationCyclesInClassResponse | undefined

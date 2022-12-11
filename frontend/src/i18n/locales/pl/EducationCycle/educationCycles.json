@@ -1,0 +1,14 @@
+{
+  "dateSince": "Data rozpoczęcia",
+  "dateUntil": "Data zakończenia",
+  "teacher": "Nauczyciel",
+  "datesShouldNotOverlap": "Zakresy dat dwóch cykli nie powinny się nakładać",
+  "shouldBeAfterCycleDateSince": "Data powinna być późniejsza niż data rozpoczęcia cyklu",
+  "shouldNotBeBeforeCycleDateSince": "Data nie powinna być wcześniejsza niż data rozpoczęcia cyklu",
+  "fillBothDateValues": "Obie daty powinny zostać wypełnione",
+  "shouldBeBeforeCycleDateUntil": "Data nie powinna być późniejsza niż data zakończenia cyklu",
+  "educationCyclesSteps": "Etapy cyklu nauczania",
+  "educationCycle": "Cykl nauczania",
+  "educationCycleNotConfigured": "Cykl nauczania nie został skonfigurowany",
+  "educationCycleNotAttached": "Żaden cykl nauczania nie został przypisany do klasy"
+}

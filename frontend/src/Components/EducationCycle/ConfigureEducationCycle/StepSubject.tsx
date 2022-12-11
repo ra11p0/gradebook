@@ -23,7 +23,7 @@ function StepSubject({
   const { t } = useTranslation('educationCycles');
   return (
     <>
-      <div className={'border rounded-2 m-1 p-1'}>
+      <div className={'m-1 p-1'}>
         <small>{subject.subjectName}</small>
         <Form.Group>
           <Form.Label>{t('teacher')}</Form.Label>
@@ -69,6 +69,7 @@ function StepSubject({
           />
         </Form.Group>
       </div>
+      <hr />
     </>
   );
 }
