@@ -35,14 +35,19 @@ function EducationCycle({ classGuid }: Props): ReactElement {
   return (
     <Card>
       <Card.Header>
-        <Card.Title>{t('educationCycle')}</Card.Title>
+        <Card.Title>
+          {`${t('educationCycle')} ${
+            educationCycle?.activeEducationCycle?.name
+              ? ' - ' + educationCycle?.activeEducationCycle?.name
+              : ''
+          }`}
+        </Card.Title>
       </Card.Header>
       <Card.Body>
         <LoadingScreen isReady={!!educationCycle}>
           <>
             {educationCycle?.activeEducationCycle ? (
               <>
-                {educationCycle.activeEducationCycle.name}
                 {educationCycle?.activeEducationCycleInstance ? (
                   <>education cycle configured</>
                 ) : (

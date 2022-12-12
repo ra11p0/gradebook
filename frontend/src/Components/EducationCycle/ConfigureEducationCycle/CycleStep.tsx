@@ -14,10 +14,10 @@ function CycleStep({ stageKey, stage, formik }: Props): ReactElement {
   const { t } = useTranslation('educationCycles');
   return (
     <>
-      <Stack className="border rounded-2 shadow mx-1 my-2 p-1">
-        <small>{`${stage.order + 1}. ${stage.name}`}</small>
+      <Stack className="border rounded-2 shadow mx-0 my-2 p-1">
+        <h6>{`${stage.order + 1}. ${stage.name}`}</h6>
         <Row>
-          <Col>
+          <Col md={6} s={12}>
             <FormikInput
               type="date"
               label={t('dateSince')}
@@ -25,7 +25,7 @@ function CycleStep({ stageKey, stage, formik }: Props): ReactElement {
               formik={formik}
             />
           </Col>
-          <Col>
+          <Col md={6} s={12}>
             <FormikInput
               type="date"
               label={t('dateUntil')}
@@ -34,7 +34,7 @@ function CycleStep({ stageKey, stage, formik }: Props): ReactElement {
             />
           </Col>
         </Row>
-
+        <h6>{t('subjects')}</h6>
         {stage.subjects.map((subject: any, subjectKey: number) => (
           <StepSubject
             key={subjectKey}

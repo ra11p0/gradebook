@@ -183,9 +183,9 @@ function ConfigureEducationCycleForm(props: Props): ReactElement {
           {(formik) => (
             <form onSubmit={formik.handleSubmit}>
               <Stack>
-                <small>{formik.values.name}</small>
+                <h5>{formik.values.name}</h5>
                 <Row>
-                  <Col>
+                  <Col md={6} s={12}>
                     <FormikInput
                       type="date"
                       name="dateSince"
@@ -193,7 +193,7 @@ function ConfigureEducationCycleForm(props: Props): ReactElement {
                       formik={formik}
                     />
                   </Col>
-                  <Col>
+                  <Col md={6} s={12}>
                     <FormikInput
                       type="date"
                       name="dateUntil"
@@ -203,7 +203,7 @@ function ConfigureEducationCycleForm(props: Props): ReactElement {
                   </Col>
                 </Row>
 
-                <small>{t('educationCyclesSteps')}</small>
+                <h6>{t('educationCyclesSteps')}</h6>
                 {formik.values.stages
                   ?.sort((a, b) => a.order - b.order)
                   .map((stage, key) => (

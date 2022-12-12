@@ -41,6 +41,7 @@ i18n.init({
       configureEducationCycleForm: require('./locales/en/EducationCycle/configureEducationCycleForm.json'),
       educationCycles: require('./locales/en/EducationCycle/educationCycles.json'),
       educationCyclesPicker: require('./locales/en/EducationCycle/educationCyclesPicker.json'),
+      classPicker: require('./locales/en/Shared/classPicker.json'),
     },
     pl: {
       common: require('./locales/pl/common.json'),
@@ -78,9 +79,11 @@ i18n.init({
       configureEducationCycleForm: require('./locales/pl/EducationCycle/configureEducationCycleForm.json'),
       educationCycles: require('./locales/pl/EducationCycle/educationCycles.json'),
       educationCyclesPicker: require('./locales/pl/EducationCycle/educationCyclesPicker.json'),
+      classPicker: require('./locales/pl/Shared/classPicker.json'),
     },
   },
   ns: [
+    'classPicker',
     'common',
     'loginForm',
     'registerForm',
