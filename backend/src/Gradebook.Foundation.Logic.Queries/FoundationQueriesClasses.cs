@@ -50,7 +50,7 @@ public partial class FoundationQueries
         EducationCyclesForClassDto educationCyclesForClassDto = new();
         if (activeEducationCycleGuid.HasValue)
             educationCyclesForClassDto.ActiveEducationCycle = (await GetEducationCycle(activeEducationCycleGuid.Value)).Response;
-        educationCyclesForClassDto.ActiveEducationCycleInstance = educationCycles.FirstOrDefault(e => e.Guid == activeEducationCycleGuid);
+        educationCyclesForClassDto.ActiveEducationCycleInstance = educationCycles.FirstOrDefault(e => e.EducationCycleGuid == activeEducationCycleGuid);
         educationCyclesForClassDto.EducationCyclesInstances = educationCycles.Select(e =>
         {
             e.EducationCycleStepInstances = educationCycleStepsInstances.Where(si => si.EducationCycleInstanceGuid == e.Guid).Select(ecsi =>

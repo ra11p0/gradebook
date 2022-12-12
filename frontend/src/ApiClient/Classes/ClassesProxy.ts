@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { axiosApiAuthorized } from '../AxiosInterceptor';
+import EducationCycleConfigurationRequest from './Definitions/Requests/EducationCycleConfigurationRequest';
 import ClassResponse from './Definitions/Responses/ClassResponse';
 import EducationCyclesInClassResponse from './Definitions/Responses/EducationCyclesInClassResponse';
 import StudentInClassResponse from './Definitions/Responses/StudentInClassResponse';
@@ -77,6 +78,16 @@ async function getEducationCyclesInClass(
   );
 }
 
+const configureEducationCycleForClass = async (
+  classGuid: string,
+  educationCycleConfigurationRequest: EducationCycleConfigurationRequest
+): Promise<AxiosResponse> => {
+  return await axiosApiAuthorized.post(
+    API_URL + `/Classes/${classGuid}/EducationCycles/Current/Configuration`,
+    educationCycleConfigurationRequest
+  );
+};
+
 export default {
   addTeachersToClass,
   getTeachersInClass,
@@ -87,5 +98,6 @@ export default {
   searchStudentsCandidatesToClassWithCurrent,
   educationCycles: {
     getEducationCyclesInClass,
+    configureEducationCycleForClass,
   },
 };

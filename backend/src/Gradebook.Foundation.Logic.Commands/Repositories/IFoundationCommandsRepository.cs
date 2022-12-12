@@ -33,4 +33,5 @@ public interface IFoundationCommandsRepository : IBaseRepository
     Task<ResponseWithStatus<Guid>> AddSubject(Guid schoolGuid, NewSubjectCommand command);
     Task<StatusResponse> SetActiveEducationCycleToClasses(IEnumerable<Guid> classesGuids, Guid educationCycleGuid);
     Task<StatusResponse> DeleteActiveEducationCycleFromClasses(IEnumerable<Guid> classesGuids);
+    Task<StatusResponse> ConfigureEducationCycleForClass(Guid classGuid, Guid creatorGuid, EducationCycleConfigurationCommand configuration);
 }

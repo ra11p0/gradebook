@@ -1,4 +1,6 @@
 using Gradebook.Foundation.Common;
+using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
+using Gradebook.Foundation.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gradebook.Foundation.Logic.Commands.Repositories;
@@ -26,5 +28,42 @@ public partial class FoundationCommandsRepository
             _class.ActiveEducationCycle = null;
         }
         return new StatusResponse(200);
+    }
+    public async Task<StatusResponse> ConfigureEducationCycleForClass(Guid classGuid, Guid creatorGuid, EducationCycleConfigurationCommand configuration)
+    {
+        EducationCycleInstance instance = new()
+        {
+            CreatorGuid = creatorGuid,
+            ClassGuid = classGuid,
+            EducationCycleGuid = configuration.Guid,
+            DateSince = configuration.DateSince,
+            DateUntil = configuration.DateUntil,
+            EducationCycleStepInstances = new List<EducationCycleStepInstance>()
+        };
+
+        await Context.AddAsync(instance);
+
+        foreach (var stage in configuration.Stages)
+        {
+            EducationCycleStepInstance stepInstance = new EducationCycleStepInstance()
+            {
+                EducationCycleStepGuid = stage.Guid,
+                DateSince = stage.DateSince,
+                DateUntil = stage.DateUntil,
+                EducationCycleStepSubjectInstances = stage.Subjects.Select(sub =>
+                {
+                    var subjectInstance = new EducationCycleStepSubjectInstance()
+                    {
+                        EducationCycleStepSubjectGuid = sub.Guid,
+                        AssignedTeacherGuid = sub.TeacherGuid,
+                    };
+                    Context.Add(subjectInstance);
+                    return subjectInstance;
+                }).ToList()
+            };
+            await Context.AddAsync(stepInstance);
+            instance.EducationCycleStepInstances.Add(stepInstance);
+        }
+        return new StatusResponse(true);
     }
 }

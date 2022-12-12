@@ -58,7 +58,8 @@ public partial class FoundationQueriesRepository
             s.Name as SubjectName,
             HoursInStep,
             IsMandatory,
-            GroupsAllowed
+            GroupsAllowed,
+            ecssi.EducationCycleStepInstanceGuid 
             ");
         builder.FROM("EducationCycleStepSubjectInstances ecssi");
         builder.JOIN("EducationCycleStepInstances ecsi ON ecsi.Guid = ecssi.EducationCycleStepInstanceGuid");
@@ -67,9 +68,9 @@ public partial class FoundationQueriesRepository
         builder.JOIN("Subjects s ON s.Guid = ecss.SubjectGuid");
         builder.JOIN("Person p ON p.Guid = ecssi.AssignedTeacherGuid");
         builder.WHERE("ecssi.IsDeleted = 0");
-        builder.WHERE("ecssi.Guid IN @guids");
+        builder.WHERE("ecssi.EducationCycleStepInstanceGuid IN @guids");
         using var cn = await GetOpenConnectionAsync();
-        return await cn.QueryAsync<EducationCycleStepSubjectInstanceDto>(builder.ToString(), new { guids });
+        return await cn.QueryAsync<EducationCycleStepSubjectInstanceDto>(builder.ToString(), new { guids = guids.ToList() });
     }
     public async Task<IPagedList<EducationCycleExtendedDto>> GetEducationCyclesByGuids(IEnumerable<Guid> guids, Pager pager)
     {

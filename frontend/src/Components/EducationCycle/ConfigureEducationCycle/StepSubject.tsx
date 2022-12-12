@@ -24,7 +24,7 @@ function StepSubject({
   return (
     <>
       <div className={'m-1 p-1'}>
-        <small>{subject.subjectName}</small>
+        <b>{subject.subjectName}</b>
         <Form.Group>
           <Form.Label>{t('teacher')}</Form.Label>
           <SelectAsyncPaginate

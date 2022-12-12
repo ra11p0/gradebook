@@ -59,6 +59,7 @@ function EducationCycle({ classGuid }: Props): ReactElement {
                       </div>
                       <div className="d-flex justify-content-end">
                         <ConfigureEducationCycle
+                          classGuid={classGuid}
                           onSubmit={() => {}}
                           educationCycleGuid={
                             educationCycle.activeEducationCycle.guid

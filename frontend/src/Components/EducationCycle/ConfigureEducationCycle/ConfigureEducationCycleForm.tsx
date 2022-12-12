@@ -1,7 +1,7 @@
 import { Formik } from 'formik';
 import _ from 'lodash';
 import React, { ReactElement, useEffect, useState } from 'react';
-import { Button, Col, Row, Stack } from 'react-bootstrap';
+import { Col, Row, Stack } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import EducationCycleResponse from '../../../ApiClient/EducationCycles/Definitions/Responses/EducationCycleResponse';
 import EducationCyclesProxy from '../../../ApiClient/EducationCycles/EducationCyclesProxy';
@@ -11,9 +11,12 @@ import LoadingScreen from '../../Shared/LoadingScreen';
 import * as yup from 'yup';
 import { TFunction } from 'i18next';
 import CycleStep from './CycleStep';
+import { LoadingButton } from '@mui/lab';
+import ClassesProxy from '../../../ApiClient/Classes/ClassesProxy';
 
 interface Props {
   educationCycleGuid: string;
+  classGuid: string;
   onSubmit: () => void;
 }
 
@@ -117,6 +120,7 @@ function validate(values: FormikProps, t: TFunction): any {
 }
 
 function ConfigureEducationCycleForm(props: Props): ReactElement {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { t } = useTranslation('educationCycles');
   const [educationCycle, setEducationCycle] = useState<
     EducationCycleResponse | undefined
@@ -172,12 +176,30 @@ function ConfigureEducationCycleForm(props: Props): ReactElement {
               dateUntil: undefined as Date | undefined,
               subjects: stage.subjects.map((subject) => ({
                 ...subject,
-                teacher: undefined,
+                teacher: undefined as undefined | { guid: string },
               })),
             })),
           }}
-          onSubmit={(values) => {
-            console.dir(values);
+          onSubmit={async (values) => {
+            setIsSubmitting(true);
+            await ClassesProxy.educationCycles
+              .configureEducationCycleForClass(props.classGuid, {
+                guid: values.guid!,
+                dateSince: values.dateSince!,
+                dateUntil: values.dateUntil!,
+                stages: values.stages!.map((st) => ({
+                  guid: st.guid,
+                  dateSince: st.dateSince,
+                  dateUntil: st.dateUntil,
+                  subjects: st.subjects.map((sub) => ({
+                    guid: sub.guid,
+                    teacherGuid: sub.teacher!.guid,
+                  })),
+                })),
+              })
+              .catch(Notifications.showApiError);
+            props.onSubmit();
+            setIsSubmitting(false);
           }}
         >
           {(formik) => (
@@ -213,7 +235,16 @@ function ConfigureEducationCycleForm(props: Props): ReactElement {
                     />
                   ))}
               </Stack>
-              <Button type="submit"> submit</Button>
+              <hr />
+              <div className="d-flex justify-content-end">
+                <LoadingButton
+                  type="submit"
+                  variant="outlined"
+                  loading={isSubmitting}
+                >
+                  {t('confirm')}
+                </LoadingButton>
+              </div>
             </form>
           )}
         </Formik>

@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { Button, Modal } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import LoadingScreen from '../../Shared/LoadingScreen';
 import ConfigureEducationCycleForm from './ConfigureEducationCycleForm';
@@ -9,6 +9,7 @@ interface Props {
   onHide: () => void;
   onSubmit: () => void;
   educationCycleGuid: string;
+  classGuid: string;
 }
 
 function ConfigureEducationCycleModal(props: Props): ReactElement {
@@ -34,22 +35,13 @@ function ConfigureEducationCycleModal(props: Props): ReactElement {
             <Modal.Body>
               <ConfigureEducationCycleForm
                 educationCycleGuid={props.educationCycleGuid}
+                classGuid={props.classGuid}
                 onSubmit={() => {
                   props.onSubmit();
                   props.onHide();
                 }}
               />
             </Modal.Body>
-            <Modal.Footer>
-              <Button
-                onClick={() => {
-                  props.onSubmit();
-                  props.onHide();
-                }}
-              >
-                {t('confirm')}
-              </Button>
-            </Modal.Footer>
           </>
         </LoadingScreen>
       </Modal>

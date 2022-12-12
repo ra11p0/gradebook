@@ -114,4 +114,6 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
 
     public Task<StatusResponse> DeleteActiveEducationCycleFromClasses(IEnumerable<Guid> classesGuids)
         => Base.DeleteActiveEducationCycleFromClasses(classesGuids);
+    public Task<StatusResponse> ConfigureEducationCycleForClass(Guid classGuid, Guid creatorGuid, EducationCycleConfigurationCommand configuration)
+        => Base.ConfigureEducationCycleForClass(classGuid, creatorGuid, configuration);
 }

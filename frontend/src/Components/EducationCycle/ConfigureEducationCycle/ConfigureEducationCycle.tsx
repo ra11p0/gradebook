@@ -6,6 +6,7 @@ import ConfigureEducationCycleModal from './ConfigureEducationCycleModal';
 interface Props {
   onSubmit: () => void;
   educationCycleGuid: string;
+  classGuid: string;
 }
 
 function ConfigureEducationCycle(props: Props): ReactElement {
@@ -14,6 +15,7 @@ function ConfigureEducationCycle(props: Props): ReactElement {
   return (
     <>
       <ConfigureEducationCycleModal
+        classGuid={props.classGuid}
         educationCycleGuid={props.educationCycleGuid}
         isModalVisible={isModalVisible}
         onHide={() => {
