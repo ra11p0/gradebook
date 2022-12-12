@@ -175,8 +175,8 @@ pipeline{
                 sh 'sudo systemctl start kestrel-${JOB_NAME}'
             }
         }
-
-        post{
+    }
+     post{
             success{
                 setBuildStatus("Build succeeded", "SUCCESS");
             }
@@ -184,6 +184,5 @@ pipeline{
                 setBuildStatus("Build failed", "FAILURE");
             }
         }
-    }
 }
     
