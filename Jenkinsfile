@@ -24,6 +24,15 @@ import groovy.json.*
         gitBranchPattern: regex;
     }
 */
+void setBuildStatus(String message, String state) {
+  step([
+      $class: "GitHubCommitStatusSetter",
+      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/ra11p0/gradebook"],
+      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/build-status"],
+      errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+      statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
+  ]);
+}
 
 def jsonSlurpLax(String jsonText){
     return new JsonSlurperClassic().parseText(
@@ -164,6 +173,15 @@ pipeline{
                 sh 'cp -r frontend/build/ release/public'
                 sh 'cp -r backend/src/Api/bin/Release/net6.0/ release/api'
                 sh 'sudo systemctl start kestrel-${JOB_NAME}'
+            }
+        }
+
+        post{
+            success{
+                setBuildStatus("Build succeeded", "SUCCESS");
+            }
+            failure{
+                setBuildStatus("Build failed", "FAILURE");
             }
         }
     }
