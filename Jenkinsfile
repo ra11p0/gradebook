@@ -179,9 +179,11 @@ pipeline{
      post{
             success{
                 setBuildStatus("Build succeeded", "SUCCESS");
+                slackSend color: "good", message: "Job ${BUILD_TAG} build and deployed successfully."
             }
             failure{
                 setBuildStatus("Build failed", "FAILURE");
+                slackSend color: "danger", message: "Job ${BUILD_TAG} failed."
             }
         }
 }
