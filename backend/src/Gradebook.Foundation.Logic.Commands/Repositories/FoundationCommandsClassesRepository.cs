@@ -41,8 +41,6 @@ public partial class FoundationCommandsRepository
             EducationCycleStepInstances = new List<EducationCycleStepInstance>()
         };
 
-        await Context.AddAsync(instance);
-
         foreach (var stage in configuration.Stages)
         {
             EducationCycleStepInstance stepInstance = new EducationCycleStepInstance()
@@ -57,13 +55,13 @@ public partial class FoundationCommandsRepository
                         EducationCycleStepSubjectGuid = sub.Guid,
                         AssignedTeacherGuid = sub.TeacherGuid,
                     };
-                    Context.Add(subjectInstance);
+
                     return subjectInstance;
                 }).ToList()
             };
-            await Context.AddAsync(stepInstance);
             instance.EducationCycleStepInstances.Add(stepInstance);
         }
+        await Context.AddAsync(instance);
         return new StatusResponse(true);
     }
 }

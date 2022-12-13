@@ -6,6 +6,7 @@ export default interface EducationCycleConfigurationRequest {
 }
 
 interface Stage {
+  order: number;
   guid: string;
   dateSince?: Date;
   dateUntil?: Date;

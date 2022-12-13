@@ -24,6 +24,7 @@ public partial class FoundationCommands
         => DeleteActiveEducationCycleFromClasses(classGuid.AsEnumerable());
     public async Task<StatusResponse> ConfigureEducationCycleForClass(Guid classGuid, EducationCycleConfigurationCommand configuration)
     {
+        if (!configuration.IsValid) return new StatusResponse(400);
         var currentPersonGuid = await _foundationQueries.Service.RecogniseCurrentPersonByClassGuid(classGuid);
         if (!currentPersonGuid.Status) return new StatusResponse(currentPersonGuid.StatusCode, currentPersonGuid.Message);
         var resp = await Repository.ConfigureEducationCycleForClass(classGuid, currentPersonGuid.Response, configuration);

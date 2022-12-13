@@ -189,6 +189,7 @@ function ConfigureEducationCycleForm(props: Props): ReactElement {
                 dateUntil: values.dateUntil!,
                 stages: values.stages!.map((st) => ({
                   guid: st.guid,
+                  order: st.order,
                   dateSince: st.dateSince,
                   dateUntil: st.dateUntil,
                   subjects: st.subjects.map((sub) => ({
