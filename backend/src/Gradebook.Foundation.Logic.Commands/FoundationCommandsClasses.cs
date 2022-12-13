@@ -8,6 +8,8 @@ public partial class FoundationCommands
 {
     private async Task<StatusResponse> SetStudentsActiveClass(Guid classGuid, List<Guid> studentGuid)
     {
+        if (!await _foundationPermissions.Service.CanManageClass(classGuid))
+            return new StatusResponse(403);
         foreach (var guid in studentGuid) if (!(await Repository.SetStudentActiveClass(classGuid, guid)).Status) return new StatusResponse(false, "Could not set active school");
         return new StatusResponse(true);
     }

@@ -20,6 +20,11 @@ public partial class FoundationCommands
     }
     public async Task<StatusResponse> EditClassesAssignedToEducationCycle(IEnumerable<Guid> classesGuids, Guid educationCycleGuid)
     {
+        foreach (var classGuid in classesGuids)
+        {
+            if (!await _foundationPermissions.Service.CanManageClass(classGuid))
+                return new StatusResponse(403);
+        }
         Repository.BeginTransaction();
         var currentAssignedClasses = await _foundationQueries.Service.GetClassesGuidsForEducationCycle(educationCycleGuid, 0);
         if (!currentAssignedClasses.Status) return new StatusResponse(currentAssignedClasses.StatusCode);

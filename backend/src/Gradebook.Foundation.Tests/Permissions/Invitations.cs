@@ -1,5 +1,6 @@
 using Gradebook.Foundation.Common.Foundation;
 using Gradebook.Foundation.Common.Foundation.Commands;
+using Gradebook.Foundation.Common.Foundation.Enums;
 using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 using Gradebook.Foundation.Logic.Commands;
@@ -9,10 +10,10 @@ using Gradebook.Foundation.Logic.Queries.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 
-namespace Gradebook.Foundation.Tests;
+namespace Gradebook.Foundation.Tests.Permissions;
 
 [Category("Unit")]
-public class Classes
+public class Permissions
 {
     private readonly Mock<IFoundationCommandsRepository> foundationCommandsRepository = new();
     private readonly Mock<IFoundationQueriesRepository> foundationQueriesRepository = new();
@@ -36,16 +37,21 @@ public class Classes
     }
 
     [Test]
-    public async Task ShouldNotAddStudentToClass_AlreadyInOne()
+    public async Task CannotCreateInvitation()
     {
-        var studentGuid = Guid.NewGuid();
-        var classGuid = Guid.NewGuid();
+        foundationQueriesRepository.Setup(e => e.GetPersonGuidForUser(It.IsAny<string>(), It.IsAny<Guid>())).ReturnsAsync(Guid.NewGuid());
+        identityLogic.Setup(e => e.CurrentUserId()).ReturnsAsync(new Common.ResponseWithStatus<string, bool>(default, true));
+        foundationPermissionsLogic.Setup(e => e.CanInviteToSchool(It.IsAny<Guid>())).ReturnsAsync(false);
+        var result = await foundationCommands!.GenerateSystemInvitation(new Guid(), Common.Foundation.Enums.SchoolRoleEnum.Admin, new Guid());
+        Assert.That(result.Status, Is.False);
+        Assert.That(result.StatusCode, Is.EqualTo(403));
+    }
+    [Test]
+    public async Task CannotCreateInvitations()
+    {
         foundationQueriesRepository
             .Setup(e => e.GetPersonGuidForUser(It.IsAny<string>(), It.IsAny<Guid>()))
             .ReturnsAsync(Guid.NewGuid());
-        foundationQueriesRepository
-            .Setup(e => e.IsStudentInAnyClass(It.Is<Guid>(e => e == studentGuid)))
-            .ReturnsAsync(true);
         identityLogic
             .Setup(e => e.CurrentUserId())
             .ReturnsAsync(new Common.ResponseWithStatus<string, bool>(default, true));
@@ -53,9 +59,13 @@ public class Classes
             .Setup(e => e.CanInviteToSchool(It.IsAny<Guid>()))
             .ReturnsAsync(false);
 
-        var result = await foundationCommands!.AddStudentsToClass(classGuid, new List<Guid> { studentGuid });
+        var result = await foundationCommands!.GenerateMultipleSystemInvitation(
+                new Guid[] { new Guid() },
+                SchoolRoleEnum.Admin,
+                new Guid()
+            );
 
         Assert.That(result.Status, Is.False);
-        Assert.That(result.StatusCode, Is.EqualTo(400));
+        Assert.That(result.StatusCode, Is.EqualTo(403));
     }
 }
