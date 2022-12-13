@@ -184,16 +184,16 @@ function ConfigureEducationCycleForm(props: Props): ReactElement {
             setIsSubmitting(true);
             await ClassesProxy.educationCycles
               .configureEducationCycleForClass(props.classGuid, {
-                guid: values.guid!,
+                educationCycleGuid: values.guid!,
                 dateSince: values.dateSince!,
                 dateUntil: values.dateUntil!,
                 stages: values.stages!.map((st) => ({
-                  guid: st.guid,
+                  educationCycleStageGuid: st.guid,
                   order: st.order,
                   dateSince: st.dateSince,
                   dateUntil: st.dateUntil,
                   subjects: st.subjects.map((sub) => ({
-                    guid: sub.guid,
+                    educationCycleStageSubjectGuid: sub.guid,
                     teacherGuid: sub.teacher!.guid,
                   })),
                 })),

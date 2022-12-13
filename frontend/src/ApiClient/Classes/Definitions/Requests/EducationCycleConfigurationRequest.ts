@@ -1,5 +1,5 @@
 export default interface EducationCycleConfigurationRequest {
-  guid: string;
+  educationCycleGuid: string;
   dateSince: Date;
   dateUntil: Date;
   stages: Stage[];
@@ -7,13 +7,13 @@ export default interface EducationCycleConfigurationRequest {
 
 interface Stage {
   order: number;
-  guid: string;
+  educationCycleStageGuid: string;
   dateSince?: Date;
   dateUntil?: Date;
   subjects: Subject[];
 }
 
 interface Subject {
-  guid: string;
+  educationCycleStageSubjectGuid: string;
   teacherGuid: string;
 }

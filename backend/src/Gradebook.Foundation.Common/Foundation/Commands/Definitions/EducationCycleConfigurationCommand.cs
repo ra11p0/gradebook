@@ -1,18 +1,18 @@
 namespace Gradebook.Foundation.Common.Foundation.Commands.Definitions;
 
-public class EducationCycleConfigurationCommand : Validatable<EducationCycleConfigurationCommand>
+public class EducationCycleConfigurationCommand : Validatable
 {
     public Guid EducationCycleGuid { get; set; }
     public DateTime DateSince { get; set; }
     public DateTime DateUntil { get; set; }
     public List<EducationCycleConfigurationStageCommand> Stages { get; set; } = new();
 
-    protected override bool Validate(EducationCycleConfigurationCommand validatable)
+    protected override StatusResponse Validate()
     {
-        if (!Stages.Any()) return false;
-        if (Stages.Any(e => !e.IsValid)) return false;
-        if (Stages.Min(e => e.DateSince) < DateSince) return false;
-        if (Stages.Max(e => e.DateUntil) > DateUntil) return false;
+        if (!Stages.Any()) return new StatusResponse(false);
+        if (Stages.Any(e => !e.IsValid)) return new StatusResponse(false);
+        if (Stages.Min(e => e.DateSince) < DateSince) return new StatusResponse(false);
+        if (Stages.Max(e => e.DateUntil) > DateUntil) return new StatusResponse(false);
 
         var stagesWithBothDates = Stages.Where((e) => e.DateSince.HasValue && e.DateUntil.HasValue).ToList();
         bool overlaps = false;
@@ -25,7 +25,7 @@ public class EducationCycleConfigurationCommand : Validatable<EducationCycleConf
                     overlaps = true;
             });
         });
-        if (overlaps) return false;
+        if (overlaps) return new StatusResponse(false);
 
         DateTime? dateThatShouldNotBeLater = null;
         bool wrongDateOrder = false;
@@ -39,8 +39,8 @@ public class EducationCycleConfigurationCommand : Validatable<EducationCycleConf
                     wrongDateOrder = true;
                 dateThatShouldNotBeLater = el.DateSince;
             });
-        if (wrongDateOrder) return false;
-        return true;
+        if (wrongDateOrder) return new StatusResponse(false);
+        return new StatusResponse(true);
     }
 
     private bool datesOverlap(DateTime startDate1, DateTime endDate1, DateTime startDate2, DateTime endDate2)

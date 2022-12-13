@@ -1,6 +1,6 @@
 namespace Gradebook.Foundation.Common.Foundation.Commands.Definitions;
 
-public class EducationCycleConfigurationStageCommand : Validatable<EducationCycleConfigurationStageCommand>
+public class EducationCycleConfigurationStageCommand : Validatable
 {
     public Guid EducationCycleStageGuid { get; set; }
     public int Order { get; set; }
@@ -8,12 +8,12 @@ public class EducationCycleConfigurationStageCommand : Validatable<EducationCycl
     public DateTime? DateUntil { get; set; }
     public List<EducationCycleConfigurationSubjectCommand> Subjects { get; set; } = new();
 
-    protected override bool Validate(EducationCycleConfigurationStageCommand validatable)
+    protected override StatusResponse Validate()
     {
-        if (!(DateSince.HasValue && DateUntil.HasValue) || (!DateSince.HasValue && !DateUntil.HasValue)) return false;
+        if (!(DateSince.HasValue && DateUntil.HasValue) || (!DateSince.HasValue && !DateUntil.HasValue)) return new StatusResponse(false);
         if (DateSince.HasValue && DateUntil.HasValue && DateSince.Value > DateUntil.Value)
-            return false;
-        if (!Subjects.Any()) return false;
-        return true;
+            return new StatusResponse(false);
+        if (!Subjects.Any()) return new StatusResponse(false);
+        return new StatusResponse(true);
     }
 }
