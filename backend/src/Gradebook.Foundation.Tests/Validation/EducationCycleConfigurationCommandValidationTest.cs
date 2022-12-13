@@ -2,6 +2,7 @@ using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
 
 namespace Gradebook.Foundation.Tests.Validation;
 
+[Category("Unit")]
 public class EducationCycleConfigurationCommandValidationTest
 {
     [Test]
