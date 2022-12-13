@@ -116,4 +116,16 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
         => Base.DeleteActiveEducationCycleFromClasses(classesGuids);
     public Task<StatusResponse> ConfigureEducationCycleForClass(Guid classGuid, Guid creatorGuid, EducationCycleConfigurationCommand configuration)
         => Base.ConfigureEducationCycleForClass(classGuid, creatorGuid, configuration);
+
+    public Task<StatusResponse> ConfigureEducationCycleStageInstanceForEducationCycleInstance(Guid educationCycleInstanceGuid, IEnumerable<EducationCycleConfigurationStageCommand> stageCommands)
+        => Base.ConfigureEducationCycleStageInstanceForEducationCycleInstance(educationCycleInstanceGuid, stageCommands);
+
+    public Task<StatusResponse> ConfigureEducationCycleStageInstanceForEducationCycleInstance(Guid educationCycleInstanceGuid, EducationCycleConfigurationStageCommand stageCommand)
+        => Base.ConfigureEducationCycleStageInstanceForEducationCycleInstance(educationCycleInstanceGuid, stageCommand);
+
+    public Task<StatusResponse> ConfigureEducationCycleSubjectInstanceForEducationCycleStepInstance(Guid educationCycleStepInstanceGuid, IEnumerable<EducationCycleConfigurationSubjectCommand> subjectCommands)
+        => Base.ConfigureEducationCycleSubjectInstanceForEducationCycleStepInstance(educationCycleStepInstanceGuid, subjectCommands);
+
+    public Task<StatusResponse> ConfigureEducationCycleSubjectInstanceForEducationCycleStepInstance(Guid educationCycleStepInstanceGuid, EducationCycleConfigurationSubjectCommand subjectCommand)
+        => Base.ConfigureEducationCycleSubjectInstanceForEducationCycleStepInstance(educationCycleStepInstanceGuid, subjectCommand);
 }

@@ -158,18 +158,6 @@ public partial class FoundationCommands : BaseLogic<IFoundationCommandsRepositor
         return new StatusResponse(true);
     }
 
-    public async Task<StatusResponse> DeleteClass(Guid classGuid)
-    {
-        var person = await _foundationQueries.Service.RecogniseCurrentPersonByClassGuid(classGuid);
-        if (!person.Status) return new StatusResponse(person.Message);
-        if (!await _foundationPermissions.Service.CanManageClass(classGuid, person.Response))
-            return new StatusResponse(403);
-        var resp = await Repository.DeleteClass(classGuid);
-        if (!resp.Status) return new StatusResponse(false, resp.Message);
-        await Repository.SaveChangesAsync();
-        return resp;
-    }
-
     public async Task<StatusResponse> DeletePerson(Guid personGuid)
     {
         var personToDelete = await _foundationQueries.Service.GetPersonByGuid(personGuid);
@@ -347,16 +335,6 @@ public partial class FoundationCommands : BaseLogic<IFoundationCommandsRepositor
         }
         return new StatusResponse<bool>(false);
     }
-    private async Task<StatusResponse> SetStudentsActiveClass(Guid classGuid, List<Guid> studentGuid)
-    {
-        foreach (var guid in studentGuid) if (!(await Repository.SetStudentActiveClass(classGuid, guid)).Status) return new StatusResponse(false, "Could not set active school");
-        return new StatusResponse(true);
-    }
-    private async Task<StatusResponse> RemoveStudentsActiveClass(List<Guid> studentGuid)
-    {
-        foreach (var guid in studentGuid) if (!(await Repository.RemoveStudentActiveClass(guid)).Status) return new StatusResponse(false, "Could not remove active school");
-        return new StatusResponse(true);
-    }
 
     public async Task<ResponseWithStatus<Guid>> AddSubject(Guid schoolGuid, NewSubjectCommand command)
     {
@@ -396,19 +374,5 @@ public partial class FoundationCommands : BaseLogic<IFoundationCommandsRepositor
             Repository.RollbackTransaction();
             return new StatusResponse($"{addResp.Message}; {removeResp.Message}");
         }
-    }
-
-    public async Task<ResponseWithStatus<Guid>> AddNewEducationCycle(EducationCycleCommand command)
-    {
-        if (!command.IsValid) return new ResponseWithStatus<Guid>("Invalid command");
-        var currentPersonGuid = await _foundationQueries.Service.GetCurrentPersonGuid(command.SchoolGuid);
-        if (!currentPersonGuid.Status) return new ResponseWithStatus<Guid>(404, "Person not found");
-        if (!await _foundationPermissions.Service.CanCreateEducationCycle(command.SchoolGuid)) return new ResponseWithStatus<Guid>(403);
-        command.CreatedDate = Time.UtcNow;
-        command.CreatorGuid = currentPersonGuid.Response;
-        var res = await Repository.AddNewEducationCycle(command);
-        if (!res.Status) return new ResponseWithStatus<Guid>(res.Message);
-        await Repository.SaveChangesAsync();
-        return new ResponseWithStatus<Guid>(res.Response);
     }
 }

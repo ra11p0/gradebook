@@ -2,7 +2,7 @@ namespace Gradebook.Foundation.Common.Foundation.Commands.Definitions;
 
 public class EducationCycleConfigurationStageCommand : Validatable<EducationCycleConfigurationStageCommand>
 {
-    public Guid Guid { get; set; }
+    public Guid EducationCycleStageGuid { get; set; }
     public int Order { get; set; }
     public DateTime? DateSince { get; set; }
     public DateTime? DateUntil { get; set; }

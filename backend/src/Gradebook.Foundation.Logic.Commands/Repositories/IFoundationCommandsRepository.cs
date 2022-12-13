@@ -4,7 +4,7 @@ using Gradebook.Foundation.Common.Foundation.Enums;
 
 namespace Gradebook.Foundation.Logic.Commands.Repositories;
 
-public interface IFoundationCommandsRepository : IBaseRepository
+public interface IFoundationCommandsRepository : IBaseRepository, IFoundationCommandsClassesRepository
 {
     Task<ResponseWithStatus<Guid>> AddNewEducationCycle(EducationCycleCommand command);
     Task<StatusResponse> AddTeachersToSubject(Guid subjectGuid, List<Guid> teachersGuids);
@@ -24,14 +24,5 @@ public interface IFoundationCommandsRepository : IBaseRepository
     Task<ResponseWithStatus<Guid>> AddNewClass(NewClassCommand command);
     Task<StatusResponse> DeleteClass(Guid classGuid);
     Task<StatusResponse> DeletePerson(Guid personGuid);
-    Task<StatusResponse> AddStudentsToClass(Guid classGuid, IEnumerable<Guid> studentsGuids);
-    Task<StatusResponse> AddTeachersToClass(Guid classGuid, IEnumerable<Guid> teachersGuids);
-    Task<StatusResponse> DeleteStudentsFromClass(Guid classGuid, IEnumerable<Guid> studentsGuids);
-    Task<StatusResponse> DeleteTeachersFromClass(Guid classGuid, IEnumerable<Guid> teachersGuids);
-    Task<StatusResponse> SetStudentActiveClass(Guid classGuid, Guid studentGuid);
-    Task<StatusResponse> RemoveStudentActiveClass(Guid studentGuid);
     Task<ResponseWithStatus<Guid>> AddSubject(Guid schoolGuid, NewSubjectCommand command);
-    Task<StatusResponse> SetActiveEducationCycleToClasses(IEnumerable<Guid> classesGuids, Guid educationCycleGuid);
-    Task<StatusResponse> DeleteActiveEducationCycleFromClasses(IEnumerable<Guid> classesGuids);
-    Task<StatusResponse> ConfigureEducationCycleForClass(Guid classGuid, Guid creatorGuid, EducationCycleConfigurationCommand configuration);
 }

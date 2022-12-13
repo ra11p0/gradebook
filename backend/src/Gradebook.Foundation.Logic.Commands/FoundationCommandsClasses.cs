@@ -6,6 +6,16 @@ namespace Gradebook.Foundation.Logic.Commands;
 
 public partial class FoundationCommands
 {
+    private async Task<StatusResponse> SetStudentsActiveClass(Guid classGuid, List<Guid> studentGuid)
+    {
+        foreach (var guid in studentGuid) if (!(await Repository.SetStudentActiveClass(classGuid, guid)).Status) return new StatusResponse(false, "Could not set active school");
+        return new StatusResponse(true);
+    }
+    private async Task<StatusResponse> RemoveStudentsActiveClass(List<Guid> studentGuid)
+    {
+        foreach (var guid in studentGuid) if (!(await Repository.RemoveStudentActiveClass(guid)).Status) return new StatusResponse(false, "Could not remove active school");
+        return new StatusResponse(true);
+    }
     public async Task<StatusResponse> SetActiveEducationCycleToClass(Guid classGuid, Guid educationCycleGuid)
     {
         if (!await _foundationPermissions.Service.CanManageClass(classGuid))
@@ -45,6 +55,17 @@ public partial class FoundationCommands
             return new StatusResponse(403);
         var resp = await Repository.ConfigureEducationCycleForClass(classGuid, currentPersonGuid.Response, configuration);
         if (!resp.Status) return resp;
+        await Repository.SaveChangesAsync();
+        return resp;
+    }
+    public async Task<StatusResponse> DeleteClass(Guid classGuid)
+    {
+        var person = await _foundationQueries.Service.RecogniseCurrentPersonByClassGuid(classGuid);
+        if (!person.Status) return new StatusResponse(person.Message);
+        if (!await _foundationPermissions.Service.CanManageClass(classGuid, person.Response))
+            return new StatusResponse(403);
+        var resp = await Repository.DeleteClass(classGuid);
+        if (!resp.Status) return new StatusResponse(false, resp.Message);
         await Repository.SaveChangesAsync();
         return resp;
     }

@@ -1,9 +1,23 @@
 using Gradebook.Foundation.Common;
+using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
 
 namespace Gradebook.Foundation.Logic.Commands;
 
 public partial class FoundationCommands
 {
+    public async Task<ResponseWithStatus<Guid>> AddNewEducationCycle(EducationCycleCommand command)
+    {
+        if (!command.IsValid) return new ResponseWithStatus<Guid>("Invalid command");
+        var currentPersonGuid = await _foundationQueries.Service.GetCurrentPersonGuid(command.SchoolGuid);
+        if (!currentPersonGuid.Status) return new ResponseWithStatus<Guid>(404, "Person not found");
+        if (!await _foundationPermissions.Service.CanCreateEducationCycle(command.SchoolGuid)) return new ResponseWithStatus<Guid>(403);
+        command.CreatedDate = Time.UtcNow;
+        command.CreatorGuid = currentPersonGuid.Response;
+        var res = await Repository.AddNewEducationCycle(command);
+        if (!res.Status) return new ResponseWithStatus<Guid>(res.Message);
+        await Repository.SaveChangesAsync();
+        return new ResponseWithStatus<Guid>(res.Response);
+    }
     public async Task<StatusResponse> EditClassesAssignedToEducationCycle(IEnumerable<Guid> classesGuids, Guid educationCycleGuid)
     {
         Repository.BeginTransaction();
