@@ -209,18 +209,18 @@ namespace Gradebook.Foundation.Tests.EducationCycles
                 DateSince = new DateTime(2022, 12, 01),
                 DateUntil = new DateTime(2022, 12, 30),
                 Stages = new List<EducationCycleConfigurationStageCommand>(){
-                new EducationCycleConfigurationStageCommand(){
-                    EducationCycleStageGuid = _db.Service.EducationCycleSteps!.First().Guid,
-                    Order = 0,
-                    DateSince = new DateTime(2022, 12, 01),
-                    DateUntil = new DateTime(2022, 12, 10),
-                    Subjects = new List<EducationCycleConfigurationSubjectCommand>(){
-                        new EducationCycleConfigurationSubjectCommand(){
-                            EducationCycleStageSubjectGuid= _db.Service.EducationCycleStepSubjects!.First().Guid
+                    new EducationCycleConfigurationStageCommand(){
+                        EducationCycleStageGuid = _db.Service.EducationCycleSteps!.First().Guid,
+                        Order = 0,
+                        DateSince = new DateTime(2022, 12, 01),
+                        DateUntil = new DateTime(2022, 12, 10),
+                        Subjects = new List<EducationCycleConfigurationSubjectCommand>(){
+                            new EducationCycleConfigurationSubjectCommand(){
+                                EducationCycleStageSubjectGuid= _db.Service.EducationCycleStepSubjects!.First().Guid
+                            }
                         }
-                    }
-                },
-            }
+                    },
+                }
             };
 
             var resp2 = await _foundationCommands.ConfigureEducationCycleForClass(classResp.Response, command);

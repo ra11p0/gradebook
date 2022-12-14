@@ -21,10 +21,17 @@ interface Props {
   onChange?: (evt: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-function FormikDatePicker({ formik, locale, name }: Props): ReactElement {
+function FormikDatePicker({
+  formik,
+  locale,
+  name,
+  testId,
+}: Props): ReactElement {
   return (
     <>
       <ReactDatePicker
+        data-testid={testId}
+        id={name}
         name={name}
         selected={_.get(formik.values, name)}
         className={`form-control ${

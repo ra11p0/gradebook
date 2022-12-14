@@ -287,4 +287,128 @@ public class Classes
         Assert.That(result.Status, Is.True);
         Assert.That(result.StatusCode, Is.EqualTo(200));
     }
+    [Test]
+    public async Task CannotAssignEducationCycleInClass()
+    {
+        foundationPermissionsLogic
+            .Setup(e => e.CanManageClass(It.IsAny<Guid>(), null))
+            .ReturnsAsync(false);
+
+        var result = await foundationCommands!.EditClassesAssignedToEducationCycle(new Guid[] { Guid.NewGuid() }, Guid.NewGuid());
+
+        Assert.That(result.Status, Is.False);
+        Assert.That(result.StatusCode, Is.EqualTo(403));
+    }
+    [Test]
+    public async Task CanAssignEducationCycleInClass()
+    {
+        foundationPermissionsLogic
+            .Setup(e => e.CanManageClass(It.IsAny<Guid>(), null))
+            .ReturnsAsync(true);
+        foundationQueriesRepository
+            .Setup(e => e.GetClassesGuidsForEducationCycle(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<Pager>()))
+            .ReturnsAsync(new PagedList<Guid>() { Guid.NewGuid() });
+
+        var result = await foundationCommands!.EditClassesAssignedToEducationCycle(new Guid[] { Guid.NewGuid() }, Guid.NewGuid());
+
+        foundationCommandsRepository.Verify(e => e.DeleteActiveEducationCycleFromClasses(It.IsAny<IEnumerable<Guid>>()), Times.Exactly(1));
+        foundationCommandsRepository.Verify(e => e.SetActiveEducationCycleToClasses(It.IsAny<IEnumerable<Guid>>(), It.IsAny<Guid>()), Times.Exactly(1));
+        Assert.That(result.Status, Is.True);
+        Assert.That(result.StatusCode, Is.EqualTo(200));
+    }
+    [Test]
+    public async Task ShouldConfigureEducationCycle()
+    {
+        var command = new EducationCycleConfigurationCommand()
+        {
+            EducationCycleGuid = Guid.NewGuid(),
+            DateSince = new DateTime(2022, 12, 01),
+            DateUntil = new DateTime(2022, 12, 30),
+            Stages = new List<EducationCycleConfigurationStageCommand>(){
+                    new EducationCycleConfigurationStageCommand(){
+                        EducationCycleStageGuid =  Guid.NewGuid(),
+                        Order = 0,
+                        DateSince = new DateTime(2022, 12, 01),
+                        DateUntil = new DateTime(2022, 12, 10),
+                        Subjects = new List<EducationCycleConfigurationSubjectCommand>(){
+                            new EducationCycleConfigurationSubjectCommand(){
+                                EducationCycleStageSubjectGuid= Guid.NewGuid()
+                            }
+                        }
+                    },
+                }
+        };
+        identityLogic
+            .Setup(e => e.CurrentUserId())
+            .ReturnsAsync(new ResponseWithStatus<string, bool>("fakeUid", true));
+        foundationPermissionsLogic
+            .Setup(e => e.CanManageClass(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .ReturnsAsync(true);
+        foundationQueriesRepository
+            .Setup(e => e.GetClassesGuidsForEducationCycle(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<Pager>()))
+            .ReturnsAsync(new PagedList<Guid>() { Guid.NewGuid() });
+        foundationQueriesRepository
+            .Setup(e => e.GetClassByGuid(It.IsAny<Guid>()))
+            .ReturnsAsync(new ClassDto());
+        foundationQueriesRepository
+            .Setup(e => e.GetPersonGuidForUser(It.IsAny<string>(), It.IsAny<Guid>()))
+            .ReturnsAsync(Guid.NewGuid());
+        foundationCommandsRepository
+            .Setup(e => e.ConfigureEducationCycleForClass(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<EducationCycleConfigurationCommand>()))
+            .ReturnsAsync(new ResponseWithStatus<Guid>(Guid.NewGuid()));
+        foundationCommandsRepository
+            .Setup(e => e.ConfigureEducationCycleStageInstanceForEducationCycleInstance(It.IsAny<Guid>(), It.IsAny<EducationCycleConfigurationStageCommand>()))
+            .ReturnsAsync(new ResponseWithStatus<Guid>(Guid.NewGuid()));
+        foundationCommandsRepository
+            .Setup(e => e.ConfigureEducationCycleSubjectInstanceForEducationCycleStepInstance(It.IsAny<Guid>(), It.IsAny<IEnumerable<EducationCycleConfigurationSubjectCommand>>()))
+            .ReturnsAsync(new StatusResponse(200));
+
+        var result = await foundationCommands!.ConfigureEducationCycleForClass(Guid.NewGuid(), command);
+
+        Assert.That(result.Status, Is.True);
+        Assert.That(result.StatusCode, Is.EqualTo(200));
+    }
+    [Test]
+    public async Task ShouldNotConfigureEducationCycle()
+    {
+        var command = new EducationCycleConfigurationCommand()
+        {
+            EducationCycleGuid = Guid.NewGuid(),
+            DateSince = new DateTime(2022, 12, 01),
+            DateUntil = new DateTime(2022, 12, 30),
+            Stages = new List<EducationCycleConfigurationStageCommand>(){
+                    new EducationCycleConfigurationStageCommand(){
+                        EducationCycleStageGuid =  Guid.NewGuid(),
+                        Order = 0,
+                        DateSince = new DateTime(2022, 12, 01),
+                        DateUntil = new DateTime(2022, 12, 10),
+                        Subjects = new List<EducationCycleConfigurationSubjectCommand>(){
+                            new EducationCycleConfigurationSubjectCommand(){
+                                EducationCycleStageSubjectGuid= Guid.NewGuid()
+                            }
+                        }
+                    },
+                }
+        };
+        identityLogic
+            .Setup(e => e.CurrentUserId())
+            .ReturnsAsync(new ResponseWithStatus<string, bool>("fakeUid", true));
+        foundationPermissionsLogic
+            .Setup(e => e.CanManageClass(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .ReturnsAsync(false);
+        foundationQueriesRepository
+            .Setup(e => e.GetClassesGuidsForEducationCycle(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<Pager>()))
+            .ReturnsAsync(new PagedList<Guid>() { Guid.NewGuid() });
+        foundationQueriesRepository
+            .Setup(e => e.GetClassByGuid(It.IsAny<Guid>()))
+            .ReturnsAsync(new ClassDto());
+        foundationQueriesRepository
+            .Setup(e => e.GetPersonGuidForUser(It.IsAny<string>(), It.IsAny<Guid>()))
+            .ReturnsAsync(Guid.NewGuid());
+
+        var result = await foundationCommands!.ConfigureEducationCycleForClass(Guid.NewGuid(), command);
+
+        Assert.That(result.Status, Is.False);
+        Assert.That(result.StatusCode, Is.EqualTo(403));
+    }
 }

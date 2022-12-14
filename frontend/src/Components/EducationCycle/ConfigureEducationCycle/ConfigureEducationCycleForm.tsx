@@ -210,6 +210,7 @@ function ConfigureEducationCycleForm(props: Props): ReactElement {
                 <Row>
                   <Col md={6} s={12}>
                     <FormikInput
+                      testId="dateSince"
                       type="date"
                       name="dateSince"
                       label={t('dateSince')}
@@ -218,6 +219,7 @@ function ConfigureEducationCycleForm(props: Props): ReactElement {
                   </Col>
                   <Col md={6} s={12}>
                     <FormikInput
+                      testId="dateUntil"
                       type="date"
                       name="dateUntil"
                       label={t('dateUntil')}

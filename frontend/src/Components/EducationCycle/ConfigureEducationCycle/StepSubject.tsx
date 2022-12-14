@@ -28,6 +28,7 @@ function StepSubject({
         <Form.Group>
           <Form.Label>{t('teacher')}</Form.Label>
           <SelectAsyncPaginate
+            id={`stages.${stageKey}.subjects.${subjectKey}.teacher`}
             value={(() => {
               const value = _.get(
                 formik.values,
