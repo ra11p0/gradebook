@@ -30,74 +30,81 @@ public partial class FoundationCommandsRepository : IFoundationCommandsClassesRe
         }
         return new StatusResponse(200);
     }
-    public async Task<StatusResponse> ConfigureEducationCycleForClass(Guid classGuid, Guid creatorGuid, EducationCycleConfigurationCommand configuration)
+    public async Task<ResponseWithStatus<Guid>> ConfigureEducationCycleForClass(Guid classGuid, Guid creatorGuid, EducationCycleConfigurationCommand configuration)
     {
+        var educationCycle = await Context.EducationCycles!.FirstOrDefaultAsync(e => e.Guid == configuration.EducationCycleGuid);
+        if (educationCycle is null) return new ResponseWithStatus<Guid>(404);
         EducationCycleInstance instance = new()
         {
             CreatorGuid = creatorGuid,
             ClassGuid = classGuid,
-            EducationCycleGuid = configuration.EducationCycleGuid,
+            EducationCycle = educationCycle,
             DateSince = configuration.DateSince,
             DateUntil = configuration.DateUntil,
             EducationCycleStepInstances = new List<EducationCycleStepInstance>()
         };
         await Context.AddAsync(instance);
-        await ConfigureEducationCycleStageInstanceForEducationCycleInstance(instance.Guid, configuration.Stages);
 
-        return new StatusResponse(true);
+        return new ResponseWithStatus<Guid>(instance.Guid);
     }
     public async Task<StatusResponse> ConfigureEducationCycleStageInstanceForEducationCycleInstance(Guid educationCycleInstanceGuid, IEnumerable<EducationCycleConfigurationStageCommand> stageCommands)
     {
         foreach (var command in stageCommands)
         {
             var resp = await ConfigureEducationCycleStageInstanceForEducationCycleInstance(educationCycleInstanceGuid, command);
-            if (!resp.Status) return resp;
+            if (!resp.Status) return new StatusResponse(resp.StatusCode);
         }
         return new StatusResponse(true);
     }
-    public async Task<StatusResponse> ConfigureEducationCycleStageInstanceForEducationCycleInstance(Guid educationCycleInstanceGuid, EducationCycleConfigurationStageCommand stageCommand)
+    public async Task<ResponseWithStatus<Guid>> ConfigureEducationCycleStageInstanceForEducationCycleInstance(Guid educationCycleInstanceGuid, EducationCycleConfigurationStageCommand stageCommand)
     {
         var instance = await Context
             .EducationCycleInstances!
             .Include(e => e.EducationCycleStepInstances)
             .FirstOrDefaultAsync(e => e.Guid == educationCycleInstanceGuid);
-        if (instance is null) return new StatusResponse(404);
+        if (instance is null) return new ResponseWithStatus<Guid>(404);
+        var educationCycleStep = await Context.EducationCycleSteps!.FirstOrDefaultAsync(e => e.Guid == stageCommand.EducationCycleStageGuid);
+        if (educationCycleStep is null) return new ResponseWithStatus<Guid>(404);
         EducationCycleStepInstance stepInstance = new EducationCycleStepInstance()
         {
-            EducationCycleStepGuid = stageCommand.EducationCycleStageGuid,
+            EducationCycleInstanceGuid = instance.Guid,
+            EducationCycleStepGuid = educationCycleStep.Guid,
             DateSince = stageCommand.DateSince,
             DateUntil = stageCommand.DateUntil,
         };
-        instance!.EducationCycleStepInstances!.Add(stepInstance);
+        Context.Add(stepInstance);
         await ConfigureEducationCycleSubjectInstanceForEducationCycleStepInstance(instance.Guid, stageCommand.Subjects);
 
-        return new StatusResponse(true);
+        return new ResponseWithStatus<Guid>(stepInstance.Guid);
     }
     public async Task<StatusResponse> ConfigureEducationCycleSubjectInstanceForEducationCycleStepInstance(Guid educationCycleStepInstanceGuid, IEnumerable<EducationCycleConfigurationSubjectCommand> subjectCommands)
     {
         foreach (var command in subjectCommands)
         {
             var resp = await ConfigureEducationCycleSubjectInstanceForEducationCycleStepInstance(educationCycleStepInstanceGuid, command);
-            if (!resp.Status) return resp;
+            if (!resp.Status) return new StatusResponse(resp.StatusCode);
         }
         return new StatusResponse(true);
     }
-    public async Task<StatusResponse> ConfigureEducationCycleSubjectInstanceForEducationCycleStepInstance(Guid educationCycleStepInstanceGuid, EducationCycleConfigurationSubjectCommand subjectCommand)
+    public async Task<ResponseWithStatus<Guid>> ConfigureEducationCycleSubjectInstanceForEducationCycleStepInstance(Guid educationCycleStepInstanceGuid, EducationCycleConfigurationSubjectCommand subjectCommand)
     {
         var instance = await Context
             .EducationCycleStepInstances!
             .Include(e => e.EducationCycleStepSubjectInstances)
             .FirstOrDefaultAsync(e => e.Guid == educationCycleStepInstanceGuid);
-        if (instance is null) return new StatusResponse(404);
+        if (instance is null) return new ResponseWithStatus<Guid>(404);
+        var educationCycleStepSubject = await Context.EducationCycleStepSubjects!.FirstOrDefaultAsync(e => e.Guid == subjectCommand.EducationCycleStageSubjectGuid);
+        if (educationCycleStepSubject is null) return new ResponseWithStatus<Guid>(404);
         var subjectInstance = new EducationCycleStepSubjectInstance()
         {
-            EducationCycleStepSubjectGuid = subjectCommand.EducationCycleStageSubjectGuid,
+            EducationCycleStepInstanceGuid = instance.Guid,
+            EducationCycleStepSubjectGuid = educationCycleStepSubject.Guid,
             AssignedTeacherGuid = subjectCommand.TeacherGuid,
         };
 
-        instance!.EducationCycleStepSubjectInstances!.Add(subjectInstance);
+        Context.Add(subjectInstance);
 
-        return new StatusResponse(true);
+        return new ResponseWithStatus<Guid>(subjectInstance.Guid);
     }
     public async Task<ResponseWithStatus<Guid>> AddNewClass(NewClassCommand command)
     {

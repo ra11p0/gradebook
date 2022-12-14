@@ -55,10 +55,34 @@ public partial class FoundationCommands
         if (!currentPersonGuid.Status) return new StatusResponse(currentPersonGuid.StatusCode, currentPersonGuid.Message);
         if (!await _foundationPermissions.Service.CanManageClass(classGuid, currentPersonGuid.Response))
             return new StatusResponse(403);
+        Repository.BeginTransaction();
         var resp = await Repository.ConfigureEducationCycleForClass(classGuid, currentPersonGuid.Response, configuration);
-        if (!resp.Status) return resp;
+        if (!resp.Status)
+        {
+            Repository.RollbackTransaction();
+            return new StatusResponse(resp.StatusCode);
+        }
         await Repository.SaveChangesAsync();
-        return resp;
+        foreach (var stage in configuration.Stages)
+        {
+            var resp2 = await Repository.ConfigureEducationCycleStageInstanceForEducationCycleInstance(resp.Response, stage);
+            if (!resp2.Status)
+            {
+                Repository.RollbackTransaction();
+                return new StatusResponse(resp.StatusCode);
+            }
+            await Repository.SaveChangesAsync();
+            var resp3 = await Repository.ConfigureEducationCycleSubjectInstanceForEducationCycleStepInstance(resp2.Response, stage.Subjects);
+            if (!resp3.Status)
+            {
+                Repository.RollbackTransaction();
+                return new StatusResponse(resp.StatusCode);
+            }
+            await Repository.SaveChangesAsync();
+        }
+        await Repository.SaveChangesAsync();
+        Repository.CommitTransaction();
+        return new StatusResponse(true);
     }
     public async Task<StatusResponse> DeleteClass(Guid classGuid)
     {
