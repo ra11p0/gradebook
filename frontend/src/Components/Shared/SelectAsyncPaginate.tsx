@@ -35,6 +35,7 @@ function SelectAsyncPaginate<T>(props: Props<T>): ReactElement {
   };
   return (
     <AsyncPaginate
+      inputId={props.id}
       id={props.id}
       placeholder={<>{t('select...')}</>}
       noOptionsMessage={() => {

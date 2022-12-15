@@ -12,7 +12,7 @@ import ConfigureEducationCycleForm from '../../Components/EducationCycle/Configu
 import EducationCyclesProxy from '../../ApiClient/EducationCycles/EducationCyclesProxy';
 import ClassesProxy from '../../ApiClient/Classes/ClassesProxy';
 import SubjectsProxy from '../../ApiClient/Subjects/SubjectsProxy';
-import { select } from 'react-select-event';
+import { select, openMenu } from 'react-select-event';
 
 describe('<ConfigureEducationCycleForm />', () => {
   it('Should validate start and end dates empty', async () => {
@@ -98,7 +98,7 @@ describe('<ConfigureEducationCycleForm />', () => {
     ).toHaveClass('is-invalid');
   });
 
-  it('Should send request', async () => {
+  it('Should api send request', async () => {
     jest
       .spyOn(EducationCyclesProxy, 'getEducationCycle')
       .mockResolvedValueOnce({
@@ -126,11 +126,11 @@ describe('<ConfigureEducationCycleForm />', () => {
     jest.spyOn(SubjectsProxy, 'getTeachersForSubject').mockResolvedValueOnce({
       data: [
         {
-          guid: 'string',
+          guid: 'fakeGuid',
           creatorGuid: 'string',
           userGuid: 'string',
-          name: 'string',
-          surname: 'string',
+          name: 'fakeName',
+          surname: 'fakeSurname',
           schoolRole: 1,
           isActive: true,
         },
@@ -180,14 +180,16 @@ describe('<ConfigureEducationCycleForm />', () => {
         '03/05/2022{enter}'
       );
     });
+    const selectField = await screen.findByRole('combobox', { name: '' });
     await act(async () => {
-      await select(await screen.findByRole('combobox', { name: '' }), 'string');
+      await openMenu(selectField);
+    });
+    await act(async () => {
+      await select(selectField, 'fakeName fakeSurname');
     });
     await act(async () => {
       fireEvent.click(screen.getByRole('button', { name: 'Confirm' }));
     });
-
-    screen.debug();
 
     expect(mockedConfigureEducationCycleForClass).toBeCalledTimes(1);
   });

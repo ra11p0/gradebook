@@ -1,5 +1,5 @@
 export default interface EducationCyclesInClassResponse {
-  activeEducationCycleInstance: EducationCycleInstance;
+  activeEducationCycleInstance?: EducationCycleInstance;
   activeEducationCycleGuid?: string;
   activeEducationCycle?: EducationCycle;
   hasPreparedActiveEducationCycle: boolean;
