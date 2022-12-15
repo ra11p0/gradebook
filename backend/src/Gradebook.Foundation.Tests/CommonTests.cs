@@ -40,12 +40,12 @@ namespace Gradebook.Foundation.Tests
         #endregion
 
         #region Validatable
-        internal class FakeValidationClass : Validatable<FakeValidationClass>
+        internal class FakeValidationClass : Validatable
         {
             public string? Value { get; set; }
-            protected override bool Validate(FakeValidationClass validatable)
+            protected override StatusResponse Validate()
             {
-                return Value != "invalid";
+                return new StatusResponse(Value != "invalid");
             }
         }
         [Test]

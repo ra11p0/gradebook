@@ -34,7 +34,7 @@ public class ResponseWithStatus<R> : ResponseWithStatus<R, bool>
     public ResponseWithStatus(string? message = null) : this(400, false, message)
     {
     }
-    public ResponseWithStatus(int statusCode, string? message = null) : this(statusCode, false, message)
+    public ResponseWithStatus(int statusCode, string? message = null) : this(statusCode, statusCode is 200 ? true : false, message)
     {
     }
     public ResponseWithStatus(bool status, string? message = null) : this(status ? 200 : 400, status, message)
@@ -60,7 +60,7 @@ public class StatusResponse : StatusResponse<bool>
     public StatusResponse(bool status, string? message = null) : this(status ? 200 : 400, status, message)
     {
     }
-    public StatusResponse(int statusCode, string? message = null) : this(statusCode, false, message)
+    public StatusResponse(int statusCode, string? message = null) : this(statusCode, statusCode is 200 ? true : false, message)
     {
     }
     public StatusResponse(int statusCode, bool status, string? message = null) : base(statusCode, status, message)

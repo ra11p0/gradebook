@@ -1,11 +1,11 @@
 namespace Gradebook.Foundation.Common.Foundation.Commands.Definitions;
 
-public class NewSubjectCommand : Validatable<NewSubjectCommand>
+public class NewSubjectCommand : Validatable
 {
     public string Name { get; set; } = string.Empty;
 
-    protected override bool Validate(NewSubjectCommand validatable)
+    protected override StatusResponse Validate()
     {
-        return !string.IsNullOrEmpty(Name);
+        return new StatusResponse(!string.IsNullOrEmpty(Name));
     }
 }

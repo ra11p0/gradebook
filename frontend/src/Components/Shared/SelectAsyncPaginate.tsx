@@ -4,6 +4,7 @@ import { ActionMeta, SingleValue } from 'react-select';
 import { AsyncPaginate } from 'react-select-async-paginate';
 
 interface Props<T> {
+  id?: string;
   value?: T;
   onChange?: (newValue: SingleValue<T>, actionMeta: ActionMeta<T>) => void;
   fetch: (query: string, page: number) => Promise<T[]>;
@@ -34,6 +35,8 @@ function SelectAsyncPaginate<T>(props: Props<T>): ReactElement {
   };
   return (
     <AsyncPaginate
+      inputId={props.id}
+      id={props.id}
       placeholder={<>{t('select...')}</>}
       noOptionsMessage={() => {
         return t('noOptions');

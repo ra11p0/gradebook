@@ -7,6 +7,7 @@ import Notifications from '../../Notifications/Notifications';
 import LoadingScreen from '../Shared/LoadingScreen';
 import { Stack } from 'react-bootstrap';
 import EducationCycleHeader from './EducationCycleHeader';
+import EducationCycleAssignedClasses from './EducationCycleAssignedClasses';
 
 interface Props {
   educationCycleGuid?: string;
@@ -19,19 +20,31 @@ function EducationCycle(props: Props): ReactElement {
     EducationCycleResponse | undefined
   >(undefined);
   useEffect(() => {
-    const guid = educationCycleGuid ?? props.educationCycleGuid;
-    if (!guid) return;
-    EducationCyclesProxy.getEducationCycle(guid)
-      .then((res) => setEducationCycle(res.data))
-      .catch(Notifications.showApiError);
+    void (async () => {
+      const guid = educationCycleGuid ?? props.educationCycleGuid;
+      if (!guid) return;
+      await EducationCyclesProxy.getEducationCycle(guid)
+        .then((res) => setEducationCycle(res.data))
+        .catch(Notifications.showApiError);
+    })();
   }, [props.educationCycleGuid, educationCycleGuid]);
   return (
     <LoadingScreen isReady={!!educationCycle}>
       <>
-        <Stack>
-          <EducationCycleHeader {...educationCycle!} />
-        </Stack>
-        <div>EducationCycle {`${educationCycle?.guid ?? ''}`}</div>
+        {educationCycle && (
+          <>
+            <Stack>
+              <EducationCycleHeader {...educationCycle} />
+              <div>EducationCycle {`${educationCycle?.guid ?? ''}`}</div>
+              education cycle assigned classes:
+              <div>
+                <EducationCycleAssignedClasses
+                  educationCycleGuid={educationCycle.guid}
+                />
+              </div>
+            </Stack>
+          </>
+        )}
       </>
     </LoadingScreen>
   );

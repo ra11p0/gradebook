@@ -19,7 +19,7 @@ namespace Api.Controllers.Schools;
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
-public class SchoolsController : ControllerBase
+public partial class SchoolsController : ControllerBase
 {
     private readonly ServiceResolver<IFoundationPermissionsLogic> _foundationPermissions;
     private readonly ServiceResolver<IFoundationQueries> _foundationQueries;
@@ -54,36 +54,6 @@ public class SchoolsController : ControllerBase
     public async Task<IActionResult> DeleteSchool([FromRoute] Guid schoolGuid)
     {
         var resp = await _foundationCommands.Service.DeleteSchool(schoolGuid);
-        return resp.Status ? Ok() : BadRequest(resp.Message);
-    }
-    #endregion
-
-    #region people
-
-    [HttpGet]
-    [Route("{schoolGuid}/People")]
-    [ProducesResponseType(typeof(IEnumerable<PersonDto>), statusCode: 200)]
-    [ProducesResponseType(typeof(string), statusCode: 400)]
-    public async Task<IActionResult> GetPeopleInSchool([FromRoute] Guid schoolGuid)
-    {
-        var resp = await _foundationQueries.Service.GetPeopleInSchool(schoolGuid);
-        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
-    }
-    [HttpGet]
-    [Route("{schoolGuid}/People/Search")]
-    [ProducesResponseType(typeof(IPagedList<PersonDto>), statusCode: 200)]
-    [ProducesResponseType(typeof(string), statusCode: 400)]
-    public async Task<IActionResult> GetPeopleInSchoolSearch([FromRoute] Guid schoolGuid, [FromQuery] int page = 1, [FromQuery] string? discriminator = "", [FromQuery] string? query = "")
-    {
-        var resp = await _foundationQueries.Service.GetPeopleInSchool(schoolGuid, discriminator!, query!, page);
-        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
-    }
-
-    [HttpPost]
-    [Route("{schoolGuid}/People")]
-    public async Task<IActionResult> AddPersonToSchool([FromRoute] Guid schoolGuid, [FromBody] Guid personGuid)
-    {
-        var resp = await _foundationCommands.Service.AddPersonToSchool(schoolGuid, personGuid);
         return resp.Status ? Ok() : BadRequest(resp.Message);
     }
     #endregion
@@ -178,29 +148,6 @@ public class SchoolsController : ControllerBase
     }
     #endregion
 
-    #region classes
-    [HttpPost]
-    [Route("{schoolGuid}/Classes")]
-    [ProducesResponseType(typeof(Guid), 200)]
-    [ProducesResponseType(typeof(string), 400)]
-    public async Task<IActionResult> AddNewClass([FromRoute] Guid schoolGuid, [FromBody] NewClassModel model)
-    {
-        var command = _mapper.Service.Map<NewClassCommand>(model);
-        command.SchoolGuid = schoolGuid;
-        var resp = await _foundationCommands.Service.AddNewClass(command);
-        return resp.ObjectResult;
-    }
-    [HttpGet]
-    [Route("{schoolGuid}/Classes")]
-    [ProducesResponseType(typeof(IPagedList<ClassDto>), 200)]
-    [ProducesResponseType(typeof(string), 400)]
-    public async Task<IActionResult> AddNewClass([FromRoute] Guid schoolGuid, [FromQuery] int page = 1)
-    {
-        var resp = await _foundationQueries.Service.GetClassesInSchool(schoolGuid, page);
-        return resp.ObjectResult;
-    }
-    #endregion
-
     #region subjects
     [HttpGet, Route("{schoolGuid}/subjects")]
     [ProducesResponseType(typeof(PagedList<SubjectDto>), statusCode: 200)]
@@ -217,32 +164,6 @@ public class SchoolsController : ControllerBase
     {
         var resp = await _foundationCommands.Service.AddSubject(schoolGuid, command);
         return resp.ObjectResult;
-    }
-    #endregion
-
-    #region education cycles
-    [HttpPost]
-    [Route("{schoolGuid}/EducationCycles")]
-    [ProducesResponseType(typeof(Guid), statusCode: 200)]
-    [ProducesResponseType(typeof(string), statusCode: 400)]
-    [ProducesResponseType(typeof(string), statusCode: 403)]
-    [ProducesResponseType(typeof(string), statusCode: 404)]
-    public async Task<IActionResult> AddNewEducationCycle([FromBody] EducationCycleCommand model, [FromRoute] Guid schoolGuid)
-    {
-        model.SchoolGuid = schoolGuid;
-        var res = await _foundationCommands.Service.AddNewEducationCycle(model);
-        return res.ObjectResult;
-    }
-    [HttpGet]
-    [Route("{schoolGuid}/EducationCycles")]
-    [ProducesResponseType(typeof(Guid), statusCode: 200)]
-    [ProducesResponseType(typeof(string), statusCode: 400)]
-    [ProducesResponseType(typeof(string), statusCode: 403)]
-    [ProducesResponseType(typeof(string), statusCode: 404)]
-    public async Task<IActionResult> GetEducationCycles([FromRoute] Guid schoolGuid, [FromQuery] int page = 0)
-    {
-        var res = await _foundationQueries.Service.GetEducationCyclesInSchool(schoolGuid, page);
-        return res.ObjectResult;
     }
     #endregion
 }

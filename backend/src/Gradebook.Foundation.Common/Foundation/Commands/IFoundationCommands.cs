@@ -27,4 +27,9 @@ public interface IFoundationCommands
     Task<StatusResponse> DeleteStudentsFromClass(Guid classGuid, IEnumerable<Guid> studentsGuids);
     Task<ResponseWithStatus<IPagedList<StudentDto>>> EditStudentsInClass(Guid classGuid, IEnumerable<Guid> studentsGuids);
     Task<ResponseWithStatus<IPagedList<TeacherDto>>> EditTeachersInClass(Guid classGuid, IEnumerable<Guid> studentsGuids);
+    Task<StatusResponse> SetActiveEducationCycleToClass(Guid classGuid, Guid educationCycleGuid);
+    Task<StatusResponse> SetActiveEducationCycleToClasses(IEnumerable<Guid> classesGuid, Guid educationCycleGuid);
+    Task<StatusResponse> DeleteActiveEducationCycleFromClass(Guid classGuid);
+    Task<StatusResponse> EditClassesAssignedToEducationCycle(IEnumerable<Guid> classesGuids, Guid educationCycleGuid);
+    Task<StatusResponse> ConfigureEducationCycleForClass(Guid classGuid, EducationCycleConfigurationCommand configuration);
 }

@@ -1,7 +1,7 @@
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 
-namespace Gradebook.Foundation.Logic.Queries;
+namespace Gradebook.Foundation.Logic.Queries.Repositories;
 
 public class FoundationQueriesRepositoryCached : BaseRepositoryCached<FoundationQueriesRepository, object>, IFoundationQueriesRepository
 {
@@ -18,7 +18,7 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
     public Task<IEnumerable<StudentDto>> GetAllInactiveAccessibleStudents(Guid schoolGuid)
         => Base.GetAllInactiveAccessibleStudents(schoolGuid);
 
-    public Task<ClassDto> GetClassByGuid(Guid guid)
+    public Task<ClassDto?> GetClassByGuid(Guid guid)
         => Base.GetClassByGuid(guid);
 
     public Task<GroupDto> GetGroupByGuid(Guid guid)
@@ -72,8 +72,8 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
     public Task<IPagedList<InvitationDto>> GetInvitationsToSchool(Guid schoolGuid, Pager pager)
         => Base.GetInvitationsToSchool(schoolGuid, pager);
 
-    public Task<IPagedList<ClassDto>> GetClassesInSchool(Guid schoolGuid, Pager pager)
-        => Base.GetClassesInSchool(schoolGuid, pager);
+    public Task<IPagedList<ClassDto>> GetClassesInSchool(Guid schoolGuid, Pager pager, string? query = "")
+        => Base.GetClassesInSchool(schoolGuid, pager, query);
 
     public Task<IPagedList<StudentDto>> GetStudentsInClass(Guid schoolGuid, Pager pager)
         => Base.GetStudentsInClass(schoolGuid, pager);
@@ -114,14 +114,14 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
     public Task<IPagedList<SubjectDto>> GetSubjectsForSchool(Guid schoolGuid, Pager pager, string query)
         => Base.GetSubjectsForSchool(schoolGuid, pager, query);
 
-    public Task<IPagedList<TeacherDto>> GetTeachersForSubject(Guid subjectGuid, Pager pager)
-        => Base.GetTeachersForSubject(subjectGuid, pager);
+    public Task<IPagedList<TeacherDto>> GetTeachersForSubject(Guid subjectGuid, Pager pager, string? query)
+        => Base.GetTeachersForSubject(subjectGuid, pager, query);
 
     public Task<IPagedList<SubjectDto>> GetSubjectsForTeacher(Guid teacherGuid, Pager pager)
         => Base.GetSubjectsForTeacher(teacherGuid, pager);
 
-    public Task<IPagedList<EducationCycleDto>> GetEducationCyclesInSchool(Guid schoolGuid, Pager pager)
-        => Base.GetEducationCyclesInSchool(schoolGuid, pager);
+    public Task<IPagedList<EducationCycleDto>> GetEducationCyclesInSchool(Guid schoolGuid, Pager pager, string query)
+        => Base.GetEducationCyclesInSchool(schoolGuid, pager, query);
 
     public Task<EducationCycleExtendedDto?> GetEducationCycle(Guid educationCycleGuid)
         => Base.GetEducationCycle(educationCycleGuid);
@@ -131,4 +131,31 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
 
     public Task<IEnumerable<EducationCycleStepSubjectDto>> GetStepsSubjectsForEducationCycleStep(Guid educationCycleStepGuid)
         => Base.GetStepsSubjectsForEducationCycleStep(educationCycleStepGuid);
+
+    public Task<IPagedList<Guid>> GetClassesGuidsForEducationCycle(Guid educationCycle, string? query, Pager pager)
+        => Base.GetClassesGuidsForEducationCycle(educationCycle, query, pager);
+
+    public Task<IEnumerable<ClassDto>> GetClassesByGuids(IEnumerable<Guid> guids)
+        => Base.GetClassesByGuids(guids);
+
+    public Task<IEnumerable<EducationCycleInstanceDto>> GetEducationCycleInstancesByGuids(IEnumerable<Guid> guids)
+        => Base.GetEducationCycleInstancesByGuids(guids);
+
+    public Task<IEnumerable<EducationCycleStepInstanceDto>> GetEducationCycleStepInstancesByEducationCycleInstancesGuids(IEnumerable<Guid> guids)
+        => Base.GetEducationCycleStepInstancesByEducationCycleInstancesGuids(guids);
+
+    public Task<IEnumerable<EducationCycleStepSubjectInstanceDto>> GetEducationCycleStepSubjectInstancesByEducationCycleStepInstancesGuids(IEnumerable<Guid> guids)
+        => Base.GetEducationCycleStepSubjectInstancesByEducationCycleStepInstancesGuids(guids);
+
+    public Task<Guid?> GetActiveEducationCycleGuidByClassGuid(Guid classGuid)
+        => Base.GetActiveEducationCycleGuidByClassGuid(classGuid);
+
+    public Task<IPagedList<Guid>> GetEducationCycleInstancesGuidsByClassGuid(Guid classGuid, Pager pager)
+        => Base.GetEducationCycleInstancesGuidsByClassGuid(classGuid, pager);
+
+    public Task<Guid?> GetEducationCycleInstanceForClass(Guid classGuid, Guid educationCycleGuid)
+        => Base.GetEducationCycleInstanceForClass(classGuid, educationCycleGuid);
+
+    public Task<IPagedList<EducationCycleExtendedDto>> GetEducationCyclesByGuids(IEnumerable<Guid> guids, Pager pager)
+        => Base.GetEducationCyclesByGuids(guids, pager);
 }

@@ -20,5 +20,6 @@
   "canUseGroups": "Zezwalaj na podział na grupy",
   "educationCycles": "Cykle nauczania",
   "addNewEducationCycle": "Dodaj nowy cykl nauczania",
-  "showEducationCycle": "Pokaż cykl nauczania"
+  "showEducationCycle": "Pokaż cykl nauczania",
+  "className": "Nazwa klasy"
 }

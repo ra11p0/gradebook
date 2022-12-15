@@ -7,9 +7,9 @@ using Gradebook.Foundation.Database;
 using Gradebook.Foundation.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Gradebook.Foundation.Logic.Commands;
+namespace Gradebook.Foundation.Logic.Commands.Repositories;
 
-public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseContext>, IFoundationCommandsRepository
+public partial class FoundationCommandsRepository : BaseRepository<FoundationDatabaseContext>, IFoundationCommandsRepository
 {
     private readonly IMapper _mapper;
     public FoundationCommandsRepository(FoundationDatabaseContext context, IMapper mapper) : base(context)
@@ -139,82 +139,6 @@ public class FoundationCommandsRepository : BaseRepository<FoundationDatabaseCon
         School? school = await GetSchoolByGuid(schoolGuid);
         if (school is null) return new StatusResponse(true);
         school.IsDeleted = true;
-        return new StatusResponse(true);
-    }
-
-    public async Task<ResponseWithStatus<Guid>> AddNewClass(NewClassCommand command)
-    {
-        var dbModel = _mapper.Map<Class>(command);
-        await Context.AddAsync(dbModel);
-        return new ResponseWithStatus<Guid>(dbModel.Guid);
-    }
-
-    public async Task<StatusResponse> DeleteClass(Guid classGuid)
-    {
-        var _class = await Context.Classes!.FirstOrDefaultAsync(c => c.Guid == classGuid);
-        if (_class is null) return new StatusResponse(true);
-        _class.IsDeleted = true;
-        return new StatusResponse(true);
-    }
-
-    public async Task<StatusResponse> DeletePerson(Guid personGuid)
-    {
-        var person = await GetPersonByGuid(personGuid);
-        if (person is null) return new StatusResponse(true);
-        person.IsDeleted = true;
-        return new StatusResponse(true);
-    }
-
-    public async Task<StatusResponse> AddStudentsToClass(Guid classGuid, IEnumerable<Guid> studentsGuids)
-    {
-        var students = Context.Students!.Where(student => studentsGuids.Contains(student.Guid));
-        var _class = await Context.Classes!.Include(entity => entity.Students).FirstOrDefaultAsync(_class => _class.Guid == classGuid);
-        if (_class is null) return new StatusResponse("Class does not exist");
-        _class.Students!.AddRange(students);
-        return new StatusResponse(true);
-    }
-
-    public async Task<StatusResponse> AddTeachersToClass(Guid classGuid, IEnumerable<Guid> teachersGuids)
-    {
-        var teachers = Context.Teachers!.Where(teacher => teachersGuids.Contains(teacher.Guid));
-        var _class = await Context.Classes!.Include(entity => entity.OwnersTeachers).FirstOrDefaultAsync(_class => _class.Guid == classGuid);
-        if (_class is null) return new StatusResponse("Class does not exist");
-        _class.OwnersTeachers!.AddRange(teachers);
-        return new StatusResponse(true);
-    }
-
-    public async Task<StatusResponse> DeleteStudentsFromClass(Guid classGuid, IEnumerable<Guid> studentsGuids)
-    {
-        var students = Context.Students!.Where(student => studentsGuids.Contains(student.Guid));
-        var _class = await Context.Classes!.Include(entity => entity.Students).FirstOrDefaultAsync(_class => _class.Guid == classGuid);
-        if (_class is null) return new StatusResponse("Class does not exist");
-        _class.Students!.RemoveRange(students);
-        return new StatusResponse(true);
-    }
-
-    public async Task<StatusResponse> DeleteTeachersFromClass(Guid classGuid, IEnumerable<Guid> teachersGuids)
-    {
-        var teachers = Context.Teachers!.Where(teacher => teachersGuids.Contains(teacher.Guid));
-        var _class = await Context.Classes!.Include(entity => entity.OwnersTeachers).FirstOrDefaultAsync(_class => _class.Guid == classGuid);
-        if (_class is null) return new StatusResponse("Class does not exist");
-        _class.OwnersTeachers!.RemoveRange(teachers);
-        return new StatusResponse(true);
-    }
-
-    public async Task<StatusResponse> SetStudentActiveClass(Guid classGuid, Guid studentGuid)
-    {
-        var _class = await Context.Classes!.FirstOrDefaultAsync(e => e.Guid == classGuid);
-        var student = await Context.Students!.FirstOrDefaultAsync(e => e.Guid == studentGuid);
-        if (_class is null || student is null) return new StatusResponse(false, _class is null ? "Class not found" : "Student not found");
-        student.CurrentClassGuid = _class.Guid;
-        return new StatusResponse(true);
-    }
-
-    public async Task<StatusResponse> RemoveStudentActiveClass(Guid studentGuid)
-    {
-        var student = await Context.Students!.FirstOrDefaultAsync(e => e.Guid == studentGuid);
-        if (student is null) return new StatusResponse(false, "Class not found");
-        student.CurrentClassGuid = null;
         return new StatusResponse(true);
     }
 

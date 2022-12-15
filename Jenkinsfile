@@ -24,6 +24,15 @@ import groovy.json.*
         gitBranchPattern: regex;
     }
 */
+void setBuildStatus(String message, String state) {
+  step([
+      $class: "GitHubCommitStatusSetter",
+      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/ra11p0/gradebook"],
+      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/build-status"],
+      errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+      statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
+  ]);
+}
 
 def jsonSlurpLax(String jsonText){
     return new JsonSlurperClassic().parseText(
@@ -84,6 +93,7 @@ pipeline{
     stages {
         stage('prepare') {
             steps {
+                slackSend color: "good", message: "Job ${BUILD_TAG} started."
                 script {
                     System.setProperty("org.jenkinsci.plugins.durabletask.BourneShellScript.HEARTBEAT_CHECK_INTERVAL", "86400");
                 }
@@ -167,5 +177,15 @@ pipeline{
             }
         }
     }
+     post{
+            success{
+                setBuildStatus("Build succeeded", "SUCCESS");
+                slackSend color: "good", message: "Job ${BUILD_TAG} build and deployed successfully."
+            }
+            failure{
+                setBuildStatus("Build failed", "FAILURE");
+                slackSend color: "danger", message: "Job ${BUILD_TAG} failed."
+            }
+        }
 }
     

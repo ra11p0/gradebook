@@ -16,7 +16,7 @@ function StudentsInClass(props: Props): ReactElement {
       <Card.Header>
         <Card.Title>{t('studentsInClass')}</Card.Title>
       </Card.Header>
-      <Card.Body>
+      <Card.Body className="max-vh-50 overflow-auto">
         <Table striped bordered hover responsive>
           <thead>
             <tr>

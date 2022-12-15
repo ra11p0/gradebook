@@ -5,9 +5,9 @@ using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Database;
 
-namespace Gradebook.Foundation.Logic.Queries;
+namespace Gradebook.Foundation.Logic.Queries.Repositories;
 
-public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseContext>, IFoundationQueriesRepository
+public partial class FoundationQueriesRepository : BaseRepository<FoundationDatabaseContext>, IFoundationQueriesRepository
 {
     public FoundationQueriesRepository(FoundationDatabaseContext context) : base(context)
     {
@@ -77,30 +77,19 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
         });
     }
 
-    public async Task<ClassDto> GetClassByGuid(Guid guid)
+    public async Task<IPagedList<ClassDto>> GetClassesInSchool(Guid schoolGuid, Pager pager, string? query = "")
     {
-        using var cn = await GetOpenConnectionAsync();
-        return await cn.QueryFirstOrDefaultAsync<ClassDto>(@"
-                SELECT Name, CreatedDate, Description, Guid, SchoolGuid
-                FROM Classes
-                WHERE Guid like @guid
-                    AND IsDeleted = 0
-            ", new
-        {
-            guid
-        });
-    }
+        var builder = new SqlBuilder();
+        builder.SELECT("Name, Description, CreatedDate, Guid");
+        builder.FROM("Classes");
+        builder.WHERE("IsDeleted = 0");
+        builder.WHERE("SchoolGuid = @schoolGuid");
+        if (!string.IsNullOrEmpty(query))
+            builder.WHERE("Name like @query");
+        builder.ORDER_BY("CreatedDate DESC");
 
-    public async Task<IPagedList<ClassDto>> GetClassesInSchool(Guid schoolGuid, Pager pager)
-    {
         using var cn = await GetOpenConnectionAsync();
-        return await cn.QueryPagedAsync<ClassDto>(@"
-            SELECT Name, Description, CreatedDate, Guid
-            FROM Classes
-            WHERE IsDeleted = 0 
-                AND SchoolGuid = @schoolGuid
-            ORDER BY CreatedDate DESC
-         ", new { schoolGuid }, pager);
+        return await cn.QueryPagedAsync<ClassDto>(builder.ToString(), new { schoolGuid, query = $"%{query}%" }, pager);
     }
 
     public async Task<GroupDto> GetGroupByGuid(Guid guid)
@@ -510,27 +499,29 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
         builder.WHERE("SchoolGuid = @schoolGuid");
 
         if (!string.IsNullOrEmpty(query))
-            builder.WHERE("CONCAT(Name) like @query");
+            builder.WHERE("Name like @query");
         builder.ORDER_BY("Name");
         using var cn = await GetOpenConnectionAsync();
         return await cn.QueryPagedAsync<SubjectDto>(builder.ToString(), new { schoolGuid, query = $"%{query}%", }, pager);
     }
 
-    public async Task<IPagedList<TeacherDto>> GetTeachersForSubject(Guid subjectGuid, Pager pager)
+    public async Task<IPagedList<TeacherDto>> GetTeachersForSubject(Guid subjectGuid, Pager pager, string? query)
     {
-        using var cn = await GetOpenConnectionAsync();
-        return await cn.QueryPagedAsync<TeacherDto>(@"
-            SELECT Name, Surname, SchoolRole, Birthday, CreatorGuid, Guid, UserGuid, SchoolGuid
-            FROM Person
-            WHERE IsDeleted = 0 
+        var builder = new SqlBuilder();
+        builder.SELECT("Name, Surname, SchoolRole, Birthday, CreatorGuid, Guid, UserGuid, SchoolGuid");
+        builder.FROM("Person");
+        builder.WHERE(@" IsDeleted = 0 
                 AND Discriminator = 'Teacher'
-                AND Guid IN (
-                    SELECT TeachersGuid 
+                AND Guid IN(
+                    SELECT TeachersGuid
                     FROM SubjectTeacher
                     WHERE SubjectsGuid = @subjectGuid
-                )
-            ORDER BY Name, Surname
-         ", new { subjectGuid }, pager);
+                )");
+        if (!string.IsNullOrEmpty(query)) builder.WHERE("CONCAT(Name, ' ', Surname) like @query");
+        builder.ORDER_BY("Name, Surname");
+
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryPagedAsync<TeacherDto>(builder.ToString(), new { subjectGuid, query = $"%{query}%" }, pager);
     }
 
     public async Task<IPagedList<SubjectDto>> GetSubjectsForTeacher(Guid teacherGuid, Pager pager)
@@ -552,28 +543,22 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
          ", new { teacherGuid }, pager);
     }
 
-    public async Task<IPagedList<EducationCycleDto>> GetEducationCyclesInSchool(Guid schoolGuid, Pager pager)
+    public async Task<IPagedList<EducationCycleDto>> GetEducationCyclesInSchool(Guid schoolGuid, Pager pager, string query)
     {
         var builder = new SqlBuilder();
         builder.SELECT("Name, SchoolGuid, Guid, CreatedDate, CreatorGuid");
         builder.FROM("EducationCycles");
         builder.WHERE("IsDeleted = 0");
         builder.WHERE("SchoolGuid = @schoolGuid");
+        if (!string.IsNullOrEmpty(query))
+            builder.WHERE("Name like @query");
         builder.ORDER_BY("Name");
         using var cn = await GetOpenConnectionAsync();
-        return await cn.QueryPagedAsync<EducationCycleDto>(builder.ToString(), new { schoolGuid }, pager);
+        return await cn.QueryPagedAsync<EducationCycleDto>(builder.ToString(), new { schoolGuid, query = $"%{query}%" }, pager);
     }
 
     public async Task<EducationCycleExtendedDto?> GetEducationCycle(Guid educationCycleGuid)
-    {
-        var builder = new SqlBuilder();
-        builder.SELECT("Name, SchoolGuid, Guid, CreatedDate, CreatorGuid");
-        builder.FROM("EducationCycles");
-        builder.WHERE("IsDeleted = 0");
-        builder.WHERE("Guid = @educationCycleGuid");
-        using var cn = await GetOpenConnectionAsync();
-        return await cn.QueryFirstOrDefaultAsync<EducationCycleExtendedDto>(builder.ToString(), new { educationCycleGuid });
-    }
+        => (await GetEducationCyclesByGuids(educationCycleGuid.AsEnumerable(), new Pager(0))).FirstOrDefault();
 
     public async Task<IEnumerable<EducationCycleStepDto>> GetStepsForEducationCycle(Guid educationCycleGuid)
     {
@@ -589,9 +574,10 @@ public class FoundationQueriesRepository : BaseRepository<FoundationDatabaseCont
     public async Task<IEnumerable<EducationCycleStepSubjectDto>> GetStepsSubjectsForEducationCycleStep(Guid educationCycleStepGuid)
     {
         var builder = new SqlBuilder();
-        builder.SELECT("Guid, SubjectGuid, HoursInStep, IsMandatory, GroupsAllowed");
-        builder.FROM("EducationCycleStepSubjects");
-        builder.WHERE("IsDeleted = 0");
+        builder.SELECT("ecss.Guid, SubjectGuid, HoursInStep, IsMandatory, GroupsAllowed, sb.Name as SubjectName");
+        builder.FROM("EducationCycleStepSubjects ecss");
+        builder.JOIN("Subjects sb ON sb.Guid = ecss.SubjectGuid");
+        builder.WHERE("ecss.IsDeleted = 0");
         builder.WHERE("EducationCycleStepGuid = @educationCycleStepGuid");
         using var cn = await GetOpenConnectionAsync();
         return await cn.QueryAsync<EducationCycleStepSubjectDto>(builder.ToString(), new { educationCycleStepGuid });

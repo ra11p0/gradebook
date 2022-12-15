@@ -10,6 +10,10 @@
   background-color: #f3f3f4;
 }
 
+.max-vh-50 {
+  max-height: 50vh !important;
+}
+
 .vh-75 {
   height: 75vh !important;
 }

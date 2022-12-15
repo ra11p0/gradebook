@@ -6,7 +6,9 @@ using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 using Gradebook.Foundation.Logic.Commands;
+using Gradebook.Foundation.Logic.Commands.Repositories;
 using Gradebook.Foundation.Logic.Queries;
+using Gradebook.Foundation.Logic.Queries.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 
@@ -113,12 +115,13 @@ public class Subjects
             .ReturnsAsync(currentPersonGuid);
         foundationQueriesRepository
             .Setup(e => e.GetSubject(It.IsAny<Guid>()))
-            .ReturnsAsync(new SubjectDto() { 
-                SchoolGuid= schoolGuid
+            .ReturnsAsync(new SubjectDto()
+            {
+                SchoolGuid = schoolGuid
             });
         foundationPermissionsLogic
             .Setup(e => e.CanCreateNewSubject(It.IsAny<Guid>()))
-            .ReturnsAsync(true); 
+            .ReturnsAsync(true);
 
         var result = await foundationQueries!.GetCurrentPersonGuidBySubjectGuid(Guid.NewGuid());
 

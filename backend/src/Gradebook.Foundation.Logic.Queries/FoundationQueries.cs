@@ -6,11 +6,11 @@ using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 using Gradebook.Foundation.Hangfire;
-using Gradebook.Foundation.Hangfire.Messages;
+using Gradebook.Foundation.Logic.Queries.Repositories;
 
 namespace Gradebook.Foundation.Logic.Queries;
 
-public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFoundationQueries
+public partial class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFoundationQueries
 {
     private readonly ServiceResolver<IIdentityLogic> _identityLogic;
     private readonly ServiceResolver<IFoundationPermissionsLogic> _foundationPermissionLogic;
@@ -83,29 +83,6 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<IEnumerable<TeacherDto>>(resp, true);
     }
 
-    public async Task<ResponseWithStatus<ClassDto, bool>> GetClassByGuid(Guid guid)
-    {
-        var resp = await Repository.GetClassByGuid(guid);
-        if (resp is null) return new ResponseWithStatus<ClassDto, bool>(404, "Class does not exist");
-        return new ResponseWithStatus<ClassDto, bool>(resp, true);
-    }
-
-    public async Task<ResponseWithStatus<IPagedList<ClassDto>>> GetClassesForPerson(Guid personGuid, int page)
-    {
-        var pager = new Pager(page);
-        var resp = await Repository.GetClassesForPerson(personGuid, pager);
-        if (resp is null) return new ResponseWithStatus<IPagedList<ClassDto>>(404);
-        return new ResponseWithStatus<IPagedList<ClassDto>>(resp, true);
-    }
-
-    public async Task<ResponseWithStatus<IPagedList<ClassDto>>> GetClassesInSchool(Guid schoolGuid, int page)
-    {
-        var pager = new Pager(page);
-        var resp = await Repository.GetClassesInSchool(schoolGuid, pager);
-        if (resp is null) return new ResponseWithStatus<IPagedList<ClassDto>>(404);
-        return new ResponseWithStatus<IPagedList<ClassDto>>(resp, true);
-    }
-
     public async Task<ResponseWithStatus<Guid, bool>> GetCurrentPersonGuid(Guid schoolGuid)
     {
         var userGuid = await _identityLogic.Service.CurrentUserId();
@@ -140,19 +117,6 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         var creator = await GetPersonByGuid(educationCycle.CreatorGuid);
         if (creator.Status) educationCycle.Creator = creator.Response;
         return new ResponseWithStatus<EducationCycleExtendedDto>(educationCycle);
-    }
-
-    public async Task<ResponseWithStatus<IPagedList<EducationCycleDto>>> GetEducationCyclesInSchool(Guid schoolGuid, int page)
-    {
-        if (!await _foundationPermissionLogic.Service.CanSeeEducationCycles(schoolGuid)) return new ResponseWithStatus<IPagedList<EducationCycleDto>>(403);
-        var pager = new Pager(page);
-        var res = await Repository.GetEducationCyclesInSchool(schoolGuid, pager);
-        var resWithCreator = await Task.WhenAll(res.Select(async cycle =>
-        {
-            cycle.Creator = (await GetPersonByGuid(cycle.CreatorGuid)).Response;
-            return cycle;
-        }));
-        return new ResponseWithStatus<IPagedList<EducationCycleDto>>(resWithCreator.ToPagedList(res));
     }
 
     public async Task<ResponseWithStatus<GroupDto, bool>> GetGroupByGuid(Guid guid)
@@ -319,10 +283,10 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<TeacherDto, bool>(resp, true);
     }
 
-    public async Task<ResponseWithStatus<IPagedList<TeacherDto>>> GetTeachersForSubject(Guid subjectGuid, int page)
+    public async Task<ResponseWithStatus<IPagedList<TeacherDto>>> GetTeachersForSubject(Guid subjectGuid, int page, string? query)
     {
         var pager = new Pager(page);
-        var response = await Repository.GetTeachersForSubject(subjectGuid, pager);
+        var response = await Repository.GetTeachersForSubject(subjectGuid, pager, query);
         return new ResponseWithStatus<IPagedList<TeacherDto>>(response, true);
     }
 

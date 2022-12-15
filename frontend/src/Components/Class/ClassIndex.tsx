@@ -15,6 +15,7 @@ import StudentInClassResponse from '../../ApiClient/Classes/Definitions/Response
 import StudentsInClass from './StudentsInClass';
 import ClassHeader from './ClassHeader';
 import { GlobalState } from '../../store';
+import EducationCycle from './EducationCycle';
 
 interface Props {
   localization: string;
@@ -57,9 +58,15 @@ function ClassIndex(props: Props): ReactElement {
             setStudentsInClass={setStudentsInClass}
           />
         </div>
-        <div className="m-4">
-          <StudentsInClass studentsInClass={studentsInClass} />
+        <div className="d-flex flex-wrap">
+          <div className="m-4">
+            <StudentsInClass studentsInClass={studentsInClass} />
+          </div>
+          <div className="m-4">
+            <EducationCycle classGuid={classGuid!} />
+          </div>
         </div>
+
         <div className="m-4">
           <Forms
             localization={props.localization}

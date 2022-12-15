@@ -141,11 +141,6 @@ public class IdentityLogic : IIdentityLogic
         if (user is null || session is null) throw new Exception("user nor session should not be null here");
         user.Sessions!.Remove(session);
     }
-    public void RemoveAllExpiredTokens()
-    {
-        var expiredTokens = _identityContext.Service.Sessions!.Where(e => e.RefreshTokenExpiryTime <= Time.UtcNow);
-        _identityContext.Service.RemoveRange(expiredTokens);
-    }
     public async Task AssignRefreshTokenToUser(string userId, string refreshToken)
     {
         var _ = int.TryParse(_configuration.Service["JWT:RefreshTokenValidityInDays"], out int refreshTokenValidityInDays);
@@ -218,7 +213,6 @@ public class IdentityLogic : IIdentityLogic
         var refreshToken = GenerateRefreshToken();
 
         await AssignRefreshTokenToUser(user.Id, refreshToken);
-        RemoveAllExpiredTokens();
 
         SaveDatabaseChanges();
         return new ResponseWithStatus<LogInResponse>(new LogInResponse()

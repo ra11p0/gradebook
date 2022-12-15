@@ -1,0 +1,17 @@
+{
+  "dateSince": "Start date",
+  "dateUntil": "End date",
+  "teacher": "Teacher",
+  "datesShouldNotOverlap": "Cycle date bounds should not overlap",
+  "shouldBeAfterCycleDateSince": "Should be after cycle start date",
+  "shouldNotBeBeforeCycleDateSince": "Should not be before cycle start date",
+  "shouldBeBeforeDateUntil": "Should be before cycle end date",
+  "fillBothDateValues": "Both date values should be filled",
+  "shouldBeBeforeCycleDateUntil": "Should not be after cycle end date",
+  "educationCyclesSteps": "Education cycle steps",
+  "educationCycle": "Education cycle",
+  "educationCycleNotConfigured": "Education cycle has not been configured",
+  "educationCycleNotAttached": "No education cycle attached to this class",
+  "subjects": "Subjects",
+  "wrongDatesOrder": "Dates order not matched with stages order"
+}

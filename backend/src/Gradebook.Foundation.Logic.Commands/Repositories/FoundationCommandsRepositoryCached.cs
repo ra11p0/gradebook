@@ -2,7 +2,7 @@ using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
 using Gradebook.Foundation.Common.Foundation.Enums;
 
-namespace Gradebook.Foundation.Logic.Commands;
+namespace Gradebook.Foundation.Logic.Commands.Repositories;
 
 public class FoundationCommandsRepositoryCached : BaseRepositoryCached<FoundationCommandsRepository, object>, IFoundationCommandsRepository
 {
@@ -108,4 +108,24 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
 
     public Task<ResponseWithStatus<Guid>> AddNewEducationCycle(EducationCycleCommand command)
         => Base.AddNewEducationCycle(command);
+
+    public Task<StatusResponse> SetActiveEducationCycleToClasses(IEnumerable<Guid> classesGuid, Guid educationCycleGuid)
+        => Base.SetActiveEducationCycleToClasses(classesGuid, educationCycleGuid);
+
+    public Task<StatusResponse> DeleteActiveEducationCycleFromClasses(IEnumerable<Guid> classesGuids)
+        => Base.DeleteActiveEducationCycleFromClasses(classesGuids);
+    public Task<ResponseWithStatus<Guid>> ConfigureEducationCycleForClass(Guid classGuid, Guid creatorGuid, EducationCycleConfigurationCommand configuration)
+        => Base.ConfigureEducationCycleForClass(classGuid, creatorGuid, configuration);
+
+    public Task<StatusResponse> ConfigureEducationCycleStageInstanceForEducationCycleInstance(Guid educationCycleInstanceGuid, IEnumerable<EducationCycleConfigurationStageCommand> stageCommands)
+        => Base.ConfigureEducationCycleStageInstanceForEducationCycleInstance(educationCycleInstanceGuid, stageCommands);
+
+    public Task<ResponseWithStatus<Guid>> ConfigureEducationCycleStageInstanceForEducationCycleInstance(Guid educationCycleInstanceGuid, EducationCycleConfigurationStageCommand stageCommand)
+        => Base.ConfigureEducationCycleStageInstanceForEducationCycleInstance(educationCycleInstanceGuid, stageCommand);
+
+    public Task<StatusResponse> ConfigureEducationCycleSubjectInstanceForEducationCycleStepInstance(Guid educationCycleStepInstanceGuid, IEnumerable<EducationCycleConfigurationSubjectCommand> subjectCommands)
+        => Base.ConfigureEducationCycleSubjectInstanceForEducationCycleStepInstance(educationCycleStepInstanceGuid, subjectCommands);
+
+    public Task<ResponseWithStatus<Guid>> ConfigureEducationCycleSubjectInstanceForEducationCycleStepInstance(Guid educationCycleStepInstanceGuid, EducationCycleConfigurationSubjectCommand subjectCommand)
+        => Base.ConfigureEducationCycleSubjectInstanceForEducationCycleStepInstance(educationCycleStepInstanceGuid, subjectCommand);
 }
