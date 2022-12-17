@@ -215,6 +215,7 @@ function ConfigureEducationCycleForm(props: Props): ReactElement {
                       name="dateSince"
                       label={t('dateSince')}
                       formik={formik}
+                      maxDate={formik.values.dateUntil}
                     />
                   </Col>
                   <Col md={6} s={12}>
@@ -224,6 +225,7 @@ function ConfigureEducationCycleForm(props: Props): ReactElement {
                       name="dateUntil"
                       label={t('dateUntil')}
                       formik={formik}
+                      minDate={formik.values.dateSince}
                     />
                   </Col>
                 </Row>

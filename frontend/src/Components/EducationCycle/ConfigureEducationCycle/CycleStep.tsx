@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { ReactElement } from 'react';
 import { Col, Row, Stack } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
@@ -23,6 +24,15 @@ function CycleStep({ stageKey, stage, formik }: Props): ReactElement {
               label={t('dateSince')}
               name={`stages.${stageKey}.dateSince`}
               formik={formik}
+              minDate={
+                _.get(formik.values, `stages.${stageKey - 1}.dateUntil`) ??
+                _.get(formik.values, 'dateSince')
+              }
+              maxDate={
+                _.get(formik.values, `stages.${stageKey}.dateUntil`) ??
+                _.get(formik.values, `stages.${stageKey + 1}.dateSince`) ??
+                _.get(formik.values, 'dateUntil')
+              }
             />
           </Col>
           <Col md={6} s={12}>
@@ -31,6 +41,15 @@ function CycleStep({ stageKey, stage, formik }: Props): ReactElement {
               label={t('dateUntil')}
               name={`stages.${stageKey}.dateUntil`}
               formik={formik}
+              minDate={
+                _.get(formik.values, `stages.${stageKey}.dateSince`) ??
+                _.get(formik.values, `stages.${stageKey - 1}.dateUntil`) ??
+                _.get(formik.values, 'dateSince')
+              }
+              maxDate={
+                _.get(formik.values, `stages.${stageKey + 1}.dateSince`) ??
+                _.get(formik.values, 'dateUntil')
+              }
             />
           </Col>
         </Row>
