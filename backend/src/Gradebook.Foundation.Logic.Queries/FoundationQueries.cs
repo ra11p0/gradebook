@@ -304,12 +304,6 @@ public partial class FoundationQueries : BaseLogic<IFoundationQueriesRepository>
         return new ResponseWithStatus<IPagedList<TeacherDto>>(response, true);
     }
 
-    public async Task<ResponseWithStatus<bool>> IsClassOwner(Guid classGuid, Guid personGuid)
-    {
-        var resp = await Repository.IsClassOwner(classGuid, personGuid);
-        return new ResponseWithStatus<bool>(resp, true);
-    }
-
     public async Task<ResponseWithStatus<bool>> IsStudentInAnyClass(Guid studentGuid)
     {
         var resp = await Repository.IsStudentInAnyClass(studentGuid);

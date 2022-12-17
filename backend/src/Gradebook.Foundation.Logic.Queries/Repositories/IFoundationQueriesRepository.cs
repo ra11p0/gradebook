@@ -50,4 +50,5 @@ public interface IFoundationQueriesRepository : IBaseRepository
     Task<IPagedList<Guid>> GetEducationCycleInstancesGuidsByClassGuid(Guid classGuid, Pager pager);
     Task<Guid?> GetEducationCycleInstanceForClass(Guid classGuid, Guid educationCycleGuid);
     Task<IPagedList<EducationCycleExtendedDto>> GetEducationCyclesByGuids(IEnumerable<Guid> guids, Pager pager);
+    Task<IPagedList<ClassDto>> GetAvailableClassesWithAssignedForEducationCycle(Guid educationCycleGuid, Pager pager, string? query);
 }

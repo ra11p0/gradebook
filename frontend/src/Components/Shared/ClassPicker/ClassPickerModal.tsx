@@ -2,6 +2,7 @@ import { Checkbox, Input } from '@mui/material';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import ClassResponse from '../../../ApiClient/Schools/Definitions/Responses/ClassResponse';
 import SchoolsProxy from '../../../ApiClient/Schools/SchoolsProxy';
 import getCurrentSchoolRedux from '../../../Redux/ReduxQueries/account/getCurrentSchoolRedux';
 import InfiniteScrollWrapper from '../InfiniteScrollWrapper';
@@ -12,6 +13,7 @@ interface Props {
   onHide: () => void;
   onClassesSelected: (selectedClassesGuids: string[]) => void;
   selected?: () => string[] | Promise<string[]>;
+  fetch?: (page: number, query: string) => Promise<ClassResponse[]>;
 }
 
 function ClassPickerModal(props: Props): ReactElement {
@@ -71,15 +73,21 @@ function ClassPickerModal(props: Props): ReactElement {
                     </div>
                   </div>
                 )}
-                fetch={async (page: number) => {
-                  return (
-                    await SchoolsProxy.getClassesInSchool(
-                      getCurrentSchoolRedux()?.schoolGuid,
-                      page,
-                      query
-                    )
-                  ).data;
-                }}
+                fetch={
+                  props.fetch
+                    ? async (page: number) => {
+                        return await props.fetch!(page, query);
+                      }
+                    : async (page: number) => {
+                        return (
+                          await SchoolsProxy.getClassesInSchool(
+                            getCurrentSchoolRedux()?.schoolGuid,
+                            page,
+                            query
+                          )
+                        ).data;
+                      }
+                }
               />
             </div>
           </Modal.Body>

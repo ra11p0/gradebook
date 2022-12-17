@@ -82,4 +82,19 @@ public partial class FoundationQueriesRepository
         using var cn = await GetOpenConnectionAsync();
         return await cn.QueryPagedAsync<EducationCycleExtendedDto>(builder.ToString(), new { guids }, pager);
     }
+    public async Task<IPagedList<ClassDto>> GetAvailableClassesWithAssignedForEducationCycle(Guid educationCycleGuid, Pager pager, string? query = "")
+    {
+        var builder = new SqlBuilder();
+        builder.SELECT("Name, Description, CreatedDate, Guid");
+        builder.FROM("Classes");
+        builder.WHERE("IsDeleted = 0");
+        builder.WHERE("(ActiveEducationCycleGuid IS NULL OR ActiveEducationCycleGuid = @educationCycleGuid)");
+        builder.WHERE("SchoolGuid IN (SELECT SchoolGuid FROM EducationCycles WHERE Guid = @educationCycleGuid)");
+        if (!string.IsNullOrEmpty(query))
+            builder.WHERE("Name like @query");
+        builder.ORDER_BY("CreatedDate DESC");
+
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryPagedAsync<ClassDto>(builder.ToString(), new { educationCycleGuid, query = $"%{query}%" }, pager);
+    }
 }
