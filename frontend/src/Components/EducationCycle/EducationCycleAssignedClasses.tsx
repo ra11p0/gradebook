@@ -53,6 +53,15 @@ function EducationCycleAssignedClasses(props: Props): ReactElement {
           />
         </div>
         <ClassPicker
+          fetch={async (page, query) =>
+            (
+              await EducationCyclesProxy.getAvailableClassesWithAssignedForEducationCycle(
+                props.educationCycleGuid,
+                page,
+                query
+              )
+            ).data
+          }
           selected={async () => {
             const guids = (
               await EducationCyclesProxy.getClassesForEducationCycle(

@@ -1,6 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-// import { useTranslation } from 'react-i18next';
 import EducationCyclesProxy from '../../ApiClient/EducationCycles/EducationCyclesProxy';
 import EducationCycleResponse from '../../ApiClient/EducationCycles/Definitions/Responses/EducationCycleResponse';
 import Notifications from '../../Notifications/Notifications';
@@ -14,7 +13,6 @@ interface Props {
 }
 
 function EducationCycle(props: Props): ReactElement {
-  // const { t } = useTranslation('educationCycles');
   const { educationCycleGuid } = useParams();
   const [educationCycle, setEducationCycle] = useState<
     EducationCycleResponse | undefined

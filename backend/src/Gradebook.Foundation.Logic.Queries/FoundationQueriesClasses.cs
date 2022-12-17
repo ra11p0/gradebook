@@ -1,9 +1,10 @@
 using Gradebook.Foundation.Common;
+using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 
 namespace Gradebook.Foundation.Logic.Queries;
 
-public partial class FoundationQueries
+public partial class FoundationQueries : IFoundationClassesQueries
 {
     public async Task<ResponseWithStatus<ClassDto, bool>> GetClassByGuid(Guid guid)
     {
@@ -11,7 +12,6 @@ public partial class FoundationQueries
         if (resp is null) return new ResponseWithStatus<ClassDto, bool>(404, "Class does not exist");
         return new ResponseWithStatus<ClassDto, bool>(resp, true);
     }
-
     public async Task<ResponseWithStatus<IPagedList<ClassDto>>> GetClassesForPerson(Guid personGuid, int page)
     {
         var pager = new Pager(page);
@@ -19,7 +19,6 @@ public partial class FoundationQueries
         if (resp is null) return new ResponseWithStatus<IPagedList<ClassDto>>(404);
         return new ResponseWithStatus<IPagedList<ClassDto>>(resp, true);
     }
-
     public async Task<ResponseWithStatus<IPagedList<ClassDto>>> GetClassesInSchool(Guid schoolGuid, int page, string? query = "")
     {
         var pager = new Pager(page);
@@ -62,5 +61,10 @@ public partial class FoundationQueries
         }).ToList();
 
         return new ResponseWithStatus<EducationCyclesForClassDto>(educationCyclesForClassDto);
+    }
+    public async Task<ResponseWithStatus<bool>> IsClassOwner(Guid classGuid, Guid personGuid)
+    {
+        var resp = await Repository.IsClassOwner(classGuid, personGuid);
+        return new ResponseWithStatus<bool>(resp, true);
     }
 }

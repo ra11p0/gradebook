@@ -41,9 +41,26 @@ const setEducationCycleForClass = async (
   );
 };
 
+async function getAvailableClassesWithAssignedForEducationCycle(
+  educationCycleGuid: string,
+  page: number,
+  query: string
+): Promise<AxiosResponse<ClassResponse[]>> {
+  return await axiosApiAuthorized.get(
+    API_URL + `/educationCycles/${educationCycleGuid}/Classes/Available`,
+    {
+      params: {
+        page,
+        query,
+      },
+    }
+  );
+}
+
 export default {
   getEducationCycle,
   getClassesForEducationCycle,
   editClassesInEducationCycle,
   setEducationCycleForClass,
+  getAvailableClassesWithAssignedForEducationCycle,
 };

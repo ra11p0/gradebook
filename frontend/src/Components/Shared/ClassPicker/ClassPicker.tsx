@@ -1,11 +1,13 @@
 import React, { ReactElement, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import ClassResponse from '../../../ApiClient/Schools/Definitions/Responses/ClassResponse';
 import ClassPickerModal from './ClassPickerModal';
 
 interface Props {
   onClassesSelected?: (guids: string[]) => void;
   selected?: () => string[] | Promise<string[]>;
+  fetch?: (page: number, query: string) => Promise<ClassResponse[]>;
 }
 
 function ClassPicker(props: Props): ReactElement {
@@ -15,6 +17,7 @@ function ClassPicker(props: Props): ReactElement {
   return (
     <>
       <ClassPickerModal
+        fetch={props.fetch}
         isModalVisible={isModalVisible}
         selected={props.selected}
         onHide={() => {

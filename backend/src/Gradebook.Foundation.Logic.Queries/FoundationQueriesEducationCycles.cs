@@ -1,10 +1,11 @@
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
+using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 
 namespace Gradebook.Foundation.Logic.Queries;
 
-public partial class FoundationQueries
+public partial class FoundationQueries : IFoundationEducationCyclesQueries
 {
     public async Task<ResponseWithStatus<IPagedList<Guid>>> GetClassesGuidsForEducationCycle(Guid educationCycleGuid, int page, string? query)
     {
@@ -30,5 +31,12 @@ public partial class FoundationQueries
             return cycle;
         }));
         return new ResponseWithStatus<IPagedList<EducationCycleDto>>(resWithCreator.ToPagedList(res));
+    }
+    public async Task<ResponseWithStatus<IPagedList<ClassDto>>> GetAvalibleClassesInForEducationCycle(Guid educationCycleGuid, int page, string? query)
+    {
+        var pager = new Pager(page);
+        var resp = await Repository.GetAvailableClassesWithAssignedForEducationCycle(educationCycleGuid, pager, query);
+        if (resp is null) return new ResponseWithStatus<IPagedList<ClassDto>>(404);
+        return new ResponseWithStatus<IPagedList<ClassDto>>(resp, true);
     }
 }

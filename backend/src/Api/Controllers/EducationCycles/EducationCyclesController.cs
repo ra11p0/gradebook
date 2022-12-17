@@ -36,6 +36,14 @@ public class EducationCyclesController : ControllerBase
         var resp = await _foundationQueries.Service.GetClassesForEducationCycle(educationCycleGuid, page ?? 0, query);
         return resp.ObjectResult;
     }
+    [HttpGet]
+    [Route("{educationCycleGuid}/Classes/Available")]
+    [ProducesResponseType(typeof(IPagedList<ClassDto>), statusCode: 200)]
+    public async Task<ObjectResult> GetAvalibleClassesInEducationCycle([FromRoute] Guid educationCycleGuid, [FromQuery] int? page = 0, [FromQuery] string? query = "")
+    {
+        var resp = await _foundationQueries.Service.GetAvalibleClassesInForEducationCycle(educationCycleGuid, page ?? 0, query);
+        return resp.ObjectResult;
+    }
     [HttpPost]
     [Route("{educationCycleGuid}/Classes")]
     [ProducesResponseType(typeof(StatusResponse), statusCode: 200)]
