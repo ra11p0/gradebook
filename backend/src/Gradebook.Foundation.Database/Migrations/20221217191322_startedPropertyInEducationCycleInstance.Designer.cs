@@ -3,6 +3,7 @@ using System;
 using Gradebook.Foundation.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gradebook.Foundation.Database.Migrations
 {
     [DbContext(typeof(FoundationDatabaseContext))]
-    partial class FoundationDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20221217191322_startedPropertyInEducationCycleInstance")]
+    partial class startedPropertyInEducationCycleInstance
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -193,14 +195,11 @@ namespace Gradebook.Foundation.Database.Migrations
                     b.Property<Guid>("EducationCycleStepGuid")
                         .HasColumnType("char(36)");
 
-                    b.Property<DateTime?>("FinishedDate")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime?>("StartedDate")
-                        .HasColumnType("datetime(6)");
+                    b.Property<bool>("Started")
+                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("Guid");
 

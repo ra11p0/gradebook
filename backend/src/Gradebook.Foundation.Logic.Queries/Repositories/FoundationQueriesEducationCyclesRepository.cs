@@ -37,7 +37,7 @@ public partial class FoundationQueriesRepository
     public async Task<IEnumerable<EducationCycleStepInstanceDto>> GetEducationCycleStepInstancesByEducationCycleInstancesGuids(IEnumerable<Guid> guids)
     {
         var builder = new SqlBuilder();
-        builder.SELECT("DateSince, DateUntil, ecsi.Guid, `Order`, EducationCycleInstanceGuid");
+        builder.SELECT("DateSince, DateUntil, StartedDate, FinishedDate, ecsi.Guid, ecs.Name AS EducationCycleStepName, `Order`, EducationCycleInstanceGuid");
         builder.FROM("EducationCycleStepInstances ecsi");
         builder.JOIN("EducationCycleSteps ecs ON ecs.Guid = ecsi.EducationCycleStepGuid");
         builder.WHERE("ecsi.IsDeleted = 0");

@@ -11,8 +11,8 @@ public class EducationCycleConfigurationCommand : Validatable
     {
         if (!Stages.Any()) return new StatusResponse(false);
         if (Stages.Any(e => !e.IsValid)) return new StatusResponse(false);
-        if (Stages.Min(e => e.DateSince) < DateSince) return new StatusResponse(false);
-        if (Stages.Max(e => e.DateUntil) > DateUntil) return new StatusResponse(false);
+        if (Stages.Min(e => e.DateSince).HasValue && Stages.Min(e => e.DateSince) < DateSince) return new StatusResponse(false);
+        if (Stages.Min(e => e.DateUntil).HasValue && Stages.Max(e => e.DateUntil) > DateUntil) return new StatusResponse(false);
 
         var stagesWithBothDates = Stages.Where((e) => e.DateSince.HasValue && e.DateUntil.HasValue).ToList();
         bool overlaps = false;

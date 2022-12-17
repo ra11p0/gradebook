@@ -1,10 +1,11 @@
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
+using Gradebook.Foundation.Common.Foundation.Commands;
 using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
 
 namespace Gradebook.Foundation.Logic.Commands;
 
-public partial class FoundationCommands
+public partial class FoundationCommands : IFoundationClassesCommands
 {
     private async Task<StatusResponse> SetStudentsActiveClass(Guid classGuid, List<Guid> studentGuid)
     {
@@ -42,15 +43,11 @@ public partial class FoundationCommands
         await Repository.SaveChangesAsync();
         return resp;
     }
-    public async Task<StatusResponse> DeleteActiveEducationCycleFromClass(Guid classGuid)
-    {
-        if (!await _foundationPermissions.Service.CanManageClass(classGuid))
-            return new StatusResponse(403);
-        return await DeleteActiveEducationCycleFromClasses(classGuid.AsEnumerable());
-    }
+    public Task<StatusResponse> DeleteActiveEducationCycleFromClass(Guid classGuid)
+        => DeleteActiveEducationCycleFromClasses(classGuid.AsEnumerable());
     public async Task<StatusResponse> ConfigureEducationCycleForClass(Guid classGuid, EducationCycleConfigurationCommand configuration)
     {
-        if (!configuration.IsValid) return new StatusResponse(400);
+        if (!configuration.IsValid) return new StatusResponse(400, "Validation error");
         var currentPersonGuid = await _foundationQueries.Service.RecogniseCurrentPersonByClassGuid(classGuid);
         if (!currentPersonGuid.Status) return new StatusResponse(currentPersonGuid.StatusCode, currentPersonGuid.Message);
         if (!await _foundationPermissions.Service.CanManageClass(classGuid, currentPersonGuid.Response))
@@ -94,5 +91,25 @@ public partial class FoundationCommands
         if (!resp.Status) return new StatusResponse(false, resp.Message);
         await Repository.SaveChangesAsync();
         return resp;
+    }
+
+    public Task<StatusResponse> StartEducationCycleStepInstance(Guid classGuid)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<StatusResponse> StopEducationCycleStepInstance(Guid classGuid)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<StatusResponse> ForwardEducationCycleStepInstance(Guid classGuid)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<StatusResponse> BackwardEducationCycleStepInstance(Guid classGuid)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -24,9 +24,32 @@ public partial class FoundationCommandsRepository : IFoundationCommandsClassesRe
     {
         foreach (var classGuid in classesGuids)
         {
-            var _class = await Context.Classes!.FirstOrDefaultAsync(e => e.Guid == classGuid);
+            var _class = await Context.Classes!.Include(e => e.EducationCycleInstances).FirstOrDefaultAsync(e => e.Guid == classGuid);
             if (_class is null) continue;
-            _class.ActiveEducationCycle = null;
+            _class.ActiveEducationCycleGuid = null;
+            var instancesToDeleteGuids = _class.EducationCycleInstances!.Select(e => e.Guid);
+            foreach (var instanceToDeleteGuid in instancesToDeleteGuids)
+            {
+                var instance = await Context.EducationCycleInstances!.Include(e => e.EducationCycleStepInstances).FirstOrDefaultAsync(w => w.Guid == instanceToDeleteGuid);
+                if (instance is null) return new StatusResponse(404, $"Education cycle instance not found. Guid: {instanceToDeleteGuid}");
+                instance.IsDeleted = true;
+                var stepInstancesGuids = instance.EducationCycleStepInstances!.Select(e => e.Guid);
+                foreach (var stepInstanceGuid in stepInstancesGuids)
+                {
+                    var stepInstance = await Context.EducationCycleStepInstances!.Include(e => e.EducationCycleStepSubjectInstances).FirstOrDefaultAsync(e => e.Guid == stepInstanceGuid);
+                    if (stepInstance is null) return new StatusResponse(404, $"Education cycle step instance not found. Guid: {stepInstanceGuid}");
+                    stepInstance!.IsDeleted = true;
+                    var stepSubjectsInstancesGuids = stepInstance.EducationCycleStepSubjectInstances!.Select(e => e.Guid);
+                    foreach (var subjectInstanceGuid in stepSubjectsInstancesGuids)
+                    {
+                        var stepSubjectInstance = await Context.EducationCycleStepSubjectInstances!.FirstOrDefaultAsync(e => e.Guid == subjectInstanceGuid);
+                        if (stepSubjectInstance is null) return new StatusResponse(404, $"Education cycle step subject instance not found. Guid: {subjectInstanceGuid}");
+                        stepSubjectInstance!.IsDeleted = true;
+                    }
+                }
+            }
+
+
         }
         return new StatusResponse(200);
     }

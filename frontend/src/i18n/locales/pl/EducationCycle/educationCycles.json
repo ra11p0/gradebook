@@ -13,5 +13,6 @@
   "educationCycleNotConfigured": "Cykl nauczania nie został skonfigurowany",
   "educationCycleNotAttached": "Żaden cykl nauczania nie został przypisany do klasy",
   "subjects": "Przedmioty",
-  "wrongDatesOrder": "Rozbieżność kolejności dat i etapów"
+  "wrongDatesOrder": "Rozbieżność kolejności dat i etapów",
+  "removeEducationCycleBinding": "Usuń połączenie z cyklem nauczania"
 }

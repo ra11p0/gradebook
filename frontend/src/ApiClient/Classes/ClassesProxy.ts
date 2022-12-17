@@ -78,6 +78,14 @@ async function getEducationCyclesInClass(
   );
 }
 
+async function deleteActiveEducationCycleFromClass(
+  classGuid: string
+): Promise<AxiosResponse> {
+  return await axiosApiAuthorized.delete(
+    API_URL + `/Classes/${classGuid}/EducationCycles`
+  );
+}
+
 const configureEducationCycleForClass = async (
   classGuid: string,
   educationCycleConfigurationRequest: EducationCycleConfigurationRequest
@@ -97,6 +105,7 @@ export default {
   getStudentsInClass,
   searchStudentsCandidatesToClassWithCurrent,
   educationCycles: {
+    deleteActiveEducationCycleFromClass,
     getEducationCyclesInClass,
     configureEducationCycleForClass,
   },

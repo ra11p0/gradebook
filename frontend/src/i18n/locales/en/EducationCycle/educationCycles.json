@@ -13,5 +13,6 @@
   "educationCycleNotConfigured": "Education cycle has not been configured",
   "educationCycleNotAttached": "No education cycle attached to this class",
   "subjects": "Subjects",
-  "wrongDatesOrder": "Dates order not matched with stages order"
+  "wrongDatesOrder": "Dates order not matched with stages order",
+  "removeEducationCycleBinding": "Remove education cycle binding"
 }

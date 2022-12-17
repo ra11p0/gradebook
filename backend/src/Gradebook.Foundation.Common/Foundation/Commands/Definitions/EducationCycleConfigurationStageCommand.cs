@@ -10,7 +10,7 @@ public class EducationCycleConfigurationStageCommand : Validatable
 
     protected override StatusResponse Validate()
     {
-        if (!(DateSince.HasValue && DateUntil.HasValue) || (!DateSince.HasValue && !DateUntil.HasValue)) return new StatusResponse(false);
+        if ((DateSince.HasValue && !DateUntil.HasValue) || (!DateSince.HasValue && DateUntil.HasValue)) return new StatusResponse(false);
         if (DateSince.HasValue && DateUntil.HasValue && DateSince.Value > DateUntil.Value)
             return new StatusResponse(false);
         if (!Subjects.Any()) return new StatusResponse(false);

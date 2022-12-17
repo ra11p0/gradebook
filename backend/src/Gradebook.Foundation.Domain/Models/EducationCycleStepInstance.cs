@@ -9,6 +9,10 @@ public class EducationCycleStepInstance : BaseDomainModel
     public Guid EducationCycleInstanceGuid { get; set; }
     public DateTime? DateSince { get; set; }
     public DateTime? DateUntil { get; set; }
+    public bool Started => StartedDate.HasValue;
+    public bool Finished => FinishedDate.HasValue;
+    public DateTime? StartedDate { get; set; }
+    public DateTime? FinishedDate { get; set; }
 
     [ForeignKey("EducationCycleInstanceGuid")]
     public virtual EducationCycleInstance? EducationCycleInstance { get; set; }

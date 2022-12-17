@@ -1,1 +1,7 @@
-{ "addTeacher": "Dodaj nauczyciela", "showPerson": "Pokaż osobę", "teachersList": "Lista nauczycieli", "removePerson": "Usuń osobę" }
+{
+  "addTeacher": "Dodaj nauczyciela",
+  "showPerson": "Pokaż osobę",
+  "teachersList": "Lista nauczycieli",
+  "removePerson": "Usuń osobę",
+  "youSureRemovePerson": "Czy na pewno chcesz usunąć osobę?"
+}

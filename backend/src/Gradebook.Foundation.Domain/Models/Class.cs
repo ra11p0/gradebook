@@ -19,4 +19,5 @@ public class Class : BaseDomainModel
     public virtual ICollection<Student>? Students { get; set; }
     public virtual ICollection<Student>? ActiveStudents { get; set; }
     public virtual ICollection<Teacher>? OwnersTeachers { get; set; }
+    public virtual ICollection<EducationCycleInstance>? EducationCycleInstances { get; set; }
 }

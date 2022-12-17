@@ -21,8 +21,10 @@ interface EducationCycleInstance {
   educationCycleStepInstances: EducationCycleStepInstance[];
 }
 
-interface EducationCycleStepInstance {
+export interface EducationCycleStepInstance {
   dateSince?: Date;
+  started: boolean;
+  educationCycleStepName: string;
   dateUntil?: Date;
   guid: string;
   educationCycleInstanceGuid: string;
