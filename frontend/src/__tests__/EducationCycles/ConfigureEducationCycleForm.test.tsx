@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
@@ -7,7 +7,6 @@ import { store } from '../../store';
 import { I18nextProvider } from 'react-i18next';
 import i18n from '../../i18n/config';
 import userEvent from '@testing-library/user-event';
-import { act } from '@testing-library/react';
 import ConfigureEducationCycleForm from '../../Components/EducationCycle/ConfigureEducationCycle/ConfigureEducationCycleForm';
 import EducationCyclesProxy from '../../ApiClient/EducationCycles/EducationCyclesProxy';
 import ClassesProxy from '../../ApiClient/Classes/ClassesProxy';
@@ -98,7 +97,8 @@ describe('<ConfigureEducationCycleForm />', () => {
     ).toHaveClass('is-invalid');
   });
 
-  it('Should api send request', async () => {
+  it('Should send api request', async () => {
+    jest.setTimeout(10000);
     jest
       .spyOn(EducationCyclesProxy, 'getEducationCycle')
       .mockResolvedValueOnce({
