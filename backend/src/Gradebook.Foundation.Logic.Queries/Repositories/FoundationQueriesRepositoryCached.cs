@@ -164,4 +164,7 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
 
     public Task<IEnumerable<EducationCycleStepInstanceDto>> GetAllEducationCycleStepInstancesForClass(Guid classGuid)
         => Base.GetAllEducationCycleStepInstancesForClass(classGuid);
+
+    public Task<IEnumerable<EducationCycleInstanceDto>> GetAllEducationCycleInstancesForClass(Guid classGuid)
+        => Base.GetAllEducationCycleInstancesForClass(classGuid);
 }

@@ -51,52 +51,6 @@ describe('<ConfigureEducationCycleForm />', () => {
     ).toHaveClass('is-invalid');
   });
 
-  it('Should validate start and end dates wrong dates order', async () => {
-    jest
-      .spyOn(EducationCyclesProxy, 'getEducationCycle')
-      .mockResolvedValueOnce({
-        data: {
-          guid: '',
-          stages: [],
-        },
-      } as any);
-
-    await act(async () => {
-      render(
-        <Provider store={store}>
-          <BrowserRouter>
-            <I18nextProvider i18n={i18n}>
-              <ConfigureEducationCycleForm
-                educationCycleGuid={'fakeEducationCycleGuid'}
-                classGuid={'fakeClassGuid'}
-                onSubmit={() => {}}
-              />
-            </I18nextProvider>
-          </BrowserRouter>
-        </Provider>
-      );
-    });
-    await act(async () => {
-      userEvent.type(
-        await screen.findByRole('textbox', { name: 'End date' }),
-        '01/01/2022{enter}'
-      );
-    });
-    await act(async () => {
-      userEvent.type(
-        await screen.findByRole('textbox', { name: 'Start date' }),
-        '02/02/2022{enter}'
-      );
-    });
-    await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: 'Confirm' }));
-    });
-
-    expect(
-      await screen.findByRole('textbox', { name: 'End date' })
-    ).toHaveClass('is-invalid');
-  });
-
   it('Should send api request', async () => {
     jest.setTimeout(10000);
     jest
@@ -177,7 +131,7 @@ describe('<ConfigureEducationCycleForm />', () => {
     await act(async () => {
       userEvent.type(
         (await screen.findAllByRole('textbox', { name: 'Start date' }))[1],
-        '03/05/2022{enter}'
+        '05/03/2022{enter}'
       );
     });
     const selectField = await screen.findByRole('combobox', { name: '' });

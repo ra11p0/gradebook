@@ -5,6 +5,7 @@ import moment from 'moment';
 import React, { ReactElement } from 'react';
 import { Button, Stack } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import Swal from 'sweetalert2';
 import ClassesProxy from '../../../ApiClient/Classes/ClassesProxy';
 import { EducationCycleStepInstance } from '../../../ApiClient/Classes/Definitions/Responses/EducationCyclesInClassResponse';
 import Notifications from '../../../Notifications/Notifications';
@@ -33,11 +34,11 @@ function EducationCycleStepInstanceCurrent(
           <small>
             {props.started && <>{t('educationCycleStartedDescription')}</>}
             {!props.isLast && props.started && (
-              <>{t('educationCycleStartedNotLastDescription')}</>
+              <div>{t('educationCycleStartedNotLastDescription')}</div>
             )}
             {!props.started && <>{t('educationCycleNotStartedDescription')}</>}
             {props.started && props.isLast && (
-              <>{t('educationCycleStartedLastDescription')}</>
+              <div>{t('educationCycleStartedLastDescription')}</div>
             )}
           </small>
 
@@ -50,10 +51,23 @@ function EducationCycleStepInstanceCurrent(
               <Button
                 variant="success"
                 onClick={async () => {
-                  await ClassesProxy.educationCycles
-                    .forwardEducationCycleStepInstance(props.classGuid)
-                    .catch(Notifications.showApiError);
-                  props.stateChanged();
+                  await Swal.fire({
+                    showLoaderOnConfirm: true,
+                    title: t('educationCycleForward'),
+                    text: t('youSureEducationCycleForward'),
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: t('yes'),
+                    denyButtonText: t('no'),
+                    icon: 'warning',
+                    preConfirm: async () => {
+                      await ClassesProxy.educationCycles
+                        .forwardEducationCycleStepInstance(props.classGuid)
+                        .catch(Notifications.showApiError);
+                    },
+                  }).then(async (resp) => {
+                    if (resp.isConfirmed) props.stateChanged();
+                  });
                 }}
               >
                 <FontAwesomeIcon icon={faForward} />
@@ -69,10 +83,23 @@ function EducationCycleStepInstanceCurrent(
               <Button
                 variant="primary"
                 onClick={async () => {
-                  await ClassesProxy.educationCycles
-                    .startEducationCycleStepInstance(props.classGuid)
-                    .catch(Notifications.showApiError);
-                  props.stateChanged();
+                  await Swal.fire({
+                    showLoaderOnConfirm: true,
+                    title: t('educationCycleStart'),
+                    text: t('youSureEducationCycleStart'),
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: t('yes'),
+                    denyButtonText: t('no'),
+                    icon: 'warning',
+                    preConfirm: async () => {
+                      await ClassesProxy.educationCycles
+                        .startEducationCycleStepInstance(props.classGuid)
+                        .catch(Notifications.showApiError);
+                    },
+                  }).then(async (resp) => {
+                    if (resp.isConfirmed) props.stateChanged();
+                  });
                 }}
               >
                 <FontAwesomeIcon icon={faPlay} />
@@ -89,10 +116,23 @@ function EducationCycleStepInstanceCurrent(
               <Button
                 variant="danger"
                 onClick={async () => {
-                  await ClassesProxy.educationCycles
-                    .stopEducationCycleStepInstance(props.classGuid)
-                    .catch(Notifications.showApiError);
-                  props.stateChanged();
+                  await Swal.fire({
+                    showLoaderOnConfirm: true,
+                    title: t('educationCycleStop'),
+                    text: t('youSureEducationCycleStop'),
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: t('yes'),
+                    denyButtonText: t('no'),
+                    icon: 'warning',
+                    preConfirm: async () => {
+                      await ClassesProxy.educationCycles
+                        .stopEducationCycleStepInstance(props.classGuid)
+                        .catch(Notifications.showApiError);
+                    },
+                  }).then(async (resp) => {
+                    if (resp.isConfirmed) props.stateChanged();
+                  });
                 }}
               >
                 <FontAwesomeIcon icon={faStop} />

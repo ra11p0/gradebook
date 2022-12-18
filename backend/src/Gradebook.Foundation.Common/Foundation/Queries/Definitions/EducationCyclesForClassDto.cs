@@ -9,5 +9,4 @@ public class EducationCyclesForClassDto
     public EducationCycleDto? ActiveEducationCycle { get; set; }
     public Guid? ActiveEducationCycleGuid => ActiveEducationCycle?.Guid;
     public bool HasPreparedActiveEducationCycle => ActiveEducationCycleGuid.HasValue && ActiveEducationCycle is not null;
-    public List<EducationCycleInstanceDto>? EducationCyclesInstances { get; set; }
 }

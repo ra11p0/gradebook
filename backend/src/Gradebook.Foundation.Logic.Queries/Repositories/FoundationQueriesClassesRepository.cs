@@ -23,17 +23,6 @@ public partial class FoundationQueriesRepository : IFoundationQueriesClassesRepo
             guids
         });
     }
-    public async Task<IPagedList<EducationCycleInstanceDto>> GetEducationCycleInstancesByClassGuid(Guid classGuid, Pager pager)
-    {
-        var builder = new SqlBuilder();
-
-        builder.SELECT("");
-        builder.FROM("");
-        builder.WHERE("");
-
-        using var cn = await GetOpenConnectionAsync();
-        return await cn.QueryPagedAsync<EducationCycleInstanceDto>(builder.ToString(), new { classGuid }, pager);
-    }
     public async Task<Guid?> GetActiveEducationCycleGuidByClassGuid(Guid classGuid)
     {
         var builder = new SqlBuilder();
@@ -83,5 +72,18 @@ public partial class FoundationQueriesRepository : IFoundationQueriesClassesRepo
 
         using var cn = await GetOpenConnectionAsync();
         return await cn.QueryAsync<EducationCycleStepInstanceDto>(builder.ToString(), new { classGuid });
+    }
+    public async Task<IEnumerable<EducationCycleInstanceDto>> GetAllEducationCycleInstancesForClass(Guid classGuid)
+    {
+        var builder = new SqlBuilder();
+        builder.SELECT("eci.Guid, EducationCycleGuid, ec.Name as EducationCycleName, DateSince, DateUntil, eci.CreatorGuid");
+        builder.FROM("EducationCycleInstances eci");
+        builder.JOIN("EducationCycles ec ON ec.Guid = eci.EducationCycleGuid");
+        builder.WHERE("eci.IsDeleted = 0");
+        builder.WHERE("eci.ClassGuid = @classGuid");
+
+        builder.ORDER_BY("DateSince");
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryAsync<EducationCycleInstanceDto>(builder.ToString(), new { classGuid });
     }
 }

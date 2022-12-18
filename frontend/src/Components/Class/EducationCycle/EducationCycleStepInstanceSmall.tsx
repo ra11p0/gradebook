@@ -7,13 +7,16 @@ function EducationCycleStepInstanceSmall(
 ): ReactElement {
   return (
     <>
-      <small className="text-secondary">{`${props.educationCycleStepName}${
-        props.dateSince && props.dateUntil
-          ? ` (${moment.utc(props.dateSince).local().format('ll')}
+      <small className="text-secondary">
+        {`${props.educationCycleStepName}
+        ${
+          props.dateSince && props.dateUntil
+            ? ` (${moment.utc(props.dateSince).local().format('ll')}
            - 
           ${moment.utc(props.dateUntil).local().format('ll')})`
-          : ''
-      }`}</small>
+            : ''
+        }`}
+      </small>
     </>
   );
 }

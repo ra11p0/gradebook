@@ -32,7 +32,7 @@ public partial class FoundationQueriesRepository
 
         builder.ORDER_BY("DateSince");
         using var cn = await GetOpenConnectionAsync();
-        return await cn.QueryAsync<EducationCycleInstanceDto>(builder.ToString(), new { guids });
+        return await cn.QueryAsync<EducationCycleInstanceDto>(builder.ToString(), new { guids = guids.ToList() });
     }
     public async Task<IEnumerable<EducationCycleStepInstanceDto>> GetEducationCycleStepInstancesByEducationCycleInstancesGuids(IEnumerable<Guid> guids)
     {
@@ -45,7 +45,7 @@ public partial class FoundationQueriesRepository
 
         builder.ORDER_BY("`Order`");
         using var cn = await GetOpenConnectionAsync();
-        return await cn.QueryAsync<EducationCycleStepInstanceDto>(builder.ToString(), new { guids });
+        return await cn.QueryAsync<EducationCycleStepInstanceDto>(builder.ToString(), new { guids = guids.ToList() });
     }
     public async Task<IEnumerable<EducationCycleStepSubjectInstanceDto>> GetEducationCycleStepSubjectInstancesByEducationCycleStepInstancesGuids(IEnumerable<Guid> guids)
     {
@@ -80,7 +80,7 @@ public partial class FoundationQueriesRepository
         builder.WHERE("IsDeleted = 0");
         builder.WHERE("Guid in @guids");
         using var cn = await GetOpenConnectionAsync();
-        return await cn.QueryPagedAsync<EducationCycleExtendedDto>(builder.ToString(), new { guids }, pager);
+        return await cn.QueryPagedAsync<EducationCycleExtendedDto>(builder.ToString(), new { guids = guids.ToList() }, pager);
     }
     public async Task<IPagedList<ClassDto>> GetAvailableClassesWithAssignedForEducationCycle(Guid educationCycleGuid, Pager pager, string? query = "")
     {

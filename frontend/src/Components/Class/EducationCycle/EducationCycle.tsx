@@ -1,29 +1,28 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { Alert, Card, Stack } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
+import { Card } from 'react-bootstrap';
 import ClassesProxy from '../../../ApiClient/Classes/ClassesProxy';
 import EducationCyclesInClassResponse, {
   EducationCycleStepInstance,
 } from '../../../ApiClient/Classes/Definitions/Responses/EducationCyclesInClassResponse';
-import EducationCyclesProxy from '../../../ApiClient/EducationCycles/EducationCyclesProxy';
 import Notifications from '../../../Notifications/Notifications';
-import ConfigureEducationCycle from '../../EducationCycle/ConfigureEducationCycle/ConfigureEducationCycle';
-import EducationCyclePicker from '../../Shared/EducationCyclePicker/EducationCyclePicker';
 import LoadingScreen from '../../Shared/LoadingScreen';
-import EducationCycleStepInstanceCurrent from './EducationCycleStepInstanceCurrent';
-import EducationCycleStepInstanceSmall from './EducationCycleStepInstanceSmall';
 import EducationCycleHeader from './EducationCycleHeader';
+import EducationCycleNotConfigured from './EducationCycleNotConfigured';
+import EducationCycleNotAttached from './EducationCycleNotAttached';
+import EducationCycleStepInstances from './EducationCycleStepInstances';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   classGuid: string;
 }
 
 function EducationCycle({ classGuid }: Props): ReactElement {
-  const { t } = useTranslation('educationCycles');
-
   const [educationCycle, setEducationCycle] = useState<
     EducationCyclesInClassResponse | undefined
   >(undefined);
+  const { t } = useTranslation('educationCycles');
 
   const prepareEducationCycle = async (): Promise<void> => {
     await ClassesProxy.educationCycles
@@ -72,82 +71,39 @@ function EducationCycle({ classGuid }: Props): ReactElement {
               <>
                 {educationCycle?.activeEducationCycleInstance ? (
                   <>
-                    <Stack>
-                      <div>
-                        <Stack>
-                          {getCurrentAndSurroundingStepInstances()
-                            ?.previous && (
-                            <EducationCycleStepInstanceSmall
-                              {...getCurrentAndSurroundingStepInstances()!
-                                .previous!}
-                            />
-                          )}
-                          {getCurrentAndSurroundingStepInstances()?.current && (
-                            <EducationCycleStepInstanceCurrent
-                              {...getCurrentAndSurroundingStepInstances()!
-                                .current!}
-                              isLast={
-                                !getCurrentAndSurroundingStepInstances()?.next
-                              }
-                              stateChanged={async () => {
-                                await prepareEducationCycle();
-                              }}
-                              classGuid={classGuid}
-                            />
-                          )}
-                          {getCurrentAndSurroundingStepInstances()?.next && (
-                            <EducationCycleStepInstanceSmall
-                              {...getCurrentAndSurroundingStepInstances()!
-                                .next!}
-                            />
-                          )}
-                        </Stack>
-                      </div>
-                    </Stack>
+                    {educationCycle.activeEducationCycleInstance &&
+                    !educationCycle.currentStepInstance &&
+                    !educationCycle.nextStepInstance &&
+                    !educationCycle.previousStepInstance ? (
+                      <p className="text-success">
+                        <FontAwesomeIcon icon={faCheck} />{' '}
+                        {t('finishedEducationCycle')}
+                      </p>
+                    ) : (
+                      <>
+                        <EducationCycleStepInstances
+                          getCurrentAndSurroundingStepInstances={
+                            getCurrentAndSurroundingStepInstances
+                          }
+                          prepareEducationCycle={prepareEducationCycle}
+                          classGuid={classGuid}
+                        />
+                      </>
+                    )}
                   </>
                 ) : (
-                  <>
-                    <Alert variant="warning">
-                      <div className="d-flex justify-content-between">
-                        <div>{t('educationCycleNotConfigured')}</div>
-                      </div>
-                      <div className="d-flex justify-content-end m-1 p-1">
-                        <ConfigureEducationCycle
-                          classGuid={classGuid}
-                          onSubmit={async () => {
-                            await prepareEducationCycle();
-                          }}
-                          educationCycleGuid={
-                            educationCycle.activeEducationCycle.guid
-                          }
-                        />
-                      </div>
-                    </Alert>
-                  </>
+                  <EducationCycleNotConfigured
+                    classGuid={classGuid}
+                    prepareEducationCycle={prepareEducationCycle}
+                    educationCycle={educationCycle}
+                  />
                 )}
               </>
             ) : (
-              <>
-                <Alert variant="warning">
-                  <div className="d-flex justify-content-between">
-                    <div>{t('educationCycleNotAttached')}</div>
-                  </div>
-                  <div className="d-flex justify-content-end m-1 p-1">
-                    <EducationCyclePicker
-                      onCyclesSelected={async (selected) => {
-                        const selectedOne = selected.find(() => true);
-                        if (!selectedOne) return;
-                        await EducationCyclesProxy.setEducationCycleForClass(
-                          selectedOne,
-                          classGuid
-                        );
-                        await prepareEducationCycle();
-                      }}
-                      onlyOne={true}
-                    />
-                  </div>
-                </Alert>
-              </>
+              <EducationCycleNotAttached
+                classGuid={classGuid}
+                prepareEducationCycle={prepareEducationCycle}
+              />
             )}
           </>
         </LoadingScreen>

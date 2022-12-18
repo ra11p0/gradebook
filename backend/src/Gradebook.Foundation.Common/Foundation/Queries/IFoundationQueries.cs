@@ -12,7 +12,6 @@ public interface IFoundationQueries : IFoundationEducationCyclesQueries, IFounda
     Task<ResponseWithStatus<IPagedList<SubjectDto>>> GetSubjectsForSchool(Guid schoolGuid, int page, string query);
     Task<ResponseWithStatus<IEnumerable<SchoolWithRelatedPersonDto>, bool>> GetSchoolsForUser(string userGuid);
     Task<ResponseWithStatus<IEnumerable<PersonDto>>> GetPeopleByUserGuid(string userGuid);
-    Task<ResponseWithStatus<bool>> IsUserActive(string userGuid);
     Task<ResponseWithStatus<SchoolDto>> GetSchool(Guid schoolGuid);
     Task<ResponseWithStatus<Guid, bool>> GetPersonGuidForUser(string userId, Guid schoolGuid);
     Task<ResponseWithStatus<IEnumerable<PersonDto>, bool>> GetPeopleInSchool(Guid schoolGuid);
@@ -20,12 +19,10 @@ public interface IFoundationQueries : IFoundationEducationCyclesQueries, IFounda
     Task<ResponseWithStatus<IEnumerable<StudentDto>, bool>> GetAllAccessibleStudents(Guid schoolGuid);
     Task<ResponseWithStatus<IEnumerable<StudentDto>>> GetInactiveStudents(Guid schoolGuid);
     Task<ResponseWithStatus<IEnumerable<TeacherDto>>> GetInactiveTeachers(Guid schoolGuid);
-    Task<ResponseWithStatus<IEnumerable<InvitationDto>, bool>> GetInvitations(Guid personGuid);
     Task<ResponseWithStatus<IPagedList<InvitationDto>, bool>> GetInvitationsToSchool(Guid schoolGuid, int page);
     Task<ResponseWithStatus<InvitationDto, bool>> GetInvitationByActivationCode(string activationCode);
     Task<ResponseWithStatus<PersonDto, bool>> GetPersonByGuid(Guid guid);
     Task<ResponseWithStatus<ActivationCodeInfoDto>> GetActivationCodeInfo(string activationCode, string method);
-    Task<ResponseWithStatus<GroupDto, bool>> GetGroupByGuid(Guid guid);
     Task<ResponseWithStatus<StudentDto, bool>> GetStudentByGuid(Guid guid);
     Task<ResponseWithStatus<TeacherDto, bool>> GetTeacherByGuid(Guid guid);
     Task<ResponseWithStatus<IPagedList<StudentDto>>> GetStudentsInSchool(Guid schoolGuid, int page);

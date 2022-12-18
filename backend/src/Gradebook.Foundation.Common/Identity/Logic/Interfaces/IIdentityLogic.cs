@@ -13,7 +13,6 @@ public interface IIdentityLogic
     Task<ResponseWithStatus<string[], bool>> GetUserRoles(string? userGuid = null);
     Task<ResponseWithStatus<string, bool>> CurrentUserId();
     Task<StatusResponse<bool>> AddUserRole(string role, string? userGuid = null);
-    Task<StatusResponse<bool>> RemoveUserRole(string role, string? userGuid = null);
     Task<bool> IsValidRefreshTokenForUser(string userId, string refreshToken);
     Task RemoveRefreshTokenFromUser(string userId, string refreshToken);
     Task AssignRefreshTokenToUser(string userId, string refreshToken);

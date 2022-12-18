@@ -3,7 +3,6 @@ export default interface EducationCyclesInClassResponse {
   activeEducationCycleGuid?: string;
   activeEducationCycle?: EducationCycle;
   hasPreparedActiveEducationCycle: boolean;
-  educationCyclesInstances?: EducationCycleInstance[];
   currentStepInstance?: EducationCycleStepInstance;
   previousStepInstance?: EducationCycleStepInstance;
   nextStepInstance?: EducationCycleStepInstance;

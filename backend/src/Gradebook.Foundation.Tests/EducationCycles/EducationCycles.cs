@@ -303,6 +303,85 @@ namespace Gradebook.Foundation.Tests.EducationCycles
             Assert.That(respPrevious.Response!.Guid, Is.EqualTo(previousStepInstanceGuid));
         }
         [Test]
+        [Obsolete]
+        public async Task ShouldShowCurrentNextPreviousEducationCycleStepInstance3()
+        {
+            var firstStepInstanceGuid = Guid.NewGuid();
+            var secondStepInstanceGuid = Guid.NewGuid();
+            var thirdStepInstanceGuid = Guid.NewGuid();
+            _foundationQueriesRepository
+                .Setup(e => e.GetAllEducationCycleStepInstancesForClass(It.IsAny<Guid>()))
+                .ReturnsAsync(new EducationCycleStepInstanceDto[] {
+                    new EducationCycleStepInstanceDto(){
+                        DateSince = new DateTime(2012, 10, 10),
+                        DateUntil = new DateTime(2012, 10, 15),
+                        Order = 0,
+                        Guid = firstStepInstanceGuid
+                    }, new EducationCycleStepInstanceDto(){
+                        StartedDate = new DateTime(2012, 10, 16),
+                        Guid = secondStepInstanceGuid,
+                        Order = 1
+                    },
+                    new EducationCycleStepInstanceDto(){
+                        DateSince = new DateTime(2012, 10, 20),
+                        DateUntil = new DateTime(2012, 10, 25),
+                        Guid = thirdStepInstanceGuid,
+                        Order = 2
+                    },
+                   });
+            Time.SetFakeUtcNow(new DateTime(2012, 10, 11));
+            var resp = await _foundationQueries.GetCurrentEducationCycleStepInstance(Guid.NewGuid());
+            Assert.That(resp.Response!.Guid, Is.EqualTo(firstStepInstanceGuid));
+
+            Time.SetFakeUtcNow(new DateTime(2012, 10, 16));
+            var resp2 = await _foundationQueries.GetCurrentEducationCycleStepInstance(Guid.NewGuid());
+            Assert.That(resp2.Response!.Guid, Is.EqualTo(secondStepInstanceGuid));
+
+            Time.SetFakeUtcNow(new DateTime(2012, 10, 22));
+            var resp3 = await _foundationQueries.GetCurrentEducationCycleStepInstance(Guid.NewGuid());
+            Assert.That(resp3.Response!.Guid, Is.EqualTo(secondStepInstanceGuid));
+        }
+        [Test]
+        [Obsolete]
+        public async Task ShouldShowCurrentNextPreviousEducationCycleStepInstance4()
+        {
+            var firstStepInstanceGuid = Guid.NewGuid();
+            var secondStepInstanceGuid = Guid.NewGuid();
+            var thirdStepInstanceGuid = Guid.NewGuid();
+            _foundationQueriesRepository
+                .Setup(e => e.GetAllEducationCycleStepInstancesForClass(It.IsAny<Guid>()))
+                .ReturnsAsync(new EducationCycleStepInstanceDto[] {
+                    new EducationCycleStepInstanceDto(){
+                        DateSince = new DateTime(2012, 10, 10),
+                        DateUntil = new DateTime(2012, 10, 15),
+                        FinishedDate = new DateTime(2012, 10, 12),
+                        Order = 0,
+                        Guid = firstStepInstanceGuid
+                    }, new EducationCycleStepInstanceDto(){
+                        StartedDate = new DateTime(2012, 10, 16),
+                        Guid = secondStepInstanceGuid,
+                        Order = 1
+                    },
+                    new EducationCycleStepInstanceDto(){
+                        DateSince = new DateTime(2012, 10, 20),
+                        DateUntil = new DateTime(2012, 10, 25),
+                        Guid = thirdStepInstanceGuid,
+                        Order = 2
+                    },
+                   });
+            Time.SetFakeUtcNow(new DateTime(2012, 10, 12));
+            var resp = await _foundationQueries.GetCurrentEducationCycleStepInstance(Guid.NewGuid());
+            Assert.That(resp.Response!.Guid, Is.EqualTo(secondStepInstanceGuid));
+
+            Time.SetFakeUtcNow(new DateTime(2012, 10, 13));
+            var resp2 = await _foundationQueries.GetCurrentEducationCycleStepInstance(Guid.NewGuid());
+            Assert.That(resp2.Response!.Guid, Is.EqualTo(secondStepInstanceGuid));
+
+            Time.SetFakeUtcNow(new DateTime(2012, 10, 16));
+            var resp3 = await _foundationQueries.GetCurrentEducationCycleStepInstance(Guid.NewGuid());
+            Assert.That(resp3.Response!.Guid, Is.EqualTo(secondStepInstanceGuid));
+        }
+        [Test]
         public async Task ShouldShowZeroCurrentEducationCycleStepInstance()
         {
             _foundationQueriesRepository

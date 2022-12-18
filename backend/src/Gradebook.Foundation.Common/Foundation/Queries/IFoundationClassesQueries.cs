@@ -12,7 +12,6 @@ public interface IFoundationClassesQueries
     Task<ResponseWithStatus<IPagedList<TeacherDto>>> GetTeachersInClass(Guid classGuid, int page);
     Task<ResponseWithStatus<IEnumerable<StudentDto>>> GetAllStudentsInClass(Guid classGuid);
     Task<ResponseWithStatus<IEnumerable<TeacherDto>>> GetAllTeachersInClass(Guid classGuid);
-    Task<ResponseWithStatus<Guid?>> GetPreviousEducationCycleStepInstanceGuid(Guid classGuid);
     Task<ResponseWithStatus<Guid?>> GetCurrentEducationCycleStepInstanceGuid(Guid classGuid);
     Task<ResponseWithStatus<Guid?>> GetNextEducationCycleStepInstanceGuid(Guid classGuid);
     Task<ResponseWithStatus<EducationCycleStepInstanceDto>> GetPreviousEducationCycleStepInstance(Guid classGuid);

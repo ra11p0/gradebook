@@ -10,7 +10,6 @@ using Gradebook.Foundation.Common.Mailservice;
 using Gradebook.Foundation.Common.Settings.Commands;
 using Gradebook.Foundation.Identity.Models;
 using Gradebook.Foundation.Mailservice.MailMessages;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -116,13 +115,6 @@ public class IdentityLogic : IIdentityLogic
         return new ResponseWithStatus<string[], bool>(response.ToArray(), true);
     }
     public async Task<StatusResponse<bool>> AddUserRole(string role, string? userGuid = null)
-    {
-        var r = (await GetUserRoles(userGuid)).Response!.Any(e => e.Normalize() == role.Normalize());
-        if (r) return new StatusResponse<bool>(true);
-        await EditUserRoles((await GetUserRoles(userGuid)).Response!.Append(role).ToArray(), userGuid);
-        return new StatusResponse<bool>(true);
-    }
-    public async Task<StatusResponse<bool>> RemoveUserRole(string role, string? userGuid = null)
     {
         await EditUserRoles((await GetUserRoles(userGuid)).Response!.Where(e => e.Normalize() != role.Normalize()).ToArray(), userGuid);
         return new StatusResponse<bool>(true);

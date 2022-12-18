@@ -14,5 +14,18 @@
   "educationCycleNotAttached": "No education cycle attached to this class",
   "subjects": "Subjects",
   "wrongDatesOrder": "Dates order not matched with stages order",
-  "removeEducationCycleBinding": "Remove education cycle binding"
+  "removeEducationCycleBinding": "Remove education cycle binding",
+  "unbindEducationCycle": "Remove education cycle binding",
+  "youSureUnbindEducationCycle": "Are you sure you want to remove education cycle binding?",
+  "educationCycleNotStartedDescription": "Education cycle stage is not started yet.",
+  "educationCycleStart": "Start education cycle stage.",
+  "youSureEducationCycleStart": "Are you sure you want to start education cycle stage? You cannot undo this action.",
+  "educationCycleStartedDescription": "Education cycle stage started.",
+  "educationCycleStartedNotLastDescription": "You can start next stage now.",
+  "educationCycleForward": "Start next stage.",
+  "youSureEducationCycleForward": "Are you sure you want to start next stage? You cannot undo this action.",
+  "educationCycleStartedLastDescription": "You can finish education cycle.",
+  "educationCycleStop": "Finish education cycle.",
+  "youSureEducationCycleStop": "Are you sure you want to finish education cycle? You cannot undo this action.",
+  "finishedEducationCycle": "Education cycle finished"
 }
