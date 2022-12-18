@@ -1,6 +1,4 @@
 import i18n from 'i18next';
-import setApplicationLanguageReduxWrapper from '../Redux/ReduxCommands/account/setApplicationLanguageRedux';
-import { store } from '../store';
 
 i18n.init({
   fallbackNS: 'common',
@@ -39,6 +37,11 @@ i18n.init({
       addNewTeacherModal: require('./locales/en/Dashboard/Manage/ManageTeachers/addNewTeacherModal.json'),
       person: require('./locales/en/Person/person.json'),
       educationCycle: require('./locales/en/Dashboard/Manage/educationCycle.json'),
+      service: require('./locales/en/service.json'),
+      configureEducationCycleForm: require('./locales/en/EducationCycle/configureEducationCycleForm.json'),
+      educationCycles: require('./locales/en/EducationCycle/educationCycles.json'),
+      educationCyclesPicker: require('./locales/en/EducationCycle/educationCyclesPicker.json'),
+      classPicker: require('./locales/en/Shared/classPicker.json'),
     },
     pl: {
       common: require('./locales/pl/common.json'),
@@ -72,9 +75,15 @@ i18n.init({
       addNewTeacherModal: require('./locales/pl/Dashboard/Manage/ManageTeachers/addNewTeacherModal.json'),
       person: require('./locales/pl/Person/person.json'),
       educationCycle: require('./locales/pl/Dashboard/Manage/educationCycle.json'),
+      service: require('./locales/pl/service.json'),
+      configureEducationCycleForm: require('./locales/pl/EducationCycle/configureEducationCycleForm.json'),
+      educationCycles: require('./locales/pl/EducationCycle/educationCycles.json'),
+      educationCyclesPicker: require('./locales/pl/EducationCycle/educationCyclesPicker.json'),
+      classPicker: require('./locales/pl/Shared/classPicker.json'),
     },
   },
   ns: [
+    'classPicker',
     'common',
     'loginForm',
     'registerForm',
@@ -106,14 +115,14 @@ i18n.init({
     'addNewSubjectModal',
     'addNewTeacherModal',
     'person',
+    'service',
+    'configureEducationCycleForm',
+    'educationCycles',
+    'educationCyclesPicker',
   ],
   defaultNS: 'common',
 });
 
 i18n.languages = ['en', 'pl'];
-
-i18n.on('languageChanged', (language) => {
-  setApplicationLanguageReduxWrapper(store.dispatch, language);
-});
 
 export default i18n;

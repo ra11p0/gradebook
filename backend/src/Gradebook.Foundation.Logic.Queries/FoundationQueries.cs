@@ -6,11 +6,11 @@ using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 using Gradebook.Foundation.Hangfire;
-using Gradebook.Foundation.Hangfire.Messages;
+using Gradebook.Foundation.Logic.Queries.Repositories;
 
 namespace Gradebook.Foundation.Logic.Queries;
 
-public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFoundationQueries
+public partial class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFoundationQueries
 {
     private readonly ServiceResolver<IIdentityLogic> _identityLogic;
     private readonly ServiceResolver<IFoundationPermissionsLogic> _foundationPermissionLogic;
@@ -83,29 +83,6 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<IEnumerable<TeacherDto>>(resp, true);
     }
 
-    public async Task<ResponseWithStatus<ClassDto, bool>> GetClassByGuid(Guid guid)
-    {
-        var resp = await Repository.GetClassByGuid(guid);
-        if (resp is null) return new ResponseWithStatus<ClassDto, bool>(404, "Class does not exist");
-        return new ResponseWithStatus<ClassDto, bool>(resp, true);
-    }
-
-    public async Task<ResponseWithStatus<IPagedList<ClassDto>>> GetClassesForPerson(Guid personGuid, int page)
-    {
-        var pager = new Pager(page);
-        var resp = await Repository.GetClassesForPerson(personGuid, pager);
-        if (resp is null) return new ResponseWithStatus<IPagedList<ClassDto>>(404);
-        return new ResponseWithStatus<IPagedList<ClassDto>>(resp, true);
-    }
-
-    public async Task<ResponseWithStatus<IPagedList<ClassDto>>> GetClassesInSchool(Guid schoolGuid, int page)
-    {
-        var pager = new Pager(page);
-        var resp = await Repository.GetClassesInSchool(schoolGuid, pager);
-        if (resp is null) return new ResponseWithStatus<IPagedList<ClassDto>>(404);
-        return new ResponseWithStatus<IPagedList<ClassDto>>(resp, true);
-    }
-
     public async Task<ResponseWithStatus<Guid, bool>> GetCurrentPersonGuid(Guid schoolGuid)
     {
         var userGuid = await _identityLogic.Service.CurrentUserId();
@@ -142,26 +119,6 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<EducationCycleExtendedDto>(educationCycle);
     }
 
-    public async Task<ResponseWithStatus<IPagedList<EducationCycleDto>>> GetEducationCyclesInSchool(Guid schoolGuid, int page)
-    {
-        if (!await _foundationPermissionLogic.Service.CanSeeEducationCycles(schoolGuid)) return new ResponseWithStatus<IPagedList<EducationCycleDto>>(403);
-        var pager = new Pager(page);
-        var res = await Repository.GetEducationCyclesInSchool(schoolGuid, pager);
-        var resWithCreator = await Task.WhenAll(res.Select(async cycle =>
-        {
-            cycle.Creator = (await GetPersonByGuid(cycle.CreatorGuid)).Response;
-            return cycle;
-        }));
-        return new ResponseWithStatus<IPagedList<EducationCycleDto>>(resWithCreator.ToPagedList(res));
-    }
-
-    public async Task<ResponseWithStatus<GroupDto, bool>> GetGroupByGuid(Guid guid)
-    {
-        var resp = await Repository.GetGroupByGuid(guid);
-        if (resp is null) return new ResponseWithStatus<GroupDto, bool>(404);
-        return new ResponseWithStatus<GroupDto, bool>(resp, true);
-    }
-
     public async Task<ResponseWithStatus<IEnumerable<StudentDto>>> GetInactiveStudents(Guid schoolGuid)
     {
         var students = await Repository.GetAllInactiveAccessibleStudents(schoolGuid);
@@ -178,12 +135,6 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         var invitation = await Repository.GetInvitationByActivationCode(activationCode);
         if (invitation is null) return new ResponseWithStatus<InvitationDto, bool>(statusCode: 404, status: false, message: "Invitation does not exist");
         return new ResponseWithStatus<InvitationDto, bool>(invitation, true);
-    }
-
-    public async Task<ResponseWithStatus<IEnumerable<InvitationDto>, bool>> GetInvitations(Guid personGuid)
-    {
-        var resp = await Repository.GetInvitations(personGuid);
-        return new ResponseWithStatus<IEnumerable<InvitationDto>, bool>(resp, true);
     }
 
     public async Task<ResponseWithStatus<IPagedList<InvitationDto>, bool>> GetInvitationsToSchool(Guid schoolGuid, int page)
@@ -319,10 +270,10 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<TeacherDto, bool>(resp, true);
     }
 
-    public async Task<ResponseWithStatus<IPagedList<TeacherDto>>> GetTeachersForSubject(Guid subjectGuid, int page)
+    public async Task<ResponseWithStatus<IPagedList<TeacherDto>>> GetTeachersForSubject(Guid subjectGuid, int page, string? query)
     {
         var pager = new Pager(page);
-        var response = await Repository.GetTeachersForSubject(subjectGuid, pager);
+        var response = await Repository.GetTeachersForSubject(subjectGuid, pager, query);
         return new ResponseWithStatus<IPagedList<TeacherDto>>(response, true);
     }
 
@@ -340,21 +291,10 @@ public class FoundationQueries : BaseLogic<IFoundationQueriesRepository>, IFound
         return new ResponseWithStatus<IPagedList<TeacherDto>>(response, true);
     }
 
-    public async Task<ResponseWithStatus<bool>> IsClassOwner(Guid classGuid, Guid personGuid)
-    {
-        var resp = await Repository.IsClassOwner(classGuid, personGuid);
-        return new ResponseWithStatus<bool>(resp, true);
-    }
-
     public async Task<ResponseWithStatus<bool>> IsStudentInAnyClass(Guid studentGuid)
     {
         var resp = await Repository.IsStudentInAnyClass(studentGuid);
         return new ResponseWithStatus<bool>(resp);
-    }
-
-    public async Task<ResponseWithStatus<bool>> IsUserActive(string userGuid)
-    {
-        return new ResponseWithStatus<bool>(await Repository.IsUserActive(userGuid), true);
     }
 
     public async Task<ResponseWithStatus<Guid>> RecogniseCurrentPersonByClassGuid(Guid classGuid)

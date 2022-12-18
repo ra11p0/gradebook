@@ -1,4 +1,4 @@
-using Receipts.Foundation.DependencyResolver;
+using Gradebook.Foundation.DependencyResolver;
 using Gradebook.Foundation.SignalR;
 using Gradebook.Foundation.DependencyResolver.Services;
 
@@ -20,7 +20,7 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGet("/", () => "Hello World!");
+app.MapGet("/", () => "Hello!");
 
 app.MapDefaultControllerRoute();
 

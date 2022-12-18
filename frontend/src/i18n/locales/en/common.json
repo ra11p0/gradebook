@@ -17,5 +17,6 @@
   "fieldRequired": "Field required",
   "fieldNumberOnly": "Field must contain digits only",
   "createdDate": "Created date",
-  "creator": "Creator"
+  "creator": "Creator",
+  "confirm": "Confirm"
 }

@@ -1,6 +1,6 @@
 namespace Gradebook.Foundation.Common.Foundation.Commands.Definitions;
 
-public class EducationCycleCommand : Validatable<EducationCycleCommand>
+public class EducationCycleCommand : Validatable
 {
     public Guid? Guid { get; set; }
     public Guid SchoolGuid { get; set; }
@@ -9,9 +9,9 @@ public class EducationCycleCommand : Validatable<EducationCycleCommand>
     public string Name { get; set; } = string.Empty;
     public List<EducationCycleStepCommand> Stages { get; set; } = new();
 
-    protected override bool Validate(EducationCycleCommand validatable)
+    protected override StatusResponse Validate()
     {
         var isAnyStageInvalid = Stages.Any(stage => !stage.IsValid);
-        return SchoolGuid != default && !string.IsNullOrEmpty(Name) && !isAnyStageInvalid && Stages.Count > 0;
+        return new StatusResponse(SchoolGuid != default && !string.IsNullOrEmpty(Name) && !isAnyStageInvalid && Stages.Count > 0);
     }
 }

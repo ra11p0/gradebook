@@ -4,6 +4,7 @@ import getSessionRedux from '../../Redux/ReduxQueries/account/getSessionRedux';
 export default class HubProxy {
   private subscribers: Subscriber[] = [];
   private connection: HubConnection | undefined = undefined;
+
   public async connect(url: string): Promise<void> {
     if (this.connection) await this.connection.stop();
     const session = getSessionRedux();
@@ -18,6 +19,10 @@ export default class HubProxy {
         this.connection?.on(s.methodName, s.newMethod);
       });
     });
+  }
+
+  public async disconnect(): Promise<void> {
+    if (this.connection) await this.connection.stop();
   }
 
   public async send(method: string, content: any): Promise<void> {

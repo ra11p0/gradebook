@@ -3,7 +3,7 @@ namespace Gradebook.Foundation.Common.Foundation;
 public interface IFoundationPermissionsLogic
 {
     Task<bool> CanInviteToSchool(Guid personGuid);
-    Task<bool> CanManageClass(Guid classGuid, Guid personGuid);
+    Task<bool> CanManageClass(Guid classGuid, Guid? personGuid = null);
     Task<bool> CanCreateNewClass(Guid personGuid);
     Task<bool> CanCreateNewStudents(Guid personGuid);
     Task<bool> CanDeleteStudents(Guid personGuid);

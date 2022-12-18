@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Header from './Components/Shared/Header';
+import Header from './Components/Shared/Header/Header';
 import Index from './Routes/Index';
 import Dashboard from './Routes/Dashboard';
 import { connect } from 'react-redux';
@@ -18,15 +18,14 @@ import setAppLoadReduxWrapper from './Redux/ReduxCommands/account/setAppLoadRedu
 import LoadingScreen from './Components/Shared/LoadingScreen';
 import AccountProxy from './ApiClient/Accounts/AccountsProxy';
 import setLoginReduxWrapper from './Redux/ReduxCommands/account/setLoginRedux';
-import { GlobalState, store } from './store';
+import { GlobalState } from './store';
 import setLogOutReduxWrapper from './Redux/ReduxCommands/account/setLogOutRedux';
 import setApplicationLanguageReduxWrapper from './Redux/ReduxCommands/account/setApplicationLanguageRedux';
-import i18n from './i18n/config';
 import Subject from './Routes/Subject';
 import EducationCycle from './Routes/EducationCycle';
 import PermissionLevelEnum from './Common/Enums/Permissions/PermissionLevelEnum';
 import getHasPermissionRedux from './Redux/ReduxQueries/account/getHasPermissionRedux';
-
+import Service from './Routes/Service';
 
 interface AppProps {
   onLoad: (isAppLoaded: boolean) => void;
@@ -43,34 +42,31 @@ class App extends React.Component<AppProps> {
     this.props.onLoad(loaded);
   }
 
-  componentDidMount(): void {
-    setApplicationLanguageReduxWrapper(store.dispatch, i18n.language);
+  async componentDidMount(): Promise<void> {
+    const userLang = navigator.language;
+    await setApplicationLanguageReduxWrapper(userLang);
     const access = localStorage.getItem('access_token');
     const refresh = localStorage.getItem('refresh_token');
     if (access && refresh) {
-      AccountProxy.refreshAccessToken(access, refresh)
+      await AccountProxy.refreshAccessToken(access, refresh)
         .then(async (refreshAccessTokenResponse) => {
-          await setLoginReduxWrapper(store.dispatch, {
+          await setLoginReduxWrapper({
             accessToken: refreshAccessTokenResponse.data.access_token,
             refreshToken: refreshAccessTokenResponse.data.refresh_token,
           });
-          this.onLoad(true);
         })
-        .catch(() => {
-          setLogOutReduxWrapper();
+        .catch(async () => {
+          await setLogOutReduxWrapper();
         });
-    } else {
-      this.onLoad(true);
     }
+    this.onLoad(true);
   }
 
   render(): React.ReactNode {
     return (
       <div>
         {process.env.REACT_APP_BUILD && (
-          <div className='position-fixed'>
-            {process.env.REACT_APP_BUILD}
-          </div>
+          <div className="position-fixed">{process.env.REACT_APP_BUILD}</div>
         )}
 
         <LoadingScreen isReady={this.props.appLoaded}>
@@ -86,6 +82,7 @@ class App extends React.Component<AppProps> {
                       path="/account/register"
                       element={<RegisterForm />}
                     />
+                    <Route path="/Service/*" element={<Service />} />
                     <Route path="*" element={<Index />} />
                   </>
                 )

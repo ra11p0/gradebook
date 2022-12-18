@@ -8,16 +8,12 @@ import moment from 'moment';
 import PeopleProxy from '../../../ApiClient/People/PeopleProxy';
 import Notifications from '../../../Notifications/Notifications';
 import AccountProxy from '../../../ApiClient/Accounts/AccountsProxy';
-import GetAccessibleSchoolsResponse from '../../../ApiClient/Accounts/Definitions/Responses/GetAccessibleSchoolsResponse';
 import getCurrentUserIdReduxProxy from '../../../Redux/ReduxQueries/account/getCurrentUserIdRedux';
-import setSchoolsListReduxWrapper from '../../../Redux/ReduxCommands/account/setSchoolsListRedux';
 import setLoginReduxWrapper from '../../../Redux/ReduxCommands/account/setLoginRedux';
-import { store } from '../../../store';
 import getSessionRedux from '../../../Redux/ReduxQueries/account/getSessionRedux';
 
 interface ActivateStudentFormProps {
   defaultOnBackHandler: () => void;
-  setSchoolsList?: (schoolsList: GetAccessibleSchoolsResponse[]) => void;
   userId?: string;
   onSubmit?: () => void;
 }
@@ -49,11 +45,11 @@ const ActivateStudentForm = (props: ActivateStudentFormProps): ReactElement => {
     onSubmit: (values: ActivateStudentFormValues) => {
       PeopleProxy.activatePerson(values.accessCode)
         .then(() => {
-          void AccountProxy.getAccessibleSchools(props.userId!).then(
+          void AccountProxy.getAccessibleSchools(props.userId).then(
             (schoolsResponse) => {
               const session = getSessionRedux();
               if (!session) return;
-              void setLoginReduxWrapper(store.dispatch, {
+              void setLoginReduxWrapper({
                 accessToken: session.accessToken,
                 refreshToken: session.refreshToken,
               });
@@ -159,8 +155,5 @@ export default connect(
   (state) => ({
     userId: getCurrentUserIdReduxProxy(state),
   }),
-  (dispatch) => ({
-    setSchoolsList: (schoolsList: GetAccessibleSchoolsResponse[]) =>
-      setSchoolsListReduxWrapper(dispatch, { schoolsList }),
-  })
+  () => ({})
 )(ActivateStudentForm);

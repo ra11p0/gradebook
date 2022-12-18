@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from 'axios';
-import SettingsEnum from '../../Common/Enums/SettingsEnum';
 import { axiosApiAuthorized } from '../AxiosInterceptor';
 import GetAccessibleSchoolsResponse from './Definitions/Responses/GetAccessibleSchoolsResponse';
 import LoginRequest from './Definitions/Requests/LoginRequest';
@@ -9,6 +8,9 @@ import RefreshTokenResponse from './Definitions/Responses/RefreshTokenResponse';
 import RegisterRequest from './Definitions/Requests/RegisterRequest';
 import RelatedPersonResponse from './Definitions/Responses/RelatedPersonResponse';
 import SettingsRequest from './Definitions/Requests/SettingsRequest';
+import UserSettings from './Definitions/Responses/UserSettings';
+import getApplicationLanguageRedux from '../../Redux/ReduxQueries/account/getApplicationLanguageRedux';
+import getCurrentUserIdRedux from '../../Redux/ReduxQueries/account/getCurrentUserIdRedux';
 
 const API_URL = process.env.REACT_APP_API_URL!;
 
@@ -23,7 +25,19 @@ async function logIn(
 }
 
 async function register(request: RegisterRequest): Promise<AxiosResponse<any>> {
-  return await axios.post(API_URL + '/Account/register', request);
+  const language = getApplicationLanguageRedux();
+  return await axios.post(API_URL + '/Account/register', request, {
+    params: { language },
+  });
+}
+
+async function verifyEmailAddress(
+  userId: string,
+  activationCode: string
+): Promise<AxiosResponse<LoginResponse>> {
+  return await axios.post(
+    `${API_URL}/Account/${userId}/emailActivation/${activationCode}`
+  );
 }
 
 async function refreshAccessToken(
@@ -37,7 +51,7 @@ async function refreshAccessToken(
 }
 
 const getAccessibleSchools = async (
-  userGuid: string
+  userGuid: string = getCurrentUserIdRedux()
 ): Promise<AxiosResponse<GetAccessibleSchoolsResponse[]>> => {
   return await axiosApiAuthorized.get(API_URL + `/account/${userGuid}/schools`);
 };
@@ -54,37 +68,34 @@ const getRelatedPeople = async (
 
 // #region settings
 
-const getDefaultPerson = async (
-  userGuid: string
-): Promise<AxiosResponse<string>> => {
-  return await axiosApiAuthorized.get(
-    API_URL + `/account/${userGuid}/settings/${SettingsEnum.DefaultPersonGuid}`
-  );
+async function getUserSettings(): Promise<AxiosResponse<UserSettings>> {
+  return await axiosApiAuthorized.get(API_URL + `/account/settings`);
+}
+
+const getDefaultSchool = async (): Promise<string> => {
+  return (await getUserSettings()).data.defaultSchool;
 };
 
-const setDefaultPerson = async (
-  userGuid: string,
-  defaultPersonGuid: string
+const setDefaultSchool = async (
+  defaultSchool: string
 ): Promise<AxiosResponse> => {
-  return await axiosApiAuthorized.post(
-    API_URL + `/account/${userGuid}/settings/${SettingsEnum.DefaultPersonGuid}`,
-    { defaultPersonGuid }
-  );
+  return await setSettings({ defaultSchool });
+};
+
+const setLanguage = async (language: string): Promise<AxiosResponse> => {
+  return await setSettings({ language });
 };
 
 const setSettings = async (
-  userGuid: string,
   settings: SettingsRequest
 ): Promise<AxiosResponse> => {
-  return await axiosApiAuthorized.post(
-    API_URL + `/account/${userGuid}/settings`,
-    settings
-  );
+  return await axiosApiAuthorized.post(API_URL + `/account/settings`, settings);
 };
 
 // #endregion settings
 
 export default {
+  verifyEmailAddress,
   getRelatedPeople,
   getMe,
   getAccessibleSchools,
@@ -92,8 +103,10 @@ export default {
   refreshAccessToken,
   register,
   settings: {
+    setLanguage,
     setSettings,
-    getDefaultPerson,
-    setDefaultPerson,
+    setDefaultSchool,
+    getUserSettings,
+    getDefaultSchool,
   },
 };

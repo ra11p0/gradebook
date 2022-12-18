@@ -23,6 +23,7 @@ const showCommonError = (): void => {
     },
   });
 };
+
 const showError = (message: string): void => {
   NorificationsStore.addNotification({
     ...defaultConfig,
@@ -35,12 +36,16 @@ const showError = (message: string): void => {
     },
   });
 };
+
 const showApiError = (err: { response: any; message?: string }): void => {
   const message = err.response.data?.title ?? err.response.data ?? err.message;
+
   NorificationsStore.addNotification({
     ...defaultConfig,
     title: t('error', { ns: 'notifications' }).toString(),
-    message: t(message, { ns: 'notifications' }).toString(),
+    message: t(typeof message === 'object' ? message.message : message, {
+      ns: 'notifications',
+    }).toString(),
     type: 'danger',
     dismiss: {
       duration: 5000,
@@ -62,9 +67,22 @@ const showSuccessNotification = (title: string, message: string): void => {
   });
 };
 
+const showChangesSavedNotification = (): void => {
+  NorificationsStore.addNotification({
+    ...defaultConfig,
+    title: t('changesSaved', { ns: 'notifications' }).toString(),
+    type: 'success',
+    dismiss: {
+      duration: 5000,
+      onScreen: true,
+    },
+  });
+};
+
 export default {
   showCommonError,
   showError,
   showApiError,
   showSuccessNotification,
+  showChangesSavedNotification,
 };

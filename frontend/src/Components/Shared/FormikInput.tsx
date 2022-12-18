@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import React, { ReactElement } from 'react';
 import { Form } from 'react-bootstrap';
+import FormikDatePicker, { FormikDatePickerProps } from './FormikDatePicker';
 import FormikValidationLabel from './FormikValidationLabel';
 
 interface Props {
@@ -9,6 +10,7 @@ interface Props {
   label?: string;
   type?: string;
   formik: {
+    setFieldValue: (fieldName: string, value: any) => void;
     handleChange: (evt: React.ChangeEvent<any>) => void;
     handleBlur: (evt: React.ChangeEvent<any>) => void;
     values: any;
@@ -17,9 +19,12 @@ interface Props {
   };
   onChange?: (evt: React.ChangeEvent<HTMLInputElement>) => void;
   showErrorsDespiteTouching?: boolean;
+  hideValidation?: boolean;
 }
 
-function FormikInput(props: Props): ReactElement {
+function FormikInput(
+  props: Props & ({} | FormikDatePickerProps)
+): ReactElement {
   return (
     <Form.Group className="m-1 p-1">
       {(() => {
@@ -52,6 +57,15 @@ function FormikInput(props: Props): ReactElement {
                 />
               </>
             );
+          case 'date':
+            return (
+              <>
+                <Form.Label htmlFor={props.name}>
+                  {props.label ?? props.name}
+                </Form.Label>
+                <FormikDatePicker {...props} />
+              </>
+            );
           default:
             return (
               <>
@@ -79,17 +93,18 @@ function FormikInput(props: Props): ReactElement {
                   onBlur={(evt: any) => {
                     props.formik.handleBlur(evt);
                   }}
-                  value={_.get(props.formik.values, props.name)}
+                  value={_.get(props.formik.values, props.name) ?? ''}
                 />
               </>
             );
         }
       })()}
-
-      <FormikValidationLabel
-        {...props}
-        showDespiteTouching={props.showErrorsDespiteTouching}
-      />
+      {!props.hideValidation && (
+        <FormikValidationLabel
+          {...props}
+          showDespiteTouching={props.showErrorsDespiteTouching}
+        />
+      )}
     </Form.Group>
   );
 }

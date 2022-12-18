@@ -9,7 +9,7 @@ public class SystemInvitation : BaseDomainModel
 {
     public DateTime CreatedDate { get; set; } = Time.UtcNow;
     public DateTime ExprationDate { get; set; } = Time.UtcNow.AddDays(7);
-    public string InvitationCode { get; set; } = new string("").GetRandom(6);
+    public string InvitationCode { get; set; } = string.Empty.GetRandom(6);
     public bool IsUsed { get; set; } = false;
 
     //**********

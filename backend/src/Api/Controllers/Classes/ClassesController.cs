@@ -12,7 +12,7 @@ namespace Api.Controllers.Classes;
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
-public class ClassesController : ControllerBase
+public partial class ClassesController : ControllerBase
 {
     private readonly ServiceResolver<IFoundationCommands> _foundationCommands;
     private readonly ServiceResolver<IFoundationQueries> _foundationQueries;

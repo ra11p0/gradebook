@@ -1,7 +1,7 @@
 import AccountsProxy from '../../../ApiClient/Accounts/AccountsProxy';
 import { connectAllHubs } from '../../../ApiClient/SignalR/HubsResolver';
+import { store } from '../../../store';
 import ActionTypes from '../../ActionTypes/accountActionTypes';
-import setSchoolReduxWrapper from './setSchoolRedux';
 import setSchoolsListReduxWrapper from './setSchoolsListRedux';
 import setUserReduxWrapper from './setUserRedux';
 
@@ -14,28 +14,23 @@ export interface logInAction {
   refreshToken: string;
 }
 
-export default async (dispatch: any, action: logInAction): Promise<void> => {
-  return await new Promise((resolve) => {
-    localStorage.setItem('access_token', action.accessToken);
-    localStorage.setItem('refresh_token', action.refreshToken);
+export default async (
+  action: logInAction,
+  dispatch: any = store.dispatch
+): Promise<void> => {
+  localStorage.setItem('access_token', action.accessToken);
+  localStorage.setItem('refresh_token', action.refreshToken);
 
-    dispatch({ ...logIn, payload: { ...action } });
-    void AccountsProxy.getMe()
-      .then(async (getMeResponse) => {
-        setUserReduxWrapper(dispatch, { userId: getMeResponse.data.userId });
-        setSchoolsListReduxWrapper(dispatch, {
-          schoolsList: getMeResponse.data.schools,
-        });
-        const defaultSchool = getMeResponse.data.schools.find(() => true);
-        if (defaultSchool)
-          await setSchoolReduxWrapper(dispatch, {
-            schoolGuid: defaultSchool.school.guid,
-            schoolName: defaultSchool.school.name,
-          });
-      })
-      .then(async () => {
-        await connectAllHubs();
-      })
-      .then(resolve);
+  dispatch({ ...logIn, payload: { ...action } });
+  const getMeResponse = await AccountsProxy.getMe();
+
+  await setSchoolsListReduxWrapper({
+    schoolsList: getMeResponse.data.schools,
   });
+
+  await setUserReduxWrapper({
+    ...getMeResponse.data,
+  });
+
+  await connectAllHubs();
 };

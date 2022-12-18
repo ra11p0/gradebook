@@ -10,7 +10,7 @@ interface JoinSchoolModalProps {
   person?: CurrentPersonProxyResult;
 }
 function JoinSchoolModal(props: JoinSchoolModalProps): ReactElement {
-  const { t } = useTranslation('ActivateAdministratorSchool');
+  const { t } = useTranslation('activateAccount');
   return (
     <Modal show={props.show} onHide={props.onHide} size="lg">
       <Modal.Header closeButton>

@@ -116,12 +116,13 @@ const addNewClass = async (
 };
 
 const getClassesInSchool = async (
-  schoolGuid: string,
-  page: number
+  schoolGuid: string = getCurrentSchoolRedux()!.schoolGuid,
+  page: number = 0,
+  query: string = ''
 ): Promise<AxiosResponse<ClassResponse[]>> => {
   return await axiosApiAuthorized.get(
     API_URL + `/schools/${schoolGuid}/Classes`,
-    { params: { page } }
+    { params: { page, query } }
   );
 };
 
@@ -177,12 +178,13 @@ const addEducationCycle = async (
 
 const getEducationCyclesInSchool = async (
   page: number = 0,
+  query: string = '',
   schoolGuid: string | undefined = getCurrentSchoolRedux()?.schoolGuid
 ): Promise<AxiosResponse<EducationCycleResponse[]>> => {
   if (!schoolGuid) throw new Error('schoolGuid was undefined');
   return await axiosApiAuthorized.get(
     `${API_URL}/schools/${schoolGuid}/educationCycles`,
-    { params: { page } }
+    { params: { page, query } }
   );
 };
 

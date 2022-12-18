@@ -4,7 +4,9 @@ using Gradebook.Foundation.Common.Foundation.Commands;
 using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Database;
 using Gradebook.Foundation.Logic.Commands;
+using Gradebook.Foundation.Logic.Commands.Repositories;
 using Gradebook.Foundation.Logic.Queries;
+using Gradebook.Foundation.Logic.Queries.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,5 +35,7 @@ public class FoundationService
         services.AddScoped<IFoundationPermissionsLogic, FoundationPermissionsLogic>();
 
         services.AddScoped<Context>();
+
+        services.AddLocalization(options => options.ResourcesPath = "Resources");
     }
 }

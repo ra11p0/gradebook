@@ -11,7 +11,7 @@ public abstract class BaseRepository<T> : BaseRepository where T : DbContext
     private int _transactionBlocker;
     //public IDbContextTransaction? Transaction => _transaction;
 
-    protected BaseRepository(T context) : base(context.Database.GetDbConnection().ConnectionString)
+    protected BaseRepository(T context) : base(context.Database.IsRelational() ? context.Database.GetDbConnection().ConnectionString : "")
     {
         Context = context;
     }

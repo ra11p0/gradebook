@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Gradebook.Foundation.Common.Identity.Responses;
 
 namespace Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 
@@ -12,10 +13,15 @@ public interface IIdentityLogic
     Task<ResponseWithStatus<string[], bool>> GetUserRoles(string? userGuid = null);
     Task<ResponseWithStatus<string, bool>> CurrentUserId();
     Task<StatusResponse<bool>> AddUserRole(string role, string? userGuid = null);
-    Task<StatusResponse<bool>> RemoveUserRole(string role, string? userGuid = null);
     Task<bool> IsValidRefreshTokenForUser(string userId, string refreshToken);
     Task RemoveRefreshTokenFromUser(string userId, string refreshToken);
     Task AssignRefreshTokenToUser(string userId, string refreshToken);
-    void RemoveAllExpiredTokens();
+    Task<string?> GetEmailForUser(string userId);
+    Task<StatusResponse> RegisterUser(string email, string password, string language);
+    Task<ResponseWithStatus<LogInResponse>> LoginUser(string email, string password);
+    Task<StatusResponse> VerifyUserEmail(string userId, string code);
+    Task<ResponseWithStatus<string>> CreateAuthCodeForUser(string userId);
+    Task<StatusResponse> UseAuthCode(string userId, string code);
+    Task<StatusResponse> IsAuthCodeValid(string userId, string code);
     void SaveDatabaseChanges();
 }

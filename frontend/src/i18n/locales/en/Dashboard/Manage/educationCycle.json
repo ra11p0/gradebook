@@ -20,5 +20,6 @@
   "canUseGroups": "Allow groups",
   "educationCycles": "Education cycles",
   "addNewEducationCycle": "Add new education cycle",
-  "showEducationCycle": "Show education cycle"
+  "showEducationCycle": "Show education cycle",
+  "className": "Class name"
 }

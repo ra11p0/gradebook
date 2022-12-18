@@ -1,3 +1,4 @@
+import SchoolRolesEnum from '../../Common/Enums/SchoolRolesEnum';
 import ActionType from '../ActionTypes/accountActionTypes';
 
 export interface State {
@@ -16,7 +17,18 @@ export interface State {
     accessToken: string;
     refreshToken: string;
   };
-  schoolsList?: [];
+  schoolsList?: Array<{
+    person: {
+      guid: string;
+      name: string;
+      surname: string;
+      schoolRole: SchoolRolesEnum;
+      schoolGuid: string;
+      activeClassGuid: string;
+      birthday: Date;
+      activeClass: string;
+    };
+  }>;
   permissions?: any;
   language?: string;
 }
@@ -64,6 +76,9 @@ export default (
         school: undefined,
         schoolsList: undefined,
         user: undefined,
+        permissions: undefined,
+        person: undefined,
+        language: undefined,
       };
     case ActionType.SetSchool:
       return {

@@ -1,10 +1,16 @@
 {
-  "logIn": "Login",
+  "logIn": "Zaloguj",
   "loging": "Logowanie",
   "loginFailed": "Logowanie nieudane",
   "email": "Email",
   "password": "Hasło",
-  "register": "Rejestracja",
-  "changePassword": "Zmień hasło",
-  "recoverAccess": "Przywróć dostęp"
+  "register": "Zarejestruj się!",
+  "forgotPassword": "Nie pamiętam hasła",
+  "recoverAccess": "Przywróć dostęp",
+  "emailFieldRequired": "Email wymagany",
+  "passwordFieldRequired": "Hasło wymagane",
+  "wrongEmailAddress": "Niepoprawny adres email",
+  "dontHaveAccount": "Nie masz jeszcze konta?",
+  "activateYourAccountToLogIn": "Aktywuj swoje konto by się zalogować. Mail z linkiem aktywującym został właśnie wysłany. Link aktywacyjny jest ważny przez 30 minut.",
+  "couldNotLoginWithTypedCredentials": "Email lub hasło niepoprawne"
 }

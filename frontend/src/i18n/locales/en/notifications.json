@@ -6,5 +6,7 @@
   "personRemovedNotificationTitle": "Person removed",
   "personRemovedNotificationText": "Person has been removed successfully",
   "success": "Success",
-  "permissionsSaved": "Permissions saved"
+  "permissionsSaved": "Permissions saved",
+  "User already exists!": "User already exists!",
+  "changesSaved": "Changes saved!"
 }

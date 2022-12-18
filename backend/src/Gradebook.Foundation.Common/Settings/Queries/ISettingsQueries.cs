@@ -4,6 +4,7 @@ namespace Gradebook.Foundation.Common.Settings.Commands;
 
 public interface ISettingsQueries
 {
-    Task<Guid> GetDefaultPersonGuid(string userGuid);
-    Task<ResponseWithStatus<SettingsDto>> GetAccountSettings(string userGuid);
+    Task<Guid> GetDefaultSchoolGuid(string userGuid);
+    Task<ResponseWithStatus<SettingsDto>> GetAccountSettings();
+    Task<string?> GetUserLanguage(string userGuid);
 }

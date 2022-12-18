@@ -12,10 +12,11 @@ const getSubject = async (
 };
 const getTeachersForSubject = async (
   guid: string,
-  page: number = 0
+  page: number = 0,
+  query: string = ''
 ): Promise<AxiosResponse<TeachersForSubjectResponse[]>> => {
   return await axiosApiAuthorized.get(`${API_URL}/subjects/${guid}/teachers`, {
-    params: { page },
+    params: { page, query },
   });
 };
 const editTeachersInSubject = async (

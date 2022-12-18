@@ -4,7 +4,9 @@ using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 using Gradebook.Foundation.Logic.Commands;
+using Gradebook.Foundation.Logic.Commands.Repositories;
 using Gradebook.Foundation.Logic.Queries;
+using Gradebook.Foundation.Logic.Queries.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 

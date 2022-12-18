@@ -1,6 +1,6 @@
 namespace Gradebook.Foundation.Common.Foundation.Commands.Definitions;
 
-public class EducationCycleStepSubjectCommand : Validatable<EducationCycleStepSubjectCommand>
+public class EducationCycleStepSubjectCommand : Validatable
 {
     public Guid? Guid { get; set; }
     public Guid SubjectGuid { get; set; }
@@ -8,8 +8,8 @@ public class EducationCycleStepSubjectCommand : Validatable<EducationCycleStepSu
     public bool IsMandatory { get; set; }
     public bool CanUseGroups { get; set; }
 
-    protected override bool Validate(EducationCycleStepSubjectCommand validatable)
+    protected override StatusResponse Validate()
     {
-        return SubjectGuid != default(Guid) && HoursNo > 0;
+        return new StatusResponse(SubjectGuid != default(Guid) && HoursNo > 0);
     }
 }

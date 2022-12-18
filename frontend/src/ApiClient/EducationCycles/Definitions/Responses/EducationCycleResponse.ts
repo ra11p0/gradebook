@@ -23,4 +23,5 @@ interface Subject {
   hoursInStep: number;
   isMandatory: boolean;
   groupsAllowed: boolean;
+  subjectName: string;
 }

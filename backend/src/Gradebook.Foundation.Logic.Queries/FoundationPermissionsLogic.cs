@@ -52,12 +52,13 @@ public class FoundationPermissionsLogic : IFoundationPermissionsLogic
         return permission == Common.Permissions.Enums.PermissionLevelEnum.Invitations_CanInvite;
     }
 
-    public async Task<bool> CanManageClass(Guid classGuid, Guid personGuid)
+    public async Task<bool> CanManageClass(Guid classGuid, Guid? personGuid)
     {
-        var permission = await _permissionsQueries.Service.GetPermissionForPerson(personGuid, Common.Permissions.Enums.PermissionEnum.Classes);
+        if (!personGuid.HasValue) personGuid = (await _foundationQueries.Service.RecogniseCurrentPersonByClassGuid(classGuid)).Response;
+        var permission = await _permissionsQueries.Service.GetPermissionForPerson(personGuid.Value, Common.Permissions.Enums.PermissionEnum.Classes);
         if (permission is Common.Permissions.Enums.PermissionLevelEnum.Classes_ViewOnly) return false;
         if (permission is Common.Permissions.Enums.PermissionLevelEnum.Classes_CanManageAll) return true;
-        return (await _foundationQueries.Service.IsClassOwner(classGuid, personGuid)).Response;
+        return (await _foundationQueries.Service.IsClassOwner(classGuid, personGuid.Value)).Response;
     }
 
     public async Task<bool> CanManageSubject(Guid subjectGuid, Guid personGuid)

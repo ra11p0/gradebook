@@ -9,5 +9,7 @@
   "personRemovedNotificationTitle": "Osoba usunięta",
   "personRemovedNotificationText": "Osoba została pomyślnie usunięta",
   "success": "Sukces",
-  "permissionsSaved": "Uprawnienia zapisane"
+  "permissionsSaved": "Uprawnienia zapisane",
+  "User already exists!": "Adres email został już użyty!",
+  "changesSaved": "Zapisano zmiany!"
 }
