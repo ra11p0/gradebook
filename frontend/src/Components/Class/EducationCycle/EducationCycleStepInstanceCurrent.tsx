@@ -5,9 +5,9 @@ import moment from 'moment';
 import React, { ReactElement } from 'react';
 import { Button, Stack } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import ClassesProxy from '../../ApiClient/Classes/ClassesProxy';
-import { EducationCycleStepInstance } from '../../ApiClient/Classes/Definitions/Responses/EducationCyclesInClassResponse';
-import Notifications from '../../Notifications/Notifications';
+import ClassesProxy from '../../../ApiClient/Classes/ClassesProxy';
+import { EducationCycleStepInstance } from '../../../ApiClient/Classes/Definitions/Responses/EducationCyclesInClassResponse';
+import Notifications from '../../../Notifications/Notifications';
 
 function EducationCycleStepInstanceCurrent(
   props: EducationCycleStepInstance & {

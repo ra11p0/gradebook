@@ -1,6 +1,6 @@
 import moment from 'moment';
 import React, { ReactElement } from 'react';
-import { EducationCycleStepInstance } from '../../ApiClient/Classes/Definitions/Responses/EducationCyclesInClassResponse';
+import { EducationCycleStepInstance } from '../../../ApiClient/Classes/Definitions/Responses/EducationCyclesInClassResponse';
 
 function EducationCycleStepInstanceSmall(
   props: EducationCycleStepInstance

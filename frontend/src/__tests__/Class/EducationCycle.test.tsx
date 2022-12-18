@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { store } from '../../store';
 import i18n from '../../i18n/config';
 import { I18nextProvider } from 'react-i18next';
-import EducationCycle from '../../Components/Class/EducationCycle';
+import EducationCycle from '../../Components/Class/EducationCycle/EducationCycle';
 import ClassesProxy from '../../ApiClient/Classes/ClassesProxy';
 
 describe('<EducationCycle />', () => {
