@@ -2,7 +2,6 @@ using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Hangfire;
 using Hangfire;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Gradebook.Foundation.Hangfire;
 
