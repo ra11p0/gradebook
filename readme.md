@@ -25,9 +25,13 @@ then:
     CREATE DATABASE GradebookDB;
 
     CREATE USER 'gradebook'@'localhost' IDENTIFIED BY 'gr@d3b00k';
+    
+    UPDATE mysql.user SET host = '%';
+    
+    FLUSH PRIVILEGES;
 
     GRANT ALL PRIVILEGES ON GradebookDB.* TO 'gradebook'@'%' WITH GRANT OPTION;
 
     FLUSH PRIVILEGES;
 
-    UPDATE mysql.user SET host = '%';
+   
