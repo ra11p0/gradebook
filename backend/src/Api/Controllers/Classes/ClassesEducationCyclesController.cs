@@ -34,7 +34,7 @@ public partial class ClassesController
         var resp = await _foundationCommands.Service.ConfigureEducationCycleForClass(classGuid, configuration);
         return resp.ObjectResult;
     }
-    [HttpPut]
+    [HttpPatch]
     [Route("{classGuid}/EducationCycles/Instances/Steps/Start")]
     [ProducesResponseType(typeof(string), 200)]
     [ProducesResponseType(typeof(string), 400)]
@@ -43,16 +43,7 @@ public partial class ClassesController
         var resp = await _foundationCommands.Service.StartEducationCycleStepInstance(classGuid);
         return resp.ObjectResult;
     }
-    [HttpPut]
-    [Route("{classGuid}/EducationCycles/Instances/Steps/Backward")]
-    [ProducesResponseType(typeof(string), 200)]
-    [ProducesResponseType(typeof(string), 400)]
-    public async Task<ObjectResult> BackwardEducationCycleStepInstance([FromRoute] Guid classGuid)
-    {
-        var resp = await _foundationCommands.Service.BackwardEducationCycleStepInstance(classGuid);
-        return resp.ObjectResult;
-    }
-    [HttpPut]
+    [HttpPatch]
     [Route("{classGuid}/EducationCycles/Instances/Steps/Forward")]
     [ProducesResponseType(typeof(string), 200)]
     [ProducesResponseType(typeof(string), 400)]
@@ -61,7 +52,7 @@ public partial class ClassesController
         var resp = await _foundationCommands.Service.ForwardEducationCycleStepInstance(classGuid);
         return resp.ObjectResult;
     }
-    [HttpPut]
+    [HttpPatch]
     [Route("{classGuid}/EducationCycles/Instances/Steps/Stop")]
     [ProducesResponseType(typeof(string), 200)]
     [ProducesResponseType(typeof(string), 400)]

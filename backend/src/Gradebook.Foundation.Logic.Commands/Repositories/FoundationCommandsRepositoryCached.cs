@@ -128,4 +128,10 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
 
     public Task<ResponseWithStatus<Guid>> ConfigureEducationCycleSubjectInstanceForEducationCycleStepInstance(Guid educationCycleStepInstanceGuid, EducationCycleConfigurationSubjectCommand subjectCommand)
         => Base.ConfigureEducationCycleSubjectInstanceForEducationCycleStepInstance(educationCycleStepInstanceGuid, subjectCommand);
+
+    public Task<StatusResponse> StartEducationCycleStepInstance(Guid educationCycleStepInstanceGuid)
+        => Base.StartEducationCycleStepInstance(educationCycleStepInstanceGuid);
+
+    public Task<StatusResponse> StopEducationCycleStepInstance(Guid educationCycleStepInstanceGuid)
+        => Base.StopEducationCycleStepInstance(educationCycleStepInstanceGuid);
 }

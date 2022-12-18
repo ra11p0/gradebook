@@ -1,10 +1,4 @@
-import {
-  faBackward,
-  faForward,
-  faPlay,
-  faStop,
-  faTrash,
-} from '@fortawesome/free-solid-svg-icons';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import React, { ReactElement, useEffect, useState } from 'react';
@@ -21,6 +15,8 @@ import ConfigureEducationCycle from '../EducationCycle/ConfigureEducationCycle/C
 import EducationCyclePicker from '../Shared/EducationCyclePicker/EducationCyclePicker';
 import LoadingScreen from '../Shared/LoadingScreen';
 import moment from 'moment';
+import EducationCycleStepInstanceCurrent from './EducationCycleStepInstanceCurrent';
+import EducationCycleStepInstanceSmall from './EducationCycleStepInstanceSmall';
 
 interface Props {
   classGuid: string;
@@ -28,6 +24,7 @@ interface Props {
 
 function EducationCycle({ classGuid }: Props): ReactElement {
   const { t } = useTranslation('educationCycles');
+
   const [educationCycle, setEducationCycle] = useState<
     EducationCyclesInClassResponse | undefined
   >(undefined);
@@ -48,28 +45,13 @@ function EducationCycle({ classGuid }: Props): ReactElement {
         previous?: EducationCycleStepInstance;
         next?: EducationCycleStepInstance;
       } => {
-    let currentEducationCycleStepInstance =
-      educationCycle?.activeEducationCycleInstance?.educationCycleStepInstances
-        .sort((a, b) => a.order - b.order)
-        .find((e) => e.started);
-
-    if (!currentEducationCycleStepInstance)
-      currentEducationCycleStepInstance =
-        educationCycle?.activeEducationCycleInstance?.educationCycleStepInstances
-          .sort((a, b) => a.order - b.order)
-          .find((e) => true);
-    if (!currentEducationCycleStepInstance) return undefined;
     return {
-      current: currentEducationCycleStepInstance,
-      previous:
-        educationCycle?.activeEducationCycleInstance?.educationCycleStepInstances.find(
-          (e) => e.order === currentEducationCycleStepInstance!.order - 1
-        ),
-      next: educationCycle?.activeEducationCycleInstance?.educationCycleStepInstances.find(
-        (e) => e.order === currentEducationCycleStepInstance!.order + 1
-      ),
+      current: educationCycle?.currentStepInstance,
+      previous: educationCycle?.previousStepInstance,
+      next: educationCycle?.nextStepInstance,
     };
   };
+
   useEffect(() => {
     void (async () => {
       await prepareEducationCycle();
@@ -165,6 +147,10 @@ function EducationCycle({ classGuid }: Props): ReactElement {
                               isLast={
                                 !getCurrentAndSurroundingStepInstances()?.next
                               }
+                              stateChanged={async () => {
+                                await prepareEducationCycle();
+                              }}
+                              classGuid={classGuid}
                             />
                           )}
                           {getCurrentAndSurroundingStepInstances()?.next && (
@@ -225,111 +211,6 @@ function EducationCycle({ classGuid }: Props): ReactElement {
         </LoadingScreen>
       </Card.Body>
     </Card>
-  );
-}
-
-function EducationCycleStepInstanceSmall(
-  props: EducationCycleStepInstance
-): ReactElement {
-  return (
-    <>
-      <small className="text-secondary">{`${props.educationCycleStepName}${
-        props.dateSince && props.dateUntil
-          ? ` (${moment.utc(props.dateSince).local().format('ll')}
-           - 
-          ${moment.utc(props.dateUntil).local().format('ll')})`
-          : ''
-      }`}</small>
-    </>
-  );
-}
-
-function EducationCycleStepInstanceCurrent(
-  props: EducationCycleStepInstance & { isLast: boolean }
-): ReactElement {
-  const { t } = useTranslation('educationCycles');
-  return (
-    <>
-      <Stack className="border-bottom border-top py-1">
-        <div>
-          {`${props.educationCycleStepName}${
-            props.dateSince && props.dateUntil
-              ? ` (${moment.utc(props.dateSince).local().format('ll')}
-           - 
-          ${moment.utc(props.dateUntil).local().format('ll')})`
-              : ''
-          }`}
-        </div>
-        <Stack className="gap-1">
-          <small>
-            {props.started && <>{t('educationCycleStartedDescription')}</>}
-            {!props.isLast && props.started && (
-              <>{t('educationCycleStartedNotLastDescription')}</>
-            )}
-            {!props.started && <>{t('educationCycleNotStartedDescription')}</>}
-            {props.started && props.isLast && (
-              <>{t('educationCycleStartedLastDescription')}</>
-            )}
-          </small>
-          <small>
-            {props.started && <>{t('educationCycleStartedDescription')}</>}
-            {!props.isLast && props.started && (
-              <>{t('educationCycleStartedNotLastDescription')}</>
-            )}
-            {!props.started && <>{t('educationCycleNotStartedDescription')}</>}
-            {props.started && props.isLast && (
-              <>{t('educationCycleStartedLastDescription')}</>
-            )}
-          </small>
-
-          {props.started && (
-            <Tippy
-              content={t('educationCycleBack')}
-              arrow={true}
-              animation={'scale'}
-            >
-              <Button variant="danger">
-                <FontAwesomeIcon icon={faBackward} />
-              </Button>
-            </Tippy>
-          )}
-          {!props.isLast && props.started && (
-            <Tippy
-              content={t('educationCycleForward')}
-              arrow={true}
-              animation={'scale'}
-            >
-              <Button variant="success">
-                <FontAwesomeIcon icon={faForward} />
-              </Button>
-            </Tippy>
-          )}
-          {!props.started && (
-            <Tippy
-              content={t('educationCycleStart')}
-              arrow={true}
-              animation={'scale'}
-            >
-              <Button variant="primary">
-                <FontAwesomeIcon icon={faPlay} />
-              </Button>
-            </Tippy>
-          )}
-
-          {props.isLast && (
-            <Tippy
-              content={t('educationCycleStop')}
-              arrow={true}
-              animation={'scale'}
-            >
-              <Button variant="danger">
-                <FontAwesomeIcon icon={faStop} />
-              </Button>
-            </Tippy>
-          )}
-        </Stack>
-      </Stack>
-    </>
   );
 }
 

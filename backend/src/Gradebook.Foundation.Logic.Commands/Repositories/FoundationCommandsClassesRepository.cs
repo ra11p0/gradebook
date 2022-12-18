@@ -196,4 +196,19 @@ public partial class FoundationCommandsRepository : IFoundationCommandsClassesRe
         student.CurrentClassGuid = null;
         return new StatusResponse(true);
     }
+    public async Task<StatusResponse> StartEducationCycleStepInstance(Guid educationCycleStepInstanceGuid)
+    {
+        var instance = await Context.EducationCycleStepInstances!.FirstOrDefaultAsync(e => e.Guid == educationCycleStepInstanceGuid);
+        if (instance is null) return new StatusResponse(404);
+        instance.StartedDate = Time.UtcNow;
+        return new StatusResponse(true);
+
+    }
+    public async Task<StatusResponse> StopEducationCycleStepInstance(Guid educationCycleStepInstanceGuid)
+    {
+        var instance = await Context.EducationCycleStepInstances!.FirstOrDefaultAsync(e => e.Guid == educationCycleStepInstanceGuid);
+        if (instance is null) return new StatusResponse(404);
+        instance.FinishedDate = Time.UtcNow;
+        return new StatusResponse(true);
+    }
 }

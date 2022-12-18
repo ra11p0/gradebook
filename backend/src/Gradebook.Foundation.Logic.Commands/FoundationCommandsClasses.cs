@@ -92,24 +92,54 @@ public partial class FoundationCommands : IFoundationClassesCommands
         await Repository.SaveChangesAsync();
         return resp;
     }
-
-    public Task<StatusResponse> StartEducationCycleStepInstance(Guid classGuid)
+    public async Task<StatusResponse> StartEducationCycleStepInstance(Guid classGuid)
     {
-        throw new NotImplementedException();
+        if (!await _foundationPermissions.Service.CanManageClass(classGuid))
+            return new StatusResponse(403);
+        var currentStepGuid = await _foundationQueries.Service.GetCurrentEducationCycleStepInstanceGuid(classGuid);
+        if (!currentStepGuid.Status) return new StatusResponse(404);
+        if (!currentStepGuid.Response.HasValue) return new StatusResponse(404);
+        var resp = await Repository.StartEducationCycleStepInstance(currentStepGuid.Response!.Value);
+        if (resp.Status)
+            await Repository.SaveChangesAsync();
+        return resp;
     }
-
-    public Task<StatusResponse> StopEducationCycleStepInstance(Guid classGuid)
+    public async Task<StatusResponse> StopEducationCycleStepInstance(Guid classGuid)
     {
-        throw new NotImplementedException();
+        if (!await _foundationPermissions.Service.CanManageClass(classGuid))
+            return new StatusResponse(403);
+        var currentStepGuid = await _foundationQueries.Service.GetCurrentEducationCycleStepInstanceGuid(classGuid);
+        if (!currentStepGuid.Status) return new StatusResponse(404);
+        if (!currentStepGuid.Response.HasValue) return new StatusResponse(404);
+        var resp = await Repository.StopEducationCycleStepInstance(currentStepGuid.Response!.Value);
+        if (resp.Status)
+            await Repository.SaveChangesAsync();
+        return resp;
     }
-
-    public Task<StatusResponse> ForwardEducationCycleStepInstance(Guid classGuid)
+    public async Task<StatusResponse> ForwardEducationCycleStepInstance(Guid classGuid)
     {
-        throw new NotImplementedException();
-    }
+        if (!await _foundationPermissions.Service.CanManageClass(classGuid))
+            return new StatusResponse(403);
+        var currentStep = await _foundationQueries.Service.GetCurrentEducationCycleStepInstanceGuid(classGuid);
+        var nextStep = await _foundationQueries.Service.GetNextEducationCycleStepInstanceGuid(classGuid);
+        Repository.BeginTransaction();
 
-    public Task<StatusResponse> BackwardEducationCycleStepInstance(Guid classGuid)
-    {
-        throw new NotImplementedException();
+        if (!currentStep.Status) return new StatusResponse(currentStep.StatusCode);
+        if (!nextStep.Status) return new StatusResponse(nextStep.StatusCode);
+
+        var resp = await Repository.StopEducationCycleStepInstance(currentStep.Response!.Value);
+        if (!resp.Status)
+        {
+            Repository.RollbackTransaction();
+            return resp;
+        }
+        var resp2 = await Repository.StartEducationCycleStepInstance(nextStep.Response!.Value);
+        if (resp2.Status)
+        {
+            await Repository.SaveChangesAsync();
+            Repository.CommitTransaction();
+        }
+        else Repository.RollbackTransaction();
+        return resp2;
     }
 }

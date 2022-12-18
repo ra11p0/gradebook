@@ -4,6 +4,9 @@ export default interface EducationCyclesInClassResponse {
   activeEducationCycle?: EducationCycle;
   hasPreparedActiveEducationCycle: boolean;
   educationCyclesInstances?: EducationCycleInstance[];
+  currentStepInstance?: EducationCycleStepInstance;
+  previousStepInstance?: EducationCycleStepInstance;
+  nextStepInstance?: EducationCycleStepInstance;
 }
 
 interface EducationCycle {

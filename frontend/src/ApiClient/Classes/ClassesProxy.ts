@@ -86,6 +86,30 @@ async function deleteActiveEducationCycleFromClass(
   );
 }
 
+async function startEducationCycleStepInstance(
+  classGuid: string
+): Promise<AxiosResponse> {
+  return await axiosApiAuthorized.patch(
+    API_URL + `/Classes/${classGuid}/EducationCycles/Instances/Steps/Start`
+  );
+}
+
+async function forwardEducationCycleStepInstance(
+  classGuid: string
+): Promise<AxiosResponse> {
+  return await axiosApiAuthorized.patch(
+    API_URL + `/Classes/${classGuid}/EducationCycles/Instances/Steps/Forward`
+  );
+}
+
+async function stopEducationCycleStepInstance(
+  classGuid: string
+): Promise<AxiosResponse> {
+  return await axiosApiAuthorized.patch(
+    API_URL + `/Classes/${classGuid}/EducationCycles/Instances/Steps/Stop`
+  );
+}
+
 const configureEducationCycleForClass = async (
   classGuid: string,
   educationCycleConfigurationRequest: EducationCycleConfigurationRequest
@@ -108,5 +132,8 @@ export default {
     deleteActiveEducationCycleFromClass,
     getEducationCyclesInClass,
     configureEducationCycleForClass,
+    startEducationCycleStepInstance,
+    forwardEducationCycleStepInstance,
+    stopEducationCycleStepInstance,
   },
 };

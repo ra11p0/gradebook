@@ -138,4 +138,62 @@ public class EducationCycles
         Assert.That(result.Status, Is.False);
         Assert.That(result.StatusCode, Is.EqualTo(403));
     }
+    [Test]
+    public async Task ShouldNotAllowToStartEducationCycleStepInstance()
+    {
+        foundationPermissionsLogic
+          .Setup(e => e.CanManageClass(It.IsAny<Guid>(), null))
+          .ReturnsAsync(false);
+        var resultStart = await foundationCommands!.StartEducationCycleStepInstance(Guid.NewGuid());
+        var resultForward = await foundationCommands!.ForwardEducationCycleStepInstance(Guid.NewGuid());
+        var resultStop = await foundationCommands!.StopEducationCycleStepInstance(Guid.NewGuid());
+
+        Assert.That(resultStart.StatusCode, Is.EqualTo(403));
+        Assert.That(resultForward.StatusCode, Is.EqualTo(403));
+        Assert.That(resultStop.StatusCode, Is.EqualTo(403));
+    }
+    [Test]
+    public async Task ShouldAllowToStartEducationCycleStepInstance()
+    {
+        var currentGuid = Guid.NewGuid();
+        var nextGuid = Guid.NewGuid();
+
+        foundationPermissionsLogic
+          .Setup(e => e.CanManageClass(It.IsAny<Guid>(), null))
+          .ReturnsAsync(true);
+        foundationCommandsRepository
+            .Setup(e => e.StartEducationCycleStepInstance(It.IsAny<Guid>()))
+            .ReturnsAsync(new StatusResponse(true));
+        foundationCommandsRepository
+            .Setup(e => e.StopEducationCycleStepInstance(It.IsAny<Guid>()))
+            .ReturnsAsync(new StatusResponse(true));
+        foundationQueriesRepository
+             .Setup(e => e.GetAllEducationCycleStepInstancesForClass(It.IsAny<Guid>()))
+             .ReturnsAsync(new EducationCycleStepInstanceDto[] {
+                    new EducationCycleStepInstanceDto(){
+                        StartedDate = new DateTime(),
+                        FinishedDate = new DateTime(),
+                        Order = 0
+                    }, new EducationCycleStepInstanceDto(){
+                        StartedDate= new DateTime(),
+                        Guid = currentGuid,
+                        Order = 1
+                    },
+                    new EducationCycleStepInstanceDto(){
+                        Guid = nextGuid,
+                        Order = 2
+                    },
+                });
+        var resultStart = await foundationCommands!.StartEducationCycleStepInstance(Guid.NewGuid());
+        var resultForward = await foundationCommands!.ForwardEducationCycleStepInstance(Guid.NewGuid());
+        foundationCommandsRepository.Verify(e => e.StopEducationCycleStepInstance(currentGuid), Times.Exactly(1));
+        var resultStop = await foundationCommands!.StopEducationCycleStepInstance(Guid.NewGuid());
+
+        Assert.That(resultStart.StatusCode, Is.EqualTo(200));
+        Assert.That(resultForward.StatusCode, Is.EqualTo(200));
+        Assert.That(resultStop.StatusCode, Is.EqualTo(200));
+        foundationCommandsRepository.Verify(e => e.StopEducationCycleStepInstance(currentGuid), Times.Exactly(2));
+        foundationCommandsRepository.Verify(e => e.StartEducationCycleStepInstance(nextGuid), Times.Exactly(1));
+        foundationCommandsRepository.Verify(e => e.StartEducationCycleStepInstance(currentGuid), Times.Exactly(1));
+    }
 }

@@ -3,7 +3,7 @@ using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 
 namespace Gradebook.Foundation.Logic.Queries.Repositories;
 
-public interface IFoundationQueriesRepository : IBaseRepository
+public interface IFoundationQueriesRepository : IBaseRepository, IFoundationQueriesClassesRepository
 {
     Task<EducationCycleExtendedDto?> GetEducationCycle(Guid educationCycleGuid);
     Task<IEnumerable<EducationCycleStepDto>> GetStepsForEducationCycle(Guid educationCycleGuid);
