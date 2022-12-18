@@ -77,7 +77,8 @@ def prepareAppSettings() {
     envFileText = envFileText.replace('{apiUrl}', params.nodeApiUrl)
     envFileText = envFileText.replace("{environment}", params.environment)
     envFileText = envFileText.replace("{port}", params.apiPort)
-    envFileText = envFileText.replace("{build}", env.BUILD_TAG)
+    if( params.environment == 'PRODUCTION') envFileText = envFileText.replace("{build}", '')
+    else envFileText = envFileText.replace("{build}", env.BUILD_TAG)
 
     println envFileText
 
