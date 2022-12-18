@@ -2,7 +2,7 @@ using System.Net.Mail;
 
 namespace Gradebook.Foundation.Common.Mailservice;
 
-public interface ISmtpClient
+public interface ISmtpClient : IDisposable
 {
     void Send(MailMessage message);
 }

@@ -1,5 +1,6 @@
 using Gradebook.Foundation.Domain;
 using Gradebook.Foundation.Domain.Models;
+using Gradebook.Foundation.Domain.Models.System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -27,6 +28,7 @@ public class FoundationDatabaseContext : DbContext
     public DbSet<EducationCycleInstance>? EducationCycleInstances { get; set; }
     public DbSet<EducationCycleStepInstance>? EducationCycleStepInstances { get; set; }
     public DbSet<EducationCycleStepSubjectInstance>? EducationCycleStepSubjectInstances { get; set; }
+    public DbSet<Email>? MailHistory { get; set; }
 
     public FoundationDatabaseContext()
     {

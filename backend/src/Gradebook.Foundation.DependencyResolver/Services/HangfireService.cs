@@ -37,6 +37,7 @@ public class HangfireService
         #region workers 
 
         services.AddScoped<BaseHangfireWorker<NotificationsWorkerMessage>, NotificationsWorker>();
+        services.AddScoped<BaseHangfireWorker<SendEmailWorkerMessage>, SendEmailWorker>();
 
         #endregion
     }
