@@ -15,6 +15,7 @@ using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Gradebook.Foundation.Common.Extensions;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Gradebook.Foundation.Hangfire;
 
 namespace Gradebook.Foundation.Tests.Identity;
 
@@ -38,6 +39,7 @@ public class IdentityLogic
             services.AddScoped<ISettingsCommands>(e => _settingsCommands.Object);
             services.AddScoped<ISmtpClient>(e => _smtpClient.Object);
             services.AddScoped<IIdentityLogic>(e => _identityLogicMocked.Object);
+            services.AddScoped<HangfireClient>();
             services.AddDbContext<ApplicationIdentityDatabaseContext>(o =>
                 {
                     o.UseInMemoryDatabase("fakeDb");
@@ -139,6 +141,7 @@ public class IdentityLogic
         Assert.That(db.Users!.Include(e => e.AuthorizationCodes).First(e => e.Id == fakeUser.Id).AuthorizationCodes!.Any(e => e.Code == resp.Response));
     }
     [Test]
+    [Obsolete]
     public async Task ShouldReturnAuthCodeInvalid()
     {
         var provider = _serviceProvider;
