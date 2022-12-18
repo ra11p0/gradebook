@@ -17,12 +17,12 @@ public class MailClient : IMailClient
     private readonly ServiceResolver<IIdentityLogic> _identityLogic;
     private readonly ServiceResolver<ISettingsQueries> _settingsQueries;
     private readonly IServiceProvider _serviceProvider;
-    private readonly ServiceResolver<HangfireClient> _hangfireClient;
+    private readonly ServiceResolver<IHangfireClient> _hangfireClient;
     public MailClient(IServiceProvider provider, string sender, string? senderName = null)
     {
         _identityLogic = provider.GetResolver<IIdentityLogic>();
         _settingsQueries = provider.GetResolver<ISettingsQueries>();
-        _hangfireClient = provider.GetResolver<HangfireClient>();
+        _hangfireClient = provider.GetResolver<IHangfireClient>();
         _sender = sender;
         _senderName = senderName;
         _serviceProvider = provider;

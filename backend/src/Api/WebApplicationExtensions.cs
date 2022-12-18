@@ -16,7 +16,7 @@ public static class WebApplicationExtensions
             var exceptionHandlerPathFeature =
                 context.Features.Get<IExceptionHandlerPathFeature>();
 
-            var hangfireService = app.Services.GetResolver<HangfireClient>();
+            var hangfireService = app.Services.GetResolver<IHangfireClient>();
             var config = app.Services.GetResolver<IConfiguration>();
             hangfireService.Service.SendMessage(new SendEmailWorkerMessage()
             {

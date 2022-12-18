@@ -32,7 +32,7 @@ public class HangfireService
              })));
         services.AddHangfireServer();
 
-        services.AddScoped<HangfireClient>();
+        services.AddScoped<IHangfireClient, HangfireClient>();
 
         #region workers 
 

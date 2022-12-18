@@ -16,6 +16,10 @@ using Microsoft.Extensions.Configuration;
 using Gradebook.Foundation.Common.Extensions;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Gradebook.Foundation.Hangfire;
+using Gradebook.Foundation.Common.Hangfire;
+using Gradebook.Foundation.Hangfire.Messages;
+using Gradebook.Foundation.Hangfire.Workers;
+using Gradebook.Foundation.Tests.Utils;
 
 namespace Gradebook.Foundation.Tests.Identity;
 
@@ -39,7 +43,9 @@ public class IdentityLogic
             services.AddScoped<ISettingsCommands>(e => _settingsCommands.Object);
             services.AddScoped<ISmtpClient>(e => _smtpClient.Object);
             services.AddScoped<IIdentityLogic>(e => _identityLogicMocked.Object);
-            services.AddScoped<HangfireClient>();
+            services.AddScoped<IHangfireClient, FakeHangfireClient>();
+            services.AddScoped<BaseHangfireWorker<SendEmailWorkerMessage>, SendEmailWorker>();
+            services.AddScoped<Context>();
             services.AddDbContext<ApplicationIdentityDatabaseContext>(o =>
                 {
                     o.UseInMemoryDatabase("fakeDb");
