@@ -6,6 +6,82 @@ namespace Gradebook.Foundation.Tests.Validation;
 public class EducationCycleConfigurationCommandValidationTest
 {
     [Test]
+    public void IsValid_PartiallyNullStagesDates()
+    {
+        var command = new EducationCycleConfigurationCommand()
+        {
+            DateSince = new DateTime(2022, 12, 01),
+            DateUntil = new DateTime(2022, 12, 30),
+            Stages = new List<EducationCycleConfigurationStageCommand>(){
+                new EducationCycleConfigurationStageCommand(){
+                    DateSince = new DateTime(2022, 12, 01),
+                    DateUntil = new DateTime(2022, 12, 10),
+                    Order = 0,
+                    Subjects = new List<EducationCycleConfigurationSubjectCommand>(){
+                        new EducationCycleConfigurationSubjectCommand(),
+                        new EducationCycleConfigurationSubjectCommand(),
+                        new EducationCycleConfigurationSubjectCommand()
+                    }
+                },
+                new EducationCycleConfigurationStageCommand(){
+                    Order = 1,
+                    Subjects = new List<EducationCycleConfigurationSubjectCommand>(){
+                        new EducationCycleConfigurationSubjectCommand(),
+                        new EducationCycleConfigurationSubjectCommand(),
+                        new EducationCycleConfigurationSubjectCommand()
+                    }
+                },
+                 new EducationCycleConfigurationStageCommand(){
+                    Order = 2,
+                    Subjects = new List<EducationCycleConfigurationSubjectCommand>(){
+                        new EducationCycleConfigurationSubjectCommand(),
+                        new EducationCycleConfigurationSubjectCommand(),
+                        new EducationCycleConfigurationSubjectCommand()
+                    }
+                }
+            }
+        };
+
+        Assert.That(command.IsValid);
+    }
+    [Test]
+    public void IsValid_NullStagesDates()
+    {
+        var command = new EducationCycleConfigurationCommand()
+        {
+            DateSince = new DateTime(2022, 12, 01),
+            DateUntil = new DateTime(2022, 12, 30),
+            Stages = new List<EducationCycleConfigurationStageCommand>(){
+                new EducationCycleConfigurationStageCommand(){
+                    Order = 0,
+                    Subjects = new List<EducationCycleConfigurationSubjectCommand>(){
+                        new EducationCycleConfigurationSubjectCommand(),
+                        new EducationCycleConfigurationSubjectCommand(),
+                        new EducationCycleConfigurationSubjectCommand()
+                    }
+                },
+                new EducationCycleConfigurationStageCommand(){
+                    Order = 1,
+                    Subjects = new List<EducationCycleConfigurationSubjectCommand>(){
+                        new EducationCycleConfigurationSubjectCommand(),
+                        new EducationCycleConfigurationSubjectCommand(),
+                        new EducationCycleConfigurationSubjectCommand()
+                    }
+                },
+                 new EducationCycleConfigurationStageCommand(){
+                    Order = 2,
+                    Subjects = new List<EducationCycleConfigurationSubjectCommand>(){
+                        new EducationCycleConfigurationSubjectCommand(),
+                        new EducationCycleConfigurationSubjectCommand(),
+                        new EducationCycleConfigurationSubjectCommand()
+                    }
+                }
+            }
+        };
+
+        Assert.That(command.IsValid);
+    }
+    [Test]
     public void IsValid()
     {
         var command = new EducationCycleConfigurationCommand()

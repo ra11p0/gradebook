@@ -5,13 +5,15 @@ import { connect } from 'react-redux';
 import getApplicationLanguageRedux from '../../Redux/ReduxQueries/account/getApplicationLanguageRedux';
 import { GlobalState } from '../../store';
 
-interface Props {
+export interface FormikDatePickerProps {
+  minDate?: Date;
+  maxDate?: Date;
   locale: string;
   testId?: string;
   name: string;
   label?: string;
   formik: {
-    setFieldValue: (fieldName: string, value: Date | null) => void;
+    setFieldValue: (fieldName: string, value: Date | undefined) => void;
     handleChange: (evt: React.ChangeEvent<any>) => void;
     handleBlur: (evt: React.ChangeEvent<any>) => void;
     values: any;
@@ -26,10 +28,14 @@ function FormikDatePicker({
   locale,
   name,
   testId,
-}: Props): ReactElement {
+  minDate,
+  maxDate,
+}: FormikDatePickerProps): ReactElement {
   return (
     <>
       <ReactDatePicker
+        minDate={minDate}
+        maxDate={maxDate}
         data-testid={testId}
         id={name}
         name={name}
@@ -44,7 +50,11 @@ function FormikDatePicker({
             : ''
         }`}
         onChange={(evt) => {
-          formik.setFieldValue(name, evt);
+          if (evt) {
+            formik.setFieldValue(name, evt);
+            return;
+          }
+          formik.setFieldValue(name, undefined);
         }}
         onBlur={(evt) => {
           formik.handleBlur(evt);

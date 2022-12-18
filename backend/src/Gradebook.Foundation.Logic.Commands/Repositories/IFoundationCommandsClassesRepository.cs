@@ -18,4 +18,6 @@ public interface IFoundationCommandsClassesRepository
     Task<StatusResponse> DeleteTeachersFromClass(Guid classGuid, IEnumerable<Guid> teachersGuids);
     Task<StatusResponse> SetStudentActiveClass(Guid classGuid, Guid studentGuid);
     Task<StatusResponse> RemoveStudentActiveClass(Guid studentGuid);
+    Task<StatusResponse> StartEducationCycleStepInstance(Guid educationCycleStepInstanceGuid);
+    Task<StatusResponse> StopEducationCycleStepInstance(Guid educationCycleStepInstanceGuid);
 }

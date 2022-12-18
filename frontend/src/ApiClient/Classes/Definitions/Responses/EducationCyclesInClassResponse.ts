@@ -3,7 +3,9 @@ export default interface EducationCyclesInClassResponse {
   activeEducationCycleGuid?: string;
   activeEducationCycle?: EducationCycle;
   hasPreparedActiveEducationCycle: boolean;
-  educationCyclesInstances?: EducationCycleInstance[];
+  currentStepInstance?: EducationCycleStepInstance;
+  previousStepInstance?: EducationCycleStepInstance;
+  nextStepInstance?: EducationCycleStepInstance;
 }
 
 interface EducationCycle {
@@ -21,8 +23,10 @@ interface EducationCycleInstance {
   educationCycleStepInstances: EducationCycleStepInstance[];
 }
 
-interface EducationCycleStepInstance {
+export interface EducationCycleStepInstance {
   dateSince?: Date;
+  started: boolean;
+  educationCycleStepName: string;
   dateUntil?: Date;
   guid: string;
   educationCycleInstanceGuid: string;

@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, { ReactElement } from 'react';
 import { Form } from 'react-bootstrap';
-import FormikDatePicker from './FormikDatePicker';
+import FormikDatePicker, { FormikDatePickerProps } from './FormikDatePicker';
 import FormikValidationLabel from './FormikValidationLabel';
 
 interface Props {
@@ -22,7 +22,9 @@ interface Props {
   hideValidation?: boolean;
 }
 
-function FormikInput(props: Props): ReactElement {
+function FormikInput(
+  props: Props & ({} | FormikDatePickerProps)
+): ReactElement {
   return (
     <Form.Group className="m-1 p-1">
       {(() => {

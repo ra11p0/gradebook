@@ -161,4 +161,10 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
 
     public Task<IPagedList<ClassDto>> GetAvailableClassesWithAssignedForEducationCycle(Guid educationCycleGuid, Pager pager, string? query)
         => Base.GetAvailableClassesWithAssignedForEducationCycle(educationCycleGuid, pager, query);
+
+    public Task<IEnumerable<EducationCycleStepInstanceDto>> GetAllEducationCycleStepInstancesForClass(Guid classGuid)
+        => Base.GetAllEducationCycleStepInstancesForClass(classGuid);
+
+    public Task<IEnumerable<EducationCycleInstanceDto>> GetAllEducationCycleInstancesForClass(Guid classGuid)
+        => Base.GetAllEducationCycleInstancesForClass(classGuid);
 }

@@ -1,10 +1,11 @@
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
+using Gradebook.Foundation.Common.Foundation.Commands;
 using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
 
 namespace Gradebook.Foundation.Logic.Commands;
 
-public partial class FoundationCommands
+public partial class FoundationCommands : IFoundationClassesCommands
 {
     private async Task<StatusResponse> SetStudentsActiveClass(Guid classGuid, List<Guid> studentGuid)
     {
@@ -42,15 +43,11 @@ public partial class FoundationCommands
         await Repository.SaveChangesAsync();
         return resp;
     }
-    public async Task<StatusResponse> DeleteActiveEducationCycleFromClass(Guid classGuid)
-    {
-        if (!await _foundationPermissions.Service.CanManageClass(classGuid))
-            return new StatusResponse(403);
-        return await DeleteActiveEducationCycleFromClasses(classGuid.AsEnumerable());
-    }
+    public Task<StatusResponse> DeleteActiveEducationCycleFromClass(Guid classGuid)
+        => DeleteActiveEducationCycleFromClasses(classGuid.AsEnumerable());
     public async Task<StatusResponse> ConfigureEducationCycleForClass(Guid classGuid, EducationCycleConfigurationCommand configuration)
     {
-        if (!configuration.IsValid) return new StatusResponse(400);
+        if (!configuration.IsValid) return new StatusResponse(400, "Validation error");
         var currentPersonGuid = await _foundationQueries.Service.RecogniseCurrentPersonByClassGuid(classGuid);
         if (!currentPersonGuid.Status) return new StatusResponse(currentPersonGuid.StatusCode, currentPersonGuid.Message);
         if (!await _foundationPermissions.Service.CanManageClass(classGuid, currentPersonGuid.Response))
@@ -94,5 +91,55 @@ public partial class FoundationCommands
         if (!resp.Status) return new StatusResponse(false, resp.Message);
         await Repository.SaveChangesAsync();
         return resp;
+    }
+    public async Task<StatusResponse> StartEducationCycleStepInstance(Guid classGuid)
+    {
+        if (!await _foundationPermissions.Service.CanManageClass(classGuid))
+            return new StatusResponse(403);
+        var currentStepGuid = await _foundationQueries.Service.GetCurrentEducationCycleStepInstanceGuid(classGuid);
+        if (!currentStepGuid.Status) return new StatusResponse(404);
+        if (!currentStepGuid.Response.HasValue) return new StatusResponse(404);
+        var resp = await Repository.StartEducationCycleStepInstance(currentStepGuid.Response!.Value);
+        if (resp.Status)
+            await Repository.SaveChangesAsync();
+        return resp;
+    }
+    public async Task<StatusResponse> StopEducationCycleStepInstance(Guid classGuid)
+    {
+        if (!await _foundationPermissions.Service.CanManageClass(classGuid))
+            return new StatusResponse(403);
+        var currentStepGuid = await _foundationQueries.Service.GetCurrentEducationCycleStepInstanceGuid(classGuid);
+        if (!currentStepGuid.Status) return new StatusResponse(404);
+        if (!currentStepGuid.Response.HasValue) return new StatusResponse(404);
+        var resp = await Repository.StopEducationCycleStepInstance(currentStepGuid.Response!.Value);
+        if (resp.Status)
+            await Repository.SaveChangesAsync();
+        return resp;
+    }
+    public async Task<StatusResponse> ForwardEducationCycleStepInstance(Guid classGuid)
+    {
+        if (!await _foundationPermissions.Service.CanManageClass(classGuid))
+            return new StatusResponse(403);
+        var currentStep = await _foundationQueries.Service.GetCurrentEducationCycleStepInstanceGuid(classGuid);
+        var nextStep = await _foundationQueries.Service.GetNextEducationCycleStepInstanceGuid(classGuid);
+        Repository.BeginTransaction();
+
+        if (!currentStep.Status) return new StatusResponse(currentStep.StatusCode);
+        if (!nextStep.Status) return new StatusResponse(nextStep.StatusCode);
+
+        var resp = await Repository.StopEducationCycleStepInstance(currentStep.Response!.Value);
+        if (!resp.Status)
+        {
+            Repository.RollbackTransaction();
+            return resp;
+        }
+        var resp2 = await Repository.StartEducationCycleStepInstance(nextStep.Response!.Value);
+        if (resp2.Status)
+        {
+            await Repository.SaveChangesAsync();
+            Repository.CommitTransaction();
+        }
+        else Repository.RollbackTransaction();
+        return resp2;
     }
 }

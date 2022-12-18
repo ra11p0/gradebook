@@ -119,13 +119,6 @@ public partial class FoundationQueries : BaseLogic<IFoundationQueriesRepository>
         return new ResponseWithStatus<EducationCycleExtendedDto>(educationCycle);
     }
 
-    public async Task<ResponseWithStatus<GroupDto, bool>> GetGroupByGuid(Guid guid)
-    {
-        var resp = await Repository.GetGroupByGuid(guid);
-        if (resp is null) return new ResponseWithStatus<GroupDto, bool>(404);
-        return new ResponseWithStatus<GroupDto, bool>(resp, true);
-    }
-
     public async Task<ResponseWithStatus<IEnumerable<StudentDto>>> GetInactiveStudents(Guid schoolGuid)
     {
         var students = await Repository.GetAllInactiveAccessibleStudents(schoolGuid);
@@ -142,12 +135,6 @@ public partial class FoundationQueries : BaseLogic<IFoundationQueriesRepository>
         var invitation = await Repository.GetInvitationByActivationCode(activationCode);
         if (invitation is null) return new ResponseWithStatus<InvitationDto, bool>(statusCode: 404, status: false, message: "Invitation does not exist");
         return new ResponseWithStatus<InvitationDto, bool>(invitation, true);
-    }
-
-    public async Task<ResponseWithStatus<IEnumerable<InvitationDto>, bool>> GetInvitations(Guid personGuid)
-    {
-        var resp = await Repository.GetInvitations(personGuid);
-        return new ResponseWithStatus<IEnumerable<InvitationDto>, bool>(resp, true);
     }
 
     public async Task<ResponseWithStatus<IPagedList<InvitationDto>, bool>> GetInvitationsToSchool(Guid schoolGuid, int page)
@@ -308,11 +295,6 @@ public partial class FoundationQueries : BaseLogic<IFoundationQueriesRepository>
     {
         var resp = await Repository.IsStudentInAnyClass(studentGuid);
         return new ResponseWithStatus<bool>(resp);
-    }
-
-    public async Task<ResponseWithStatus<bool>> IsUserActive(string userGuid)
-    {
-        return new ResponseWithStatus<bool>(await Repository.IsUserActive(userGuid), true);
     }
 
     public async Task<ResponseWithStatus<Guid>> RecogniseCurrentPersonByClassGuid(Guid classGuid)

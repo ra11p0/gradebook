@@ -15,7 +15,7 @@ import StudentInClassResponse from '../../ApiClient/Classes/Definitions/Response
 import StudentsInClass from './StudentsInClass';
 import ClassHeader from './ClassHeader';
 import { GlobalState } from '../../store';
-import EducationCycle from './EducationCycle';
+import EducationCycle from './EducationCycle/EducationCycle';
 
 interface Props {
   localization: string;

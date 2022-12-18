@@ -4,7 +4,7 @@ using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 
 namespace Gradebook.Foundation.Common.Foundation.Commands;
 
-public interface IFoundationCommands
+public interface IFoundationCommands : IFoundationClassesCommands
 {
     Task<ResponseWithStatus<Guid>> AddNewEducationCycle(EducationCycleCommand command);
     Task<StatusResponse> EditTeachersInSubject(Guid subjectGuid, List<Guid> teachersGuids);

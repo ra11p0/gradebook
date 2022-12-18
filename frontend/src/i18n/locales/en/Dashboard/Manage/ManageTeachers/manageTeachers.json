@@ -1,1 +1,7 @@
-{ "addTeacher": "Add teacher", "showPerson": "Show person", "teachersList": "Teachers list", "removePerson": "Remove person" }
+{
+  "addTeacher": "Add teacher",
+  "showPerson": "Show person",
+  "teachersList": "Teachers list",
+  "removePerson": "Remove person",
+  "youSureRemovePerson": "Are you sure you want to remove person?"
+}

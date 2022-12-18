@@ -13,5 +13,19 @@
   "educationCycleNotConfigured": "Cykl nauczania nie został skonfigurowany",
   "educationCycleNotAttached": "Żaden cykl nauczania nie został przypisany do klasy",
   "subjects": "Przedmioty",
-  "wrongDatesOrder": "Rozbieżność kolejności dat i etapów"
+  "wrongDatesOrder": "Rozbieżność kolejności dat i etapów",
+  "removeEducationCycleBinding": "Usuń połączenie z cyklem nauczania",
+  "unbindEducationCycle": "Usuń połączenie z cyklem nauczania",
+  "youSureUnbindEducationCycle": "Czy na pewno chcez usunąć połączenie z cyklem nauczania?",
+  "educationCycleNotStartedDescription": "Etap cyklu nauczania nie został rozpoczęty.",
+  "educationCycleStart": "Rozpocznij etap cyklu nauczania.",
+  "youSureEducationCycleStart": "Czy na pewno chcesz rozpocząć etap cyklu nauczania? Tej akcji nie da się cofnąć.",
+  "educationCycleStartedDescription": "Etap cyklu nauczania został rozpoczęty.",
+  "educationCycleStartedNotLastDescription": "Możesz przejść do następnego etapu.",
+  "educationCycleForward": "Przejdź do następnego etapu.",
+  "youSureEducationCycleForward": "Czy na pewno chcesz rozpocząć kolejny etap cyklu nauczania? Tej akcji nie da się cofnąć.",
+  "educationCycleStartedLastDescription": "Możesz zakończyć cykl nauczania.",
+  "educationCycleStop": "Zakończ cykl nauczania.",
+  "youSureEducationCycleStop": "Czy na pewno chcesz zakończyć cykl nauczania? Tej akcji nie da się cofnąć.",
+  "finishedEducationCycle": "Cykl nauczania zakończony"
 }
