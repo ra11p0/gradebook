@@ -50,9 +50,8 @@ describe('<ConfigureEducationCycleForm />', () => {
       await screen.findByRole('textbox', { name: 'End date' })
     ).toHaveClass('is-invalid');
   });
-
+  jest.setTimeout(10000);
   it('Should send api request', async () => {
-    jest.setTimeout(10000);
     jest
       .spyOn(EducationCyclesProxy, 'getEducationCycle')
       .mockResolvedValueOnce({

@@ -5,7 +5,7 @@ using Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
-DependencyInjector.Inject(builder.Services, builder.Configuration);
+builder.Inject();
 
 builder.Services.AddControllers();
 
@@ -29,7 +29,6 @@ app.MapGet("/", () => "Hello!");
 
 app.MapDefaultControllerRoute();
 
-HubsMapper.MapHubs(app);
-
+app.MapHubs();
 
 app.Run();
