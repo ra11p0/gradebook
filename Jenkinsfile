@@ -142,11 +142,14 @@ pipeline{
             parallel{
                 stage('build frontend'){
                     steps {
+                        sh 'rm -fr frontend/build/;'
                         sh 'cd frontend; export NODE_OPTIONS="--max-old-space-size=2048"; npm run build;'
                     }
                 }
                 stage('build backend'){
                     steps {
+                                  
+                        sh 'rm -fr backend/src/Api/bin/Release/net6.0/'
                         sh 'cd backend; dotnet build -c Release'
                     }
                 }
