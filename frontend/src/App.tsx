@@ -65,8 +65,8 @@ class App extends React.Component<AppProps> {
   render(): React.ReactNode {
     return (
       <div>
-        {process.env.REACT_APP_BUILD && (
-          <div className="position-fixed">{process.env.REACT_APP_BUILD}</div>
+        {import.meta.env.VITE_APP_BUILD && (
+          <div className="position-fixed">{import.meta.env.VITE_APP_BUILD}</div>
         )}
 
         <LoadingScreen isReady={this.props.appLoaded}>
