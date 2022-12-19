@@ -142,14 +142,11 @@ pipeline{
             parallel{
                 stage('build frontend'){
                     steps {
-                        sh 'rm -fr frontend/build/;'
                         sh 'cd frontend; export NODE_OPTIONS="--max-old-space-size=2048"; npm run build;'
                     }
                 }
                 stage('build backend'){
                     steps {
-                                  
-                        sh 'rm -fr backend/src/Api/bin/Release/net6.0/'
                         sh 'cd backend; dotnet build -c Release'
                     }
                 }
@@ -179,6 +176,12 @@ pipeline{
                 sh 'cp -r frontend/build/ release/public'
                 sh 'cp -r backend/src/Api/bin/Release/net6.0/ release/api'
                 sh 'sudo systemctl start kestrel-${JOB_NAME}'
+            }
+        }
+        stage('cleanup'){
+            steps{
+                sh 'rm -fr frontend/build/;'
+                sh 'rm -fr backend/src/Api/bin/Release/net6.0/'
             }
         }
     }
