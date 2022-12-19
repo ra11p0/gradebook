@@ -14,8 +14,11 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          chunks++;
-          return `chunk_${chunks % maxChunks}`;
+          if (!id.includes('src')) {
+            chunks++;
+            return `chunk_${chunks % maxChunks}`;
+          }
+          return `app_${maxChunks + 1}`;
         },
       },
     },
