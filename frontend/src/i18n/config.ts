@@ -1,5 +1,6 @@
 import i18n from 'i18next';
-void i18n.init({
+
+await i18n.init({
   fallbackNS: 'common',
   fallbackLng: 'en',
   lng: 'en',

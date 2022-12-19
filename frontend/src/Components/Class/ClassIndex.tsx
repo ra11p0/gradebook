@@ -4,10 +4,6 @@ import ClassesProxy from '../../ApiClient/Classes/ClassesProxy';
 import ClassResponse from '../../ApiClient/Schools/Definitions/Responses/ClassResponse';
 import Notifications from '../../Notifications/Notifications';
 import LoadingScreen from '../Shared/LoadingScreen';
-import ApplicationModes from '@ra11p0/forms-app/dist/Constraints/ApplicationModes';
-import Field from '@ra11p0/forms-app/dist/Interfaces/Common/Field';
-import FormFilledResult from '@ra11p0/forms-app/dist/Interfaces/Common/FormFilledResult';
-import Forms from '@ra11p0/forms-app/dist/Components/Forms';
 import TeachersInClassResponse from '../../ApiClient/Classes/Definitions/Responses/TeachersInClassResponse';
 import { connect } from 'react-redux';
 import getApplicationLanguageReduxProxy from '../../Redux/ReduxQueries/account/getApplicationLanguageRedux';
@@ -67,14 +63,7 @@ function ClassIndex(props: Props): ReactElement {
           </div>
         </div>
 
-        <div className="m-4">
-          <Forms
-            localization={props.localization}
-            mode={ApplicationModes.Edit}
-            onSubmit={(result: Field[] | FormFilledResult): void => {}}
-            onDiscard={() => {}}
-          />
-        </div>
+        <div className="m-4"></div>
       </>
     </LoadingScreen>
   );
