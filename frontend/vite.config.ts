@@ -8,15 +8,6 @@ export default defineConfig({
   build: {
     outDir: 'build',
     target: 'esnext',
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes('src')) {
-            return id.toString().split('src/')[1].split('/')[0].toString();
-          }
-        },
-      },
-    },
   },
   server: {
     port: 3005,
