@@ -6,10 +6,10 @@ import setUserRedux from '../../../Redux/ReduxCommands/account/setUserRedux';
 
 describe('setUserRedux', () => {
   it('Should get user settings and set language', async () => {
-    const setLanguageReduxMock = jest
+    const setLanguageReduxMock = vi
       .spyOn(setApplicationLanguageRedux, 'default')
       .mockResolvedValueOnce();
-    const setLanguageMock = jest
+    const setLanguageMock = vi
       .spyOn(AccountsProxy.settings, 'getUserSettings')
       .mockResolvedValueOnce({
         data: {
@@ -19,6 +19,7 @@ describe('setUserRedux', () => {
 
     await setUserRedux({
       userId: 'fakeUserId',
+      isActive: true,
     });
     expect(setLanguageMock).toBeCalledTimes(1);
     expect(setLanguageReduxMock).toBeCalledTimes(1);

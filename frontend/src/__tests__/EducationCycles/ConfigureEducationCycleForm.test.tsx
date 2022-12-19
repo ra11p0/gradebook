@@ -15,14 +15,12 @@ import { select, openMenu } from 'react-select-event';
 
 describe('<ConfigureEducationCycleForm />', () => {
   it('Should validate start and end dates empty', async () => {
-    jest
-      .spyOn(EducationCyclesProxy, 'getEducationCycle')
-      .mockResolvedValueOnce({
-        data: {
-          guid: '',
-          stages: [],
-        },
-      } as any);
+    vi.spyOn(EducationCyclesProxy, 'getEducationCycle').mockResolvedValueOnce({
+      data: {
+        guid: '',
+        stages: [],
+      },
+    } as any);
 
     await act(async () => {
       render(
@@ -50,33 +48,31 @@ describe('<ConfigureEducationCycleForm />', () => {
       await screen.findByRole('textbox', { name: 'End date' })
     ).toHaveClass('is-invalid');
   });
-  jest.setTimeout(10000);
+
   it('Should send api request', async () => {
-    jest
-      .spyOn(EducationCyclesProxy, 'getEducationCycle')
-      .mockResolvedValueOnce({
-        data: {
-          guid: '',
-          stages: [
-            {
-              guid: 'string',
-              name: 'string',
-              order: 1,
-              subjects: [
-                {
-                  guid: 'string',
-                  subjectGuid: 'string',
-                  hoursInStep: 20,
-                  isMandatory: false,
-                  groupsAllowed: true,
-                  subjectName: 'string',
-                },
-              ],
-            },
-          ],
-        },
-      } as any);
-    jest.spyOn(SubjectsProxy, 'getTeachersForSubject').mockResolvedValueOnce({
+    vi.spyOn(EducationCyclesProxy, 'getEducationCycle').mockResolvedValueOnce({
+      data: {
+        guid: '',
+        stages: [
+          {
+            guid: 'string',
+            name: 'string',
+            order: 1,
+            subjects: [
+              {
+                guid: 'string',
+                subjectGuid: 'string',
+                hoursInStep: 20,
+                isMandatory: false,
+                groupsAllowed: true,
+                subjectName: 'string',
+              },
+            ],
+          },
+        ],
+      },
+    } as any);
+    vi.spyOn(SubjectsProxy, 'getTeachersForSubject').mockResolvedValueOnce({
       data: [
         {
           guid: 'fakeGuid',
@@ -90,7 +86,7 @@ describe('<ConfigureEducationCycleForm />', () => {
       ],
     } as any);
 
-    const mockedConfigureEducationCycleForClass = jest
+    const mockedConfigureEducationCycleForClass = vi
       .spyOn(ClassesProxy.educationCycles, 'configureEducationCycleForClass')
       .mockResolvedValue({} as any);
 

@@ -3,7 +3,7 @@ import { axiosApiAuthorized } from '../AxiosInterceptor';
 import SubjectResponse from './Definitions/Responses/SubjectResponse';
 import TeachersForSubjectResponse from './Definitions/Responses/TeachersForSubjectResponse';
 
-const API_URL = process.env.REACT_APP_API_URL!;
+const API_URL: string = import.meta.env.VITE_APP_API_URL ?? 'api';
 
 const getSubject = async (
   guid: string

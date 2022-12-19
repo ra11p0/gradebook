@@ -14,14 +14,12 @@ import { ReactNotifications } from 'react-notifications-component';
 
 describe('<SettingsIndex/>', () => {
   it('Should send request with settings', async () => {
-    const setSettingsMock = jest
+    const setSettingsMock = vi
       .spyOn(AccountsProxy.settings, 'setSettings')
       .mockResolvedValueOnce({} as AxiosResponse);
-    jest
-      .spyOn(AccountsProxy.settings, 'getUserSettings')
-      .mockResolvedValueOnce({
-        data: { defaultSchool: 'ds' },
-      } as AxiosResponse);
+    vi.spyOn(AccountsProxy.settings, 'getUserSettings').mockResolvedValueOnce({
+      data: { defaultSchool: 'ds' },
+    } as AxiosResponse);
     await act(() => {
       render(
         <Provider store={store}>

@@ -4,31 +4,33 @@ import * as setApplicationLanguageRedux from '../../../Redux/ReduxCommands/accou
 import HubProxy from '../../../ApiClient/SignalR/HubProxy';
 import setLoginRedux from '../../../Redux/ReduxCommands/account/setLoginRedux';
 
-jest.mock('axios', () => ({
-  create: () => ({
-    interceptors: {
-      response: {
-        use: () => ({}),
+vi.mock('axios', () => ({
+  default: {
+    create: () => ({
+      interceptors: {
+        response: {
+          use: () => ({}),
+        },
+        request: {
+          use: () => ({}),
+        },
       },
-      request: {
-        use: () => ({}),
-      },
-    },
-  }),
+    }),
+  },
 }));
 
-localStorage.setItem = jest.fn();
+localStorage.setItem = vi.fn();
 
 describe('setLogInRedux', () => {
   it('Should connect signalr hubs when loging in', async () => {
-    jest.spyOn(AccountsProxy, 'logIn').mockResolvedValue({} as any);
-    jest
-      .spyOn(AccountsProxy, 'getMe')
-      .mockResolvedValue({ data: { userId: 'fakeuid', schools: [] } } as any);
-    jest
-      .spyOn(AccountsProxy.settings, 'getUserSettings')
-      .mockResolvedValue({ data: { language: 'en' } } as any);
-    const connectMock = jest.spyOn(HubProxy.prototype, 'connect');
+    vi.spyOn(AccountsProxy, 'logIn').mockResolvedValue({} as any);
+    vi.spyOn(AccountsProxy, 'getMe').mockResolvedValue({
+      data: { userId: 'fakeuid', schools: [] },
+    } as any);
+    vi.spyOn(AccountsProxy.settings, 'getUserSettings').mockResolvedValue({
+      data: { language: 'en' },
+    } as any);
+    const connectMock = vi.spyOn(HubProxy.prototype, 'connect');
     await setLoginRedux({
       accessToken: 'fakeAccessToken',
       refreshToken: 'fakeRefreshToken',
@@ -37,14 +39,14 @@ describe('setLogInRedux', () => {
   });
 
   it('Should set user language on log in', async () => {
-    jest.spyOn(AccountsProxy, 'logIn').mockResolvedValue({} as any);
-    jest
-      .spyOn(AccountsProxy, 'getMe')
-      .mockResolvedValue({ data: { userId: 'fakeuid', schools: [] } } as any);
-    jest
-      .spyOn(AccountsProxy.settings, 'getUserSettings')
-      .mockResolvedValue({ data: { language: 'testLanguage' } } as any);
-    const setApplicationLanguageReduxMocked = jest.spyOn(
+    vi.spyOn(AccountsProxy, 'logIn').mockResolvedValue({} as any);
+    vi.spyOn(AccountsProxy, 'getMe').mockResolvedValue({
+      data: { userId: 'fakeuid', schools: [] },
+    } as any);
+    vi.spyOn(AccountsProxy.settings, 'getUserSettings').mockResolvedValue({
+      data: { language: 'testLanguage' },
+    } as any);
+    const setApplicationLanguageReduxMocked = vi.spyOn(
       setApplicationLanguageRedux,
       'default'
     );
@@ -57,14 +59,14 @@ describe('setLogInRedux', () => {
   });
 
   it('Should save tokens to storage', async () => {
-    jest.spyOn(AccountsProxy, 'logIn').mockResolvedValue({} as any);
-    jest
-      .spyOn(AccountsProxy, 'getMe')
-      .mockResolvedValue({ data: { userId: 'fakeuid', schools: [] } } as any);
-    jest
-      .spyOn(AccountsProxy.settings, 'getUserSettings')
-      .mockResolvedValue({ data: { language: 'testLanguage' } } as any);
-    const setItemMock = jest.spyOn(Storage.prototype, 'setItem');
+    vi.spyOn(AccountsProxy, 'logIn').mockResolvedValue({} as any);
+    vi.spyOn(AccountsProxy, 'getMe').mockResolvedValue({
+      data: { userId: 'fakeuid', schools: [] },
+    } as any);
+    vi.spyOn(AccountsProxy.settings, 'getUserSettings').mockResolvedValue({
+      data: { language: 'testLanguage' },
+    } as any);
+    const setItemMock = vi.spyOn(Storage.prototype, 'setItem');
     await setLoginRedux({
       accessToken: 'fakeAccessToken',
       refreshToken: 'fakeRefreshToken',

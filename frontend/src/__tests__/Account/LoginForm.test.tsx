@@ -12,22 +12,24 @@ import '@testing-library/jest-dom';
 import AccountsProxy from '../../ApiClient/Accounts/AccountsProxy';
 import Swal from 'sweetalert2';
 
-jest.mock('axios', () => ({
-  create: () => ({
-    interceptors: {
-      response: {
-        use: () => ({}),
+vi.mock('axios', () => ({
+  default: {
+    create: () => ({
+      interceptors: {
+        response: {
+          use: () => ({}),
+        },
+        request: {
+          use: () => ({}),
+        },
       },
-      request: {
-        use: () => ({}),
-      },
-    },
-  }),
+    }),
+  },
 }));
 
 describe('<LoginForm/>', () => {
   it('Should disable login button while logging in', async () => {
-    jest.spyOn(AccountsProxy, 'logIn').mockImplementationOnce(async () => {
+    vi.spyOn(AccountsProxy, 'logIn').mockImplementationOnce(async () => {
       return await new Promise((resolve, reject) => {
         void new Promise((resolve) => setTimeout(resolve, 1000)).then(() =>
           reject(new Error())
@@ -101,10 +103,10 @@ describe('<LoginForm/>', () => {
   });
 
   it('Should show login failed', async () => {
-    jest
-      .spyOn(AccountsProxy, 'logIn')
-      .mockRejectedValueOnce({ response: { status: 400 } });
-    const swalMock = jest
+    vi.spyOn(AccountsProxy, 'logIn').mockRejectedValueOnce({
+      response: { status: 400 },
+    });
+    const swalMock = vi
       .spyOn(Swal, 'fire')
       .mockImplementation(async (e: any) => {
         expect(e.icon).toEqual('error');
@@ -134,10 +136,10 @@ describe('<LoginForm/>', () => {
   });
 
   it('Should show account inactive', async () => {
-    jest
-      .spyOn(AccountsProxy, 'logIn')
-      .mockRejectedValueOnce({ response: { status: 302 } });
-    const swalMock = jest
+    vi.spyOn(AccountsProxy, 'logIn').mockRejectedValueOnce({
+      response: { status: 302 },
+    });
+    const swalMock = vi
       .spyOn(Swal, 'fire')
       .mockImplementation(async (e: any) => {
         expect(e.icon).toEqual('warning');

@@ -11,21 +11,19 @@ import AccountsProxy from '../../ApiClient/Accounts/AccountsProxy';
 import Swal from 'sweetalert2';
 import EmailActivation from '../../Components/Service/EmailActivation';
 
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
+vi.mock('react-router-dom', async () => ({
+  ...(await vi.importActual('react-router-dom')),
   useParams: () => ({ accountGuid: 'aguid', activationCode: 'actcode' }),
-  useNavigate: jest.fn(),
+  useNavigate: vi.fn(),
 }));
 
 describe('<EmailActivation/>', () => {
   it('Should show notification success', async () => {
-    jest
-      .spyOn(routerDom, 'useNavigate')
-      .mockImplementation(jest.requireActual('react-router-dom').useNavigate);
-    jest
-      .spyOn(AccountsProxy, 'verifyEmailAddress')
-      .mockResolvedValue({} as any);
-    const swalMock = jest
+    vi.spyOn(routerDom, 'useNavigate').mockImplementation(
+      (await vi.importActual('react-router-dom')).useNavigate
+    );
+    vi.spyOn(AccountsProxy, 'verifyEmailAddress').mockResolvedValue({} as any);
+    const swalMock = vi
       .spyOn(Swal, 'fire')
       .mockImplementation(async (e: any) => {
         expect(e.icon).toEqual('success');
@@ -46,13 +44,11 @@ describe('<EmailActivation/>', () => {
     expect(swalMock).toBeCalledTimes(1);
   });
   it('Should show notification failed', async () => {
-    jest
-      .spyOn(routerDom, 'useNavigate')
-      .mockImplementation(jest.requireActual('react-router-dom').useNavigate);
-    jest
-      .spyOn(AccountsProxy, 'verifyEmailAddress')
-      .mockRejectedValue({} as any);
-    const swalMock = jest
+    vi.spyOn(routerDom, 'useNavigate').mockImplementation(
+      (await vi.importActual('react-router-dom')).useNavigate
+    );
+    vi.spyOn(AccountsProxy, 'verifyEmailAddress').mockRejectedValue({} as any);
+    const swalMock = vi
       .spyOn(Swal, 'fire')
       .mockImplementation(async (e: any) => {
         expect(e.icon).toEqual('error');
@@ -73,17 +69,15 @@ describe('<EmailActivation/>', () => {
     expect(swalMock).toBeCalledTimes(1);
   });
   it('Should redirect home on error', async () => {
-    jest
-      .spyOn(AccountsProxy, 'verifyEmailAddress')
-      .mockRejectedValue({} as any);
-    const swalMock = jest
+    vi.spyOn(AccountsProxy, 'verifyEmailAddress').mockRejectedValue({} as any);
+    const swalMock = vi
       .spyOn(Swal, 'fire')
       .mockImplementation(async (e: any) => {
         expect(e.icon).toEqual('error');
         return await Promise.resolve({} as any);
       });
     let hasBeenCalledNavigate = false;
-    jest.spyOn(routerDom, 'useNavigate').mockImplementation(() => {
+    vi.spyOn(routerDom, 'useNavigate').mockImplementation(() => {
       return (to: any) => {
         hasBeenCalledNavigate = true;
         expect(to).toEqual('/');
@@ -104,17 +98,17 @@ describe('<EmailActivation/>', () => {
     expect(swalMock).toBeCalledTimes(1);
   });
   it('Should redirect home on success', async () => {
-    jest
-      .spyOn(AccountsProxy, 'verifyEmailAddress')
-      .mockResolvedValueOnce({} as any);
-    const swalMock = jest
+    vi.spyOn(AccountsProxy, 'verifyEmailAddress').mockResolvedValueOnce(
+      {} as any
+    );
+    const swalMock = vi
       .spyOn(Swal, 'fire')
       .mockImplementation(async (e: any) => {
         expect(e.icon).toEqual('success');
         return await Promise.resolve({} as any);
       });
     let hasBeenCalledNavigate = false;
-    jest.spyOn(routerDom, 'useNavigate').mockImplementation(() => {
+    vi.spyOn(routerDom, 'useNavigate').mockImplementation(() => {
       return (to: any) => {
         hasBeenCalledNavigate = true;
         expect(to).toEqual('/');

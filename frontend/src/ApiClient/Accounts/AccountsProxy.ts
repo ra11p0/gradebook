@@ -12,7 +12,7 @@ import UserSettings from './Definitions/Responses/UserSettings';
 import getApplicationLanguageRedux from '../../Redux/ReduxQueries/account/getApplicationLanguageRedux';
 import getCurrentUserIdRedux from '../../Redux/ReduxQueries/account/getCurrentUserIdRedux';
 
-const API_URL = process.env.REACT_APP_API_URL!;
+const API_URL: string = import.meta.env.VITE_APP_API_URL ?? 'api';
 
 async function logIn(
   request: LoginRequest

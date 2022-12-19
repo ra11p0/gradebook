@@ -10,13 +10,14 @@ import ClassesProxy from '../../ApiClient/Classes/ClassesProxy';
 
 describe('<EducationCycle />', () => {
   it('Should show no cycle attached', async () => {
-    jest
-      .spyOn(ClassesProxy.educationCycles, 'getEducationCyclesInClass')
-      .mockResolvedValueOnce({
-        data: {
-          hasPreparedActiveEducationCycle: false,
-        },
-      } as any);
+    vi.spyOn(
+      ClassesProxy.educationCycles,
+      'getEducationCyclesInClass'
+    ).mockResolvedValueOnce({
+      data: {
+        hasPreparedActiveEducationCycle: false,
+      },
+    } as any);
     await act(async () => {
       render(
         <Provider store={store}>
@@ -33,15 +34,16 @@ describe('<EducationCycle />', () => {
     ).toBeTruthy();
   });
   it('Should show cycle not configured', async () => {
-    jest
-      .spyOn(ClassesProxy.educationCycles, 'getEducationCyclesInClass')
-      .mockResolvedValueOnce({
-        data: {
-          activeEducationCycle: { guid: 'fakeguid' },
-          activeEducationCycleGuid: 'fakeGuid',
-          hasPreparedActiveEducationCycle: false,
-        },
-      } as any);
+    vi.spyOn(
+      ClassesProxy.educationCycles,
+      'getEducationCyclesInClass'
+    ).mockResolvedValueOnce({
+      data: {
+        activeEducationCycle: { guid: 'fakeguid' },
+        activeEducationCycleGuid: 'fakeGuid',
+        hasPreparedActiveEducationCycle: false,
+      },
+    } as any);
     await act(async () => {
       render(
         <Provider store={store}>
@@ -61,17 +63,18 @@ describe('<EducationCycle />', () => {
     ).toBeTruthy();
   });
   it('Should show cycle not started', async () => {
-    jest
-      .spyOn(ClassesProxy.educationCycles, 'getEducationCyclesInClass')
-      .mockResolvedValueOnce({
-        data: {
-          activeEducationCycle: { guid: 'fakeguid' },
-          activeEducationCycleGuid: 'fakeGuid',
-          currentStepInstance: {},
-          activeEducationCycleInstance: {},
-          hasPreparedActiveEducationCycle: false,
-        },
-      } as any);
+    vi.spyOn(
+      ClassesProxy.educationCycles,
+      'getEducationCyclesInClass'
+    ).mockResolvedValueOnce({
+      data: {
+        activeEducationCycle: { guid: 'fakeguid' },
+        activeEducationCycleGuid: 'fakeGuid',
+        currentStepInstance: {},
+        activeEducationCycleInstance: {},
+        hasPreparedActiveEducationCycle: false,
+      },
+    } as any);
     await act(async () => {
       render(
         <Provider store={store}>
@@ -88,20 +91,21 @@ describe('<EducationCycle />', () => {
     ).toBeTruthy();
   });
   it('Should show can start next cycle step', async () => {
-    jest
-      .spyOn(ClassesProxy.educationCycles, 'getEducationCyclesInClass')
-      .mockResolvedValueOnce({
-        data: {
-          activeEducationCycle: { guid: 'fakeguid' },
-          activeEducationCycleGuid: 'fakeGuid',
-          currentStepInstance: {
-            started: true,
-          },
-          nextStepInstance: {},
-          activeEducationCycleInstance: {},
-          hasPreparedActiveEducationCycle: false,
+    vi.spyOn(
+      ClassesProxy.educationCycles,
+      'getEducationCyclesInClass'
+    ).mockResolvedValueOnce({
+      data: {
+        activeEducationCycle: { guid: 'fakeguid' },
+        activeEducationCycleGuid: 'fakeGuid',
+        currentStepInstance: {
+          started: true,
         },
-      } as any);
+        nextStepInstance: {},
+        activeEducationCycleInstance: {},
+        hasPreparedActiveEducationCycle: false,
+      },
+    } as any);
     await act(async () => {
       render(
         <Provider store={store}>
@@ -121,19 +125,20 @@ describe('<EducationCycle />', () => {
     ).toBeTruthy();
   });
   it('Should show can finish cycle', async () => {
-    jest
-      .spyOn(ClassesProxy.educationCycles, 'getEducationCyclesInClass')
-      .mockResolvedValueOnce({
-        data: {
-          activeEducationCycle: { guid: 'fakeguid' },
-          activeEducationCycleGuid: 'fakeGuid',
-          currentStepInstance: {
-            started: true,
-          },
-          activeEducationCycleInstance: {},
-          hasPreparedActiveEducationCycle: false,
+    vi.spyOn(
+      ClassesProxy.educationCycles,
+      'getEducationCyclesInClass'
+    ).mockResolvedValueOnce({
+      data: {
+        activeEducationCycle: { guid: 'fakeguid' },
+        activeEducationCycleGuid: 'fakeGuid',
+        currentStepInstance: {
+          started: true,
         },
-      } as any);
+        activeEducationCycleInstance: {},
+        hasPreparedActiveEducationCycle: false,
+      },
+    } as any);
     await act(async () => {
       render(
         <Provider store={store}>

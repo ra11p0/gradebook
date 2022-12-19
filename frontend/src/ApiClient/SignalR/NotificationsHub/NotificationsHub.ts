@@ -1,7 +1,7 @@
 import Notifications from '../../../Notifications/Notifications';
 import HubProxy from '../HubProxy';
 
-const API_URL = process.env.REACT_APP_API_URL!;
+const API_URL: string = import.meta.env.VITE_APP_API_URL ?? 'api';
 const HUB_URL = `${API_URL}/signalr/notifications`;
 
 const proxy = new HubProxy();

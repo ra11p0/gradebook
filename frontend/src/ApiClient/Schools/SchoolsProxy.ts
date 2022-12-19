@@ -17,7 +17,7 @@ import getCurrentSchoolRedux from '../../Redux/ReduxQueries/account/getCurrentSc
 import NewEducationCycleRequest from './Definitions/Requests/NewEducationCycleRequest';
 import EducationCycleResponse from './Definitions/Responses/EducationCycleResponse';
 
-const API_URL = process.env.REACT_APP_API_URL!;
+const API_URL: string = import.meta.env.VITE_APP_API_URL ?? 'api';
 
 const removeSchool = async (schoolGuid: string): Promise<AxiosResponse> => {
   return await axiosApiAuthorized.delete(API_URL + `/schools/${schoolGuid}`);

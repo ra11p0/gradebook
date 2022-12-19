@@ -16,13 +16,13 @@ import { AxiosResponse } from 'axios';
 
 describe('<LanguageSelect/>', () => {
   it('Should send request with language changed', async () => {
-    const setLanguageMock = jest
+    const setLanguageMock = vi
       .spyOn(AccountsProxy.settings, 'setLanguage')
       .mockResolvedValueOnce({} as AxiosResponse);
-    const setLanguageReduxMock = jest
+    const setLanguageReduxMock = vi
       .spyOn(setApplicationLanguageRedux, 'default')
       .mockResolvedValueOnce();
-    const getIsLoggedInReduxMock = jest
+    const getIsLoggedInReduxMock = vi
       .spyOn(getIsLoggedInRedux, 'default')
       .mockReturnValueOnce(true);
     await act(() => {
@@ -49,13 +49,13 @@ describe('<LanguageSelect/>', () => {
     expect(getIsLoggedInReduxMock).toBeCalledTimes(1);
   });
   it('Should not send request, only local change - user not logged in', async () => {
-    const setLanguageMock = jest
+    const setLanguageMock = vi
       .spyOn(AccountsProxy.settings, 'setLanguage')
       .mockResolvedValueOnce({} as AxiosResponse);
-    const setLanguageReduxMock = jest
+    const setLanguageReduxMock = vi
       .spyOn(setApplicationLanguageRedux, 'default')
       .mockResolvedValueOnce();
-    const getIsLoggedInReduxMock = jest
+    const getIsLoggedInReduxMock = vi
       .spyOn(getIsLoggedInRedux, 'default')
       .mockReturnValueOnce(false);
     await act(() => {
