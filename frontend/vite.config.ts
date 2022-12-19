@@ -3,9 +3,6 @@ import react from '@vitejs/plugin-react';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
 import svgrPlugin from 'vite-plugin-svgr';
 
-const maxChunks = 5;
-let chunks = 0;
-
 // https://vitejs.dev/config/
 export default defineConfig({
   build: {
@@ -14,11 +11,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (!id.includes('src')) {
-            chunks++;
-            return `chunk_${chunks % maxChunks}`;
-          }
-          return `app_${maxChunks + 1}`;
+          return 'app';
         },
       },
     },
