@@ -8,6 +8,15 @@ export default defineConfig({
   build: {
     outDir: 'build',
     target: 'esnext',
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('i18n/locales')) {
+            return 'i18n';
+          }
+        },
+      },
+    },
   },
   server: {
     port: 3005,
@@ -17,8 +26,5 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-  },
-  define: {
-    'process.env': {},
   },
 });
