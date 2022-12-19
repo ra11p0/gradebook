@@ -48,11 +48,7 @@
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build",
-    "serve": "vite preview",
     "test": "vitest",
-    "test:debug": "react-scripts --inspect-brk test --runInBand --no-cache",
-    "mocha": "mocha -r ts-node/register -r mock-local-storage 'src/**/*.test.ts'",
-    "eject": "react-scripts eject",
     "clean": "rm -fr node_modules && rm -f package-lock.json",
     "cleanpp": "rm -fr node_modules/@ra11p0 && rm -f package-lock.json"
   },
