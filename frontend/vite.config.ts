@@ -7,6 +7,7 @@ import svgrPlugin from 'vite-plugin-svgr';
 export default defineConfig({
   build: {
     outDir: 'build',
+    target: 'esnext',
   },
   server: {
     port: 3005,
