@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "ESNext",
     "lib": ["dom", "dom.iterable", "esnext"],
+    "types": ["vite/client", "vite-plugin-svgr/client"],
     "sourceRoot": "/src",
     "outDir": "out",
     "sourceMap": true,
@@ -17,8 +18,8 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "preserve",
-    "module": "CommonJS"
+    "module": "es2022"
   },
-  "include": ["/**/*.ts", "src"],
-  "exclude": ["node_modules"]
+  "include": ["/**/*.ts", "src", "src/index.tsx"],
+  "exclude": ["node_modules", "src/__tests__", "vite.config.ts"]
 }

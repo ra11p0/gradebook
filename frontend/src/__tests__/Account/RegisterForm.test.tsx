@@ -15,7 +15,7 @@ import { ReactNotifications } from 'react-notifications-component';
 
 describe('<RegisterForm/>', () => {
   it('Should disable register button while registering', async () => {
-    jest.spyOn(AccountsProxy, 'register').mockImplementationOnce(async () => {
+    vi.spyOn(AccountsProxy, 'register').mockImplementationOnce(async () => {
       return await new Promise((resolve, reject) => {
         void new Promise((resolve) => setTimeout(resolve, 1000)).then(() => {
           reject(new Error());
@@ -156,10 +156,10 @@ describe('<RegisterForm/>', () => {
   });
 
   it('Should show error alert', async () => {
-    const mockekdAccountsProxy = jest
+    const mockekdAccountsProxy = vi
       .spyOn(AccountsProxy, 'register')
       .mockRejectedValueOnce({ response: { data: 'fakeError' } });
-    const mockedNotifications = jest.spyOn(Notifications, 'showApiError');
+    const mockedNotifications = vi.spyOn(Notifications, 'showApiError');
     await act(() => {
       render(
         <Provider store={store}>

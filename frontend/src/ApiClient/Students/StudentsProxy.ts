@@ -2,7 +2,7 @@ import { AxiosResponse } from 'axios';
 import { axiosApiAuthorized } from '../AxiosInterceptor';
 import StudentResponse from './Definitions/Responses/StudentResponse';
 
-const API_URL = process.env.REACT_APP_API_URL!;
+const API_URL: string = import.meta.env.VITE_APP_API_URL ?? 'api';
 
 const getAccessibleStudents = async (): Promise<
   AxiosResponse<StudentResponse[]>

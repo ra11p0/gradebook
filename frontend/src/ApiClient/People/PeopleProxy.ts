@@ -7,7 +7,7 @@ import PersonResponse, {
 import SetPermissionsRequest from './Definitions/Requests/SetPermissionsRequest';
 import SubjectsForTeacherResponse from './Definitions/Responses/SubjectsForTeacherResponse';
 
-const API_URL = process.env.REACT_APP_API_URL!;
+const API_URL: string = import.meta.env.VITE_APP_API_URL ?? 'api';
 
 const activatePerson = async (
   activationCode: string

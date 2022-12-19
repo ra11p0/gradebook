@@ -2,7 +2,8 @@ import { AxiosResponse } from 'axios';
 import { axiosApiAuthorized } from '../AxiosInterceptor';
 import ClassResponse from '../Classes/Definitions/Responses/ClassResponse';
 import EducationCycleResponse from './Definitions/Responses/EducationCycleResponse';
-const API_URL = process.env.REACT_APP_API_URL!;
+
+const API_URL: string = import.meta.env.VITE_APP_API_URL ?? 'api';
 
 const getEducationCycle = async (
   educationCycleGuid: string
