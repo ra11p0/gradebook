@@ -8,13 +8,6 @@ export default defineConfig({
   build: {
     outDir: 'build',
     target: 'esnext',
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          return 'app';
-        },
-      },
-    },
   },
   server: {
     port: 3005,
