@@ -49,9 +49,11 @@ void i18n.init({
         './locales/en/Dashboard/Manage/Classes/classes.json'
       ),
       addNewClassModal: await import(
-        './locales/en/Dashboard/Manage/Classes/addNewClassModal'
+        './locales/en/Dashboard/Manage/Classes/addNewClassModal.json'
       ),
-      settings: await import('./locales/en/Dashboard/Manage/Settings/settings'),
+      settings: await import(
+        './locales/en/Dashboard/Manage/Settings/settings.json'
+      ),
       permissions: await import('./locales/en/Person/permissions.json'),
       personNavigation: await import(
         './locales/en/Person/personNavigation.json'
@@ -129,9 +131,11 @@ void i18n.init({
         './locales/pl/Dashboard/Manage/Classes/classes.json'
       ),
       addNewClassModal: await import(
-        './locales/pl/Dashboard/Manage/Classes/addNewClassModal'
+        './locales/pl/Dashboard/Manage/Classes/addNewClassModal.json'
       ),
-      settings: await import('./locales/pl/Dashboard/Manage/Settings/settings'),
+      settings: await import(
+        './locales/pl/Dashboard/Manage/Settings/settings.json'
+      ),
       permissions: await import('./locales/pl/Person/permissions.json'),
       personNavigation: await import(
         './locales/pl/Person/personNavigation.json'
