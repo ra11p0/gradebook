@@ -117,6 +117,7 @@ pipeline{
     
         stage('frontend install dependencies'){
             steps {
+                sh 'cd frontend; npm run cleanpp; '
                 sh 'cd frontend; npm cache clean -f; '
                 sh 'cd frontend; export NODE_OPTIONS="--max-old-space-size=2048"; npm install -f --noproxy registry.npmjs.org --maxsockets 1;'
             }
