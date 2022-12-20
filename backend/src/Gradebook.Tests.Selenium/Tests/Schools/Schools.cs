@@ -1,6 +1,8 @@
+using Gradebook.Tests.Selenium.Constraints.Views;
 using Gradebook.Tests.Selenium.Helpers;
 using Gradebook.Tests.Selenium.IWebDriverExtensions;
 using Gradebook.Tests.Selenium.QuickActionsExtensions;
+using SchoolsView = Gradebook.Tests.Selenium.Constraints.Views.Dashboard.Schools;
 
 namespace Gradebook.Tests.Selenium.Tests.Schools;
 
@@ -15,18 +17,18 @@ public class Schools
         using var driver = WebDriverBuilder.BuildWebDriver();
         driver.Login(CommonResources.GetValue("email")!, CommonResources.GetValue(key: "password")!);
         driver.GoToSchoolsTab();
-        driver.ClickOn(".addSchoolButton");
-        driver.ClickOn(".activateAdministrator");
-        driver.WaitFor("input[name='city']").SendKeys(CommonResources.GetValue("secondSchoolCity"));
-        driver.WaitFor("input[name='postalCode']").SendKeys(CommonResources.GetValue("secondSchoolPostalCode"));
-        driver.WaitFor("input[name='addressLine1']").SendKeys(CommonResources.GetValue("secondSchoolAddress"));
-        driver.WaitFor("input[name='name']").SendKeys(CommonResources.GetValue("secondSchoolName"));
-        driver.ClickOn("button[type='submit']");
-        Assert.That(driver.HasSelect2Option("#schoolSelect", CommonResources.GetValue("secondSchoolName")!));
-        driver.SelectSelect2Option("#schoolSelect", CommonResources.GetValue("secondSchoolName")!);
+        driver.ClickOn(SchoolsView.AddSchoolButton);
+        driver.ClickOn(RegisterPerson.RegisterAdministratorButton);
+        driver.WaitFor(RegisterPerson.SchoolAddressCity).SendKeys(CommonResources.GetValue("secondSchoolCity"));
+        driver.WaitFor(RegisterPerson.SchoolAddressPostalCode).SendKeys(CommonResources.GetValue("secondSchoolPostalCode"));
+        driver.WaitFor(RegisterPerson.SchoolAddressLine1Field).SendKeys(CommonResources.GetValue("secondSchoolAddress"));
+        driver.WaitFor(RegisterPerson.SchoolNameField).SendKeys(CommonResources.GetValue("secondSchoolName"));
+        driver.ClickOn(RegisterPerson.SubmitButton);
+        Assert.That(driver.HasSelect2Option(Header.SchoolSelect, CommonResources.GetValue("secondSchoolName")!));
+        driver.SelectSelect2Option(Header.SchoolSelect, CommonResources.GetValue("secondSchoolName")!);
         Assert.That(driver.WaitFor("tbody").ContainsText(CommonResources.GetValue("secondSchoolName")!));
         Assert.That(driver.WaitFor("tbody").ContainsText(CommonResources.GetValue("secondSchoolAddress")!));
         Assert.That(driver.WaitFor("tbody").ContainsText(CommonResources.GetValue("secondSchoolPostalCode")!));
-        Assert.That(driver.WaitFor("#schoolSelect").ContainsText(CommonResources.GetValue("secondSchoolName")!));
+        Assert.That(driver.WaitFor(Header.SchoolSelect).ContainsText(CommonResources.GetValue("secondSchoolName")!));
     }
 }

@@ -1,3 +1,4 @@
+using Gradebook.Tests.Selenium.Constraints.Views;
 using Gradebook.Tests.Selenium.Helpers;
 using Gradebook.Tests.Selenium.IWebDriverExtensions;
 using Gradebook.Tests.Selenium.QuickActionsExtensions;
@@ -14,20 +15,20 @@ public class RegisterAndLogin
     {
         using var driver = WebDriverBuilder.BuildWebDriver();
         driver.GoTo(ConfigurationManager.GetValue("Urls:ApplicationUrl"));
-        driver.ClickOn("a[href='/register']");
-        driver.WaitFor("#email").SendKeys(CommonResources.GetValue("email"));
-        driver.WaitFor("#password").SendKeys(CommonResources.GetValue("password"));
-        driver.WaitFor("#password2").SendKeys(CommonResources.GetValue("password"));
-        driver.WaitFor("#termsAndConditions").Click();
-        driver.ClickOn("button[type='submit']");
+        driver.ClickOn(Login.RegisterButton);
+        driver.WaitFor(Register.EmailField).SendKeys(CommonResources.GetValue("email"));
+        driver.WaitFor(Register.PasswordField).SendKeys(CommonResources.GetValue("password"));
+        driver.WaitFor(Register.Password2Field).SendKeys(CommonResources.GetValue("password"));
+        driver.WaitFor(Register.TermsAndConditionsSwitch).Click();
+        driver.ClickOn(Register.SubmitButton);
         var link = DatabaseHelper.GetActivationLinkForEmail(CommonResources.GetValue("email")!);
         driver.GoTo(link);
-        Assert.That(driver.Contains(".swal2-success-ring"));
-        driver.ClickOn(".swal2-confirm");
-        driver.WaitFor("#email").SendKeys(CommonResources.GetValue("email"));
-        driver.WaitFor("#password").SendKeys(CommonResources.GetValue("password"));
-        driver.ClickOn("button[type='submit']");
-        Assert.That(driver.Contains("#logOutButton"));
+        Assert.That(driver.Contains(Swal.SuccessRing));
+        driver.ClickOn(Swal.ConfirmButton);
+        driver.WaitFor(Login.EmailField).SendKeys(CommonResources.GetValue("email"));
+        driver.WaitFor(Login.PasswordField).SendKeys(CommonResources.GetValue("password"));
+        driver.ClickOn(Login.SubmitButton);
+        Assert.That(driver.Contains(Header.LogOutButton));
     }
     [Test]
     [Order(2)]
@@ -35,19 +36,19 @@ public class RegisterAndLogin
     {
         using var driver = WebDriverBuilder.BuildWebDriver();
         driver.Login(CommonResources.GetValue("email")!, CommonResources.GetValue("password")!);
-        driver.ClickOn("button.activateAdministrator");
-        driver.WaitFor("#name").SendKeys(CommonResources.GetValue("name")!);
-        driver.WaitFor("#surname").SendKeys(CommonResources.GetValue("surname")!);
-        driver.WaitFor("input.birthday").SelectAll().SendKeys(CommonResources.GetValue("birthday")!);
-        driver.ClickOn("button[type='submit']");
-        driver.WaitFor("#name").SendKeys(CommonResources.GetValue("schoolName")!);
-        driver.WaitFor("#addressLine1").SendKeys(CommonResources.GetValue("schoolAddress")!);
-        driver.WaitFor("#postalCode").SendKeys(CommonResources.GetValue("postalCode")!);
-        driver.WaitFor("#city").SendKeys(CommonResources.GetValue("city")!);
-        driver.ClickOn("button[type='submit']");
-        Assert.That(driver.Contains("a.nav-link[href='/account/profile']"));
+        driver.ClickOn(RegisterPerson.RegisterAdministratorButton);
+        driver.WaitFor(RegisterPerson.NameField).SendKeys(CommonResources.GetValue("name")!);
+        driver.WaitFor(RegisterPerson.SurnameField).SendKeys(CommonResources.GetValue("surname")!);
+        driver.WaitFor(RegisterPerson.BirthdayField).SelectAll().SendKeys(CommonResources.GetValue("birthday")!);
+        driver.ClickOn(RegisterPerson.SubmitButton);
+        driver.WaitFor(RegisterPerson.SchoolNameField).SendKeys(CommonResources.GetValue("schoolName")!);
+        driver.WaitFor(RegisterPerson.SchoolAddressLine1Field).SendKeys(CommonResources.GetValue("schoolAddress")!);
+        driver.WaitFor(RegisterPerson.SchoolAddressPostalCode).SendKeys(CommonResources.GetValue("postalCode")!);
+        driver.WaitFor(RegisterPerson.SchoolAddressCity).SendKeys(CommonResources.GetValue("city")!);
+        driver.ClickOn(RegisterPerson.SubmitButton);
+        Assert.That(driver.Contains(Header.AccountButton));
         Assert.That(
-            driver.WaitFor("a.nav-link[href='/account/profile']")
+            driver.WaitFor(Header.AccountButton)
             .ContainsText(CommonResources.GetValue("name")! + " " + CommonResources.GetValue("surname")!));
     }
 }
