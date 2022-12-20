@@ -85,6 +85,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 {this.props.isLoggedIn && (
                   <div className="w-auto">
                     <Button
+                      id="logOutButton"
                       variant="outline-danger"
                       onClick={async () => await this.logOut()}
                     >

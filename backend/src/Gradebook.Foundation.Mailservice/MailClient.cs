@@ -6,6 +6,7 @@ using Gradebook.Foundation.Common.Mailservice;
 using Gradebook.Foundation.Common.Settings.Commands;
 using Gradebook.Foundation.Hangfire;
 using Gradebook.Foundation.Hangfire.Messages;
+using Newtonsoft.Json;
 
 namespace Gradebook.Foundation.Mailservice;
 
@@ -35,6 +36,7 @@ public class MailClient : IMailClient
         if (string.IsNullOrEmpty(mailMessage.TargetGuid)) throw new Exception("Target not specified");
         _hangfireClient.Service.SendMessage(new SendEmailWorkerMessage()
         {
+            PayloadJson = JsonConvert.SerializeObject(mailMessage),
             From = Sender.Address,
             To = targetEmail.Address,
             Subject = mailType.Subject,
