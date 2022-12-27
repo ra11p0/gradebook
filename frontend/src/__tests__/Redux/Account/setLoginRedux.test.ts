@@ -19,6 +19,23 @@ vi.mock('axios', () => ({
   },
 }));
 
+vi.mock('@microsoft/signalr', () => ({
+  HubConnectionBuilder: vi.fn().mockImplementation(() => ({
+    withUrl: () => ({
+      withAutomaticReconnect: () => ({
+        build: () => ({
+          on: () => ({}),
+          stop: () => ({}),
+          start: () =>
+            new Promise<void>((resolve, reject) => {
+              resolve();
+            }),
+        }),
+      }),
+    }),
+  })),
+}));
+
 localStorage.setItem = vi.fn();
 
 describe('setLogInRedux', () => {
