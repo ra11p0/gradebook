@@ -46,7 +46,7 @@ def jsonSlurpLax(String jsonText){
 }
 
 def prepareAppSettings() {
-    def appsettingsTemplateText = new File(env.WORKSPACE+"/ci/appsettings.template.json").text
+    def appsettingsTemplateText = readFile env.WORKSPACE+"/ci/appsettings.template.json"
 
     println appsettingsTemplateText
 
@@ -72,7 +72,7 @@ def prepareAppSettings() {
     println jsonPrepared
     writeFile(file:'ci/appsettings.Production.json', text: jsonPrepared)
     
-    def envFileText = new File(env.WORKSPACE + '/ci/.env.template').text
+    def envFileText = readFile env.WORKSPACE + '/ci/.env.template'
     
     envFileText = envFileText.replace('{apiUrl}', params.nodeApiUrl)
     envFileText = envFileText.replace("{environment}", params.environment)
@@ -117,7 +117,6 @@ pipeline{
     
         stage('frontend install dependencies'){
             steps {
-                sh 'cd frontend; npm run cleanpp; '
                 sh 'cd frontend; npm cache clean -f; '
                 sh 'cd frontend; export NODE_OPTIONS="--max-old-space-size=2048"; npm install -f --noproxy registry.npmjs.org --maxsockets 1;'
             }
@@ -142,14 +141,11 @@ pipeline{
             parallel{
                 stage('build frontend'){
                     steps {
-                        sh 'rm -fr frontend/build/;'
                         sh 'cd frontend; export NODE_OPTIONS="--max-old-space-size=2048"; npm run build;'
                     }
                 }
                 stage('build backend'){
                     steps {
-                                  
-                        sh 'rm -fr backend/src/Api/bin/Release/net6.0/'
                         sh 'cd backend; dotnet build -c Release'
                     }
                 }
@@ -194,3 +190,4 @@ pipeline{
         }
 }
     
+
