@@ -1,10 +1,10 @@
 {
   "Browser": {
     "RunHeadless": false,
-    "Platform": "macos"
+    "Platform": "linux"
   },
   "Urls": {
     "ApplicationUrl": "http://development.gradebook.com/"
   },
-  "MysqlConnectionString": "server=127.0.0.1;port=3306;database=GradebookDB;uid=gradebook;password=gr@d3b00k;AllowUserVariables=True;"
+  "MysqlConnectionString": "server=127.0.0.1;port=3306;database=GradebookSeleniumDB;uid=gradebook;password=gr@d3b00k;AllowUserVariables=True;"
 }
