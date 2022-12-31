@@ -25,6 +25,14 @@ public static class IWebDriverExtensions
         var el = wait.Until(d => d.FindElement(By.CssSelector(cssSelector)));
         return el;
     }
+
+    public static T WaitFor<T>(this IWebDriver driver, string cssSelector, Func<IWebElement, T> waitFunc, int timeoutSeconds = 5)
+    {
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
+        var res = wait.Until(e => waitFunc(e.FindElement(By.CssSelector(cssSelector))));
+        return res;
+    }
+
     public static ReadOnlyCollection<IWebElement> WaitForMany(this IWebDriver driver, string cssSelector, int timeoutSeconds = 5)
     {
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
@@ -42,6 +50,12 @@ public static class IWebDriverExtensions
     public static IWebDriver GoTo(this IWebDriver driver, string url)
     {
         driver!.Navigate().GoToUrl(url);
+        return driver;
+    }
+
+    public static IWebDriver Refresh(this IWebDriver driver)
+    {
+        driver.Navigate().Refresh();
         return driver;
     }
 }
