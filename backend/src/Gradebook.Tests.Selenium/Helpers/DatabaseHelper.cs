@@ -1,5 +1,7 @@
 using Gradebook.Foundation.Mailservice.MailMessages;
 using Newtonsoft.Json;
+using MySql.Data.MySqlClient;
+using Dapper;
 
 namespace Gradebook.Tests.Selenium.Helpers;
 
