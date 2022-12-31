@@ -1,0 +1,168 @@
+import groovy.json.JsonSlurperClassic
+import groovy.json.*
+
+def jsonSlurpLax(String jsonText){
+    return new JsonSlurperClassic().parseText(
+        new JsonBuilder(
+            new JsonSlurper()
+                .setType(JsonParserType.LAX)
+                .parseText(jsonText)
+        )
+        .toString()
+    )
+}
+
+void setBuildStatus(String message, String state) {
+  step([
+      $class: "GitHubCommitStatusSetter",
+      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/ra11p0/gradebook"],
+      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/build-status/selenium"],
+      errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+      statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
+  ]);
+}
+
+
+def prepareAppSettings() {
+    def apiPort = '5503'
+    
+    def appsettingsTemplateText = readFile env.WORKSPACE+"/ci/appsettings.template.json"
+
+    println appsettingsTemplateText
+
+    appSettings = jsonSlurpLax(appsettingsTemplateText)
+
+    appSettings.ConnectionStrings.DefaultAppDatabase = "server="+params.dbHost+";port="+params.dbPort+";database="+params.dbName+";uid="+params.dbUid+";password="+params.dbPassword.plainText+";AllowUserVariables=True;"
+    appSettings.Urls = "http://127.0.0.1:"+apiPort
+    appSettings.JWT.ValidAudience = "http://selenium.gradebook.ra11p0dev.ovh"
+    appSettings.JWT.ValidIssuer = "http://selenium.gradebook.ra11p0dev.ovh"
+    appSettings.JWT.Secret = "eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY3MjE1NTczMiwiaWF0IjoxNjcyMTU1NzMyfQ"
+
+    //  smtp configuration
+    appSettings.smtp.host = 'localhost'
+    appSettings.smtp.port = '2525'
+    appSettings.smtp.username = ''
+    appSettings.smtp.password =  ''
+    appSettings.smtp.defaultSender = 'no-reply@gradebook.ovh'
+    appSettings.smtp.defaultSenderName = 'Gradebook'
+    appSettings.TargetUrl = "http://selenium.gradebook.ra11p0dev.ovh"
+
+    def jsonPrepared = new JsonBuilder(appSettings).toPrettyString()
+
+    println jsonPrepared
+    writeFile(file:'ci/appsettings.Production.json', text: jsonPrepared)
+    
+    def envFileText = readFile env.WORKSPACE + '/ci/.env.template'
+    
+    envFileText = envFileText.replace('{apiUrl}', "http://selenium.gradebook.ra11p0dev.ovh/api")
+    envFileText = envFileText.replace("{environment}", 'PROD')
+    envFileText = envFileText.replace("{port}", apiPort)
+    if( params.environment == 'PRODUCTION') envFileText = envFileText.replace("{build}", '')
+    else envFileText = envFileText.replace("{build}", env.BUILD_TAG)
+
+    println envFileText
+
+    writeFile(file:'ci/.env', text: envFileText)
+}
+
+pipeline {
+    agent { label 'acer' }
+    stages {
+        stage('prepare') {
+            steps {
+                slackSend color: "good", message: "Job ${BUILD_TAG} started."
+                script {
+                    System.setProperty("org.jenkinsci.plugins.durabletask.BourneShellScript.HEARTBEAT_CHECK_INTERVAL", "86400");
+                }
+                checkout([$class: 'GitSCM', branches: [[name:  params.gitBranchPattern]], extensions: [], userRemoteConfigs: [[url: 'https://github.com/ra11p0/gradebook.git']]])
+                script{
+                    def dbPass = params.dbPassword.plainText
+                    sh "sudo docker exec mysql mysql -u ${params.dbUid} --password="+ dbPass +" -e 'DROP DATABASE IF EXISTS ${params.dbName};'"       
+                }
+            }
+        }  
+        stage('prepare appsettings and .env') {
+            steps {
+                prepareAppSettings()
+                
+                sh 'cp -f ./ci/.env ./frontend/'
+                sh 'cp -f ./ci/appsettings.Production.json ./backend/src/Api/appsettings.Production.json'
+                sh 'cp -f ./ci/appsettings.Production.json ./backend/src/Gradebook.Foundation.Identity/appsettings.json'
+                sh 'cp -f ./ci/appsettings.Production.json ./backend/src/Gradebook.Foundation.Database/appsettings.json'
+                sh 'cp -f ./ci/appsettings.Production.json ./backend/src/Gradebook.Permissions.Database/appsettings.json'
+                sh 'cp -f ./ci/appsettings.Production.json ./backend/src/Gradebook.Settings.Database/appsettings.json '
+            }
+        }
+    
+        stage('frontend install dependencies'){
+            steps {
+                sh 'cd frontend; npm cache clean -f;'
+                sh 'cd frontend; npm install'
+            }
+        }
+        
+        stage('build'){
+            parallel{
+                stage('build frontend'){
+                    steps {
+                        sh 'cd frontend; export NODE_OPTIONS="--max-old-space-size=2048"; npm run build;'
+                    }
+                }
+                stage('build backend'){
+                    steps {
+                        sh 'cd backend; dotnet build -c Release'
+                    }
+                }
+            }
+        }
+        stage('migrate databases'){
+            steps {
+                sh 'cd backend/src/Gradebook.Foundation.Identity; dotnet run'
+                sh 'cd backend/src/Gradebook.Foundation.Database; dotnet run'
+                sh 'cd backend/src/Gradebook.Permissions.Database; dotnet run'
+                sh 'cd backend/src/Gradebook.Settings.Database; dotnet run'
+            }
+        }
+
+        stage('deploy'){
+            steps{
+                sh 'rm -fr release; mkdir release;'
+                sh 'cp -r frontend/build/ release/public'
+                sh 'cp -r backend/src/Api/bin/Release/net6.0/ release/api'
+                sh 'sudo systemctl restart kestrel-${JOB_NAME}'
+            }
+        }
+        
+        stage('automatic tests'){
+            steps{
+                script{
+                    def appsettingsTemplateText = readFile env.WORKSPACE+"/backend/src/Gradebook.Tests.Selenium/testsettings.json"
+                    
+                    appSettings = jsonSlurpLax(appsettingsTemplateText)
+                    
+                    appSettings.Browser.RunHeadless = true
+                    appSettings.Browser.Platform = 'linux'
+                    appSettings.Urls.ApplicationUrl = "http://selenium.gradebook.ra11p0dev.ovh/"
+                    appSettings.MysqlConnectionString = "server="+params.dbHost+";port="+params.dbPort+";database="+params.dbName+";uid="+params.dbUid+";password="+params.dbPassword.plainText+";AllowUserVariables=True;"
+                    
+                    
+                    def jsonPrepared = new JsonBuilder(appSettings).toPrettyString()
+                    println jsonPrepared
+                    writeFile(file:env.WORKSPACE+'/backend/src/Gradebook.Tests.Selenium/testsettings.json', text: jsonPrepared)
+                }
+                sh 'cd backend; dotnet test --filter TestCategory=Selenium'
+            }
+        }
+   
+    }
+    post{
+            success{
+                setBuildStatus("Build succeeded", "SUCCESS");
+                slackSend color: "good", message: "Job ${BUILD_TAG} tested successfully."
+            }
+            failure{
+                setBuildStatus("Build failed", "FAILURE");
+                slackSend color: "danger", message: "Job ${BUILD_TAG} failed."
+            }
+    }
+}
