@@ -7,13 +7,6 @@ namespace Gradebook.Tests.Selenium.Tests.Permissions;
 [Order(3)]
 public class Permissions
 {
-    [SetUp]
-    public void Setup()
-    {
-
-        _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
-        _actions = new(_driver);
-    }
     [Test]
     [Order(1)]
     public void CanSetOwnPermission()
