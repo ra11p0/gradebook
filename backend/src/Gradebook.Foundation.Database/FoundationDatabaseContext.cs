@@ -63,4 +63,8 @@ public class FoundationDatabaseContext : DbContext
             );
         }
     }
+    public async Task Migrate()
+    {
+        await this.Database.MigrateAsync();
+    }
 }

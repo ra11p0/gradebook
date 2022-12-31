@@ -35,10 +35,11 @@ public class SendEmailWorker : BaseHangfireWorker<SendEmailWorkerMessage>
         client.Send(mailMessage);
         await _foundationDbContext.Service.MailHistory!.AddAsync(new Email()
         {
-            From = message.From!,
-            To = message.To!,
-            Subject = message.Subject!,
-            Message = message.Message!
+            PayloadJson = message.PayloadJson ?? "",
+            From = message.From ?? "",
+            To = message.To ?? "",
+            Subject = message.Subject ?? "",
+            Message = message.Message ?? ""
         });
         await _foundationDbContext.Service.SaveChangesAsync();
     }

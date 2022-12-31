@@ -1,4 +1,3 @@
-using Gradebook.Foundation.Common.Foundation;
 using Gradebook.Foundation.Domain;
 using Gradebook.Permissions.Domain.Models;
 using Microsoft.EntityFrameworkCore;
@@ -42,5 +41,10 @@ public class PermissionsDatabaseContext : DbContext
                 e => e.MigrationsHistoryTable("__PermissionsMigrationsHistory")
             );
         }
+    }
+
+    public async Task Migrate()
+    {
+        await this.Database.MigrateAsync();
     }
 }

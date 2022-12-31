@@ -70,6 +70,7 @@
     ]
   },
   "devDependencies": {
+    "jsdom": "^20.0.3",
     "@redux-devtools/core": "^3.13.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",

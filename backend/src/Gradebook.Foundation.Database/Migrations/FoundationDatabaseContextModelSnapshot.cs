@@ -16,7 +16,7 @@ namespace Gradebook.Foundation.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.11")
+                .HasAnnotation("ProductVersion", "6.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("ClassStudent", b =>
@@ -531,6 +531,10 @@ namespace Gradebook.Foundation.Database.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PayloadJson")
                         .IsRequired()
                         .HasColumnType("longtext");
 

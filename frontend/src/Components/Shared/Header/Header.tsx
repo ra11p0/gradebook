@@ -60,13 +60,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                           {t('dashboard')}
                         </Link>
                         <LoadingScreen isReady={!!this.props.currentPerson}>
-                          <>
+                          {this.props.currentPerson && (
                             <Link to="/account/profile" className="nav-link">
-                              {`${this.props.currentPerson!.name} ${
-                                this.props.currentPerson!.surname
-                              }`}
+                              {`${this.props.currentPerson.name} ${this.props.currentPerson.surname}`}
                             </Link>
-                          </>
+                          )}
                         </LoadingScreen>
                       </>
                     )}
@@ -85,6 +83,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 {this.props.isLoggedIn && (
                   <div className="w-auto">
                     <Button
+                      id="logOutButton"
                       variant="outline-danger"
                       onClick={async () => await this.logOut()}
                     >

@@ -9,4 +9,5 @@ public class Email : BaseDomainModel
     public DateTime SendDateTime { get; set; } = Time.UtcNow;
     public string Subject { get; set; } = string.Empty;
     public string Message { get; set; } = string.Empty;
+    public string PayloadJson { get; set; } = string.Empty;
 }

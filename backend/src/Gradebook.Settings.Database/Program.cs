@@ -1,7 +1,3 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Gradebook.Settings.Database;
 
-var builder = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json");
-var config = builder.Build();
-var _ = config.GetConnectionString("DefaultAppDatabase");
+await new SettingsDatabaseContext().Migrate();
