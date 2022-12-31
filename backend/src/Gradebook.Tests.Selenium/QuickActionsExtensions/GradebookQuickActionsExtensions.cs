@@ -69,17 +69,15 @@ public static class GradebookQuickActionsExtensions
     }
     public static IWebDriver AddNewStudent(this IWebDriver driver, string studentName, string studentSurname, string studentBirthday)
     {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
         driver.GoToGradebookHomepage();
-        wait.Until(d => d.FindElement(By.CssSelector("a[href='/manageStudents']"))).Click();
-        wait.Until(d => d.FindElement(By.CssSelector("button.addNewStudentButton"))).Click();
-        wait.Until(d => d.FindElement(By.CssSelector("input[name='name']"))).SendKeys(studentName);
-        driver!.FindElement(By.CssSelector("input[name='surname']")).SendKeys(studentSurname);
-        driver!.FindElement(By.CssSelector("input.birthday")).SendKeys(Keys.Control + 'a' + Keys.Delete);
-        driver!.FindElement(By.CssSelector("input.birthday")).SendKeys(studentBirthday);
-        driver.FindElement(By.CssSelector("button[type='submit']")).Click();
-        wait.Until(d => d.FindElement(By.XPath($"//div[text()='{studentName}']")));
-        wait.Until(d => d.FindElement(By.XPath($"//div[text()='{studentSurname}']")));
+        driver.ClickOn("a[href='/dashboard/manageStudents']");
+        driver.ClickOn("button.addNewStudentButton");
+        driver.WaitFor("input[name='name']").SendKeys(studentName);
+        driver.WaitFor("input[name='surname']").SendKeys(studentSurname);
+        driver.WaitFor("input.birthday").SelectAll().SendKeys(studentBirthday);
+        driver.ClickOn("button[type='submit']");
+        Assert.That(driver.WaitFor("tbody").ContainsText(studentName));
+        Assert.That(driver.WaitFor("tbody").ContainsText(studentSurname));
         driver.GoToGradebookHomepage();
         return driver;
     }

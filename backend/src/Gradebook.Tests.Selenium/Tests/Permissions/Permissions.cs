@@ -14,7 +14,6 @@ public class Permissions
         using var driver = WebDriverBuilder.BuildWebDriver();
 
         driver.Login(CommonResources.GetValue("email")!, CommonResources.GetValue(key: "password")!);
-        driver.AddNewStudent("Mikołaj", "Lubuszczyk", "02.02.2002");
 
         driver.ClickOn("a[href='/account/profile']");
         driver.ClickOn("a.permissions");
@@ -27,7 +26,7 @@ public class Permissions
         driver.ClickOn("li[data-value='1']");
         driver.ClickOn(".savePermissionsButton");
 
-        Assert.That(driver.WaitFor(".rnc__notification-item--success").Displayed);
+        Assert.That(driver.Contains(".rnc__notification-item--success"));
 
         driver.Refresh();
         driver.ClickOn("button.administrationPermissions");
@@ -38,7 +37,7 @@ public class Permissions
         driver.ClickOn("li[data-value='2']");
         driver.ClickOn(".savePermissionsButton");
 
-        Assert.That(driver.WaitFor(".rnc__notification-item--success").Displayed);
+        Assert.That(driver.Contains(".rnc__notification-item--success"));
 
         driver.Refresh();
 
@@ -54,8 +53,9 @@ public class Permissions
 
         driver.Login(CommonResources.GetValue("email")!, CommonResources.GetValue(key: "password")!);
         driver.AddNewStudent("Mikołaj", "Lubuszczyk", "02.02.2002");
+
         driver.ClickOn("a[href='/dashboard/manageStudents']");
-        driver.ClickOn("button.showProfileButton");
+        driver.ClickOn("tbody tr");
         driver.ClickOn("a.permissions");
         driver.ClickOn("button.administrationPermissions");
         driver.ClickOn("div.permission_1.row .MuiSelect-select");
@@ -67,7 +67,7 @@ public class Permissions
         driver.ClickOn("li[data-value='1']");
         driver.ClickOn(".savePermissionsButton");
 
-        Assert.That(driver.WaitFor(".rnc__notification-item--success").Displayed);
+        Assert.That(driver.Contains(".rnc__notification-item--success"));
 
         driver.Refresh();
         driver.ClickOn("button.administrationPermissions");
@@ -78,11 +78,10 @@ public class Permissions
         driver.ClickOn("li[data-value='2']");
         driver.ClickOn(".savePermissionsButton");
 
-        Assert.That(driver.WaitFor(".rnc__notification-item--success").Displayed);
+        Assert.That(driver.Contains(".rnc__notification-item--success"));
 
         driver.Refresh();
         driver.ClickOn("button.administrationPermissions");
-
 
         Assert.That(driver.WaitFor("div.permission_1.row .MuiSelect-select", e => e.Text != permissionText));
     }
