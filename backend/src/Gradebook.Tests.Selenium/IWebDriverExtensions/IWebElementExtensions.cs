@@ -19,6 +19,16 @@ public static class IWebElementExtensions
     }
     public static bool ContainsText(this IWebElement el, string innerText)
     {
-        return el.GetAttribute("innerText").Contains(innerText);
+        const int timeoutLimit = 5;
+        int timeout = 0;
+        var contains = false;
+        do
+        {
+            contains = el.GetAttribute("innerText").Contains(innerText);
+            timeout++;
+            if (timeout > timeoutLimit) break;
+            Thread.Sleep(1000);
+        } while (!contains);
+        return contains;
     }
 }

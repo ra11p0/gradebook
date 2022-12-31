@@ -1,4 +1,6 @@
+using Gradebook.Tests.Selenium.Constraints.Views;
 using Gradebook.Tests.Selenium.IWebDriverExtensions;
+using LoginView = Gradebook.Tests.Selenium.Constraints.Views.Login;
 
 namespace Gradebook.Tests.Selenium.QuickActionsExtensions;
 
@@ -13,20 +15,22 @@ public static class GradebookQuickActionsExtensions
     public static IWebDriver Login(this IWebDriver driver, string email, string password)
     {
         driver.GoToGradebookHomepage();
-        driver.WaitFor("#email").SendKeys(email);
-        driver.WaitFor("#password").SendKeys(password);
-        driver.ClickOn("button[type='submit']");
-        driver.WaitFor("#logOutButton");
+        driver.WaitFor(LoginView.EmailField).SendKeys(email);
+        driver.WaitFor(LoginView.PasswordField).SendKeys(password);
+        driver.ClickOn(LoginView.SubmitButton);
+        driver.WaitFor(Header.LogOutButton);
         return driver;
     }
     public static IWebDriver Logout(this IWebDriver driver)
     {
         driver.GoToGradebookHomepage();
-        driver.ClickOn("#logOutButton");
+        driver.ClickOn(Header.LogOutButton);
         return driver;
     }
     public static IWebDriver Register(this IWebDriver driver, string email, string password)
     {
+        // nowe akcje drivera
+        /*
         driver.GoToGradebookHomepage();
 
         //  Login form view
@@ -46,7 +50,7 @@ public static class GradebookQuickActionsExtensions
         password2.SendKeys(password);
         submitButton.Click();
 
-        wait.Until(drv => drv.FindElement(By.CssSelector(".swal2-confirm.swal2-styled")));
+        wait.Until(drv => drv.FindElement(By.CssSelector(".swal2-confirm.swal2-styled")));*/
         return driver;
     }
     public static IWebDriver GoToGradebookHomepage(this IWebDriver driver)
