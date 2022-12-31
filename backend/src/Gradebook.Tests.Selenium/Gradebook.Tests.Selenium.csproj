@@ -40,5 +40,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Gradebook.Foundation.Domain\Gradebook.Foundation.Domain.csproj" />
     <ProjectReference Include="..\Gradebook.Foundation.Mailservice\Gradebook.Foundation.Mailservice.csproj" />
+    <ProjectReference Include="..\Gradebook.Foundation.Common\Gradebook.Foundation.Common.csproj" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,4 @@
-using Dapper;
 using Gradebook.Foundation.Mailservice.MailMessages;
-using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 
 namespace Gradebook.Tests.Selenium.Helpers;
@@ -17,7 +15,7 @@ public static class DatabaseHelper
                 AND `To` LIKE @email", new { scanSince, email });
         var message = JsonConvert.DeserializeObject<ActivateAccountMailMessage>(jsonString);
         string url = ConfigurationManager.GetValue("Urls:ApplicationUrl");
-        return $"{url}service/account/{message!.PersonGuid}/activation/{message!.AuthCode}";
+        return $"{url}service/account/{message!.TargetGuid}/activation/{message!.AuthCode}";
     }
 
     private static T ScanDatabase<T>(string query, object? values = null, int timeoutInSeconds = 30)
