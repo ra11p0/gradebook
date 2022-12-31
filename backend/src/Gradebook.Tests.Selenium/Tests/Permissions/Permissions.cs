@@ -6,7 +6,7 @@ namespace Gradebook.Tests.Selenium.Tests.Permissions;
 [Category("Selenium")]
 [Order(3)]
 public class Permissions
-{
+{.
     [Test]
     [Order(1)]
     public void CanSetOwnPermission()
