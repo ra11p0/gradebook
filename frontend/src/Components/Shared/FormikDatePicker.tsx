@@ -38,7 +38,7 @@ function FormikDatePicker({
       <ReactDatePicker
         minDate={minDate}
         maxDate={maxDate}
-        data-testid={testId}
+        data-testid={testId ?? id ?? name}
         id={id ?? name}
         name={name}
         selected={_.get(formik.values, name)}

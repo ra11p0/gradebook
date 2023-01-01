@@ -48,7 +48,7 @@ function ChangePasswordLoggedIn(props: Props): ReactElement {
             .then(async (resp) => {
               await Swal.fire({
                 icon: 'success',
-                titleText: t('passwordChanged'),
+                title: t('passwordChanged'),
               });
               props.onRequestCompleted();
             })

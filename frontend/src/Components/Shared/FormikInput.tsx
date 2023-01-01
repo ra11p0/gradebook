@@ -34,7 +34,7 @@ function FormikInput(
             return (
               <>
                 <Form.Check
-                  data-testid={props.testId}
+                  data-testid={props.testId ?? props.id ?? props.name}
                   type="switch"
                   id={props.id ?? props.name}
                   name={props.name}
@@ -74,7 +74,7 @@ function FormikInput(
                   {props.label ?? props.name}
                 </Form.Label>
                 <Form.Control
-                  data-testid={props.testId}
+                  data-testid={props.testId ?? props.id ?? props.name}
                   className="form-control"
                   id={props.id ?? props.name}
                   name={props.name}
