@@ -54,7 +54,7 @@ class ActivateAccount extends React.Component<
                   {!this.state.role && (
                     <>
                       <Row className="text-center">
-                        <div>{t('iAmA...')}</div>
+                        <div>{t('iAmA')}</div>
                       </Row>
                       <Row>
                         <Col>
@@ -134,6 +134,6 @@ export default withTranslation('activateAccount')(
       isUserLoggedIn: getIsLoggedInReduxProxy(state),
       isUserActivated: getIsUserActivatedReduxProxy(state),
     }),
-    (dispatch: any) => ({})
+    () => ({})
   )(ActivateAccount)
 );

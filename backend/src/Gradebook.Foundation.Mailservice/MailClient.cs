@@ -40,9 +40,9 @@ public class MailClient : IMailClient
             From = Sender.Address,
             To = targetEmail.Address,
             Subject = mailType.Subject,
-            Message = htmlString
+            Message = htmlString,
+            MessageType = mailMessage.GetType().Name
         });
-
     }
     private async Task<MailAddress> GetTargetEmail(string userGuid)
     {

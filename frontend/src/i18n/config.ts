@@ -86,6 +86,7 @@ await i18n.init({
         './locales/en/EducationCycle/educationCyclesPicker.json'
       ),
       classPicker: await import('./locales/en/Shared/classPicker.json'),
+      changePassword: await import('./locales/en/Account/changePassword.json'),
     },
     pl: {
       common: await import('./locales/pl/common.json'),
@@ -168,6 +169,7 @@ await i18n.init({
         './locales/pl/EducationCycle/educationCyclesPicker.json'
       ),
       classPicker: await import('./locales/pl/Shared/classPicker.json'),
+      changePassword: await import('./locales/pl/Account/changePassword.json'),
     },
   },
   ns: [
@@ -207,6 +209,7 @@ await i18n.init({
     'configureEducationCycleForm',
     'educationCycles',
     'educationCyclesPicker',
+    'changePassword',
   ],
   defaultNS: 'common',
 });

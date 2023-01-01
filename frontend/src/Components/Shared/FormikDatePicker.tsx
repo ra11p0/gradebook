@@ -6,6 +6,7 @@ import getApplicationLanguageRedux from '../../Redux/ReduxQueries/account/getApp
 import { GlobalState } from '../../store';
 
 export interface FormikDatePickerProps {
+  id?: string;
   minDate?: Date;
   maxDate?: Date;
   locale: string;
@@ -30,6 +31,7 @@ function FormikDatePicker({
   testId,
   minDate,
   maxDate,
+  id,
 }: FormikDatePickerProps): ReactElement {
   return (
     <>
@@ -37,7 +39,7 @@ function FormikDatePicker({
         minDate={minDate}
         maxDate={maxDate}
         data-testid={testId}
-        id={name}
+        id={id ?? name}
         name={name}
         selected={_.get(formik.values, name)}
         className={`form-control ${

@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import AccountProxy from '../../../ApiClient/Accounts/AccountsProxy';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-bootstrap';
@@ -11,6 +11,8 @@ import FormikInput from '../../Shared/FormikInput';
 import * as yup from 'yup';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Swal from 'sweetalert2';
+import { Link } from '@mui/material';
+import ChangePasswordModal from '../ChangePassword/ChangePasswordModal';
 
 function LoginForm(): ReactElement {
   const { t } = useTranslation('loginForm');
@@ -73,9 +75,7 @@ function LoginForm(): ReactElement {
                 formik={formik}
               />
               <div className="text-end fs-7">
-                <Link className="text-secondary" to={''}>
-                  {t('forgotPassword')}
-                </Link>
+                <ForgotPasswordSection />
               </div>
               <div className="text-center">
                 <LoadingButton
@@ -94,10 +94,30 @@ function LoginForm(): ReactElement {
       </div>
       <p className="text-center ">
         {t('dontHaveAccount')} &nbsp;
-        <Link className="text-secondary" to={'register'}>
+        <RouterLink className="text-secondary" to={'register'}>
           {t('register')}
-        </Link>
+        </RouterLink>
       </p>
+    </>
+  );
+}
+
+function ForgotPasswordSection(): ReactElement {
+  const { t } = useTranslation('loginForm');
+  const [changePasswordModalVisible, setChangePasswordModalVisible] =
+    useState(false);
+  return (
+    <>
+      <ChangePasswordModal
+        show={changePasswordModalVisible}
+        onHide={() => setChangePasswordModalVisible(false)}
+      />
+      <Link
+        className="text-secondary cursor-pointer"
+        onClick={() => setChangePasswordModalVisible(true)}
+      >
+        {t('forgotPassword')}
+      </Link>
     </>
   );
 }

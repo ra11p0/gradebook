@@ -8,5 +8,6 @@
   "success": "Success",
   "permissionsSaved": "Permissions saved",
   "User already exists!": "User already exists!",
-  "changesSaved": "Changes saved!"
+  "changesSaved": "Changes saved!",
+  "UnknownEmailAddress": "Unknown email address"
 }

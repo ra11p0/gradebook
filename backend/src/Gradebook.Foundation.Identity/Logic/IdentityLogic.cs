@@ -257,4 +257,16 @@ public class IdentityLogic : IIdentityLogic
         await _userManager.Service.UpdateAsync(user);
         return new StatusResponse(true);
     }
+
+    public async Task<StatusResponse> RemindPassword(string email)
+    {
+        using var transaction = await _identityContext.Service.Database.BeginTransactionAsync();
+        var user = await _userManager.Service.FindByEmailAsync(email);
+        if (user is null)
+            return new StatusResponse(message: "UnknownEmailAddress");
+        var authCode = await CreateAuthCodeForUser(user.Id);
+        if (!authCode.Status) return new StatusResponse(authCode.Message);
+        await transaction.CommitAsync();
+        return new StatusResponse(true);
+    }
 }

@@ -1,6 +1,7 @@
 {
   "yes": "Yes",
   "no": "No",
+  "email": "Email address",
   "noResults": "No results",
   "noMoreResults": "No more results",
   "loading": "Loading",
@@ -18,5 +19,6 @@
   "fieldNumberOnly": "Field must contain digits only",
   "createdDate": "Created date",
   "creator": "Creator",
-  "confirm": "Confirm"
+  "confirm": "Confirm",
+  "emailInvalid": "Invalid email address"
 }

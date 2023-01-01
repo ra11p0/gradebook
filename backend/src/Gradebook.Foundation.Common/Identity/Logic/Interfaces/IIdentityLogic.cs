@@ -23,5 +23,6 @@ public interface IIdentityLogic
     Task<ResponseWithStatus<string>> CreateAuthCodeForUser(string userId);
     Task<StatusResponse> UseAuthCode(string userId, string code);
     Task<StatusResponse> IsAuthCodeValid(string userId, string code);
+    Task<StatusResponse> RemindPassword(string email);
     void SaveDatabaseChanges();
 }

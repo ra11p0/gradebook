@@ -78,7 +78,6 @@ export default (
         user: undefined,
         permissions: undefined,
         person: undefined,
-        language: undefined,
       };
     case ActionType.SetSchool:
       return {

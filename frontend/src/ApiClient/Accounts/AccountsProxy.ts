@@ -24,6 +24,12 @@ async function logIn(
   });
 }
 
+async function forgotPassword(email: string): Promise<AxiosResponse<string>> {
+  return await axios.post(`${API_URL}/Account/RemindPassword`, email, {
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
+
 async function register(request: RegisterRequest): Promise<AxiosResponse<any>> {
   const language = getApplicationLanguageRedux();
   return await axios.post(API_URL + '/Account/register', request, {
@@ -102,6 +108,7 @@ export default {
   logIn,
   refreshAccessToken,
   register,
+  forgotPassword,
   settings: {
     setLanguage,
     setSettings,
