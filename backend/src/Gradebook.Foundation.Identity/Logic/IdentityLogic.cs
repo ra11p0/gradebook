@@ -263,7 +263,7 @@ public class IdentityLogic : IIdentityLogic
         using var transaction = await _identityContext.Service.Database.BeginTransactionAsync();
         var user = await _userManager.Service.FindByEmailAsync(email);
         if (user is null)
-            return new StatusResponse(message: "UnknownEmailAddress");
+            return new StatusResponse(404, message: "UnknownEmailAddress");
         var authCode = await CreateAuthCodeForUser(user.Id);
         if (!authCode.Status) return new StatusResponse(authCode.Message);
         await _mailClient.Service.SendMail(new RemindPasswordMailMessage(user.Id, authCode.Response!));
@@ -287,6 +287,7 @@ public class IdentityLogic : IIdentityLogic
 
     public async Task<StatusResponse> SetNewPasswordAuthorized(string password, string confirmPassword, string oldPassword)
     {
+        if (password != confirmPassword) return new StatusResponse("PasswordsNotTheSame");
         var user = await _userManager.Service.FindByIdAsync(_context.UserId);
         if (!(user != null && await _userManager.Service.CheckPasswordAsync(user, oldPassword)))
             return new StatusResponse(403);

@@ -20,17 +20,13 @@ using Gradebook.Foundation.Common.Hangfire;
 using Gradebook.Foundation.Hangfire.Messages;
 using Gradebook.Foundation.Hangfire.Workers;
 using Gradebook.Foundation.Tests.Utils;
+using Gradebook.Foundation.Database;
 
 namespace Gradebook.Foundation.Tests.Identity;
 
 [Category("Unit")]
 public class IdentityLogic
 {
-    #region const
-    private const string HOST = "fakeHost";
-    private const int PORT = 25;
-    private const string SENDER = "fakeSender@sender.com";
-    #endregion
     private ServiceCollection _serviceCollection
     {
         get
@@ -47,6 +43,11 @@ public class IdentityLogic
             services.AddScoped<BaseHangfireWorker<SendEmailWorkerMessage>, SendEmailWorker>();
             services.AddScoped<Context>();
             services.AddDbContext<ApplicationIdentityDatabaseContext>(o =>
+                {
+                    o.UseInMemoryDatabase("fakeDb");
+                    o.ConfigureWarnings(e => e.Ignore(InMemoryEventId.TransactionIgnoredWarning));
+                });
+            services.AddDbContext<FoundationDatabaseContext>(o =>
                 {
                     o.UseInMemoryDatabase("fakeDb");
                     o.ConfigureWarnings(e => e.Ignore(InMemoryEventId.TransactionIgnoredWarning));

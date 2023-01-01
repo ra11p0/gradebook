@@ -19,6 +19,6 @@ public class FakeHangfireClient : IHangfireClient
         message.Context = _context;
         var worker = _serviceProvider.GetResolver<BaseHangfireWorker<I>>().Service;
         if (worker is null) throw new Exception("Message worker not found!");
-        worker.DoJobWithContext(message).GetAwaiter();
+        worker.DoJobWithContext(message).GetAwaiter().GetResult();
     }
 }
