@@ -21,7 +21,7 @@ public class RegisterAndLogin
         driver.WaitFor(Register.Password2Field).SendKeys(CommonResources.GetValue("password"));
         driver.WaitFor(Register.TermsAndConditionsSwitch).Click();
         driver.ClickOn(Register.SubmitButton);
-        var link = DatabaseHelper.GetActivationLinkForEmail(CommonResources.GetValue("email")!);
+        var link = DatabaseHelper.GetActivationLinkFromEmail(CommonResources.GetValue("email")!);
         driver.GoTo(link);
         Assert.That(driver.Contains(Swal.SuccessRing));
         driver.ClickOn(Swal.ConfirmButton);

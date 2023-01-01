@@ -1,5 +1,7 @@
+using Gradebook.Tests.Selenium.Constraints.Views.Dashboard;
 using Gradebook.Tests.Selenium.IWebDriverExtensions;
 using Gradebook.Tests.Selenium.QuickActionsExtensions;
+using StudentsView = Gradebook.Tests.Selenium.Constraints.Views.Dashboard.Students;
 
 namespace Gradebook.Tests.Selenium.Tests.Students;
 
@@ -23,8 +25,8 @@ public class StudentsAndInvitations
     {
         using var driver = WebDriverBuilder.BuildWebDriver();
         driver.Login(CommonResources.GetValue("email")!, CommonResources.GetValue(key: "password")!);
-        driver.ClickOn("a[href='/dashboard/manageStudents']");
-        driver.ClickOn("button.addNewStudentButton");
+        driver.ClickOn(Common.ManageStudentsButton);
+        driver.ClickOn(StudentsView.NewStudentButton);
         driver.WaitFor("input[name='name']").SendKeys(_storage["studentName"]);
         driver.WaitFor("input[name='surname']").SendKeys(_storage["studentSurname"]);
         driver.WaitFor("input.birthday").ClearElement().SendKeys(_storage["studentBirthday"]);

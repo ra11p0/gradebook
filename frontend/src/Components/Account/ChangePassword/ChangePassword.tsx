@@ -8,7 +8,9 @@ function ChangePassword(): ReactElement {
   const { t } = useTranslation('settings');
   return (
     <>
-      <Button onClick={() => setShowModal(true)}>{t('changePassword')}</Button>
+      <Button test-id="changeSchoolButton" onClick={() => setShowModal(true)}>
+        {t('changePassword')}
+      </Button>
       <ChangePasswordModal
         show={showModal}
         onHide={() => setShowModal(false)}

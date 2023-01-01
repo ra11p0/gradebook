@@ -114,6 +114,7 @@ function ForgotPasswordSection(): ReactElement {
       />
       <Link
         className="text-secondary cursor-pointer"
+        test-id="forgotPassword"
         onClick={() => setChangePasswordModalVisible(true)}
       >
         {t('forgotPassword')}
