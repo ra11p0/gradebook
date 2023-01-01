@@ -157,9 +157,16 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("SetNewPassword/{userId}/{authCode}/")]
-    public async Task<ObjectResult> RemindPassword([FromBody] SetNewPasswordModel model, [FromRoute] string authCode, [FromRoute] string userId)
+    public async Task<ObjectResult> SetNewPassword([FromBody] SetNewPasswordModel model, [FromRoute] string authCode, [FromRoute] string userId)
     {
         return (await _identityLogic.Service.SetNewPassword(userId, authCode, model.Password!, model.ConfirmPassword!)).ObjectResult;
+    }
+
+    [HttpPost("SetNewPassword")]
+    [Authorize]
+    public async Task<ObjectResult> SetNewPasswordAuthorized([FromBody] SetNewPasswordAuthorizedModel model)
+    {
+        return (await _identityLogic.Service.SetNewPasswordAuthorized(model.Password!, model.ConfirmPassword!, model.OldPassword!)).ObjectResult;
     }
     #endregion
 

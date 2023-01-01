@@ -3,6 +3,7 @@ import { Col, ListGroup, Row } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import getCurrentUserIdReduxProxy from '../../../../../Redux/ReduxQueries/account/getCurrentUserIdRedux';
+import ChangePassword from '../../../../Account/ChangePassword/ChangePassword';
 import DefaultSchoolSetting from './Settings/DefaultSchoolSetting';
 
 interface Props {
@@ -24,6 +25,17 @@ function AccountSettingsIndex(props: Props): ReactElement {
             <Col>{t('defaultSchoolDescription')}</Col>
             <Col>
               <DefaultSchoolSetting formik={props.formik} />
+            </Col>
+          </Row>
+        </ListGroup.Item>
+        <ListGroup.Item>
+          <Row>
+            <Col className="my-auto">
+              <div className="">{t('changePassword')}</div>
+            </Col>
+            <Col>{t('changePasswordDescription')}</Col>
+            <Col className="d-flex justify-content-end">
+              <ChangePassword />
             </Col>
           </Row>
         </ListGroup.Item>

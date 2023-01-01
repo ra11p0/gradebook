@@ -42,6 +42,18 @@ async function setNewPassword(
   );
 }
 
+async function setNewPasswordAuthorized(
+  password: string,
+  confirmPassword: string,
+  oldPassword: string
+): Promise<AxiosResponse<string>> {
+  return await axiosApiAuthorized.post(`${API_URL}/Account/SetNewPassword`, {
+    password,
+    confirmPassword,
+    oldPassword,
+  });
+}
+
 async function register(request: RegisterRequest): Promise<AxiosResponse<any>> {
   const language = getApplicationLanguageRedux();
   return await axios.post(API_URL + '/Account/register', request, {
@@ -122,6 +134,7 @@ export default {
   register,
   forgotPassword,
   setNewPassword,
+  setNewPasswordAuthorized,
   settings: {
     setLanguage,
     setSettings,

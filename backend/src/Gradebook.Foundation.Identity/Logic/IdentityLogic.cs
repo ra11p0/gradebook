@@ -284,4 +284,14 @@ public class IdentityLogic : IIdentityLogic
         await transaction.CommitAsync();
         return new StatusResponse(true);
     }
+
+    public async Task<StatusResponse> SetNewPasswordAuthorized(string password, string confirmPassword, string oldPassword)
+    {
+        var user = await _userManager.Service.FindByIdAsync(_context.UserId);
+        if (!(user != null && await _userManager.Service.CheckPasswordAsync(user, oldPassword)))
+            return new StatusResponse(403);
+        await _userManager.Service.RemovePasswordAsync(user);
+        await _userManager.Service.AddPasswordAsync(user, password);
+        return new StatusResponse(200);
+    }
 }

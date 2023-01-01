@@ -24,5 +24,6 @@
   "Teacher": "Nauczyciel",
   "Student": "Uczeń",
   "confirm": "Potwierdź",
-  "submit": "Wyślij"
+  "submit": "Wyślij",
+  "wrongPassword": "Niepoprawne hasło"
 }

@@ -20,5 +20,6 @@
   "createdDate": "Created date",
   "creator": "Creator",
   "confirm": "Confirm",
-  "emailInvalid": "Invalid email address"
+  "emailInvalid": "Invalid email address",
+  "wrongPassword": "Wrong password"
 }

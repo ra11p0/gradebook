@@ -20,5 +20,8 @@
   "termsAndConditions": "I accept terms and conditions.",
   "exit": "Go back",
   "setNewPassword": "Set new password",
-  "passwordChanged": "Password changed."
+  "passwordChanged": "Password changed.",
+  "newPassword": "New password",
+  "newPasswordConfirm": "Confirm new password",
+  "oldPassword": "Old password"
 }

@@ -20,5 +20,8 @@
   "termsAndConditions": "Akceptuję zasady i warunki.",
   "exit": "Wróć",
   "setNewPassword": "Zapisz nowe hasło",
-  "passwordChanged": "Hasło zostało zmienione."
+  "passwordChanged": "Hasło zostało zmienione.",
+  "newPassword": "Nowe hasło",
+  "newPasswordConfirm": "Potwierdź nowe hasło",
+  "oldPassword": "Stare hasło"
 }

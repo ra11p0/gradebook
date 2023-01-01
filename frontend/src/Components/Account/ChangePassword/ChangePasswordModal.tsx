@@ -21,7 +21,13 @@ function ChangePasswordModal(props: Props): ReactElement {
         <Modal.Title>{t('changePasswordModalTitle')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {props.isLoggedIn && <ChangePasswordLoggedIn />}
+        {props.isLoggedIn && (
+          <ChangePasswordLoggedIn
+            onRequestCompleted={() => {
+              props.onHide();
+            }}
+          />
+        )}
         {!props.isLoggedIn && (
           <ChangePasswordNotLoggedIn
             onRequestCompleted={() => {
