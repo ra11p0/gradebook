@@ -23,5 +23,6 @@
   "Admin": "Administrator",
   "Teacher": "Nauczyciel",
   "Student": "Uczeń",
-  "confirm": "Potwierdź"
+  "confirm": "Potwierdź",
+  "submit": "Wyślij"
 }

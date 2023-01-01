@@ -17,5 +17,8 @@
   "alreadyHaveAccount": "Already have account?",
   "login": "Log in!",
   "termsConditionsRequired": "Terms and conditions acceptance is required",
-  "termsAndConditions": "I accept terms and conditions."
+  "termsAndConditions": "I accept terms and conditions.",
+  "exit": "Go back",
+  "setNewPassword": "Set new password",
+  "passwordChanged": "Password changed."
 }

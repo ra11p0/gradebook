@@ -155,6 +155,12 @@ public class AccountController : ControllerBase
     {
         return (await _identityLogic.Service.RemindPassword(email)).ObjectResult;
     }
+
+    [HttpPost("SetNewPassword/{userId}/{authCode}/")]
+    public async Task<ObjectResult> RemindPassword([FromBody] SetNewPasswordModel model, [FromRoute] string authCode, [FromRoute] string userId)
+    {
+        return (await _identityLogic.Service.SetNewPassword(userId, authCode, model.Password!, model.ConfirmPassword!)).ObjectResult;
+    }
     #endregion
 
     #region roles
