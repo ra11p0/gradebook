@@ -10,6 +10,8 @@
   "personRemovedNotificationText": "Osoba została pomyślnie usunięta",
   "success": "Sukces",
   "permissionsSaved": "Uprawnienia zapisane",
-  "User already exists!": "Adres email został już użyty!",
-  "changesSaved": "Zapisano zmiany!"
+  "User already exists": "Adres email został już użyty!",
+  "changesSaved": "Zapisano zmiany!",
+  "UnknownEmailAddress": "Nieznany adres email",
+  "NotFound": "Coś nie zostało odnalezione :/"
 }

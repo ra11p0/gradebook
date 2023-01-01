@@ -17,5 +17,11 @@
   "alreadyHaveAccount": "Masz już konto?",
   "login": "Zaloguj się!",
   "termsConditionsRequired": "Akceptacja zasad i warunków wymagana",
-  "termsAndConditions": "Akceptuję zasady i warunki."
+  "termsAndConditions": "Akceptuję zasady i warunki.",
+  "exit": "Wróć",
+  "setNewPassword": "Zapisz nowe hasło",
+  "passwordChanged": "Hasło zostało zmienione.",
+  "newPassword": "Nowe hasło",
+  "newPasswordConfirm": "Potwierdź nowe hasło",
+  "oldPassword": "Stare hasło"
 }

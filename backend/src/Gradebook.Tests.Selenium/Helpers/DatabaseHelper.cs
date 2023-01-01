@@ -7,7 +7,7 @@ namespace Gradebook.Tests.Selenium.Helpers;
 
 public static class DatabaseHelper
 {
-    public static string GetActivationLinkForEmail(string email, DateTime? scanSince = null, int timeoutInSeconds = 30)
+    public static string GetActivationLinkFromEmail(string email, DateTime? scanSince = null, int timeoutInSeconds = 30)
     {
         scanSince = scanSince ?? DateTime.UtcNow;
         var jsonString = ScanDatabase<string>(@"
@@ -18,6 +18,19 @@ public static class DatabaseHelper
         var message = JsonConvert.DeserializeObject<ActivateAccountMailMessage>(jsonString);
         string url = ConfigurationManager.GetValue("Urls:ApplicationUrl");
         return $"{url}service/account/{message!.TargetGuid}/activation/{message!.AuthCode}";
+    }
+
+    public static string GetChangePasswordLinkFromEmail(string email, DateTime? scanSince = null, int timeoutInSeconds = 30)
+    {
+        scanSince = scanSince ?? DateTime.UtcNow;
+        var jsonString = ScanDatabase<string>(@"
+            SELECT PayloadJson 
+            FROM MailHistory 
+            WHERE SendDateTime > @scanSince
+                AND `To` LIKE @email", new { scanSince, email });
+        var message = JsonConvert.DeserializeObject<RemindPasswordMailMessage>(jsonString);
+        string url = ConfigurationManager.GetValue("Urls:ApplicationUrl");
+        return $"{url}service/account/{message!.TargetGuid}/RemindPassword/{message!.AuthCode}";
     }
 
     private static T ScanDatabase<T>(string query, object? values = null, int timeoutInSeconds = 30)

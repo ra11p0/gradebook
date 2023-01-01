@@ -9,4 +9,5 @@ public class SendEmailWorkerMessage : BaseHangfireWorkerMessage
     public string? Subject { get; set; }
     public string? Message { get; set; }
     public string? PayloadJson { get; set; }
+    public string? MessageType { get; set; }
 }

@@ -1,4 +1,5 @@
 using Gradebook.Tests.Selenium.Constraints.Views;
+using Gradebook.Tests.Selenium.Helpers;
 using Gradebook.Tests.Selenium.IWebDriverExtensions;
 using LoginView = Gradebook.Tests.Selenium.Constraints.Views.Login;
 
@@ -65,6 +66,26 @@ public static class GradebookQuickActionsExtensions
     public static IWebDriver GoToSchoolsTab(this IWebDriver driver)
     {
         driver.GoTo(ConfigurationManager.GetValue("Urls:ApplicationUrl") + "dashboard/manageSchool");
+        return driver;
+    }
+    public static IWebDriver ChangePassword(this IWebDriver driver, string email, string newPassword)
+    {
+        driver.GoToGradebookHomepage();
+        driver.ClickOn("a[test-id='forgotPassword']");
+        driver.WaitForMany("input[name='email']")[1].SendKeys(email);
+        driver.WaitForMany("button[type='submit']")[1].Click();
+
+        Assert.That(driver.Contains(Swal.SuccessRing));
+
+        var remindPasswordLink = DatabaseHelper.GetChangePasswordLinkFromEmail(email);
+
+        driver.GoTo(remindPasswordLink);
+        driver.WaitFor("input[name='newPassword']").SendKeys(newPassword);
+        driver.WaitFor("input[name='newPasswordConfirm']").SendKeys(newPassword);
+        driver.ClickOn("button[type='submit']");
+
+        Assert.That(driver.Contains(Swal.SuccessRing));
+
         return driver;
     }
     public static IWebDriver AddNewStudent(this IWebDriver driver, string studentName, string studentSurname, string studentBirthday)

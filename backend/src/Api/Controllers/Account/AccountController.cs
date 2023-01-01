@@ -1,5 +1,4 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using Api.Models.Account;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
@@ -151,12 +150,30 @@ public class AccountController : ControllerBase
         });
     }
 
+    [HttpPost("RemindPassword")]
+    public async Task<ObjectResult> RemindPassword([FromBody] string email)
+    {
+        return (await _identityLogic.Service.RemindPassword(email)).ObjectResult;
+    }
+
+    [HttpPost("SetNewPassword/{userId}/{authCode}/")]
+    public async Task<ObjectResult> SetNewPassword([FromBody] SetNewPasswordModel model, [FromRoute] string authCode, [FromRoute] string userId)
+    {
+        return (await _identityLogic.Service.SetNewPassword(userId, authCode, model.Password!, model.ConfirmPassword!)).ObjectResult;
+    }
+
+    [HttpPost("SetNewPassword")]
+    [Authorize]
+    public async Task<ObjectResult> SetNewPasswordAuthorized([FromBody] SetNewPasswordAuthorizedModel model)
+    {
+        return (await _identityLogic.Service.SetNewPasswordAuthorized(model.Password!, model.ConfirmPassword!, model.OldPassword!)).ObjectResult;
+    }
     #endregion
 
     #region roles
     [HttpPost]
     [Route("{userGuid}/roles")]
-    public async Task<IActionResult> PostRoles([FromRoute] string userGuid, [FromBody] string[] roles)
+    public IActionResult PostRoles([FromRoute] string userGuid, [FromBody] string[] roles)
     {
         return NotFound();
         /*await _identityLogic.Service.EditUserRoles(roles, userGuid);

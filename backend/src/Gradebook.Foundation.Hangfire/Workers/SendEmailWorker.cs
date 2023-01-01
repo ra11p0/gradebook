@@ -23,9 +23,9 @@ public class SendEmailWorker : BaseHangfireWorker<SendEmailWorkerMessage>
     public async override Task DoJob(SendEmailWorkerMessage message)
     {
         var mailMessage = new MailMessage(
-       new MailAddress(message.From!),
-       new MailAddress(message.To!)
-       )
+            new MailAddress(message.From!),
+            new MailAddress(message.To!)
+            )
         {
             Body = message.Message,
             Subject = message.Subject,
@@ -39,7 +39,8 @@ public class SendEmailWorker : BaseHangfireWorker<SendEmailWorkerMessage>
             From = message.From ?? "",
             To = message.To ?? "",
             Subject = message.Subject ?? "",
-            Message = message.Message ?? ""
+            Message = message.Message ?? "",
+            MessageType = message.MessageType ?? ""
         });
         await _foundationDbContext.Service.SaveChangesAsync();
     }

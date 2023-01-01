@@ -6,6 +6,7 @@ import FormikValidationLabel from './FormikValidationLabel';
 
 interface Props {
   testId?: string;
+  id?: string;
   name: string;
   label?: string;
   type?: string;
@@ -33,9 +34,9 @@ function FormikInput(
             return (
               <>
                 <Form.Check
-                  data-testid={props.testId}
+                  data-testid={props.testId ?? props.id ?? props.name}
                   type="switch"
-                  id={props.name}
+                  id={props.id ?? props.name}
                   name={props.name}
                   label={props.label ?? props.name}
                   checked={_.get(props.formik.values, props.name)}
@@ -73,9 +74,9 @@ function FormikInput(
                   {props.label ?? props.name}
                 </Form.Label>
                 <Form.Control
-                  data-testid={props.testId}
+                  data-testid={props.testId ?? props.id ?? props.name}
                   className="form-control"
-                  id={props.name}
+                  id={props.id ?? props.name}
                   name={props.name}
                   type={props.type ?? 'text'}
                   onChange={(evt: any) => {

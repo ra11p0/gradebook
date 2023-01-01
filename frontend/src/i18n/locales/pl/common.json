@@ -1,6 +1,7 @@
 {
   "yes": "Tak",
   "no": "Nie",
+  "email": "Adres email",
   "noResults": "Brak wyników",
   "noMoreResults": "Koniec wyników",
   "loading": "Ładowanie",
@@ -16,10 +17,13 @@
   "noOptions": "Brak wyników",
   "fieldRequired": "Pole wymagane",
   "fieldNumberOnly": "Pole musi zawierać tylko liczby",
+  "emailInvalid": "Niepoprawny adres email",
   "createdDate": "Data utworzenia",
   "creator": "Stworzony przez",
   "Admin": "Administrator",
   "Teacher": "Nauczyciel",
   "Student": "Uczeń",
-  "confirm": "Potwierdź"
+  "confirm": "Potwierdź",
+  "submit": "Wyślij",
+  "wrongPassword": "Niepoprawne hasło"
 }
