@@ -6,6 +6,7 @@ using Gradebook.Tests.Selenium.Constraints.Views.Dashboard;
 
 namespace Gradebook.Tests.Selenium.Tests.Account;
 
+[Category("Selenium")]
 [Order(5)]
 public class ChangePassword
 {

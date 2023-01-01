@@ -27,6 +27,7 @@ using FoundationIdentityLogic = Gradebook.Foundation.Identity.Logic.IdentityLogi
 
 namespace Gradebook.Foundation.Tests.Identity;
 
+[Category("Unit")]
 public class ChangePassword
 {
     private ServiceCollection _serviceCollection
