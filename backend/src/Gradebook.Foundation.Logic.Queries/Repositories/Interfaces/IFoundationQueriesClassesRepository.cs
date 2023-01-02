@@ -1,6 +1,6 @@
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 
-namespace Gradebook.Foundation.Logic.Queries.Repositories;
+namespace Gradebook.Foundation.Logic.Queries.Repositories.Interfaces;
 
 public interface IFoundationQueriesClassesRepository
 {

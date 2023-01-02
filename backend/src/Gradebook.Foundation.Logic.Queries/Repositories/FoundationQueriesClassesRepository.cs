@@ -3,6 +3,7 @@ using DbExtensions;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
+using Gradebook.Foundation.Logic.Queries.Repositories.Interfaces;
 
 namespace Gradebook.Foundation.Logic.Queries.Repositories;
 

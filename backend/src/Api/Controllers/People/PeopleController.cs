@@ -26,6 +26,7 @@ public class PeopleController : ControllerBase
     private readonly ServiceResolver<IFoundationPermissionsLogic> _foundationPermissionsLogic;
     private readonly ServiceResolver<IPermissionsPermissionsLogic> _permissionsPermissionsLogic;
     private readonly ServiceResolver<Context> _context;
+    private IFoundationPeopleQueries FoundationPeopleQueries => _foundationQueries.Service;
     public PeopleController(IServiceProvider serviceProvider)
     {
         _foundationCommands = serviceProvider.GetResolver<IFoundationCommands>();
@@ -36,6 +37,13 @@ public class PeopleController : ControllerBase
         _permissionsPermissionsLogic = serviceProvider.GetResolver<IPermissionsPermissionsLogic>();
         _context = serviceProvider.GetResolver<Context>();
     }
+
+    [HttpGet, Route("Details")]
+    public async Task<ObjectResult> GetPeopleDetails([FromBody] Guid[] peopleGuids, [FromQuery] int? page = 0)
+    {
+        return (await FoundationPeopleQueries.GetPeopleByGuids(peopleGuids, page!.Value)).ObjectResult;
+    }
+
     [HttpGet, Route("{teacherGuid}/subjects")]
     [ProducesResponseType(typeof(PersonDto), statusCode: 200)]
     public async Task<IActionResult> GetSubjectsForTeacher([FromRoute] Guid teacherGuid, [FromQuery] int page = 0)

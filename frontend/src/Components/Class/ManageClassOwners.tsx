@@ -5,7 +5,7 @@ import ClassesProxy from '../../ApiClient/Classes/ClassesProxy';
 import TeachersInClassResponse from '../../ApiClient/Classes/Definitions/Responses/TeachersInClassResponse';
 import SchoolsProxy from '../../ApiClient/Schools/SchoolsProxy';
 import Notifications from '../../Notifications/Notifications';
-import PeoplePicker from '../Shared/PeoplePicker';
+import PeoplePicker from '../Shared/PeoplePicker/PeoplePicker';
 
 interface Props {
   classGuid: string;

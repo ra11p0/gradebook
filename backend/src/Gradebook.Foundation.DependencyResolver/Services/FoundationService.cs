@@ -7,6 +7,7 @@ using Gradebook.Foundation.Logic.Commands;
 using Gradebook.Foundation.Logic.Commands.Repositories;
 using Gradebook.Foundation.Logic.Queries;
 using Gradebook.Foundation.Logic.Queries.Repositories;
+using Gradebook.Foundation.Logic.Queries.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

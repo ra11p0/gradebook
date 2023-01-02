@@ -1,9 +1,11 @@
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 
-namespace Gradebook.Foundation.Logic.Queries.Repositories;
+namespace Gradebook.Foundation.Logic.Queries.Repositories.Interfaces;
 
-public interface IFoundationQueriesRepository : IBaseRepository, IFoundationQueriesClassesRepository
+public interface IFoundationQueriesRepository : IBaseRepository,
+    IFoundationQueriesClassesRepository,
+    IFoundationQueriesPeopleRepository
 {
     Task<EducationCycleExtendedDto?> GetEducationCycle(Guid educationCycleGuid);
     Task<IEnumerable<EducationCycleStepDto>> GetStepsForEducationCycle(Guid educationCycleGuid);
@@ -16,15 +18,9 @@ public interface IFoundationQueriesRepository : IBaseRepository, IFoundationQuer
     Task<Guid?> GetPersonGuidForUser(string userId, Guid schoolGuid);
     Task<IEnumerable<SchoolDto>> GetSchoolsForUser(string userGuid);
     Task<IEnumerable<PersonDto>> GetPeopleInSchool(Guid schoolGuid);
-    Task<IEnumerable<StudentDto>> GetAllAccessibleStudents(Guid schoolGuid);
-    Task<IEnumerable<StudentDto>> GetAllInactiveAccessibleStudents(Guid schoolGuid);
-    Task<IEnumerable<TeacherDto>> GetAllAccessibleTeachers(Guid relatedPersonGuid);
     Task<IEnumerable<InvitationDto>> GetInvitations(Guid personGuid);
     Task<IPagedList<InvitationDto>> GetInvitationsToSchool(Guid schoolGuid, Pager pager);
     Task<InvitationDto> GetInvitationByActivationCode(string activationCode);
-    Task<PersonDto> GetPersonByGuid(Guid guid);
-    Task<StudentDto> GetStudentByGuid(Guid guid);
-    Task<TeacherDto> GetTeacherByGuid(Guid guid);
     Task<GroupDto> GetGroupByGuid(Guid guid);
     Task<ClassDto?> GetClassByGuid(Guid guid);
     Task<IEnumerable<ClassDto>> GetClassesByGuids(IEnumerable<Guid> guids);

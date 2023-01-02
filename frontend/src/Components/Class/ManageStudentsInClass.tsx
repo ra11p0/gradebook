@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import ClassesProxy from '../../ApiClient/Classes/ClassesProxy';
 import StudentInClassResponse from '../../ApiClient/Classes/Definitions/Responses/StudentInClassResponse';
 import Notifications from '../../Notifications/Notifications';
-import PeoplePicker from '../Shared/PeoplePicker';
+import PeoplePicker from '../Shared/PeoplePicker/PeoplePicker';
 
 interface Props {
   classGuid: string;

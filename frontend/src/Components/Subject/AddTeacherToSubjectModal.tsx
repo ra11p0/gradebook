@@ -5,7 +5,7 @@ import SchoolsProxy from '../../ApiClient/Schools/SchoolsProxy';
 import TeachersForSubjectResponse from '../../ApiClient/Subjects/Definitions/Responses/TeachersForSubjectResponse';
 import SubjectsProxy from '../../ApiClient/Subjects/SubjectsProxy';
 import Notifications from '../../Notifications/Notifications';
-import PeoplePicker from '../Shared/PeoplePicker';
+import PeoplePicker from '../Shared/PeoplePicker/PeoplePicker';
 
 interface Props {
   onHide: () => void;

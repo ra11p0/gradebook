@@ -6,7 +6,7 @@ using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 using Gradebook.Foundation.Hangfire;
-using Gradebook.Foundation.Logic.Queries.Repositories;
+using Gradebook.Foundation.Logic.Queries.Repositories.Interfaces;
 
 namespace Gradebook.Foundation.Logic.Queries;
 
