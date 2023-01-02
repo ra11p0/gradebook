@@ -9,7 +9,7 @@ interface Props {
   id?: string;
   name: string;
   label?: string;
-  type?: 'date' | 'switch' | 'password';
+  type?: 'date' | 'switch' | 'password' | 'email';
   formik: {
     setFieldValue: (fieldName: string, value: any) => void;
     handleChange: (evt: React.ChangeEvent<any>) => void;
