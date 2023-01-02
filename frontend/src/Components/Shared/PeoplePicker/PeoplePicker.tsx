@@ -1,15 +1,15 @@
-import { Button } from '@mui/material';
+import { Button, List, ListItem } from '@mui/material';
 import React, { ReactElement, useEffect, useState } from 'react';
-import { Col, ListGroup, Modal, Row, Tab, Tabs } from 'react-bootstrap';
+import { Col, Modal, Row } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import PersonResponse from '../../../ApiClient/Schools/Definitions/Responses/PersonResponse';
-import LoadingScreen from '../LoadingScreen';
+import PersonResponse from '../../../ApiClient/People/Definitions/Responses/PersonResponse';
+import PeopleProxy from '../../../ApiClient/People/PeopleProxy';
+import InfiniteScrollWrapper from '../InfiniteScrollWrapper';
 import Person from '../Person';
 import IndividualPicker from './IndividualPicker';
 
 interface Props {
-  dynamic?: boolean;
   onHide: () => void;
   onConfirm: (peopleGuids: string[]) => void;
   getPeople: (
@@ -27,14 +27,6 @@ interface Props {
 function PeoplePicker(props: Props): ReactElement {
   const { t } = useTranslation('peoplePicker');
   const [selectedPeople, setSelectedPeople] = useState<string[]>([]);
-  const [selectedPeopleModels, setSelectedPeopleModels] = useState<
-    PersonResponse[] | undefined
-  >(undefined);
-
-  useEffect(() => {
-    setSelectedPeopleModels(undefined);
-    void (async () => {})();
-  }, [selectedPeople]);
 
   useEffect(() => {
     setSelectedPeople(props.selectedPeople ?? []);
@@ -45,32 +37,33 @@ function PeoplePicker(props: Props): ReactElement {
       <Modal.Body>
         <Row>
           <Col>
-            <Tabs
-              defaultActiveKey="individual"
-              id="uncontrolled-tab-example"
-              className="mb-3"
-            >
-              <Tab eventKey="individual" title="individual">
-                <IndividualPicker
-                  {...props}
-                  setSelectedPeople={setSelectedPeople}
-                  selectedPeople={selectedPeople}
-                />
-              </Tab>
-              <Tab eventKey="profile" title="Profile"></Tab>
-            </Tabs>
+            <IndividualPicker
+              {...props}
+              setSelectedPeople={setSelectedPeople}
+              selectedPeople={selectedPeople}
+            />
           </Col>
           <Col xs="4">
             <h5>{t('selectedPeople')}</h5>
-            <LoadingScreen isReady={!!selectedPeopleModels}>
-              <ListGroup>
-                {selectedPeopleModels?.map((el, key) => (
-                  <>
-                    <Person {...el} key={key} />
-                  </>
-                ))}
-              </ListGroup>
-            </LoadingScreen>
+            <List
+              className="vh-50 overflow-auto"
+              id="scrollContainerSelectedPeople"
+            >
+              <InfiniteScrollWrapper
+                scrollableTarget="scrollContainerSelectedPeople"
+                effect={[selectedPeople]}
+                fetch={async (page: number) => {
+                  return (
+                    await PeopleProxy.getPeopleDetails(selectedPeople, page)
+                  ).data;
+                }}
+                mapper={(item: PersonResponse, index: number) => (
+                  <ListItem key={index} className="p-1 m-0">
+                    <Person {...item} />
+                  </ListItem>
+                )}
+              />
+            </List>
           </Col>
         </Row>
       </Modal.Body>

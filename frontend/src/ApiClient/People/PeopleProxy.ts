@@ -66,11 +66,25 @@ const getSubjectsForTeacher = async (
   );
 };
 
+async function getPeopleDetails(
+  peopleGuids: string[],
+  page: number = 0
+): Promise<AxiosResponse<PersonResponse[]>> {
+  return await axiosApiAuthorized.post(
+    `${API_URL}/people/details`,
+    peopleGuids,
+    {
+      params: { page },
+    }
+  );
+}
+
 export default {
   getPerson,
   activatePerson,
   removePerson,
   getClassesForPerson,
+  getPeopleDetails,
   permissions: {
     getPermissions,
     setPermissions,

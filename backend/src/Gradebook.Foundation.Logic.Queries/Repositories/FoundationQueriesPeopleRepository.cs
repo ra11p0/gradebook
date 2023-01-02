@@ -1,5 +1,6 @@
 using Dapper;
 using Gradebook.Foundation.Common;
+using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Logic.Queries.Repositories.Interfaces;
 
@@ -110,8 +111,15 @@ public partial class FoundationQueriesRepository : IFoundationQueriesPeopleRepos
             guid
         });
     }
-    public Task<IPagedList<PersonDto>> GetPeopleByGuids(IEnumerable<Guid> guids, Pager pager)
+    public async Task<IPagedList<PersonDto>> GetPeopleByGuids(IEnumerable<Guid> guids, Pager pager)
     {
-        throw new NotImplementedException();
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryPagedAsync<PersonDto>(@"
+                SELECT Guid, Name, Surname, SchoolRole, Birthday, UserGuid, SchoolGuid, CurrentClassGuid AS 'ActiveClassGuid'
+                FROM Person
+                WHERE Guid IN @guids
+                    AND IsDeleted = 0
+                ORDER BY Name, Surname
+            ", new { guids }, pager);
     }
 }

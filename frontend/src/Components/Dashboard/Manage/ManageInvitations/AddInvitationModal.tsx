@@ -13,6 +13,7 @@ interface AddInvitationModalProps {
 const AddInvitationModal = (props: AddInvitationModalProps): ReactElement => {
   return (
     <PeoplePicker
+      showFilters
       show={props.show}
       onHide={props.onHide}
       onConfirm={async (peopleGuids: string[]) => {
@@ -22,7 +23,7 @@ const AddInvitationModal = (props: AddInvitationModalProps): ReactElement => {
             role: SchoolRolesEnum.Student,
           },
           props.currentSchool.schoolGuid!
-        ).then((response) => {
+        ).then(() => {
           props.onHide();
         });
       }}

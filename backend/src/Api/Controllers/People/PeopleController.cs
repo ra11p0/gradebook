@@ -38,7 +38,7 @@ public class PeopleController : ControllerBase
         _context = serviceProvider.GetResolver<Context>();
     }
 
-    [HttpGet, Route("Details")]
+    [HttpPost, Route("Details")]
     public async Task<ObjectResult> GetPeopleDetails([FromBody] Guid[] peopleGuids, [FromQuery] int? page = 0)
     {
         return (await FoundationPeopleQueries.GetPeopleByGuids(peopleGuids, page!.Value)).ObjectResult;
