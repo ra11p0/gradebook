@@ -21,28 +21,28 @@ public static class IWebDriverExtensions
 
     public static IWebElement WaitFor(this IWebDriver driver, string cssSelector, int timeoutSeconds = 5)
     {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutSeconds));
         var el = wait.Until(d => d.FindElement(By.CssSelector(cssSelector)));
         return el;
     }
 
     public static T WaitFor<T>(this IWebDriver driver, string cssSelector, Func<IWebElement, T> waitFunc, int timeoutSeconds = 5)
     {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutSeconds));
         var res = wait.Until(e => waitFunc(e.FindElement(By.CssSelector(cssSelector))));
         return res;
     }
 
     public static ReadOnlyCollection<IWebElement> WaitForMany(this IWebDriver driver, string cssSelector, int timeoutSeconds = 5)
     {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutSeconds));
         var el = wait.Until(d => d.FindElements(By.CssSelector(cssSelector)));
         return el;
     }
 
     public static bool Contains(this IWebDriver driver, string cssSelector, int timeoutSeconds = 5)
     {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutSeconds));
         var el = wait.Until(d => d.FindElement(By.CssSelector(cssSelector)));
         return el is not null;
     }
