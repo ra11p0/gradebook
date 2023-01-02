@@ -9,6 +9,7 @@ import NewTeacherRequest from '../../../../ApiClient/Schools/Definitions/Request
 import ReactDatePicker from 'react-datepicker';
 import moment from 'moment';
 import getApplicationLanguageReduxProxy from '../../../../Redux/ReduxQueries/account/getApplicationLanguageRedux';
+import FormikInput from '../../../Shared/FormikInput';
 
 interface Props {
   show: boolean;
@@ -55,52 +56,14 @@ function AddNewTeacherModal(props: Props): ReactElement {
       </Modal.Header>
       <form onSubmit={formik.handleSubmit}>
         <Modal.Body>
-          <div className="m-1 p-1">
-            <label htmlFor="name">{t('name')}</label>
-            <input
-              className="form-control"
-              id="name"
-              name="name"
-              type="text"
-              onChange={formik.handleChange}
-              value={formik.values.name}
-            />
-            {formik.errors.name && formik.touched.name ? (
-              <div className="invalid-feedback d-block">
-                {formik.errors.name}
-              </div>
-            ) : null}
-          </div>
-          <div className="m-1 p-1">
-            <label htmlFor="surname">{t('surname')}</label>
-            <input
-              className="form-control"
-              id="surname"
-              name="surname"
-              type="text"
-              onChange={formik.handleChange}
-              value={formik.values.surname}
-            />
-            {formik.errors.surname && formik.touched.surname ? (
-              <div className="invalid-feedback d-block">
-                {formik.errors.surname}
-              </div>
-            ) : null}
-          </div>
-          <div className="m-1 p-1">
-            <label htmlFor="birthday">{t('birthday')}</label>
-            <ReactDatePicker
-              selected={formik.values.birthday}
-              className="form-control birthday"
-              onChange={(evt) => {
-                formik.handleChange({
-                  target: { name: 'birthday', id: 'birthday', value: evt },
-                });
-              }}
-              dateFormat={'P'}
-              locale={props.locale}
-            />
-          </div>
+          <FormikInput name="name" label={t('name')} formik={formik} />
+          <FormikInput name="surname" label={t('surname')} formik={formik} />
+          <FormikInput
+            name="birthday"
+            label={t('birthday')}
+            type="date"
+            formik={formik}
+          />
         </Modal.Body>
         <Modal.Footer>
           <Button type="submit" variant="outlined">

@@ -66,6 +66,7 @@ const TeachersList = (props: ManageTeachersProps): ReactElement => {
             <Button
               onClick={() => setShowAddTeacherModal(true)}
               variant="outlined"
+              test-id="addNewTeacherButton"
             >
               {t('addTeacher')}
             </Button>
@@ -97,7 +98,9 @@ const TeachersList = (props: ManageTeachersProps): ReactElement => {
               >
                 <td>{element.name}</td>
                 <td>{element.surname}</td>
-                <td>{moment.utc(element.birthday).local().format('L')}</td>
+                <td className="test-teacherBirthday">
+                  {moment.utc(element.birthday).local().format('L')}
+                </td>
                 <td>
                   <FontAwesomeIcon
                     icon={element.isActive ? faCheck : faTimes}
