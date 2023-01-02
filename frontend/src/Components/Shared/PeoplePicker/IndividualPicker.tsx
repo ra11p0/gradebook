@@ -4,21 +4,20 @@ import { Checkbox, Input } from '@mui/material';
 import React, { ReactElement, useState } from 'react';
 import { Button, Collapse } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import PeoplePickerData from '../../../ApiClient/People/Definitions/Requests/PeoplePickerData';
+import { SimplePersonResponse } from '../../../ApiClient/People/Definitions/Responses/PersonResponse';
 import PersonResponse from '../../../ApiClient/Schools/Definitions/Responses/PersonResponse';
 import InfiniteScrollWrapper from '../InfiniteScrollWrapper';
 
 interface Props {
   showFilters?: boolean;
-  discriminator?: string;
   selectedPeople: string[];
   setSelectedPeople: (setFn: (e: string[]) => string[]) => void;
   currentSchoolGuid?: string;
   getPeople: (
-    schoolGuid: string,
-    schoolRole: string,
-    query: string,
+    pickerData: PeoplePickerData,
     page: number
-  ) => Promise<PersonResponse[]>;
+  ) => Promise<SimplePersonResponse[]>;
 }
 
 function IndividualPicker({
@@ -26,7 +25,6 @@ function IndividualPicker({
   setSelectedPeople,
   currentSchoolGuid,
   getPeople,
-  discriminator,
   showFilters,
 }: Props): ReactElement {
   const { t } = useTranslation('peoplePicker');
@@ -59,13 +57,42 @@ function IndividualPicker({
             <Button
               variant="link"
               className="btn-sm"
-              onClick={() => {
-                setSelectedPeople((ppl) => ppl.concat());
+              onClick={async () => {
+                if (!currentSchoolGuid) return;
+                const allPeople = await getPeople(
+                  { schoolGuid: currentSchoolGuid, query },
+                  0
+                );
+                const selectedWithAll = selectedPeople.concat(
+                  allPeople.map((e) => e.guid)
+                );
+
+                setSelectedPeople((ppl) =>
+                  selectedWithAll.filter(
+                    (el, index) => selectedWithAll.indexOf(el) === index
+                  )
+                );
               }}
             >
               {t('selectAll')}
             </Button>
-            <Button variant="link" className="btn-sm ">
+            <Button
+              variant="link"
+              className="btn-sm "
+              onClick={async () => {
+                if (!currentSchoolGuid) return;
+                const pplToUnselect = await getPeople(
+                  { schoolGuid: currentSchoolGuid, query },
+                  0
+                );
+
+                setSelectedPeople((ppl) =>
+                  ppl.filter(
+                    (el) => !pplToUnselect.map((e) => e.guid).includes(el)
+                  )
+                );
+              }}
+            >
               {t('unselectAll')}
             </Button>
           </div>
@@ -90,9 +117,7 @@ function IndividualPicker({
           fetch={async (page: number) => {
             if (!currentSchoolGuid) return [];
             return (await getPeople(
-              currentSchoolGuid,
-              discriminator ?? '',
-              query,
+              { schoolGuid: currentSchoolGuid, query },
               page
             )) as [];
           }}

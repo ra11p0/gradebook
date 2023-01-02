@@ -1,9 +1,10 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import SchoolsProxy from '../../ApiClient/Schools/SchoolsProxy';
+import PeopleProxy from '../../ApiClient/People/PeopleProxy';
 import TeachersForSubjectResponse from '../../ApiClient/Subjects/Definitions/Responses/TeachersForSubjectResponse';
 import SubjectsProxy from '../../ApiClient/Subjects/SubjectsProxy';
+import SchoolRolesEnum from '../../Common/Enums/SchoolRolesEnum';
 import Notifications from '../../Notifications/Notifications';
 import PeoplePicker from '../Shared/PeoplePicker/PeoplePicker';
 
@@ -49,14 +50,12 @@ function AddTeacherToSubjectModal(props: Props): ReactElement {
             })
             .catch(Notifications.showApiError);
         }}
-        getPeople={async (
-          schoolGuid: string,
-          schoolRole: string,
-          query: string,
-          page: number
-        ) => {
+        getPeople={async (pickerData, page: number) => {
           return (
-            await SchoolsProxy.searchPeople(schoolGuid, 'Teacher', query, page)
+            await PeopleProxy.searchPeople(
+              { ...pickerData, schoolRole: SchoolRolesEnum.Teacher },
+              page
+            )
           ).data;
         }}
         show={showPicker}

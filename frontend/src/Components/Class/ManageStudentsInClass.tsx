@@ -41,16 +41,11 @@ function ManageStudentsInClass(props: Props): ReactElement {
             .catch(Notifications.showApiError);
         }}
         selectedPeople={props.studentsInClass.map((s) => s.guid)}
-        getPeople={async (
-          schoolGuid,
-          discriminator: string,
-          query: string,
-          page: number
-        ) => {
+        getPeople={async (pickerData, page) => {
           return (
             await ClassesProxy.searchStudentsCandidatesToClassWithCurrent(
               props.classGuid ?? '',
-              query,
+              pickerData.query ?? '',
               page
             )
           ).data;

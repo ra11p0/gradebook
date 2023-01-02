@@ -4,6 +4,7 @@ import SchoolRolesEnum from '../../../../Common/Enums/SchoolRolesEnum';
 import SchoolsProxy from '../../../../ApiClient/Schools/SchoolsProxy';
 import getCurrentSchoolReduxProxy from '../../../../Redux/ReduxQueries/account/getCurrentSchoolRedux';
 import PeoplePicker from '../../../Shared/PeoplePicker/PeoplePicker';
+import PeopleProxy from '../../../../ApiClient/People/PeopleProxy';
 
 interface AddInvitationModalProps {
   show: boolean;
@@ -27,15 +28,8 @@ const AddInvitationModal = (props: AddInvitationModalProps): ReactElement => {
           props.onHide();
         });
       }}
-      getPeople={async (
-        schoolGuid: string,
-        schoolRole: string,
-        query: string,
-        page: number
-      ) => {
-        return (
-          await SchoolsProxy.getInactiveAccessibleStudentsInSchool(schoolGuid)
-        ).data;
+      getPeople={async (pickerData, page) => {
+        return (await PeopleProxy.searchPeople(pickerData, page)).data;
       }}
     />
   );

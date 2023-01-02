@@ -3,6 +3,7 @@ using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Foundation;
 using Gradebook.Foundation.Common.Foundation.Commands;
+using Gradebook.Foundation.Common.Foundation.Models;
 using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Common.Permissions;
@@ -44,6 +45,12 @@ public class PeopleController : ControllerBase
         return (await FoundationPeopleQueries.GetPeopleByGuids(peopleGuids, page!.Value)).ObjectResult;
     }
 
+    [HttpPost, Route("Search")]
+    public async Task<ObjectResult> SearchPeopleInSchool([FromBody] PeoplePickerData peoplePickerData, [FromQuery] int? page)
+    {
+        return (await FoundationPeopleQueries.SearchPeople(peoplePickerData, page ?? 1)).ObjectResult;
+    }
+
     [HttpGet, Route("{teacherGuid}/subjects")]
     [ProducesResponseType(typeof(PersonDto), statusCode: 200)]
     public async Task<IActionResult> GetSubjectsForTeacher([FromRoute] Guid teacherGuid, [FromQuery] int page = 0)
@@ -67,8 +74,6 @@ public class PeopleController : ControllerBase
         var classesResponse = await _foundationQueries.Service.GetClassesForPerson(personGuid, page);
         return classesResponse.Status ? Ok(classesResponse.Response) : BadRequest(classesResponse.Message);
     }
-
-
     [HttpDelete]
     [Route("{personGuid}")]
     [ProducesResponseType(typeof(string), statusCode: 400)]

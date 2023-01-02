@@ -3,21 +3,25 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import { Col, Modal, Row } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import PersonResponse from '../../../ApiClient/People/Definitions/Responses/PersonResponse';
+import PeoplePickerData from '../../../ApiClient/People/Definitions/Requests/PeoplePickerData';
+import PersonResponse, {
+  SimplePersonResponse,
+} from '../../../ApiClient/People/Definitions/Responses/PersonResponse';
 import PeopleProxy from '../../../ApiClient/People/PeopleProxy';
+import getCurrentSchoolRedux from '../../../Redux/ReduxQueries/account/getCurrentSchoolRedux';
+import { GlobalState } from '../../../store';
 import InfiniteScrollWrapper from '../InfiniteScrollWrapper';
 import Person from '../Person';
 import IndividualPicker from './IndividualPicker';
 
 interface Props {
+  showFilters?: boolean;
   onHide: () => void;
   onConfirm: (peopleGuids: string[]) => void;
   getPeople: (
-    schoolGuid: string,
-    schoolRole: string,
-    query: string,
+    pickerData: PeoplePickerData,
     page: number
-  ) => Promise<PersonResponse[]>;
+  ) => Promise<SimplePersonResponse[]>;
   show: boolean;
   currentSchoolGuid?: string;
   discriminator?: string;
@@ -83,8 +87,8 @@ function PeoplePicker(props: Props): ReactElement {
 }
 
 export default connect(
-  (state: any) => ({
-    currentSchoolGuid: state.common.school?.schoolGuid,
+  (state: GlobalState) => ({
+    currentSchoolGuid: getCurrentSchoolRedux(state)?.schoolGuid,
   }),
   () => ({})
 )(PeoplePicker);

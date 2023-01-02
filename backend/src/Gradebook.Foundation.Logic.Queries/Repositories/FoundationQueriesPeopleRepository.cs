@@ -1,6 +1,8 @@
 using Dapper;
+using DbExtensions;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
+using Gradebook.Foundation.Common.Foundation.Models;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Logic.Queries.Repositories.Interfaces;
 
@@ -121,5 +123,32 @@ public partial class FoundationQueriesRepository : IFoundationQueriesPeopleRepos
                     AND IsDeleted = 0
                 ORDER BY Name, Surname
             ", new { guids }, pager);
+    }
+
+    public async Task<IPagedList<PersonDto>> SearchPeople(PeoplePickerData pickerData, Pager pager)
+    {
+        var builder = new SqlBuilder();
+        builder.SELECT("Guid, Name, Surname, SchoolRole, Birthday, UserGuid, SchoolGuid, CurrentClassGuid AS 'ActiveClassGuid'");
+        builder.FROM("Person");
+        builder.WHERE("SchoolGuid = @SchoolGuid");
+        if (!pickerData.IncludeDeleted)
+            builder.WHERE("IsDeleted = 0");
+        if (!string.IsNullOrEmpty(pickerData.Query))
+        {
+            pickerData.Query = $"%{pickerData.Query}%";
+            builder.WHERE("CONCAT(Name, ' ', Surname) like @Query");
+        }
+        if (pickerData.ActiveClassGuid.HasValue)
+            builder.WHERE("ActiveClassGuid = @ActiveClassGuid");
+        if (pickerData.BirthdaySince.HasValue)
+            builder.WHERE("Birthday > @BirthdaySince");
+        if (pickerData.BirthdayUntil.HasValue)
+            builder.WHERE("Birthday < @BirthdayUntil");
+        if (pickerData.SchoolRole != 0)
+            builder.WHERE("SchoolRole = @SchoolRole");
+        builder.ORDER_BY("CONCAT(Name, ' ', Surname) ");
+
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryPagedAsync<PersonDto>(builder.ToString(), pickerData, pager);
     }
 }
