@@ -17,7 +17,7 @@ public class LanguageSetting
         driver.ClickOn("[test-id='languageDropdown']");
         driver.ClickOn("[test-id='languageDropdown-english']");
         driver.GoToTeachersTab();
-        var dateTextBeforeChange = driver.WaitFor(".test-teacherBirthday").Text;
+        var dateTextBeforeChange = driver.WaitFor(".test-teacherBirthday", 10).Text;
 
         driver.ClickOn("[test-id='languageDropdown']");
         driver.ClickOn("[test-id='languageDropdown-polish']");
