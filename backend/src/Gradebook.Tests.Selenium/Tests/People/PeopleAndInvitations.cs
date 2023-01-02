@@ -75,6 +75,7 @@ public class PeopleAndInvitations
         Assert.That(driver.WaitFor("a[href='/account/profile']").Displayed);*/
     }
     [Test]
+    [Order(4)]
     public void CanAddTeacher()
     {
         const string teacherName = "Mariusz";
