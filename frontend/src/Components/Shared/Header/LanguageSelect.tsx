@@ -25,15 +25,21 @@ function LanguageSelect(props: Props): ReactElement {
   return (
     <>
       <Dropdown drop="start">
-        <Dropdown.Toggle variant="outline-secondary">
+        <Dropdown.Toggle variant="outline-secondary" test-id="languageDropdown">
           <FontAwesomeIcon icon={faLanguage} />
         </Dropdown.Toggle>
         <Dropdown.Menu>
-          <Dropdown.Item onClick={async () => await setLanguage('pl')}>
+          <Dropdown.Item
+            onClick={async () => await setLanguage('pl')}
+            test-id="languageDropdown-polish"
+          >
             {t('polish')} (Polish)
             {props.language === 'pl' && <FontAwesomeIcon icon={faCheck} />}
           </Dropdown.Item>
-          <Dropdown.Item onClick={async () => await setLanguage('en')}>
+          <Dropdown.Item
+            onClick={async () => await setLanguage('en')}
+            test-id="languageDropdown-english"
+          >
             {t('english')} (English)
             {props.language === 'en' && <FontAwesomeIcon icon={faCheck} />}
           </Dropdown.Item>

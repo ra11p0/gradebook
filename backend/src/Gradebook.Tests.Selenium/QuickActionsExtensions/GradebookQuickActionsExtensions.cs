@@ -63,6 +63,11 @@ public static class GradebookQuickActionsExtensions
         wait.Until(d => d.FindElement(By.CssSelector("a[href='/manageInvitations']"))).Click();
         return driver;
     }
+    public static IWebDriver GoToTeachersTab(this IWebDriver driver)
+    {
+        driver.GoTo($"{ConfigurationManager.GetValue("Urls:ApplicationUrl")}dashboard/manageTeachers");
+        return driver;
+    }
     public static IWebDriver GoToSchoolsTab(this IWebDriver driver)
     {
         driver.GoTo(ConfigurationManager.GetValue("Urls:ApplicationUrl") + "dashboard/manageSchool");

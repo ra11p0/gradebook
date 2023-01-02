@@ -1,4 +1,3 @@
-using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 
 namespace Gradebook.Tests.Selenium;
@@ -27,7 +26,7 @@ public static class WebDriverBuilder
             options.AddArgument("--headless");
         }
         string? path = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.FullName;
-        var driver = new ChromeDriver(path + @$"/Drivers/{ConfigurationManager.GetValue("Browser:Platform")}/", options);
+        var driver = new DriverImplementation(path + @$"/Drivers/{ConfigurationManager.GetValue("Browser:Platform")}/", options);
         driver.Manage().Window.Maximize();
         return driver;
     }

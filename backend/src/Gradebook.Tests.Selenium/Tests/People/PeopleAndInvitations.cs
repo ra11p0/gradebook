@@ -3,14 +3,14 @@ using Gradebook.Tests.Selenium.IWebDriverExtensions;
 using Gradebook.Tests.Selenium.QuickActionsExtensions;
 using StudentsView = Gradebook.Tests.Selenium.Constraints.Views.Dashboard.Students;
 
-namespace Gradebook.Tests.Selenium.Tests.Students;
+namespace Gradebook.Tests.Selenium.Tests.People;
 
 [Category("Selenium")]
 [Order(2)]
-public class StudentsAndInvitations
+public class PeopleAndInvitations
 {
     private readonly Dictionary<string, string> _storage = new();
-    public StudentsAndInvitations()
+    public PeopleAndInvitations()
     {
         _storage["studentName"] = "Mateusz";
         _storage["studentSurname"] = "Kowalczyk";
@@ -74,4 +74,22 @@ public class StudentsAndInvitations
         driver.ClickOn("button[type='submit']");
         Assert.That(driver.WaitFor("a[href='/account/profile']").Displayed);*/
     }
+    [Test]
+    public void CanAddTeacher()
+    {
+        const string teacherName = "Mariusz";
+        const string teacherSurname = "Tracz";
+        using var driver = WebDriverBuilder.BuildWebDriver();
+        driver.Login(CommonResources.GetValue("email")!, CommonResources.GetValue(key: "password")!);
+        driver.GoToTeachersTab();
+        driver.ClickOn("[test-id='addNewTeacherButton']");
+        driver.WaitFor("input[name='name']").SendKeys(teacherName);
+        driver.WaitFor("input[name='surname']").SendKeys(teacherSurname);
+        driver.WaitFor("input[name='birthday']").ClearElement().SendKeys("02.02.1992");
+        driver.ClickOn("button[type='submit']");
+
+        Assert.That(driver.WaitFor("tbody", e => e.ContainsText(teacherName)), "Could not find teacher name in teachers list");
+        Assert.That(driver.WaitFor("tbody", e => e.ContainsText(teacherSurname)), "Could not find teacher surname in teachers list");
+    }
+
 }
