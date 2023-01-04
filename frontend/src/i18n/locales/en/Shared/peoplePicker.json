@@ -9,5 +9,6 @@
   "_class": "Class",
   "roleNameAdmin": "Administrator",
   "roleNameStudent": "Student",
-  "roleNameTeacher": "Teacher"
+  "roleNameTeacher": "Teacher",
+  "schoolRole": "Role"
 }

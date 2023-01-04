@@ -146,6 +146,8 @@ public partial class FoundationQueriesRepository : IFoundationQueriesPeopleRepos
             builder.WHERE("Birthday < @BirthdayUntil");
         if (pickerData.SchoolRole != 0)
             builder.WHERE("SchoolRole = @SchoolRole");
+        if (pickerData.OnlyInactive)
+            builder.WHERE("UserGuid is null");
         builder.ORDER_BY("CONCAT(Name, ' ', Surname) ");
 
         using var cn = await GetOpenConnectionAsync();

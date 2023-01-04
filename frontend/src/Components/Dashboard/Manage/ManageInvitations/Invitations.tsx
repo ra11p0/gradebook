@@ -34,7 +34,7 @@ const Invitations = (props: InvitationsProps): ReactElement => {
                 className="addInvitationButton"
                 onClick={() => setShowInvitationModal(true)}
               >
-                {t('inviteStudent')}
+                {t('invitePeople')}
               </Button>
               <AddInvitationModal
                 show={showInvitationModal}

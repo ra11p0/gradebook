@@ -1,5 +1,6 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { LoadingButton } from '@mui/lab';
 import { Button, List, ListItem } from '@mui/material';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { Col, Modal, Row } from 'react-bootstrap';
@@ -19,7 +20,7 @@ import IndividualPicker from './IndividualPicker';
 interface Props {
   showFilters?: boolean;
   onHide: () => void;
-  onConfirm: (peopleGuids: string[]) => void;
+  onConfirm: (peopleGuids: string[]) => void | Promise<void>;
   getPeople: (
     pickerData: PeoplePickerData,
     page: number
@@ -33,6 +34,7 @@ interface Props {
 function PeoplePicker(props: Props): ReactElement {
   const { t } = useTranslation('peoplePicker');
   const [selectedPeople, setSelectedPeople] = useState<string[]>([]);
+  const [confirmButtonLoading, setConfirmButtonLoading] = useState(false);
 
   useEffect(() => {
     setSelectedPeople(props.selectedPeople ?? []);
@@ -85,15 +87,18 @@ function PeoplePicker(props: Props): ReactElement {
         </Row>
       </Modal.Body>
       <Modal.Footer>
-        <Button
+        <LoadingButton
           variant="outlined"
-          onClick={() => {
-            props.onConfirm([...new Set(selectedPeople)]);
+          loading={confirmButtonLoading}
+          onClick={async () => {
+            setConfirmButtonLoading(true);
+            await props.onConfirm([...new Set(selectedPeople)]);
+            setConfirmButtonLoading(false);
             props.onHide();
           }}
         >
           {t('confirm')}
-        </Button>
+        </LoadingButton>
       </Modal.Footer>
     </Modal>
   );

@@ -11,4 +11,5 @@ public class PeoplePickerData
     public DateTime? BirthdaySince { get; set; }
     public DateTime? BirthdayUntil { get; set; }
     public SchoolRoleEnum SchoolRole { get; set; }
+    public bool OnlyInactive { get; set; }
 }

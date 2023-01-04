@@ -14,6 +14,10 @@ function RoleSelect(props: Props): ReactElement {
     <div>
       <Form.Label>{t('schoolRole')}</Form.Label>
       <ReactSelect
+        isClearable
+        onChange={(e) => {
+          props.onRoleChanged(e?.value as SchoolRolesEnum | undefined);
+        }}
         options={Object.values(SchoolRolesEnum)
           .filter((e) => !isNaN(e as number))
           .map((e) => ({

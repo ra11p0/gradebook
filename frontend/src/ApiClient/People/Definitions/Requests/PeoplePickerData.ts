@@ -8,4 +8,5 @@ export default interface PeoplePickerData {
   birthdaySince?: Date;
   birthdayUntil?: Date;
   schoolRole?: SchoolRolesEnum;
+  onlyInactive?: boolean;
 }

@@ -29,7 +29,12 @@ const AddInvitationModal = (props: AddInvitationModalProps): ReactElement => {
         });
       }}
       getPeople={async (pickerData, page) => {
-        return (await PeopleProxy.searchPeople(pickerData, page)).data;
+        return (
+          await PeopleProxy.searchPeople(
+            { ...pickerData, onlyInactive: true },
+            page
+          )
+        ).data;
       }}
     />
   );
