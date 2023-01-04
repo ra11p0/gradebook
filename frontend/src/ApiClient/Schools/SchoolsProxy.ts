@@ -114,16 +114,16 @@ const addNewClass = async (
   );
 };
 
-const getClassesInSchool = async (
+async function getClassesInSchool(
   schoolGuid: string = getCurrentSchoolRedux()!.schoolGuid,
   page: number = 0,
   query: string = ''
-): Promise<AxiosResponse<ClassResponse[]>> => {
+): Promise<AxiosResponse<ClassResponse[]>> {
   return await axiosApiAuthorized.get(
     API_URL + `/schools/${schoolGuid}/Classes`,
     { params: { page, query } }
   );
-};
+}
 
 const addNewSubject = async (
   newSubjectRequest: NewSubjectRequest,

@@ -1,1 +1,13 @@
-{ "peoplePicker": "Select people", "searchPeople": "Search", "confirm": "Confirm" }
+{
+  "peoplePicker": "Select people",
+  "searchPeople": "Search",
+  "confirm": "Confirm",
+  "selectAll": "Select all",
+  "unselectAll": "Unselect all",
+  "selectedPeople": "Selected people",
+  "filters": "Filters",
+  "_class": "Class",
+  "roleNameAdmin": "Administrator",
+  "roleNameStudent": "Student",
+  "roleNameTeacher": "Teacher"
+}

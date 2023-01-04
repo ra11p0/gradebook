@@ -139,7 +139,7 @@ public partial class FoundationQueriesRepository : IFoundationQueriesPeopleRepos
             builder.WHERE("CONCAT(Name, ' ', Surname) like @Query");
         }
         if (pickerData.ActiveClassGuid.HasValue)
-            builder.WHERE("ActiveClassGuid = @ActiveClassGuid");
+            builder.WHERE("CurrentClassGuid = @ActiveClassGuid");
         if (pickerData.BirthdaySince.HasValue)
             builder.WHERE("Birthday > @BirthdaySince");
         if (pickerData.BirthdayUntil.HasValue)

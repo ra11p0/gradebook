@@ -1,3 +1,5 @@
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, List, ListItem } from '@mui/material';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { Col, Modal, Row } from 'react-bootstrap';
@@ -63,7 +65,18 @@ function PeoplePicker(props: Props): ReactElement {
                 }}
                 mapper={(item: PersonResponse, index: number) => (
                   <ListItem key={index} className="p-1 m-0">
-                    <Person {...item} />
+                    <div className="d-flex justify-content-between w-100">
+                      <FontAwesomeIcon
+                        icon={faTimes}
+                        className="m-auto pe-3 cursor-pointer text-danger"
+                        onClick={() => {
+                          setSelectedPeople((s) =>
+                            s.filter((p) => p !== item.guid)
+                          );
+                        }}
+                      />
+                      <Person {...item} />
+                    </div>
                   </ListItem>
                 )}
               />

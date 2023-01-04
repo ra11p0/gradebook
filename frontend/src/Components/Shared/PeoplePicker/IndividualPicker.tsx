@@ -1,6 +1,6 @@
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Checkbox, Input } from '@mui/material';
+import { Input } from '@mui/material';
 import React, { ReactElement, useState } from 'react';
 import { Button, Collapse } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
@@ -8,6 +8,8 @@ import PeoplePickerData from '../../../ApiClient/People/Definitions/Requests/Peo
 import { SimplePersonResponse } from '../../../ApiClient/People/Definitions/Responses/PersonResponse';
 import PersonResponse from '../../../ApiClient/Schools/Definitions/Responses/PersonResponse';
 import InfiniteScrollWrapper from '../InfiniteScrollWrapper';
+import Filters from './Filters';
+import PersonItem from './PersonItem';
 
 interface Props {
   showFilters?: boolean;
@@ -30,6 +32,9 @@ function IndividualPicker({
   const { t } = useTranslation('peoplePicker');
   const [query, setQuery] = useState('');
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [pickerData, setPickerData] = useState<PeoplePickerData | undefined>(
+    undefined
+  );
   return (
     <>
       <div className="d-flex justify-content-between">
@@ -60,14 +65,14 @@ function IndividualPicker({
               onClick={async () => {
                 if (!currentSchoolGuid) return;
                 const allPeople = await getPeople(
-                  { schoolGuid: currentSchoolGuid, query },
+                  { schoolGuid: currentSchoolGuid, query, ...pickerData },
                   0
                 );
                 const selectedWithAll = selectedPeople.concat(
                   allPeople.map((e) => e.guid)
                 );
 
-                setSelectedPeople((ppl) =>
+                setSelectedPeople(() =>
                   selectedWithAll.filter(
                     (el, index) => selectedWithAll.indexOf(el) === index
                   )
@@ -82,7 +87,7 @@ function IndividualPicker({
               onClick={async () => {
                 if (!currentSchoolGuid) return;
                 const pplToUnselect = await getPeople(
-                  { schoolGuid: currentSchoolGuid, query },
+                  { schoolGuid: currentSchoolGuid, query, ...pickerData },
                   0
                 );
 
@@ -99,13 +104,15 @@ function IndividualPicker({
         </div>
       </div>
 
-      <div id="scrollContainer" className="vh-50 overflow-scroll">
+      <div id="scrollContainer" className="vh-50 overflow-auto p-1">
         <Collapse in={filtersOpen}>
-          <div>dsa</div>
+          <div>
+            <Filters onChange={setPickerData} />
+          </div>
         </Collapse>
         <InfiniteScrollWrapper
           scrollableTarget="scrollContainer"
-          effect={[query]}
+          effect={[query, pickerData]}
           mapper={(person: PersonResponse, index) => (
             <PersonItem
               {...person}
@@ -117,47 +124,11 @@ function IndividualPicker({
           fetch={async (page: number) => {
             if (!currentSchoolGuid) return [];
             return (await getPeople(
-              { schoolGuid: currentSchoolGuid, query },
+              { ...pickerData, schoolGuid: currentSchoolGuid, query },
               page
             )) as [];
           }}
         />
-      </div>
-    </>
-  );
-}
-interface PersonItemProps {
-  guid: string;
-  selectedPeople: string[];
-  name: string;
-  surname: string;
-  setSelectedPeople: (setFn: (e: string[]) => string[]) => void;
-}
-
-function PersonItem(props: PersonItemProps): ReactElement {
-  return (
-    <>
-      <div
-        className="d-flex justify-content-between border rounded-2 my-1 p-1 cursor-pointer"
-        onClick={() => {
-          props.selectedPeople.includes(props.guid)
-            ? props.setSelectedPeople((s) => s.filter((p) => p !== props.guid))
-            : props.setSelectedPeople((s) => [...s, props.guid]);
-        }}
-      >
-        <div className="my-auto">{`${props.name} ${props.surname}`}</div>
-        <div>
-          <Checkbox
-            checked={props.selectedPeople.includes(props.guid)}
-            onChange={(e, o) =>
-              o
-                ? props.setSelectedPeople((s) => [...s, props.guid])
-                : props.setSelectedPeople((s) =>
-                    s.filter((p) => p !== props.guid)
-                  )
-            }
-          />
-        </div>
       </div>
     </>
   );

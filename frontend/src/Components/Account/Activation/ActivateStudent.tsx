@@ -7,7 +7,6 @@ import InvitationsProxy from '../../../ApiClient/Invitations/InvitationsProxy';
 import moment from 'moment';
 import PeopleProxy from '../../../ApiClient/People/PeopleProxy';
 import Notifications from '../../../Notifications/Notifications';
-import AccountProxy from '../../../ApiClient/Accounts/AccountsProxy';
 import getCurrentUserIdReduxProxy from '../../../Redux/ReduxQueries/account/getCurrentUserIdRedux';
 import setLoginReduxWrapper from '../../../Redux/ReduxCommands/account/setLoginRedux';
 import getSessionRedux from '../../../Redux/ReduxQueries/account/getSessionRedux';
@@ -45,17 +44,13 @@ const ActivateStudentForm = (props: ActivateStudentFormProps): ReactElement => {
     onSubmit: (values: ActivateStudentFormValues) => {
       PeopleProxy.activatePerson(values.accessCode)
         .then(() => {
-          void AccountProxy.getAccessibleSchools(props.userId).then(
-            (schoolsResponse) => {
-              const session = getSessionRedux();
-              if (!session) return;
-              void setLoginReduxWrapper({
-                accessToken: session.accessToken,
-                refreshToken: session.refreshToken,
-              });
-              if (props.onSubmit) props.onSubmit();
-            }
-          );
+          const session = getSessionRedux();
+          if (!session) return;
+          void setLoginReduxWrapper({
+            accessToken: session.accessToken,
+            refreshToken: session.refreshToken,
+          });
+          if (props.onSubmit) props.onSubmit();
         })
         .catch(Notifications.showApiError);
     },

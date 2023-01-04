@@ -1,1 +1,13 @@
-{ "peoplePicker": "Wybierz osoby", "searchPeople": "Wyszukiwanie", "confirm": "Potwierdź" }
+{
+  "peoplePicker": "Wybierz osoby",
+  "searchPeople": "Wyszukiwanie",
+  "confirm": "Potwierdź",
+  "selectAll": "Zaznacz wszystkich",
+  "unselectAll": "Odznacz wszystkich",
+  "selectedPeople": "Zaznaczone osoby",
+  "filters": "Filtry",
+  "_class": "Klasa",
+  "roleNameAdmin": "Administrator",
+  "roleNameStudent": "Uczeń",
+  "roleNameTeacher": "Nauczyciel"
+}

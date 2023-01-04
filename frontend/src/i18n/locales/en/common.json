@@ -13,7 +13,7 @@
   "surname": "Surname",
   "birthday": "Birthday",
   "isActive": "Is active",
-  "select...": "Select...",
+  "select": "Select...",
   "noOptions": "No results",
   "fieldRequired": "Field required",
   "fieldNumberOnly": "Field must contain digits only",
