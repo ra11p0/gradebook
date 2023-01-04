@@ -5,7 +5,8 @@ namespace Gradebook.Foundation.Logic.Queries.Repositories.Interfaces;
 
 public interface IFoundationQueriesRepository : IBaseRepository,
     IFoundationQueriesClassesRepository,
-    IFoundationQueriesPeopleRepository
+    IFoundationQueriesPeopleRepository,
+    IFoundationQueriesInvitationsRepository
 {
     Task<EducationCycleExtendedDto?> GetEducationCycle(Guid educationCycleGuid);
     Task<IEnumerable<EducationCycleStepDto>> GetStepsForEducationCycle(Guid educationCycleGuid);
@@ -18,9 +19,6 @@ public interface IFoundationQueriesRepository : IBaseRepository,
     Task<Guid?> GetPersonGuidForUser(string userId, Guid schoolGuid);
     Task<IEnumerable<SchoolDto>> GetSchoolsForUser(string userGuid);
     Task<IEnumerable<PersonDto>> GetPeopleInSchool(Guid schoolGuid);
-    Task<IEnumerable<InvitationDto>> GetInvitations(Guid personGuid);
-    Task<IPagedList<InvitationDto>> GetInvitationsToSchool(Guid schoolGuid, Pager pager);
-    Task<InvitationDto> GetInvitationByActivationCode(string activationCode);
     Task<GroupDto> GetGroupByGuid(Guid guid);
     Task<ClassDto?> GetClassByGuid(Guid guid);
     Task<IEnumerable<ClassDto>> GetClassesByGuids(IEnumerable<Guid> guids);

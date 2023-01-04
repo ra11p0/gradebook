@@ -14,6 +14,7 @@ function ClassSelect(props: Props): ReactElement {
     <div>
       <Form.Label>{t('_class')}</Form.Label>
       <SelectAsyncPaginate
+        maxMenuHeight={200}
         isClearable
         cacheOptions
         getOptionLabel={(o) => o.name}

@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react';
 import { connect } from 'react-redux';
-import SchoolRolesEnum from '../../../../Common/Enums/SchoolRolesEnum';
 import SchoolsProxy from '../../../../ApiClient/Schools/SchoolsProxy';
 import getCurrentSchoolReduxProxy from '../../../../Redux/ReduxQueries/account/getCurrentSchoolRedux';
 import PeoplePicker from '../../../Shared/PeoplePicker/PeoplePicker';
@@ -21,7 +20,6 @@ const AddInvitationModal = (props: AddInvitationModalProps): ReactElement => {
         await SchoolsProxy.inviteMultiplePeople(
           {
             invitedPersonGuidArray: peopleGuids,
-            role: SchoolRolesEnum.Student,
           },
           props.currentSchool.schoolGuid!
         ).then(() => {

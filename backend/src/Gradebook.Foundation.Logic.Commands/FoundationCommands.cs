@@ -269,22 +269,22 @@ public partial class FoundationCommands : BaseLogic<IFoundationCommandsRepositor
         }
     }
 
-    public async Task<ResponseWithStatus<string[], bool>> GenerateMultipleSystemInvitation(Guid[] peopleGuid, SchoolRoleEnum role, Guid schoolGuid)
+    public async Task<ResponseWithStatus<string[], bool>> GenerateMultipleSystemInvitation(Guid[] peopleGuid, Guid schoolGuid)
     {
         var currentPersonGuid = await _foundationQueries.Service.GetCurrentPersonGuid(schoolGuid);
         if (!currentPersonGuid.Status) return new ResponseWithStatus<string[], bool>(currentPersonGuid.Message);
         if (!await _foundationPermissions.Service.CanInviteToSchool(currentPersonGuid.Response!)) return new ResponseWithStatus<string[], bool>(403);
-        var response = await Task.WhenAll(peopleGuid.Select(async personGuid => await Repository.GenerateSystemInvitation(personGuid, currentPersonGuid.Response, role, schoolGuid)));
+        var response = await Task.WhenAll(peopleGuid.Select(async personGuid => await Repository.GenerateSystemInvitation(personGuid, currentPersonGuid.Response, schoolGuid)));
         await Repository.SaveChangesAsync();
         return new ResponseWithStatus<string[], bool>(response!, response is not null);
     }
 
-    public async Task<ResponseWithStatus<string, bool>> GenerateSystemInvitation(Guid personGuid, SchoolRoleEnum role, Guid schoolGuid)
+    public async Task<ResponseWithStatus<string, bool>> GenerateSystemInvitation(Guid personGuid, Guid schoolGuid)
     {
         var currentPersonGuid = await _foundationQueries.Service.GetCurrentPersonGuid(schoolGuid);
         if (!currentPersonGuid.Status) return new ResponseWithStatus<string, bool>(currentPersonGuid.Message);
         if (!await _foundationPermissions.Service.CanInviteToSchool(currentPersonGuid.Response!)) return new ResponseWithStatus<string, bool>(403);
-        var response = await Repository.GenerateSystemInvitation(personGuid, currentPersonGuid.Response, role, schoolGuid);
+        var response = await Repository.GenerateSystemInvitation(personGuid, currentPersonGuid.Response, schoolGuid);
         await Repository.SaveChangesAsync();
         return new ResponseWithStatus<string, bool>(response, response is not null);
     }
@@ -374,5 +374,10 @@ public partial class FoundationCommands : BaseLogic<IFoundationCommandsRepositor
             Repository.RollbackTransaction();
             return new StatusResponse($"{addResp.Message}; {removeResp.Message}");
         }
+    }
+
+    public Task<ResponseWithStatus<string, bool>> GenerateSystemInvitation(Guid personGuid, SchoolRoleEnum role, Guid schoolGuid)
+    {
+        throw new NotImplementedException();
     }
 }

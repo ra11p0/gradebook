@@ -4,6 +4,7 @@ import { ActionMeta, SingleValue } from 'react-select';
 import { AsyncPaginate } from 'react-select-async-paginate';
 
 interface Props<T> {
+  maxMenuHeight?: number;
   className?: string;
   isClearable?: boolean;
   cacheOptions?: boolean;
