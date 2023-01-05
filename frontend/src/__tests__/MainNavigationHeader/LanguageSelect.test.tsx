@@ -40,7 +40,7 @@ describe('<LanguageSelect/>', () => {
       userEvent.click(screen.getByRole('button'));
     });
     await act(async () => {
-      await userEvent.click(
+      userEvent.click(
         await screen.findByRole('button', { name: 'polish (Polish)' })
       );
     });

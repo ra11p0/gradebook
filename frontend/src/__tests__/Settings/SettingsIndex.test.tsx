@@ -5,6 +5,7 @@ import { act } from 'react-dom/test-utils';
 import { ReactNotifications } from 'react-notifications-component';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
+import { vi } from 'vitest';
 import AccountsProxy from '../../ApiClient/Accounts/AccountsProxy';
 import SettingsIndex from '../../Components/Dashboard/Manage/Settings/SettingsIndex';
 import { store } from '../../store';

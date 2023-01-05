@@ -1,13 +1,12 @@
-import React from 'react';
 import { render } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { I18nextProvider } from 'react-i18next';
 import { Provider } from 'react-redux';
-import { store } from '../../store';
-import setPermissionsRedux from '../../Redux/ReduxCommands/account/setPermissionsRedux';
+import { BrowserRouter } from 'react-router-dom';
 import PermissionLevelEnum from '../../Common/Enums/Permissions/PermissionLevelEnum';
 import DashboardNavigation from '../../Components/Dashboard/DashboardNavigation';
 import i18n from '../../i18n/config';
-import { I18nextProvider } from 'react-i18next';
+import setPermissionsRedux from '../../Redux/ReduxCommands/account/setPermissionsRedux';
+import { store } from '../../store';
 
 describe('<DashboardNavigation />', () => {
   it('Should not show `education cycle` button - EducationCycles_NoAccess', async () => {

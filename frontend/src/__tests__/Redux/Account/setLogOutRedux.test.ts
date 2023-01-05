@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom';
+import { vi } from 'vitest';
 import HubProxy from '../../../ApiClient/SignalR/HubProxy';
 import setLogOutRedux from '../../../Redux/ReduxCommands/account/setLogOutRedux';
 

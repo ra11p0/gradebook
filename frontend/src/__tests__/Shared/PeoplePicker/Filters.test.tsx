@@ -1,15 +1,14 @@
 import { act, render, screen } from '@testing-library/react';
-import React from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import i18n from '../../../i18n/config';
-import { store } from '../../../store';
-import Filters from '../../../Components/Shared/PeoplePicker/Filters';
+import { openMenu, select } from 'react-select-event';
+import { vi } from 'vitest';
 import PeoplePickerData from '../../../ApiClient/People/Definitions/Requests/PeoplePickerData';
 import SchoolProxy from '../../../ApiClient/Schools/SchoolsProxy';
-import { vi } from 'vitest';
-import { openMenu, select } from 'react-select-event';
+import Filters from '../../../Components/Shared/PeoplePicker/Filters';
+import i18n from '../../../i18n/config';
+import { store } from '../../../store';
 
 describe('<Filters />', () => {
   it('Class filter should call back on change', async () => {
