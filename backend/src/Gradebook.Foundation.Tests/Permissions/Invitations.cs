@@ -42,7 +42,7 @@ public class Permissions
         foundationQueriesRepository.Setup(e => e.GetPersonGuidForUser(It.IsAny<string>(), It.IsAny<Guid>())).ReturnsAsync(Guid.NewGuid());
         identityLogic.Setup(e => e.CurrentUserId()).ReturnsAsync(new Common.ResponseWithStatus<string, bool>(default, true));
         foundationPermissionsLogic.Setup(e => e.CanInviteToSchool(It.IsAny<Guid>())).ReturnsAsync(false);
-        var result = await foundationCommands!.GenerateSystemInvitation(new Guid(), Common.Foundation.Enums.SchoolRoleEnum.Admin, new Guid());
+        var result = await foundationCommands!.GenerateSystemInvitation(new Guid(), new Guid());
         Assert.That(result.Status, Is.False);
         Assert.That(result.StatusCode, Is.EqualTo(403));
     }
@@ -61,7 +61,6 @@ public class Permissions
 
         var result = await foundationCommands!.GenerateMultipleSystemInvitation(
                 new Guid[] { new Guid() },
-                SchoolRoleEnum.Admin,
                 new Guid()
             );
 
