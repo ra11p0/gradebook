@@ -1,7 +1,8 @@
-import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import viteTsconfigPaths from 'vite-tsconfig-paths';
+import { defineConfig } from 'vite';
+import eslint from 'vite-plugin-eslint';
 import svgrPlugin from 'vite-plugin-svgr';
+import viteTsconfigPaths from 'vite-tsconfig-paths';
 import { configDefaults } from 'vitest/config';
 
 // https://vitejs.dev/config/
@@ -12,9 +13,8 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes('i18n/locales')) {
-            return 'i18n';
-          }
+          if (id.includes('i18n/locales')) return 'i18n';
+          if (id.includes('node_modules')) return 'mod';
         },
       },
     },
@@ -23,7 +23,7 @@ export default defineConfig({
     port: 3005,
     host: '127.0.0.1',
   },
-  plugins: [react(), viteTsconfigPaths(), svgrPlugin()],
+  plugins: [react(), viteTsconfigPaths(), svgrPlugin(), eslint()],
   test: {
     globals: true,
     environment: 'jsdom',

@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import { Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import ReactSelect from 'react-select';
@@ -7,7 +7,6 @@ import SchoolRolesEnum from '../../../Common/Enums/SchoolRolesEnum';
 interface Props {
   onRoleChanged: (schoolRole: SchoolRolesEnum | undefined) => void;
 }
-
 function RoleSelect(props: Props): ReactElement {
   const { t } = useTranslation('peoplePicker');
   return (

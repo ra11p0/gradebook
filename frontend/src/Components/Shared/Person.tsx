@@ -1,8 +1,8 @@
-import React, { ReactElement } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Col, Row } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ReactElement } from 'react';
+import { Col, Row } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import SchoolRolesEnum from '../../Common/Enums/SchoolRolesEnum';
 interface PersonProps {
