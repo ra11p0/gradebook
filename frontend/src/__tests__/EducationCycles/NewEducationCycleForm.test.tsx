@@ -85,8 +85,6 @@ describe('<NewCycleForm />', () => {
       const submit = getByTestId(form, 'submit');
       fireEvent.click(submit);
     });
-    await expect(
-      await screen.findByText('At least one step required')
-    ).toBeTruthy();
+    expect(await screen.findByText('atLeastOneStep')).toBeTruthy();
   });
 });

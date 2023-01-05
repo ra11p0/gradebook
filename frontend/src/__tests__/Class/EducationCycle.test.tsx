@@ -1,13 +1,12 @@
-import React from 'react';
 import { act, render, screen } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { store } from '../../store';
-import i18n from '../../i18n/config';
 import { I18nextProvider } from 'react-i18next';
-import EducationCycle from '../../Components/Class/EducationCycle/EducationCycle';
-import ClassesProxy from '../../ApiClient/Classes/ClassesProxy';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 import { vi } from 'vitest';
+import ClassesProxy from '../../ApiClient/Classes/ClassesProxy';
+import EducationCycle from '../../Components/Class/EducationCycle/EducationCycle';
+import i18n from '../../i18n/config';
+import { store } from '../../store';
 
 describe('<EducationCycle />', () => {
   it('Should show no cycle attached', async () => {
@@ -30,9 +29,7 @@ describe('<EducationCycle />', () => {
         </Provider>
       );
     });
-    expect(
-      await screen.findByText('No education cycle attached to this class')
-    ).toBeTruthy();
+    expect(await screen.findByText('educationCycleNotAttached')).toBeTruthy();
   });
   it('Should show cycle not configured', async () => {
     vi.spyOn(
@@ -56,11 +53,9 @@ describe('<EducationCycle />', () => {
         </Provider>
       );
     });
+    expect(await screen.findByText('educationCycleNotConfigured')).toBeTruthy();
     expect(
-      await screen.findByText('Education cycle has not been configured')
-    ).toBeTruthy();
-    expect(
-      await screen.findByRole('button', { name: 'Configure education cycle' })
+      await screen.findByRole('button', { name: 'configureEducationCycle' })
     ).toBeTruthy();
   });
   it('Should show cycle not started', async () => {
@@ -88,7 +83,7 @@ describe('<EducationCycle />', () => {
       );
     });
     expect(
-      await screen.findByText('Education cycle stage is not started yet.')
+      await screen.findByText('educationCycleNotStartedDescription')
     ).toBeTruthy();
   });
   it('Should show can start next cycle step', async () => {
@@ -119,10 +114,10 @@ describe('<EducationCycle />', () => {
       );
     });
     expect(
-      await screen.findByText('Education cycle stage started.')
+      await screen.findByText('educationCycleStartedDescription')
     ).toBeTruthy();
     expect(
-      await screen.findByText('You can start next stage now.')
+      await screen.findByText('educationCycleStartedNotLastDescription')
     ).toBeTruthy();
   });
   it('Should show can finish cycle', async () => {
@@ -143,19 +138,15 @@ describe('<EducationCycle />', () => {
     await act(async () => {
       render(
         <Provider store={store}>
-          <BrowserRouter>
-            <I18nextProvider i18n={i18n}>
-              <EducationCycle classGuid={'fakeClassGuid'} />
-            </I18nextProvider>
-          </BrowserRouter>
+          <EducationCycle classGuid={'fakeClassGuid'} />
         </Provider>
       );
     });
     expect(
-      await screen.findByText('Education cycle stage started.')
+      await screen.findByText('educationCycleStartedDescription')
     ).toBeTruthy();
     expect(
-      await screen.findByText('You can finish education cycle.')
+      await screen.findByText('educationCycleStartedLastDescription')
     ).toBeTruthy();
   });
 });

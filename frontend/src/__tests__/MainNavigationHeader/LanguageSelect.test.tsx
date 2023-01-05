@@ -41,7 +41,7 @@ describe('<LanguageSelect/>', () => {
     });
     await act(async () => {
       await userEvent.click(
-        await screen.findByRole('button', { name: 'Polish (Polish)' })
+        await screen.findByRole('button', { name: 'polish (Polish)' })
       );
     });
     expect(setLanguageMock).toBeCalledTimes(1);
@@ -73,8 +73,8 @@ describe('<LanguageSelect/>', () => {
       userEvent.click(screen.getByRole('button'));
     });
     await act(async () => {
-      await userEvent.click(
-        await screen.findByRole('button', { name: 'Polish (Polish)' })
+      userEvent.click(
+        await screen.findByRole('button', { name: 'polish (Polish)' })
       );
     });
     expect(getIsLoggedInReduxMock).toBeCalledTimes(1);
