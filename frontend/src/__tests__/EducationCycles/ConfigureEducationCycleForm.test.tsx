@@ -12,6 +12,7 @@ import EducationCyclesProxy from '../../ApiClient/EducationCycles/EducationCycle
 import ClassesProxy from '../../ApiClient/Classes/ClassesProxy';
 import SubjectsProxy from '../../ApiClient/Subjects/SubjectsProxy';
 import { select, openMenu } from 'react-select-event';
+import { vi } from 'vitest';
 
 describe('<ConfigureEducationCycleForm />', () => {
   it('Should validate start and end dates empty', async () => {

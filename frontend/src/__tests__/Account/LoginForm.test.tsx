@@ -11,6 +11,8 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import AccountsProxy from '../../ApiClient/Accounts/AccountsProxy';
 import Swal from 'sweetalert2';
+import { vi } from 'vitest';
+import { wait } from '@testing-library/user-event/dist/utils';
 
 vi.mock('axios', () => ({
   default: {
@@ -29,13 +31,9 @@ vi.mock('axios', () => ({
 
 describe('<LoginForm/>', () => {
   it('Should disable login button while logging in', async () => {
-    vi.spyOn(AccountsProxy, 'logIn').mockImplementationOnce(async () => {
-      return await new Promise((resolve, reject) => {
-        void new Promise((resolve) => setTimeout(resolve, 1000)).then(() =>
-          reject(new Error())
-        );
-      });
-    });
+    vi.spyOn(AccountsProxy, 'logIn').mockImplementationOnce(
+      async () => (await wait(1000)) as any
+    );
 
     await act(() => {
       render(

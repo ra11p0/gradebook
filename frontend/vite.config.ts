@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
 import svgrPlugin from 'vite-plugin-svgr';
+import { configDefaults } from 'vitest/config';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -27,5 +28,6 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     testTimeout: 10000,
+    exclude: [...configDefaults.exclude],
   },
 });

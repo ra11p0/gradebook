@@ -14,6 +14,8 @@ function RoleSelect(props: Props): ReactElement {
     <div>
       <Form.Label>{t('schoolRole')}</Form.Label>
       <ReactSelect
+        id="roleFilter"
+        data-testid="roleFilter"
         maxMenuHeight={200}
         isClearable
         onChange={(e) => {

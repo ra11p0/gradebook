@@ -10,11 +10,11 @@ import '@testing-library/jest-dom';
 import AccountsProxy from '../../../ApiClient/Accounts/AccountsProxy';
 import Swal from 'sweetalert2';
 import ChangePasswordLoggedIn from '../../../Components/Account/ChangePassword/ChangePasswordLoggedIn';
-import { display } from '@mui/system';
+import { vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 
 vi.mock('react-router-dom', async () => ({
-  ...(await vi.importActual('react-router-dom')),
+  ...((await vi.importActual('react-router-dom')) as any),
   useParams: () => ({ accountGuid: 'aguid', activationCode: 'actcode' }),
   useNavigate: vi.fn(),
 }));

@@ -25,6 +25,7 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
+  "ignorePatterns": "**/*.test.tsx",
   "plugins": ["react", "@typescript-eslint"],
   "rules": {
     "@typescript-eslint/no-misused-promises": "off",

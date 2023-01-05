@@ -12,6 +12,7 @@ import '@testing-library/jest-dom';
 import AccountsProxy from '../../ApiClient/Accounts/AccountsProxy';
 import Notifications from '../../Notifications/Notifications';
 import { ReactNotifications } from 'react-notifications-component';
+import { vi } from 'vitest';
 
 describe('<RegisterForm/>', () => {
   it('Should disable register button while registering', async () => {
