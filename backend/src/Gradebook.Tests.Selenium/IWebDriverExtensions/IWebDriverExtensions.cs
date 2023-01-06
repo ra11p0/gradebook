@@ -4,6 +4,9 @@ namespace Gradebook.Tests.Selenium.IWebDriverExtensions;
 
 public static class IWebDriverExtensions
 {
+    private static WebDriverWait GetWait(this IWebDriver driver, int timeoutSeconds = 5)
+        => new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutSeconds));
+
     public static IWebDriver ScrollTo(this IWebDriver driver, IWebElement element)
     {
         ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", element);
@@ -18,32 +21,46 @@ public static class IWebDriverExtensions
         el.Click();
         return el;
     }
+    public static IWebElement ClickOnElementContaining(this IWebDriver driver, string text, int timeoutSeconds = 5)
+    {
+        var el = driver.WaitForXpath($"//*[text()='{text}']");
+        driver.ScrollTo(el);
+        el.Click();
+        return el;
+    }
+    public static IWebElement WaitForElementContaining(this IWebDriver driver, string text, int timeoutSeconds = 5)
+    {
+        var el = driver.WaitForXpath($"//*[text()='{text}']");
+        return el;
+    }
 
     public static IWebElement WaitFor(this IWebDriver driver, string cssSelector, int timeoutSeconds = 5)
     {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
-        var el = wait.Until(d => d.FindElement(By.CssSelector(cssSelector)));
+        var el = driver.GetWait(timeoutSeconds).Until(d => d.FindElement(By.CssSelector(cssSelector)));
+        return el;
+    }
+
+    public static IWebElement WaitForXpath(this IWebDriver driver, string xpath, int timeoutSeconds = 5)
+    {
+        var el = driver.GetWait(timeoutSeconds).Until(d => d.FindElement(By.XPath(xpath)));
         return el;
     }
 
     public static T WaitFor<T>(this IWebDriver driver, string cssSelector, Func<IWebElement, T> waitFunc, int timeoutSeconds = 5)
     {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
-        var res = wait.Until(e => waitFunc(e.FindElement(By.CssSelector(cssSelector))));
+        var res = driver.GetWait(timeoutSeconds).Until(e => waitFunc(e.FindElement(By.CssSelector(cssSelector))));
         return res;
     }
 
     public static ReadOnlyCollection<IWebElement> WaitForMany(this IWebDriver driver, string cssSelector, int timeoutSeconds = 5)
     {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
-        var el = wait.Until(d => d.FindElements(By.CssSelector(cssSelector)));
+        var el = driver.GetWait(timeoutSeconds).Until(d => d.FindElements(By.CssSelector(cssSelector)));
         return el;
     }
 
     public static bool Contains(this IWebDriver driver, string cssSelector, int timeoutSeconds = 5)
     {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
-        var el = wait.Until(d => d.FindElement(By.CssSelector(cssSelector)));
+        var el = driver.GetWait(timeoutSeconds).Until(d => d.FindElement(By.CssSelector(cssSelector)));
         return el is not null;
     }
 

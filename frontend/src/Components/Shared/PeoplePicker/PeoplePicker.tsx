@@ -88,6 +88,7 @@ function PeoplePicker(props: Props): ReactElement {
       </Modal.Body>
       <Modal.Footer>
         <LoadingButton
+          type="submit"
           variant="outlined"
           loading={confirmButtonLoading}
           onClick={async () => {

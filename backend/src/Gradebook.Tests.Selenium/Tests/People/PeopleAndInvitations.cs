@@ -1,4 +1,5 @@
 using Gradebook.Tests.Selenium.Constraints.Views.Dashboard;
+using Gradebook.Tests.Selenium.Constraints.Views.Shared;
 using Gradebook.Tests.Selenium.IWebDriverExtensions;
 using Gradebook.Tests.Selenium.QuickActionsExtensions;
 using StudentsView = Gradebook.Tests.Selenium.Constraints.Views.Dashboard.Students;
@@ -34,46 +35,45 @@ public class PeopleAndInvitations
         Assert.That(driver.WaitFor("tbody").ContainsText(_storage["studentName"]));
         Assert.That(driver.WaitFor("tbody").ContainsText(_storage["studentSurname"]));
     }
+
     [Test]
     [Order(2)]
     public void CanInviteStudent()
     {
-        // wybieraczka do zmiany
-        /* using var driver = WebDriverBuilder.BuildWebDriver();
+        using var driver = WebDriverBuilder.BuildWebDriver();
+        driver.Login(CommonResources.GetValue("email")!, CommonResources.GetValue(key: "password")!);
+        driver.ClickOn(Common.InvitationsButton);
+        driver.ClickOn("button.addInvitationButton");
+        driver.WaitFor(PeoplePicker.SearchQueryInput).SendKeys(_storage["studentName"]);
+        driver.ClickOn($"[data-person-full-name='{_storage["studentName"] + " " + _storage["studentSurname"]}']");
+        Assert.That(driver.WaitFor(".person-element").ContainsText(_storage["studentName"] + " " + _storage["studentSurname"]));
+        driver.ClickOn("button[type='submit']");
+        Assert.That(driver.WaitForElementContaining(_storage["studentName"] + " " + _storage["studentSurname"]).Displayed);
 
+        var invitationCode = driver
+            .WaitForElementContaining(_storage["studentName"] + " " + _storage["studentSurname"])
+            .Parent("tr")
+            .Children(".invitation-code")
+            .First().Text.Trim();
 
-         //var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(5));
-         //Actions actions = new(_driver);
-         driver.ClickOn("a[href='/dashboard/manageInvitations']");
-
-
-         wait.Until(d => d.FindElement(By.CssSelector("button.addInvitationButton"))).Click();
-         wait.Until(d => d.FindElement(By.CssSelector(".selectPeopleToInvite"))).Click();
-         wait.Until(d => d.FindElement(By.XPath($"//li/a/div/div/div/div[text()='{_storage["studentName"]}']"))).Click();
-         actions.SendKeys(Keys.Escape).Perform();
-         _driver!.FindElement(By.CssSelector(".modal-footer > button[type='button']")).Click();
-         var studentNameRecord = wait.Until(d => d.FindElement(By.XPath($"//div[text()='{_storage["studentName"]}']")));
-         var studentSurnameRecord = wait.Until(d => d.FindElement(By.XPath($"//div[text()='{_storage["studentSurname"]}']")));
-         var invitationCode = _driver.FindElement(By.XPath($"//div[text()='{_storage["studentSurname"]}']/../../../../../../div")).Text;
-         _storage["newStudentInvitationCode"] = invitationCode;
-         Assert.That(!string.IsNullOrEmpty(invitationCode));*/
+        _storage["newStudentInvitationCode"] = invitationCode;
+        Assert.That(!string.IsNullOrEmpty(invitationCode));
     }
+
     [Test]
     [Order(3)]
     public void CanRegisterAsStudent()
     {
-        //  wybieraczka do zmiany
-        /*
         using var driver = WebDriverBuilder.BuildWebDriver();
         driver.Register(_storage["studentEmail"], _storage["studentPassword"]);
-        driver.Login(_storage["studentEmail"], _storage["studentPassword"]);
         driver.ClickOn("button.activateStudent");
         driver.WaitFor("input[name='accessCode']").SendKeys(_storage["newStudentInvitationCode"]);
         Assert.That(driver.WaitFor($"input[value='{_storage["studentName"]}']").Displayed);
         Assert.That(driver.WaitFor($"input[value='{_storage["studentSurname"]}']").Displayed);
         driver.ClickOn("button[type='submit']");
-        Assert.That(driver.WaitFor("a[href='/account/profile']").Displayed);*/
+        Assert.That(driver.WaitFor("a[href='/account/profile']").Displayed);
     }
+
     [Test]
     public void CanAddTeacher()
     {

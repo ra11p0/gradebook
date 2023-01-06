@@ -14,6 +14,7 @@ function PersonItem(props: Props): ReactElement {
     <>
       <div
         className="d-flex justify-content-between border rounded-2 my-1 p-1 cursor-pointer"
+        data-person-full-name={`${props.name} ${props.surname}`}
         onClick={() => {
           props.selectedPeople.includes(props.guid)
             ? props.setSelectedPeople((s) => s.filter((p) => p !== props.guid))

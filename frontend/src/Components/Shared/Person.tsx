@@ -19,7 +19,7 @@ const Person = (props: PersonProps): ReactElement => {
   return (
     <Link
       to={props.noLink ? `javascript:;` : `/person/show/${props.guid}`}
-      className={`${props.noLink ? 'disabled text-reset' : ''} ${
+      className={`person-element ${props.noLink ? 'disabled text-reset' : ''} ${
         props.className ?? ''
       } w-100 text-start btn btn-sm btn-outline-secondary`}
     >

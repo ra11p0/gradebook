@@ -17,6 +17,7 @@ public static class IWebElementExtensions
             el.SendKeys(Keys.Control + "a");
         return el;
     }
+
     public static bool ContainsText(this IWebElement el, string innerText)
     {
         const int timeoutLimit = 5;
@@ -30,5 +31,34 @@ public static class IWebElementExtensions
             Thread.Sleep(1000);
         } while (!contains);
         return contains;
+    }
+
+    public static IWebElement Parent(this IWebElement el)
+    {
+        var parent = el.FindElement(By.XPath("./.."));
+        return parent;
+    }
+    public static IWebElement Parent(this IWebElement el, string cssSelector)
+    {
+        IWebElement parent = el;
+        do
+        {
+            parent = parent.Parent();
+            var targetParent = parent.Children(cssSelector).FirstOrDefault();
+            if (targetParent is not null) return targetParent;
+        }
+        while (true);
+
+    }
+
+    public static IEnumerable<IWebElement> Children(this IWebElement el)
+    {
+        var children = el.FindElements(By.XPath(".//*"));
+        return children;
+    }
+
+    public static IEnumerable<IWebElement> Children(this IWebElement el, string cssSelector)
+    {
+        return el.FindElements(By.CssSelector(cssSelector));
     }
 }

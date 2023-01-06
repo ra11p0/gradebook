@@ -2,6 +2,7 @@ using Gradebook.Tests.Selenium.Constraints.Views;
 using Gradebook.Tests.Selenium.Helpers;
 using Gradebook.Tests.Selenium.IWebDriverExtensions;
 using LoginView = Gradebook.Tests.Selenium.Constraints.Views.Login;
+using RegisterView = Gradebook.Tests.Selenium.Constraints.Views.Register;
 
 namespace Gradebook.Tests.Selenium.QuickActionsExtensions;
 
@@ -30,28 +31,21 @@ public static class GradebookQuickActionsExtensions
     }
     public static IWebDriver Register(this IWebDriver driver, string email, string password)
     {
-        // nowe akcje drivera
-        /*
         driver.GoToGradebookHomepage();
-
-        //  Login form view
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
-        var registerButton = driver.FindElement(By.CssSelector("a[href='/register']"));
-        registerButton.Click();
-
-        //  RegisterAndLogin form view
-        wait.Until(drv => drv.FindElement(By.CssSelector("form")));
-        var emailField = driver.FindElement(By.CssSelector("#email"));
-        var passwordField = driver.FindElement(By.CssSelector("#password"));
-        var password2 = driver.FindElement(By.CssSelector("#password2"));
-        var submitButton = driver.FindElement(By.CssSelector("button[type='submit']"));
-
-        emailField.SendKeys(email);
-        passwordField.SendKeys(password);
-        password2.SendKeys(password);
-        submitButton.Click();
-
-        wait.Until(drv => drv.FindElement(By.CssSelector(".swal2-confirm.swal2-styled")));*/
+        driver.ClickOn(LoginView.RegisterButton);
+        driver.WaitFor(RegisterView.EmailField).SendKeys(email);
+        driver.WaitFor(RegisterView.PasswordField).SendKeys(password);
+        driver.WaitFor(RegisterView.Password2Field).SendKeys(password);
+        driver.WaitFor(RegisterView.TermsAndConditionsSwitch).Click();
+        driver.ClickOn(RegisterView.SubmitButton);
+        var link = DatabaseHelper.GetActivationLinkFromEmail(email);
+        driver.GoTo(link);
+        Assert.That(driver.Contains(Swal.SuccessRing));
+        driver.ClickOn(Swal.ConfirmButton);
+        driver.WaitFor(LoginView.EmailField).SendKeys(email);
+        driver.WaitFor(LoginView.PasswordField).SendKeys(password);
+        driver.ClickOn(LoginView.SubmitButton);
+        Assert.That(driver.Contains(Header.LogOutButton));
         return driver;
     }
     public static IWebDriver GoToGradebookHomepage(this IWebDriver driver)
