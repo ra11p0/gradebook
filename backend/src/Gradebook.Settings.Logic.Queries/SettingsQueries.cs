@@ -20,7 +20,7 @@ public class SettingsQueries : BaseLogic<ISettingsQueriesRepository>, ISettingsQ
     public async Task<Guid> GetDefaultSchoolGuid(string userGuid)
     {
         var resp = await Repository.GetSettingForUserAsync<Guid>(userGuid, SettingEnum.DefaultSchool);
-        if (resp == default) return (await _foundationQueries.Service.GetSchoolsForUser(userGuid)).Response!.Select(e => e.School.Guid).FirstOrDefault();
+        if (resp == default) return (await _foundationQueries.Service.GetSchoolsForUser(userGuid)).Response!.OrderBy(e => e.School.Name).Select(e => e.School.Guid).FirstOrDefault();
         return resp;
     }
 
