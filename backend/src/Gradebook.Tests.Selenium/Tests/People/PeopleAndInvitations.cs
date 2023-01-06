@@ -51,7 +51,7 @@ public class PeopleAndInvitations
         Assert.That(driver.WaitForElementContaining(_storage["studentName"] + " " + _storage["studentSurname"]).Displayed);
 
         var invitationCode = driver
-            .WaitForElementContaining(_storage["studentName"] + " " + _storage["studentSurname"])
+            .WaitForElementContaining(_storage["studentName"] + " " + _storage["studentSurname"], 10)
             .Parent("tr")
             .Children(".invitation-code")
             .First().Text.Trim();
