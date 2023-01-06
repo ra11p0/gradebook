@@ -39,7 +39,7 @@ public class Classes
         driver.Login(CommonResources.GetValue("email")!, CommonResources.GetValue(key: "password")!);
 
         driver.ClickOn(Common.ClassesButton);
-        driver.WaitForElementContaining(_className).Parent("tr").Click();
+        driver.WaitForElementContaining(_className, 10).Parent("tr").Click();
         driver.ClickOn(ClassView.ManageClassOwners);
         driver.SelectPerson("Mariusz Tracz");
         driver.ClickOn("button[type='submit']");

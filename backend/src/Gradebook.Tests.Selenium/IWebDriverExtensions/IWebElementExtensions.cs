@@ -46,7 +46,6 @@ public static class IWebElementExtensions
         IWebElement parent = el;
         do
         {
-            Console.WriteLine(i);
             parent = parent.Parent();
             var targetParent = parent.Children(cssSelector).FirstOrDefault();
             if (targetParent is not null) return targetParent;
