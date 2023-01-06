@@ -8,7 +8,7 @@ namespace Gradebook.Tests.Selenium.Helpers;
 
 public static class DatabaseHelper
 {
-    public static string GetActivationLinkFromEmail(string email, DateTime? scanSince = null, int timeoutInSeconds = 30)
+    public static string GetActivationLinkFromEmail(string email, DateTime? scanSince = null)
     {
         scanSince = scanSince ?? Time.UtcNow;
         var jsonString = ScanDatabase<string>(@"
@@ -21,7 +21,7 @@ public static class DatabaseHelper
         return $"{url}service/account/{message!.TargetGuid}/activation/{message!.AuthCode}";
     }
 
-    public static string GetChangePasswordLinkFromEmail(string email, DateTime? scanSince = null, int timeoutInSeconds = 30)
+    public static string GetChangePasswordLinkFromEmail(string email, DateTime? scanSince = null)
     {
         scanSince = scanSince ?? Time.UtcNow;
         var jsonString = ScanDatabase<string>(@"
