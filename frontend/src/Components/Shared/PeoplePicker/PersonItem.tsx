@@ -27,7 +27,11 @@ function PersonItem(props: Props): ReactElement {
             checked={props.selectedPeople.includes(props.guid)}
             onChange={(e, o) =>
               o
-                ? props.setSelectedPeople((s) => [...s, props.guid])
+                ? props.setSelectedPeople((s) =>
+                    [...s, props.guid].filter(
+                      (el, elIndex, arr) => arr.indexOf(el) === elIndex
+                    )
+                  )
                 : props.setSelectedPeople((s) =>
                     s.filter((p) => p !== props.guid)
                   )

@@ -23,7 +23,7 @@ const Person = (props: PersonProps): ReactElement => {
         props.className ?? ''
       } w-100 text-start btn btn-sm btn-outline-secondary`}
     >
-      <Row>
+      <Row data-testid={`personComponent-${props.guid}`}>
         <Col xs={1} className={`my-auto mx-2`}>
           <FontAwesomeIcon icon={faUser} />
         </Col>
