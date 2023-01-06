@@ -1,9 +1,10 @@
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import { connect } from 'react-redux';
+import PeopleProxy from '../../../../ApiClient/People/PeopleProxy';
 import SchoolsProxy from '../../../../ApiClient/Schools/SchoolsProxy';
+import Notifications from '../../../../Notifications/Notifications';
 import getCurrentSchoolReduxProxy from '../../../../Redux/ReduxQueries/account/getCurrentSchoolRedux';
 import PeoplePicker from '../../../Shared/PeoplePicker/PeoplePicker';
-import PeopleProxy from '../../../../ApiClient/People/PeopleProxy';
 
 interface AddInvitationModalProps {
   show: boolean;
@@ -17,14 +18,16 @@ const AddInvitationModal = (props: AddInvitationModalProps): ReactElement => {
       show={props.show}
       onHide={props.onHide}
       onConfirm={async (peopleGuids: string[]) => {
-        await SchoolsProxy.inviteMultiplePeople(
-          {
-            invitedPersonGuidArray: peopleGuids,
-          },
-          props.currentSchool.schoolGuid!
-        ).then(() => {
-          props.onHide();
-        });
+        if (peopleGuids.length !== 0)
+          await SchoolsProxy.inviteMultiplePeople(
+            {
+              invitedPersonGuidArray: peopleGuids,
+            },
+            props.currentSchool.schoolGuid!
+          ).then(() => {
+            Notifications.showSuccessNotification();
+          });
+        props.onHide();
       }}
       getPeople={async (pickerData, page) => {
         return (
