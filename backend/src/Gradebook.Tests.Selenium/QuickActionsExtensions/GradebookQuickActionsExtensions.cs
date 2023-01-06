@@ -1,3 +1,4 @@
+using Gradebook.Foundation.Common;
 using Gradebook.Tests.Selenium.Constraints.Views;
 using Gradebook.Tests.Selenium.Helpers;
 using Gradebook.Tests.Selenium.IWebDriverExtensions;
@@ -72,11 +73,12 @@ public static class GradebookQuickActionsExtensions
         driver.GoToGradebookHomepage();
         driver.ClickOn("a[test-id='forgotPassword']");
         driver.WaitForMany("input[name='email']")[1].SendKeys(email);
+        var timestamp = Time.UtcNow;
         driver.WaitForMany("button[type='submit']")[1].Click();
 
         Assert.That(driver.Contains(Swal.SuccessRing));
 
-        var remindPasswordLink = DatabaseHelper.GetChangePasswordLinkFromEmail(email);
+        var remindPasswordLink = DatabaseHelper.GetChangePasswordLinkFromEmail(email, timestamp);
 
         driver.GoTo(remindPasswordLink);
         driver.WaitFor("input[name='newPassword']").SendKeys(newPassword);

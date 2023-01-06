@@ -2,6 +2,7 @@ using Gradebook.Foundation.Mailservice.MailMessages;
 using Newtonsoft.Json;
 using MySql.Data.MySqlClient;
 using Dapper;
+using Gradebook.Foundation.Common;
 
 namespace Gradebook.Tests.Selenium.Helpers;
 
@@ -9,7 +10,7 @@ public static class DatabaseHelper
 {
     public static string GetActivationLinkFromEmail(string email, DateTime? scanSince = null, int timeoutInSeconds = 30)
     {
-        scanSince = scanSince ?? DateTime.UtcNow;
+        scanSince = scanSince ?? Time.UtcNow;
         var jsonString = ScanDatabase<string>(@"
             SELECT PayloadJson 
             FROM MailHistory 
@@ -22,7 +23,7 @@ public static class DatabaseHelper
 
     public static string GetChangePasswordLinkFromEmail(string email, DateTime? scanSince = null, int timeoutInSeconds = 30)
     {
-        scanSince = scanSince ?? DateTime.UtcNow;
+        scanSince = scanSince ?? Time.UtcNow;
         var jsonString = ScanDatabase<string>(@"
             SELECT PayloadJson 
             FROM MailHistory 
