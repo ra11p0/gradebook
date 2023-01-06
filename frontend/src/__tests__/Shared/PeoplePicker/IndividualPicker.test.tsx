@@ -9,19 +9,18 @@ import SchoolRolesEnum from '../../../Common/Enums/SchoolRolesEnum';
 import IndividualPicker from '../../../Components/Shared/PeoplePicker/IndividualPicker';
 describe('<IndividualPicker/>', () => {
   it('Should not show filters button', async () => {
-    await act(() => {
+    await act(async () => {
       render(
         <IndividualPicker
           selectedPeople={[]}
-          setSelectedPeople={function (setFn: (e: string[]) => string[]): void {
-            //throw new Error('Function not implemented.');
-          }}
+          setSelectedPeople={function (
+            setFn: (e: string[]) => string[]
+          ): void {}}
           getPeople={async function (
             pickerData: PeoplePickerData,
             page: number
           ): Promise<SimplePersonResponse[]> {
             return [];
-            //throw new Error('Function not implemented.');
           }}
         />
       );
@@ -30,7 +29,7 @@ describe('<IndividualPicker/>', () => {
   });
 
   it('Should show filters button', async () => {
-    await act(() => {
+    await act(async () => {
       render(
         <IndividualPicker
           showFilters
@@ -198,6 +197,7 @@ describe('<IndividualPicker/>', () => {
         },
       ],
     } as any);
+
     await act(async () => {
       render(
         <IndividualPicker
@@ -205,7 +205,7 @@ describe('<IndividualPicker/>', () => {
           currentSchoolGuid="schoolguid"
           selectedPeople={[]}
           setSelectedPeople={(setFn: (e: string[]) => string[]) => {
-            const res = setFn([]);
+            setFn([]);
           }}
           getPeople={async function (
             pickerData: PeoplePickerData,
@@ -249,11 +249,11 @@ describe('<IndividualPicker/>', () => {
 
     expect(mockedFn).toBeCalledWith({ schoolGuid: 'schoolguid', query: '' });
 
-    await act(() => {
-      const searchQueryInput = screen
-        .getAllByRole('textbox')
-        .find((el) => el.id === 'searchQueryInput');
+    const searchQueryInput = screen
+      .getAllByRole('textbox')
+      .find((el) => el.id === 'searchQueryInput');
 
+    await act(async () => {
       userEvent.type(searchQueryInput!, 'query');
     });
 
@@ -262,17 +262,17 @@ describe('<IndividualPicker/>', () => {
       query: 'query',
     });
 
-    await act(() => {
+    await act(async () => {
       userEvent.click(screen.getByRole('button', { name: 'filters' }));
     });
     const rolesCombo = screen
       .queryAllByRole('combobox')
       .find((e) => e.id === 'classFilter');
-    await act(() => {
+    await act(async () => {
       openMenu(rolesCombo!);
     });
-    await act(() => {
-      select(rolesCombo!, 'first');
+    await act(async () => {
+      await select(rolesCombo!, 'first');
     });
     expect(mockedFn).toBeCalledWith({
       schoolGuid: 'schoolguid',
