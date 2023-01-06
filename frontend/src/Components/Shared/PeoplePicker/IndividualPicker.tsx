@@ -1,7 +1,7 @@
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Input } from '@mui/material';
-import React, { ReactElement, useState } from 'react';
+import { ReactElement, useState } from 'react';
 import { Button, Collapse } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import PeoplePickerData from '../../../ApiClient/People/Definitions/Requests/PeoplePickerData';
@@ -41,6 +41,7 @@ function IndividualPicker({
         {showFilters && (
           <div>
             <Button
+              data-testid="filterButton"
               className="btn-sm"
               onClick={() => {
                 setFiltersOpen(!filtersOpen);
@@ -52,6 +53,7 @@ function IndividualPicker({
         )}
         <div className={`${showFilters ? 'w-75' : 'w-100'}`}>
           <Input
+            id="searchQueryInput"
             type="text"
             className="w-100"
             placeholder={t('searchPeople')}
@@ -60,6 +62,7 @@ function IndividualPicker({
           />
           <div className="d-flex justify-content-end">
             <Button
+              data-testid="selectAllButton"
               variant="link"
               className="btn-sm"
               onClick={async () => {
@@ -82,6 +85,7 @@ function IndividualPicker({
               {t('selectAll')}
             </Button>
             <Button
+              data-testid="unselectAllButton"
               variant="link"
               className="btn-sm "
               onClick={async () => {

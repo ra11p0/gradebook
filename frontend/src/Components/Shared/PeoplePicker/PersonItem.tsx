@@ -1,5 +1,5 @@
 import { Checkbox } from '@mui/material';
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 
 interface Props {
   guid: string;
@@ -23,6 +23,7 @@ function PersonItem(props: Props): ReactElement {
         <div className="my-auto">{`${props.name} ${props.surname}`}</div>
         <div>
           <Checkbox
+            id={`personCheckbox-${props.guid}`}
             checked={props.selectedPeople.includes(props.guid)}
             onChange={(e, o) =>
               o
