@@ -13,7 +13,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes('i18n/locales')) return 'i18n';
+          if (id.includes('i18n')) return 'i18n';
           if (id.includes('node_modules')) return 'mod';
         },
       },
