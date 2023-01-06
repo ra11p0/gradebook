@@ -45,7 +45,7 @@ public static class DatabaseHelper
             item = connection.QueryFirstOrDefault<T>(query, values);
             if (timeout < DateTime.UtcNow)
                 throw new TimeoutException("Database entity not found");
-            Thread.Sleep(2000);
+
         } while (item is null);
         return item;
     }

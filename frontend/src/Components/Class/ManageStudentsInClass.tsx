@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import React, { ReactElement, useState } from 'react';
+import { ReactElement, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ClassesProxy from '../../ApiClient/Classes/ClassesProxy';
 import StudentInClassResponse from '../../ApiClient/Classes/Definitions/Responses/StudentInClassResponse';
@@ -20,6 +20,7 @@ function ManageStudentsInClass(props: Props): ReactElement {
   return (
     <>
       <Button
+        id="manageClassStudents"
         variant="outlined"
         onClick={() => {
           setShowStudentsPicker((e) => !e);

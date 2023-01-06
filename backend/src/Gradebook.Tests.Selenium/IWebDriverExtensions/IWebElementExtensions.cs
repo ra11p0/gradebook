@@ -28,7 +28,7 @@ public static class IWebElementExtensions
             contains = el.GetAttribute("innerText").Contains(innerText);
             timeout++;
             if (timeout > timeoutLimit) break;
-            Thread.Sleep(1000);
+
         } while (!contains);
         return contains;
     }
@@ -41,15 +41,19 @@ public static class IWebElementExtensions
 
     public static IWebElement Parent(this IWebElement el, string cssSelector)
     {
+        const int maxDepth = 100;
+        int i = 0;
         IWebElement parent = el;
         do
         {
+            Console.WriteLine(i);
             parent = parent.Parent();
             var targetParent = parent.Children(cssSelector).FirstOrDefault();
             if (targetParent is not null) return targetParent;
+            i++;
         }
-        while (true);
-
+        while (maxDepth > i);
+        throw new Exception("Parent " + cssSelector + " not found.");
     }
 
     public static IEnumerable<IWebElement> Children(this IWebElement el)

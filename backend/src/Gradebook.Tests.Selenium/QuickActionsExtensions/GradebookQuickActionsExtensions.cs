@@ -11,8 +11,7 @@ public static class GradebookQuickActionsExtensions
 {
     public static IWebDriver ScrollTo(this IWebDriver driver, IWebElement element)
     {
-        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", element);
-        Thread.Sleep(500);
+        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", element);
         return driver;
     }
     public static IWebDriver Login(this IWebDriver driver, string email, string password)

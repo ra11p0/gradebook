@@ -9,8 +9,8 @@ public static class IWebDriverExtensions
 
     public static IWebDriver ScrollTo(this IWebDriver driver, IWebElement element)
     {
-        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", element);
-        Thread.Sleep(500);
+        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", element);
+
         return driver;
     }
 

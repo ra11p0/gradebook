@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import React, { ReactElement, useState } from 'react';
+import { ReactElement, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ClassesProxy from '../../ApiClient/Classes/ClassesProxy';
 import TeachersInClassResponse from '../../ApiClient/Classes/Definitions/Responses/TeachersInClassResponse';
@@ -21,6 +21,7 @@ function ManageClassOwners(props: Props): ReactElement {
   return (
     <>
       <Button
+        id="manageClassOwners"
         variant="outlined"
         onClick={() => {
           setShowTeachersPicker((e) => !e);
