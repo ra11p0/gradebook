@@ -1,5 +1,7 @@
 using Gradebook.Foundation.Common;
 using Gradebook.Tests.Selenium.Constraints.Views;
+using Gradebook.Tests.Selenium.Constraints.Views.Dashboard;
+using Gradebook.Tests.Selenium.Constraints.Views.Shared;
 using Gradebook.Tests.Selenium.Helpers;
 using Gradebook.Tests.Selenium.IWebDriverExtensions;
 using LoginView = Gradebook.Tests.Selenium.Constraints.Views.Login;
@@ -11,7 +13,9 @@ public static class GradebookQuickActionsExtensions
 {
     public static IWebDriver ScrollTo(this IWebDriver driver, IWebElement element)
     {
-        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", element);
+        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'});", element);
+
+        Thread.Sleep(500);
         return driver;
     }
     public static IWebDriver Login(this IWebDriver driver, string email, string password)
@@ -102,6 +106,54 @@ public static class GradebookQuickActionsExtensions
         Assert.That(driver.WaitFor("tbody").ContainsText(studentName));
         Assert.That(driver.WaitFor("tbody").ContainsText(studentSurname));
         driver.GoToGradebookHomepage();
+        return driver;
+    }
+    public static IWebDriver AddNewStudent(this IWebDriver driver, string studentName, string studentSurname, DateTime studentBirthday)
+        => driver.AddNewStudent(studentName, studentSurname, studentBirthday.ToString("dd.MM.yyyy"));
+    public static IWebDriver AddNewClass(this IWebDriver driver, string className)
+    {
+        driver.GoToGradebookHomepage();
+        driver.ClickOn(Common.ClassesButton);
+        driver.ClickOn(Classes.AddClassButton);
+
+        driver.WaitFor(Classes.AddClass_ClassNameField).SendKeys(className);
+        driver.ClickOn("button[type='submit']");
+        driver.WaitForSuccessNotification();
+        driver.Refresh();
+
+        Assert.That(driver.WaitFor("tbody").ContainsText(className));
+
+        return driver;
+    }
+    public static IWebDriver AddNewTeacher(this IWebDriver driver, string teacherName, string teacherSurname, DateTime birthday)
+    {
+        driver.GoToGradebookHomepage();
+        driver.GoToTeachersTab();
+        driver.ClickOn("[test-id='addNewTeacherButton']");
+        driver.WaitFor("input[name='name']").SendKeys(teacherName);
+        driver.WaitFor("input[name='surname']").SendKeys(teacherSurname);
+        driver.WaitFor("input[name='birthday']").ClearElement().SendKeys(birthday.ToString("dd.MM.yyyy"));
+        driver.ClickOn("button[type='submit']");
+        driver.WaitForSuccessNotification();
+        driver.Refresh();
+        Assert.That(driver.WaitFor("tbody", e => e.ContainsText(teacherName)), "Could not find teacher name in teachers list");
+        Assert.That(driver.WaitFor("tbody", e => e.ContainsText(teacherSurname)), "Could not find teacher surname in teachers list");
+        return driver;
+    }
+
+    public static IWebDriver AddStudentToClass(this IWebDriver driver, string className, string studentName, string studentSurname)
+    {
+        driver.GoToGradebookHomepage();
+        driver.ClickOn(Common.ClassesButton);
+        driver.WaitForElementContaining(className).Parent("tr").Click();
+        driver.ClickOn(ClassView.ManageClassStudents);
+        driver.SelectPerson($"{studentName} {studentSurname}");
+        driver.ClickOn("button[type='submit']");
+        driver.Refresh();
+        driver.WaitForElementContaining(studentSurname).Parent(".cursor-pointer").Click();
+        driver.WaitForElementContaining(className).Parent("a").Click();
+
+        Assert.That(driver.WaitFor("h2", e => e.ContainsText(className)));
         return driver;
     }
 }

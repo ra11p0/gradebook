@@ -13,7 +13,7 @@ interface SchoolProps {
 }
 function School(props: SchoolProps): ReactElement {
   return (
-    <Link to={`/school/show/${props.guid}`} className={'text-reset'}>
+    <Link to={`/school/show/${props.guid}`} className={'text-reset school'}>
       <div
         className={`bg-light border rounded-3 m-1 p-2 ${props.className ?? ''}`}
       >

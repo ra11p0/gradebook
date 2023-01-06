@@ -41,14 +41,17 @@ public static class IWebElementExtensions
 
     public static IWebElement Parent(this IWebElement el, string cssSelector)
     {
+        var history = new List<IWebElement>();
         const int maxDepth = 100;
         int i = 0;
         IWebElement parent = el;
         do
         {
             parent = parent.Parent();
+
             var targetParent = parent.Children(cssSelector).FirstOrDefault();
-            if (targetParent is not null) return targetParent;
+            if (targetParent is not null) return history.Last();
+            history.Add(parent);
             i++;
         }
         while (maxDepth > i);

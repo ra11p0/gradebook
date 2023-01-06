@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using Gradebook.Tests.Selenium.QuickActionsExtensions;
 
 namespace Gradebook.Tests.Selenium.IWebDriverExtensions;
 
@@ -6,13 +7,6 @@ public static class IWebDriverExtensions
 {
     public static WebDriverWait GetWait(this IWebDriver driver, int timeoutSeconds = -1)
         => new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutSeconds <= 0 ? 15 : timeoutSeconds));
-
-    public static IWebDriver ScrollTo(this IWebDriver driver, IWebElement element)
-    {
-        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", element);
-
-        return driver;
-    }
 
     public static IWebElement ClickOn(this IWebDriver driver, string cssSelector, int timeoutSeconds = -1)
     {
@@ -73,6 +67,11 @@ public static class IWebDriverExtensions
     public static IWebDriver Refresh(this IWebDriver driver)
     {
         driver.Navigate().Refresh();
+        return driver;
+    }
+    public static IWebDriver WithTimeout(this IWebDriver driver, int timeoutInSeconds)
+    {
+        driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(timeoutInSeconds);
         return driver;
     }
 }

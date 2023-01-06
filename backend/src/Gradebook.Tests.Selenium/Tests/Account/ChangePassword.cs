@@ -13,7 +13,6 @@ public class ChangePassword
     private const string _newPassword = "!QAZ2wsx";
     private const string _secondNewPassword = "!QAZ2wsx!!!";
     [Test]
-    [Order(1)]
     public void CanRequestChangePasswordEmail()
     {
         using var driver = WebDriverBuilder.BuildWebDriver();
@@ -38,7 +37,6 @@ public class ChangePassword
         driver.ChangePassword(CommonResources.GetValue("email")!, CommonResources.GetValue("password")!);
     }
     [Test]
-    [Order(2)]
     public void CanChangePasswordInSettings()
     {
         using var driver = WebDriverBuilder.BuildWebDriver();

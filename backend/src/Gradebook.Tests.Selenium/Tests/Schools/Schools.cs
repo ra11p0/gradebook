@@ -11,7 +11,6 @@ namespace Gradebook.Tests.Selenium.Tests.Schools;
 public class Schools
 {
     [Test]
-    [Order(1)]
     public void CanAddNewSchool()
     {
         using var driver = WebDriverBuilder.BuildWebDriver();

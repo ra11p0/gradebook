@@ -15,14 +15,13 @@ public class PeopleAndInvitations
     public PeopleAndInvitations()
     {
         _storage["studentName"] = "Amelia";
-        _storage["studentSurname"] = "Zielnickka";
+        _storage["studentSurname"] = "Zielnicka";
         _storage["studentBirthday"] = "09/03/2005";
-        _storage["studentEmail"] = "amelia.zielnicka@szkola.pl";
+        _storage["studentEmail"] = "amelia.ziel1nicpka000021@szkola.pl";
         _storage["studentPassword"] = "!QAZ2wsx";
     }
 
     [Test]
-    [Order(1)]
     public void CanCreateNewStudent()
     {
         using var driver = WebDriverBuilder.BuildWebDriver();
@@ -40,7 +39,6 @@ public class PeopleAndInvitations
     }
 
     [Test]
-    [Order(2)]
     public void CanInviteStudent()
     {
         using var driver = WebDriverBuilder.BuildWebDriver();
@@ -66,7 +64,6 @@ public class PeopleAndInvitations
     }
 
     [Test]
-    [Order(3)]
     public void CanRegisterAsStudent()
     {
         using var driver = WebDriverBuilder.BuildWebDriver();
@@ -98,4 +95,19 @@ public class PeopleAndInvitations
         Assert.That(driver.WaitFor("tbody", e => e.ContainsText(teacherSurname)), "Could not find teacher surname in teachers list");
     }
 
+    [Test]
+    public void ShouldNotBePossibleToInvitePersonTwice()
+    {
+        using var driver = WebDriverBuilder.BuildWebDriver();
+        driver.Login(CommonResources.GetValue("email")!, CommonResources.GetValue(key: "password")!);
+        driver.ClickOn(Common.InvitationsButton);
+        driver.ClickOn("button.addInvitationButton");
+        driver.WaitFor(PeoplePicker.SearchQueryInput).SendKeys(_storage["studentName"] + ' ' + _storage["studentSurname"]);
+        Assert.That(
+            driver
+            .WithTimeout(5)
+            .FindElements(By.CssSelector($"[data-person-full-name='{_storage["studentName"] + ' ' + _storage["studentSurname"]}']"))
+            .Any()
+            , Is.False);
+    }
 }
