@@ -33,7 +33,7 @@ public static class DatabaseHelper
         return $"{url}service/account/{message!.TargetGuid}/RemindPassword/{message!.AuthCode}";
     }
 
-    private static T ScanDatabase<T>(string query, object? values = null, int timeoutInSeconds = 30)
+    private static T ScanDatabase<T>(string query, object? values = null, int timeoutInSeconds = 60)
     {
         using var connection = new MySqlConnection(ConfigurationManager.GetValue("MysqlConnectionString"));
         connection.Open();
