@@ -13,10 +13,10 @@ public class PeopleAndInvitations
     private readonly Dictionary<string, string> _storage = new();
     public PeopleAndInvitations()
     {
-        _storage["studentName"] = "Mateusz";
-        _storage["studentSurname"] = "Kowalczyk";
+        _storage["studentName"] = "Amelia";
+        _storage["studentSurname"] = "Zielnickka";
         _storage["studentBirthday"] = "09/03/2005";
-        _storage["studentEmail"] = "mateusz.kowalczyiiik@szkola.pl";
+        _storage["studentEmail"] = "amelia.zielnicka@szkola.pl";
         _storage["studentPassword"] = "!QAZ2wsx";
     }
 
@@ -46,7 +46,7 @@ public class PeopleAndInvitations
         driver.ClickOn("button.addInvitationButton");
         driver.WaitFor(PeoplePicker.SearchQueryInput).SendKeys(_storage["studentName"]);
         driver.ClickOn($"[data-person-full-name='{_storage["studentName"] + " " + _storage["studentSurname"]}']");
-        Assert.That(driver.WaitFor(".person-element").ContainsText(_storage["studentName"] + " " + _storage["studentSurname"]));
+        Assert.That(driver.WaitFor(".selected-people .person-element", 10).ContainsText(_storage["studentName"] + " " + _storage["studentSurname"]));
         driver.ClickOn("button[type='submit']");
         Assert.That(driver.WaitForElementContaining(_storage["studentName"] + " " + _storage["studentSurname"]).Displayed);
 

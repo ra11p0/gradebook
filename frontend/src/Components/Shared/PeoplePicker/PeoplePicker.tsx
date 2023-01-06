@@ -51,7 +51,7 @@ function PeoplePicker(props: Props): ReactElement {
               selectedPeople={selectedPeople}
             />
           </Col>
-          <Col lg="4" className="m-2 p-2">
+          <Col lg="4" className="m-2 p-2 selected-people">
             <h5>{t('selectedPeople')}</h5>
             <List
               className="vh-50 overflow-auto"

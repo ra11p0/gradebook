@@ -20,7 +20,7 @@ public static class IWebElementExtensions
 
     public static bool ContainsText(this IWebElement el, string innerText)
     {
-        const int timeoutLimit = 5;
+        const int timeoutLimit = 10;
         int timeout = 0;
         var contains = false;
         do
@@ -38,6 +38,7 @@ public static class IWebElementExtensions
         var parent = el.FindElement(By.XPath("./.."));
         return parent;
     }
+
     public static IWebElement Parent(this IWebElement el, string cssSelector)
     {
         IWebElement parent = el;
