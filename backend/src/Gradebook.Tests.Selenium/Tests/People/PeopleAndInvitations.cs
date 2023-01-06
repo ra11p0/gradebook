@@ -33,6 +33,8 @@ public class PeopleAndInvitations
         driver.WaitFor("input[name='surname']").SendKeys(_storage["studentSurname"]);
         driver.WaitFor("input.birthday").ClearElement().SendKeys(_storage["studentBirthday"]);
         driver.ClickOn("button[type='submit']");
+        driver.WaitForSuccessNotification();
+        driver.Refresh();
         Assert.That(driver.WaitFor("tbody").ContainsText(_storage["studentName"]));
         Assert.That(driver.WaitFor("tbody").ContainsText(_storage["studentSurname"]));
     }
@@ -50,6 +52,7 @@ public class PeopleAndInvitations
         Assert.That(driver.WaitFor(".selected-people .person-element", 10).ContainsText(_storage["studentName"] + " " + _storage["studentSurname"]));
         driver.ClickOn("button[type='submit']");
         driver.WaitForSuccessNotification();
+        driver.Refresh();
         Assert.That(driver.WaitForElementContaining(_storage["studentName"] + " " + _storage["studentSurname"]).Displayed);
 
         var invitationCode = driver
@@ -89,7 +92,8 @@ public class PeopleAndInvitations
         driver.WaitFor("input[name='surname']").SendKeys(teacherSurname);
         driver.WaitFor("input[name='birthday']").ClearElement().SendKeys("02.02.1992");
         driver.ClickOn("button[type='submit']");
-
+        driver.WaitForSuccessNotification();
+        driver.Refresh();
         Assert.That(driver.WaitFor("tbody", e => e.ContainsText(teacherName)), "Could not find teacher name in teachers list");
         Assert.That(driver.WaitFor("tbody", e => e.ContainsText(teacherSurname)), "Could not find teacher surname in teachers list");
     }

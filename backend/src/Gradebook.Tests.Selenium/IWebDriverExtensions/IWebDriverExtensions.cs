@@ -4,7 +4,7 @@ namespace Gradebook.Tests.Selenium.IWebDriverExtensions;
 
 public static class IWebDriverExtensions
 {
-    private static WebDriverWait GetWait(this IWebDriver driver, int timeoutSeconds = 5)
+    public static WebDriverWait GetWait(this IWebDriver driver, int timeoutSeconds = 5)
         => new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutSeconds));
 
     public static IWebDriver ScrollTo(this IWebDriver driver, IWebElement element)

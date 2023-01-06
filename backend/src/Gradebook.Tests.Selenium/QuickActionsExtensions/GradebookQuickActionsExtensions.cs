@@ -98,6 +98,8 @@ public static class GradebookQuickActionsExtensions
         driver.WaitFor("input[name='surname']").SendKeys(studentSurname);
         driver.WaitFor("input.birthday").SelectAll().SendKeys(studentBirthday);
         driver.ClickOn("button[type='submit']");
+        driver.WaitForSuccessNotification();
+        driver.Refresh();
         Assert.That(driver.WaitFor("tbody").ContainsText(studentName));
         Assert.That(driver.WaitFor("tbody").ContainsText(studentSurname));
         driver.GoToGradebookHomepage();
