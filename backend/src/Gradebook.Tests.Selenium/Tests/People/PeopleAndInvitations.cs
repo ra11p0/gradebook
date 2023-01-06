@@ -1,5 +1,6 @@
 using Gradebook.Tests.Selenium.Constraints.Views.Dashboard;
 using Gradebook.Tests.Selenium.Constraints.Views.Shared;
+using Gradebook.Tests.Selenium.Helpers;
 using Gradebook.Tests.Selenium.IWebDriverExtensions;
 using Gradebook.Tests.Selenium.QuickActionsExtensions;
 using StudentsView = Gradebook.Tests.Selenium.Constraints.Views.Dashboard.Students;
@@ -48,6 +49,7 @@ public class PeopleAndInvitations
         driver.ClickOn($"[data-person-full-name='{_storage["studentName"] + " " + _storage["studentSurname"]}']");
         Assert.That(driver.WaitFor(".selected-people .person-element", 10).ContainsText(_storage["studentName"] + " " + _storage["studentSurname"]));
         driver.ClickOn("button[type='submit']");
+        driver.WaitForSuccessNotification();
         Assert.That(driver.WaitForElementContaining(_storage["studentName"] + " " + _storage["studentSurname"]).Displayed);
 
         var invitationCode = driver
