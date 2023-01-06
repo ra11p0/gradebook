@@ -31,7 +31,7 @@ public class Classes
         Assert.That(driver.WaitFor("tbody").ContainsText(_className));
     }
     [Test]
-    [Order(1)]
+    [Order(2)]
     public void ShouldAddClassOwner()
     {
 
