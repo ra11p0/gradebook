@@ -27,7 +27,6 @@ describe('<ChangePasswordLoggedIn/>', () => {
         expect(e.icon).toEqual('success');
         return await Promise.resolve({} as any);
       });
-
     await act(async () => {
       render(
         <Provider store={store}>
@@ -46,6 +45,7 @@ describe('<ChangePasswordLoggedIn/>', () => {
     await act(async () => {
       screen.getByRole('button', { name: 'submit' }).click();
     });
+
     expect(mockedSetNewPassword).toBeCalledTimes(1);
     expect(swalMock).toBeCalledWith({
       icon: 'success',

@@ -44,12 +44,12 @@ const namespaces = [
 const supportedLngs = ['en', 'pl'];
 
 await i18n.use(initReactI18next).init({
-  load: 'all',
   fallbackNS: 'common',
   defaultNS: 'common',
   fallbackLng: 'en',
   partialBundledLanguages: true,
-  supportedLngs: ['en', 'pl'],
+  supportedLngs,
+
   /* resources: {
     en: {
       common: await import('./en/common.json'),
@@ -142,6 +142,7 @@ await i18n.use(initReactI18next).init({
       changePassword: await import('./pl/changePassword.json'),
     }, */
   resources: await (async (): Promise<any> => {
+    if (import.meta.env.MODE === 'test') return {};
     const ns: any = {};
     for (const namespace of namespaces) {
       for (const language of supportedLngs) {
@@ -154,6 +155,4 @@ await i18n.use(initReactI18next).init({
     return ns;
   })(),
 });
-
-await i18n.loadLanguages(['en', 'pl']);
 export default i18n;

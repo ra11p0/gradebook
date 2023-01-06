@@ -1,11 +1,9 @@
 import { act, render, screen } from '@testing-library/react';
-import { I18nextProvider } from 'react-i18next';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { vi } from 'vitest';
 import ClassesProxy from '../../ApiClient/Classes/ClassesProxy';
 import EducationCycle from '../../Components/Class/EducationCycle/EducationCycle';
-import i18n from '../../i18n/config';
 import { store } from '../../store';
 
 describe('<EducationCycle />', () => {
@@ -22,9 +20,7 @@ describe('<EducationCycle />', () => {
       render(
         <Provider store={store}>
           <BrowserRouter>
-            <I18nextProvider i18n={i18n}>
-              <EducationCycle classGuid={'fakeClassGuid'} />
-            </I18nextProvider>
+            <EducationCycle classGuid={'fakeClassGuid'} />
           </BrowserRouter>
         </Provider>
       );
@@ -46,9 +42,7 @@ describe('<EducationCycle />', () => {
       render(
         <Provider store={store}>
           <BrowserRouter>
-            <I18nextProvider i18n={i18n}>
-              <EducationCycle classGuid={'fakeClassGuid'} />
-            </I18nextProvider>
+            <EducationCycle classGuid={'fakeClassGuid'} />
           </BrowserRouter>
         </Provider>
       );
@@ -75,9 +69,7 @@ describe('<EducationCycle />', () => {
       render(
         <Provider store={store}>
           <BrowserRouter>
-            <I18nextProvider i18n={i18n}>
-              <EducationCycle classGuid={'fakeClassGuid'} />
-            </I18nextProvider>
+            <EducationCycle classGuid={'fakeClassGuid'} />
           </BrowserRouter>
         </Provider>
       );
@@ -106,9 +98,7 @@ describe('<EducationCycle />', () => {
       render(
         <Provider store={store}>
           <BrowserRouter>
-            <I18nextProvider i18n={i18n}>
-              <EducationCycle classGuid={'fakeClassGuid'} />
-            </I18nextProvider>
+            <EducationCycle classGuid={'fakeClassGuid'} />
           </BrowserRouter>
         </Provider>
       );
