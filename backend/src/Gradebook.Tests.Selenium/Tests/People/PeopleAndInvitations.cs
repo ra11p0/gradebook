@@ -8,7 +8,6 @@ using StudentsView = Gradebook.Tests.Selenium.Constraints.Views.Dashboard.Studen
 namespace Gradebook.Tests.Selenium.Tests.People;
 
 [Category("Selenium")]
-[Order(2)]
 public class PeopleAndInvitations
 {
     private readonly Dictionary<string, string> _storage = new();
@@ -17,7 +16,7 @@ public class PeopleAndInvitations
         _storage["studentName"] = "Amelia";
         _storage["studentSurname"] = "Zielnicka";
         _storage["studentBirthday"] = "09/03/2005";
-        _storage["studentEmail"] = "amelia.ziel1nicpka000021@szkola.pl";
+        _storage["studentEmail"] = "amelia.zielnicka@szkola.pl";
         _storage["studentPassword"] = "!QAZ2wsx";
     }
 

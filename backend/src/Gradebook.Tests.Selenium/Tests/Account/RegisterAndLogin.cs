@@ -10,6 +10,7 @@ namespace Gradebook.Tests.Selenium.Tests.Account;
 public class RegisterAndLogin
 {
     [Test]
+    [Order(1)]
     public void ShouldRegisterNewUser()
     {
         using var driver = WebDriverBuilder.BuildWebDriver();
@@ -30,6 +31,7 @@ public class RegisterAndLogin
         Assert.That(driver.Contains(Header.LogOutButton));
     }
     [Test]
+    [Order(2)]
     public void CanRegisterNewSchool()
     {
         using var driver = WebDriverBuilder.BuildWebDriver();

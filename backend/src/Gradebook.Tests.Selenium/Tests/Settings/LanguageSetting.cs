@@ -6,7 +6,6 @@ namespace Gradebook.Tests.Selenium.Tests.Settings;
 
 
 [Category("Selenium")]
-[Order(6)]
 public class LanguageSetting
 {
     [Test]
@@ -14,6 +13,9 @@ public class LanguageSetting
     {
         using var driver = WebDriverBuilder.BuildWebDriver();
         driver.Login(CommonResources.GetValue("email")!, CommonResources.GetValue(key: "password")!);
+
+        driver.AddNewTeacher("Marcel", "Wawrzyniec", new DateTime(1989, 10, 19));
+
         driver.ClickOn("[test-id='languageDropdown']");
         driver.ClickOn("[test-id='languageDropdown-english']");
         driver.GoToTeachersTab();

@@ -7,7 +7,6 @@ using SchoolsView = Gradebook.Tests.Selenium.Constraints.Views.Dashboard.Schools
 namespace Gradebook.Tests.Selenium.Tests.Schools;
 
 [Category("Selenium")]
-[Order(2)]
 public class Schools
 {
     [Test]

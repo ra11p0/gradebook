@@ -8,7 +8,6 @@ using Gradebook.Tests.Selenium.Constraints.Views.Shared;
 namespace Gradebook.Tests.Selenium.Tests.Classes;
 
 [Category("Selenium")]
-[Order(7)]
 public class Classes
 {
     [Test]
