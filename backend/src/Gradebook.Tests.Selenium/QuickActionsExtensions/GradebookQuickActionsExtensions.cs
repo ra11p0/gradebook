@@ -13,9 +13,14 @@ public static class GradebookQuickActionsExtensions
 {
     public static IWebDriver ScrollTo(this IWebDriver driver, IWebElement element)
     {
-        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'});", element);
+        ((IJavaScriptExecutor)driver).ExecuteScript("await arguments[0].scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'});", element);
 
         Thread.Sleep(500);
+        return driver;
+    }
+    public static IWebDriver WaitForPageFullyLoaded(this IWebDriver driver)
+    {
+        driver.WaitFor(".brand");
         return driver;
     }
     public static IWebDriver Login(this IWebDriver driver, string email, string password)
@@ -121,7 +126,6 @@ public static class GradebookQuickActionsExtensions
         => driver.AddNewStudent(studentName, studentSurname, studentBirthday.ToString("dd.MM.yyyy"));
     public static IWebDriver AddNewClass(this IWebDriver driver, string className)
     {
-        driver.GoToGradebookHomepage();
         driver.GoToClassesTab();
         driver.ClickOn(Classes.AddClassButton);
 

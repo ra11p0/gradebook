@@ -58,15 +58,19 @@ public static class IWebDriverExtensions
         return el is not null;
     }
 
-    public static IWebDriver GoTo(this IWebDriver driver, string url)
+    public static IWebDriver GoTo(this IWebDriver driver, string url, bool dontWaitForReactApp = false)
     {
+        driver.WaitForPageFullyLoaded();
         driver!.Navigate().GoToUrl(url);
+        driver.WaitForPageFullyLoaded();
         return driver;
     }
 
     public static IWebDriver Refresh(this IWebDriver driver)
     {
+        driver.WaitForPageFullyLoaded();
         driver.Navigate().Refresh();
+        driver.WaitForPageFullyLoaded();
         return driver;
     }
     public static IWebDriver WithTimeout(this IWebDriver driver, int timeoutInSeconds)
