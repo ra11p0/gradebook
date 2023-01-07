@@ -1,9 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Nav } from 'react-bootstrap';
 import { withTranslation } from 'react-i18next';
-import PermissionsBlocker from '../Shared/PermissionsBlocker';
+import { Link } from 'react-router-dom';
 import PermissionLevelEnum from '../../Common/Enums/Permissions/PermissionLevelEnum';
+import PermissionsBlocker from '../Shared/PermissionsBlocker';
 
 interface DashboardNavigationProps {
   t: any;

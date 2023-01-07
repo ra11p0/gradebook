@@ -8,7 +8,6 @@ import InviteMultiplePeopleRequest from './Definitions/Requests/InviteMultiplePe
 import NewClassRequest from './Definitions/Requests/NewClassRequest';
 import NewStudentRequest from './Definitions/Requests/NewStudentRequest';
 import NewTeacherRequest from './Definitions/Requests/NewTeacherRequest';
-import PersonResponse from './Definitions/Responses/PersonResponse';
 import StudentInSchoolResponse from './Definitions/Responses/StudentInSchoolResponse';
 import TeacherInSchoolResponse from './Definitions/Responses/TeacherInSchoolResponse';
 import SubjectResponse from './Definitions/Responses/SubjectResponse';
@@ -115,34 +114,16 @@ const addNewClass = async (
   );
 };
 
-const getClassesInSchool = async (
+async function getClassesInSchool(
   schoolGuid: string = getCurrentSchoolRedux()!.schoolGuid,
   page: number = 0,
   query: string = ''
-): Promise<AxiosResponse<ClassResponse[]>> => {
+): Promise<AxiosResponse<ClassResponse[]>> {
   return await axiosApiAuthorized.get(
     API_URL + `/schools/${schoolGuid}/Classes`,
     { params: { page, query } }
   );
-};
-
-const searchPeople = async (
-  schoolGuid: string,
-  discriminator: string,
-  query: string,
-  page: number
-): Promise<AxiosResponse<PersonResponse[]>> => {
-  return await axiosApiAuthorized.get(
-    API_URL + `/schools/${schoolGuid}/People/Search`,
-    {
-      params: {
-        discriminator,
-        query,
-        page,
-      },
-    }
-  );
-};
+}
 
 const addNewSubject = async (
   newSubjectRequest: NewSubjectRequest,
@@ -198,7 +179,6 @@ export default {
   getInactiveAccessibleStudentsInSchool,
   addNewClass,
   getClassesInSchool,
-  searchPeople,
   getTeachersInSchool,
   addNewTeacher,
   subjects: { getSubjectsInSchool, addNewSubject },

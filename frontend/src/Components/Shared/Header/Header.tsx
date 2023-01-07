@@ -1,18 +1,18 @@
 import React from 'react';
+import { Button, Container, Nav, Navbar } from 'react-bootstrap';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import setLogOutRedux from '../../../Redux/ReduxCommands/account/setLogOutRedux';
 import getCurrentPersonReduxProxy, {
   CurrentPersonProxyResult,
 } from '../../../Redux/ReduxQueries/account/getCurrentPersonRedux';
 import getIsLoggedInReduxProxy from '../../../Redux/ReduxQueries/account/getIsLoggedInRedux';
 import getIsUserActivatedReduxProxy from '../../../Redux/ReduxQueries/account/getIsUserActivatedRedux';
-import LoadingScreen from '../LoadingScreen';
-import SchoolSelect from './SchoolSelect';
-import LanguageSelect from './LanguageSelect';
 import { GlobalState } from '../../../store';
-import setLogOutRedux from '../../../Redux/ReduxCommands/account/setLogOutRedux';
-import { Button, Container, Nav, Navbar } from 'react-bootstrap';
+import LoadingScreen from '../LoadingScreen';
+import LanguageSelect from './LanguageSelect';
+import SchoolSelect from './SchoolSelect';
 
 interface HeaderProps {
   isLoggedIn?: boolean;
@@ -100,13 +100,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   }
 }
 
-export default withTranslation('header')(
-  connect(
-    (state: GlobalState) => ({
-      isLoggedIn: getIsLoggedInReduxProxy(state),
-      currentPerson: getCurrentPersonReduxProxy(state),
-      isActive: getIsUserActivatedReduxProxy(state),
-    }),
-    () => ({})
-  )(Header)
-);
+export default connect(
+  (state: GlobalState) => ({
+    isLoggedIn: getIsLoggedInReduxProxy(state),
+    currentPerson: getCurrentPersonReduxProxy(state),
+    isActive: getIsUserActivatedReduxProxy(state),
+  }),
+  () => ({})
+)(withTranslation('header')(Header));

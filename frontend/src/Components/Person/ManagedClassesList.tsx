@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import { Card, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
@@ -23,6 +23,7 @@ function ManagedClassesList(props: Props): ReactElement {
           <InfiniteScrollWrapper
             mapper={(item: ClassResponse, index: number) => (
               <ListGroupItem
+                id="managedClassesList"
                 key={index}
                 className="cursor-pointer"
                 onClick={() => {

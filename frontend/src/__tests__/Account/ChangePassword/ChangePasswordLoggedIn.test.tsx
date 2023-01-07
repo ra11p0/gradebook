@@ -1,20 +1,17 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import * as routerDom from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { store } from '../../../store';
-import { act } from 'react-dom/test-utils';
-import i18n from '../../../i18n/config';
-import { I18nextProvider } from 'react-i18next';
 import '@testing-library/jest-dom';
-import AccountsProxy from '../../../ApiClient/Accounts/AccountsProxy';
-import Swal from 'sweetalert2';
-import ChangePasswordLoggedIn from '../../../Components/Account/ChangePassword/ChangePasswordLoggedIn';
-import { display } from '@mui/system';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { act } from 'react-dom/test-utils';
+import { Provider } from 'react-redux';
+import * as routerDom from 'react-router-dom';
+import Swal from 'sweetalert2';
+import { vi } from 'vitest';
+import AccountsProxy from '../../../ApiClient/Accounts/AccountsProxy';
+import ChangePasswordLoggedIn from '../../../Components/Account/ChangePassword/ChangePasswordLoggedIn';
+import { store } from '../../../store';
 
 vi.mock('react-router-dom', async () => ({
-  ...(await vi.importActual('react-router-dom')),
+  ...((await vi.importActual('react-router-dom')) as any),
   useParams: () => ({ accountGuid: 'aguid', activationCode: 'actcode' }),
   useNavigate: vi.fn(),
 }));
@@ -30,14 +27,11 @@ describe('<ChangePasswordLoggedIn/>', () => {
         expect(e.icon).toEqual('success');
         return await Promise.resolve({} as any);
       });
-
     await act(async () => {
       render(
         <Provider store={store}>
           <routerDom.BrowserRouter>
-            <I18nextProvider i18n={i18n}>
-              <ChangePasswordLoggedIn onRequestCompleted={() => {}} />
-            </I18nextProvider>
+            <ChangePasswordLoggedIn onRequestCompleted={() => {}} />
           </routerDom.BrowserRouter>
         </Provider>
       );
@@ -51,10 +45,11 @@ describe('<ChangePasswordLoggedIn/>', () => {
     await act(async () => {
       screen.getByRole('button', { name: 'submit' }).click();
     });
+
     expect(mockedSetNewPassword).toBeCalledTimes(1);
     expect(swalMock).toBeCalledWith({
       icon: 'success',
-      title: 'Password changed.',
+      title: 'passwordChanged',
     });
   });
   it('Should validate confirm password', async () => {
@@ -72,9 +67,7 @@ describe('<ChangePasswordLoggedIn/>', () => {
       render(
         <Provider store={store}>
           <routerDom.BrowserRouter>
-            <I18nextProvider i18n={i18n}>
-              <ChangePasswordLoggedIn onRequestCompleted={() => {}} />
-            </I18nextProvider>
+            <ChangePasswordLoggedIn onRequestCompleted={() => {}} />
           </routerDom.BrowserRouter>
         </Provider>
       );
@@ -107,9 +100,7 @@ describe('<ChangePasswordLoggedIn/>', () => {
       render(
         <Provider store={store}>
           <routerDom.BrowserRouter>
-            <I18nextProvider i18n={i18n}>
-              <ChangePasswordLoggedIn onRequestCompleted={() => {}} />
-            </I18nextProvider>
+            <ChangePasswordLoggedIn onRequestCompleted={() => {}} />
           </routerDom.BrowserRouter>
         </Provider>
       );

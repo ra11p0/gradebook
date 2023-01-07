@@ -1,5 +1,7 @@
 using Gradebook.Foundation.Common;
+using Gradebook.Foundation.Common.Foundation.Models;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
+using Gradebook.Foundation.Logic.Queries.Repositories.Interfaces;
 
 namespace Gradebook.Foundation.Logic.Queries.Repositories;
 
@@ -167,4 +169,10 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
 
     public Task<IEnumerable<EducationCycleInstanceDto>> GetAllEducationCycleInstancesForClass(Guid classGuid)
         => Base.GetAllEducationCycleInstancesForClass(classGuid);
+
+    public Task<IPagedList<PersonDto>> GetPeopleByGuids(IEnumerable<Guid> guids, Pager pager)
+        => Base.GetPeopleByGuids(guids, pager);
+
+    public Task<IPagedList<PersonDto>> SearchPeople(PeoplePickerData pickerData, Pager pager)
+        => Base.SearchPeople(pickerData, pager);
 }

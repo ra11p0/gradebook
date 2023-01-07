@@ -1,4 +1,3 @@
-import GetAccessiblePeopleResponse from '../../../ApiClient/Accounts/Definitions/Responses/GetAccessiblePeopleResponse';
 import ActionTypes from '../../ActionTypes/accountActionTypes';
 
 const setPeopleList = {
@@ -6,7 +5,7 @@ const setPeopleList = {
 };
 
 export interface setPeopleListAction {
-  peopleList: GetAccessiblePeopleResponse[];
+  peopleList: [];
 }
 
 export default (dispatch: any, action: setPeopleListAction): void => {

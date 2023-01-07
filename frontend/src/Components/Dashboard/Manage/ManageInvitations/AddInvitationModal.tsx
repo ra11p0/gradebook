@@ -1,23 +1,10 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import { ReactElement } from 'react';
 import { connect } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { Modal } from 'react-bootstrap';
-import {
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Stack,
-} from '@mui/material';
-import StudentResponse from '../../../../ApiClient/Students/Definitions/Responses/StudentResponse';
-import Person from '../../../Shared/Person';
-import PersonSmall from '../../../Shared/PersonSmall';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import SchoolRolesEnum from '../../../../Common/Enums/SchoolRolesEnum';
+import PeopleProxy from '../../../../ApiClient/People/PeopleProxy';
 import SchoolsProxy from '../../../../ApiClient/Schools/SchoolsProxy';
+import Notifications from '../../../../Notifications/Notifications';
 import getCurrentSchoolReduxProxy from '../../../../Redux/ReduxQueries/account/getCurrentSchoolRedux';
+import PeoplePicker from '../../../Shared/PeoplePicker/PeoplePicker';
 
 interface AddInvitationModalProps {
   show: boolean;
@@ -25,104 +12,32 @@ interface AddInvitationModalProps {
   currentSchool: any;
 }
 const AddInvitationModal = (props: AddInvitationModalProps): ReactElement => {
-  const { t } = useTranslation('addInvitationModal');
-  const [inactiveStudents, setInactiveStudents] = useState(
-    [] as StudentResponse[]
-  );
-  const [selectedStudents, setSelectedStudents] = useState<string[]>([]);
-
-  useEffect(() => {
-    void SchoolsProxy.getInactiveAccessibleStudentsInSchool(
-      props.currentSchool.schoolGuid!
-    ).then((response) => {
-      setInactiveStudents(response.data);
-    });
-  }, []);
-  const sendButtonHandler = async (): Promise<void> => {
-    await SchoolsProxy.inviteMultiplePeople(
-      {
-        invitedPersonGuidArray: selectedStudents,
-        role: SchoolRolesEnum.Student,
-      },
-      props.currentSchool.schoolGuid!
-    ).then((response) => {
-      props.onHide();
-    });
-  };
   return (
-    <Modal show={props.show} onHide={props.onHide}>
-      <Modal.Header closeButton>
-        <Modal.Title>{t('addInvitation')}</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Stack>
-          <Stack>
-            <div className="d-flex flex-wrap gap-1 justify-content-center">
-              <>
-                {inactiveStudents
-                  .filter((student) => selectedStudents.includes(student.guid))
-                  .map((student) => (
-                    <div className="border rounded-3 p-0" key={student.guid}>
-                      <PersonSmall
-                        name={student.name}
-                        surname={student.surname}
-                      />
-                      <div className="d-inline mx-2">
-                        <FontAwesomeIcon
-                          icon={faTimes}
-                          className="my-auto text-danger cursor-pointer"
-                          onClick={() =>
-                            setSelectedStudents(
-                              selectedStudents.filter(
-                                (guid) => guid !== student.guid
-                              )
-                            )
-                          }
-                        />
-                      </div>
-                    </div>
-                  ))}
-              </>
-            </div>
-          </Stack>
-          <Stack>
-            <FormControl className="mt-4">
-              <InputLabel>{t('selectPeopleToInvite')}</InputLabel>
-              <Select
-                className="selectPeopleToInvite"
-                multiple
-                value={selectedStudents}
-                onChange={(event) => {
-                  const {
-                    target: { value },
-                  } = event;
-                  setSelectedStudents(
-                    typeof value === 'string' ? value.split(',') : value
-                  );
-                }}
-                renderValue={(selected) => selected.length}
-                label={t('selectPeopleToInvite')}
-              >
-                {inactiveStudents.map((student) => (
-                  <MenuItem
-                    key={student.guid}
-                    value={student.guid}
-                    className="row"
-                  >
-                    <Person {...student} noLink={true} />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Stack>
-        </Stack>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="outlined" onClick={sendButtonHandler}>
-          {t('addInvitation')}
-        </Button>
-      </Modal.Footer>
-    </Modal>
+    <PeoplePicker
+      showFilters
+      show={props.show}
+      onHide={props.onHide}
+      onConfirm={async (peopleGuids: string[]) => {
+        if (peopleGuids.length !== 0)
+          await SchoolsProxy.inviteMultiplePeople(
+            {
+              invitedPersonGuidArray: peopleGuids,
+            },
+            props.currentSchool.schoolGuid!
+          ).then(() => {
+            Notifications.showSuccessNotification();
+          });
+        props.onHide();
+      }}
+      getPeople={async (pickerData, page) => {
+        return (
+          await PeopleProxy.searchPeople(
+            { ...pickerData, onlyInactive: true },
+            page
+          )
+        ).data;
+      }}
+    />
   );
 };
 export default connect(

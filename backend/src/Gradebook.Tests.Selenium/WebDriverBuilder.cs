@@ -28,6 +28,9 @@ public static class WebDriverBuilder
         string? path = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.FullName;
         var driver = new DriverImplementation(path + @$"/Drivers/{ConfigurationManager.GetValue("Browser:Platform")}/", options);
         driver.Manage().Window.Maximize();
+        //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+        //driver.Manage().Timeouts().AsynchronousJavaScript = TimeSpan.FromSeconds(1);
+
         return driver;
     }
 }

@@ -4,10 +4,14 @@ import { ActionMeta, SingleValue } from 'react-select';
 import { AsyncPaginate } from 'react-select-async-paginate';
 
 interface Props<T> {
+  maxMenuHeight?: number;
+  className?: string;
+  isClearable?: boolean;
+  cacheOptions?: boolean;
   id?: string;
   value?: T;
   onChange?: (newValue: SingleValue<T>, actionMeta: ActionMeta<T>) => void;
-  fetch: (query: string, page: number) => Promise<T[]>;
+  fetch: (query: string, page: number) => Promise<T[]> | T[];
   getOptionValue?: (option: T) => any;
   getOptionLabel?: (option: T) => string;
   onMenuClose?: () => void;
@@ -35,12 +39,11 @@ function SelectAsyncPaginate<T>(props: Props<T>): ReactElement {
   };
   return (
     <AsyncPaginate
+      className=""
       inputId={props.id}
       id={props.id}
-      placeholder={<>{t('select...')}</>}
-      noOptionsMessage={() => {
-        return t('noOptions');
-      }}
+      placeholder={t('select')}
+      noOptionsMessage={() => t('noOptions')}
       onMenuClose={props.onMenuClose}
       defaultOptions
       value={props.value}
@@ -51,6 +54,7 @@ function SelectAsyncPaginate<T>(props: Props<T>): ReactElement {
       additional={{
         page: 1,
       }}
+      {...props}
     />
   );
 }

@@ -1,7 +1,8 @@
 import '@testing-library/jest-dom';
+import { AxiosResponse } from 'axios';
+import { vi } from 'vitest';
 import AccountsProxy from '../../../ApiClient/Accounts/AccountsProxy';
 import * as setApplicationLanguageRedux from '../../../Redux/ReduxCommands/account/setApplicationLanguageRedux';
-import { AxiosResponse } from 'axios';
 import setUserRedux from '../../../Redux/ReduxCommands/account/setUserRedux';
 
 describe('setUserRedux', () => {

@@ -1,7 +1,8 @@
 import '@testing-library/jest-dom';
+import { vi } from 'vitest';
 import AccountsProxy from '../../../ApiClient/Accounts/AccountsProxy';
-import * as setApplicationLanguageRedux from '../../../Redux/ReduxCommands/account/setApplicationLanguageRedux';
 import HubProxy from '../../../ApiClient/SignalR/HubProxy';
+import * as setApplicationLanguageRedux from '../../../Redux/ReduxCommands/account/setApplicationLanguageRedux';
 import setLoginRedux from '../../../Redux/ReduxCommands/account/setLoginRedux';
 
 vi.mock('axios', () => ({

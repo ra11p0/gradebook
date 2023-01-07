@@ -2,14 +2,15 @@ using Gradebook.Foundation.Mailservice.MailMessages;
 using Newtonsoft.Json;
 using MySql.Data.MySqlClient;
 using Dapper;
+using Gradebook.Foundation.Common;
 
 namespace Gradebook.Tests.Selenium.Helpers;
 
 public static class DatabaseHelper
 {
-    public static string GetActivationLinkFromEmail(string email, DateTime? scanSince = null, int timeoutInSeconds = 30)
+    public static string GetActivationLinkFromEmail(string email, DateTime? scanSince = null)
     {
-        scanSince = scanSince ?? DateTime.UtcNow;
+        scanSince = scanSince ?? Time.UtcNow;
         var jsonString = ScanDatabase<string>(@"
             SELECT PayloadJson 
             FROM MailHistory 
@@ -20,9 +21,9 @@ public static class DatabaseHelper
         return $"{url}service/account/{message!.TargetGuid}/activation/{message!.AuthCode}";
     }
 
-    public static string GetChangePasswordLinkFromEmail(string email, DateTime? scanSince = null, int timeoutInSeconds = 30)
+    public static string GetChangePasswordLinkFromEmail(string email, DateTime? scanSince = null)
     {
-        scanSince = scanSince ?? DateTime.UtcNow;
+        scanSince = scanSince ?? Time.UtcNow;
         var jsonString = ScanDatabase<string>(@"
             SELECT PayloadJson 
             FROM MailHistory 
@@ -33,7 +34,7 @@ public static class DatabaseHelper
         return $"{url}service/account/{message!.TargetGuid}/RemindPassword/{message!.AuthCode}";
     }
 
-    private static T ScanDatabase<T>(string query, object? values = null, int timeoutInSeconds = 30)
+    private static T ScanDatabase<T>(string query, object? values = null, int timeoutInSeconds = 60)
     {
         using var connection = new MySqlConnection(ConfigurationManager.GetValue("MysqlConnectionString"));
         connection.Open();
@@ -44,7 +45,7 @@ public static class DatabaseHelper
             item = connection.QueryFirstOrDefault<T>(query, values);
             if (timeout < DateTime.UtcNow)
                 throw new TimeoutException("Database entity not found");
-            Thread.Sleep(2000);
+
         } while (item is null);
         return item;
     }

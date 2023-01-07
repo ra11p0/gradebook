@@ -1,17 +1,14 @@
-import React from 'react';
-import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { BrowserRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { store } from '../../store';
-import { I18nextProvider } from 'react-i18next';
-import i18n from '../../i18n/config';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import ConfigureEducationCycleForm from '../../Components/EducationCycle/ConfigureEducationCycle/ConfigureEducationCycleForm';
-import EducationCyclesProxy from '../../ApiClient/EducationCycles/EducationCyclesProxy';
+import { Provider } from 'react-redux';
+import { openMenu, select } from 'react-select-event';
+import { vi } from 'vitest';
 import ClassesProxy from '../../ApiClient/Classes/ClassesProxy';
+import EducationCyclesProxy from '../../ApiClient/EducationCycles/EducationCyclesProxy';
 import SubjectsProxy from '../../ApiClient/Subjects/SubjectsProxy';
-import { select, openMenu } from 'react-select-event';
+import ConfigureEducationCycleForm from '../../Components/EducationCycle/ConfigureEducationCycle/ConfigureEducationCycleForm';
+import { store } from '../../store';
 
 describe('<ConfigureEducationCycleForm />', () => {
   it('Should validate start and end dates empty', async () => {
@@ -25,27 +22,23 @@ describe('<ConfigureEducationCycleForm />', () => {
     await act(async () => {
       render(
         <Provider store={store}>
-          <BrowserRouter>
-            <I18nextProvider i18n={i18n}>
-              <ConfigureEducationCycleForm
-                educationCycleGuid={'fakeEducationCycleGuid'}
-                classGuid={'fakeClassGuid'}
-                onSubmit={() => {}}
-              />
-            </I18nextProvider>
-          </BrowserRouter>
+          <ConfigureEducationCycleForm
+            educationCycleGuid={'fakeEducationCycleGuid'}
+            classGuid={'fakeClassGuid'}
+            onSubmit={() => {}}
+          />
         </Provider>
       );
     });
     await act(() => {
-      fireEvent.click(screen.getByRole('button', { name: 'Confirm' }));
+      fireEvent.click(screen.getByRole('button', { name: 'confirm' }));
     });
 
-    await expect(
-      await screen.findByRole('textbox', { name: 'Start date' })
+    expect(
+      await screen.findByRole('textbox', { name: 'dateSince' })
     ).toHaveClass('is-invalid');
-    await expect(
-      await screen.findByRole('textbox', { name: 'End date' })
+    expect(
+      await screen.findByRole('textbox', { name: 'dateUntil' })
     ).toHaveClass('is-invalid');
   });
 
@@ -93,39 +86,35 @@ describe('<ConfigureEducationCycleForm />', () => {
     await act(async () => {
       render(
         <Provider store={store}>
-          <BrowserRouter>
-            <I18nextProvider i18n={i18n}>
-              <ConfigureEducationCycleForm
-                educationCycleGuid={'fakeEducationCycleGuid'}
-                classGuid={'fakeClassGuid'}
-                onSubmit={() => {}}
-              />
-            </I18nextProvider>
-          </BrowserRouter>
+          <ConfigureEducationCycleForm
+            educationCycleGuid={'fakeEducationCycleGuid'}
+            classGuid={'fakeClassGuid'}
+            onSubmit={() => {}}
+          />
         </Provider>
       );
     });
     await act(async () => {
       userEvent.type(
-        (await screen.findAllByRole('textbox', { name: 'End date' }))[0],
+        (await screen.findAllByRole('textbox', { name: 'dateUntil' }))[0],
         '04/04/2022{enter}'
       );
     });
     await act(async () => {
       userEvent.type(
-        (await screen.findAllByRole('textbox', { name: 'Start date' }))[0],
+        (await screen.findAllByRole('textbox', { name: 'dateSince' }))[0],
         '01/01/2022{enter}'
       );
     });
     await act(async () => {
       userEvent.type(
-        (await screen.findAllByRole('textbox', { name: 'End date' }))[1],
+        (await screen.findAllByRole('textbox', { name: 'dateUntil' }))[1],
         '03/03/2022{enter}'
       );
     });
     await act(async () => {
       userEvent.type(
-        (await screen.findAllByRole('textbox', { name: 'Start date' }))[1],
+        (await screen.findAllByRole('textbox', { name: 'dateSince' }))[1],
         '05/03/2022{enter}'
       );
     });
@@ -137,7 +126,7 @@ describe('<ConfigureEducationCycleForm />', () => {
       await select(selectField, 'fakeName fakeSurname');
     });
     await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: 'Confirm' }));
+      fireEvent.click(screen.getByRole('button', { name: 'confirm' }));
     });
 
     expect(mockedConfigureEducationCycleForClass).toBeCalledTimes(1);

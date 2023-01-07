@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Gradebook.Foundation.Database;
 using Gradebook.Foundation.Common.Extensions;
-using Gradebook.Foundation.Logic.Queries.Repositories;
 using Gradebook.Foundation.Common.Foundation;
 using Gradebook.Foundation.Logic.Queries;
 using Gradebook.Foundation.Logic.Commands;
@@ -15,6 +14,7 @@ using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Foundation.Commands;
 using Gradebook.Foundation.Logic.Commands.Repositories;
 using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
+using Gradebook.Foundation.Logic.Queries.Repositories.Interfaces;
 
 namespace Gradebook.Foundation.Tests.EducationCycles
 {

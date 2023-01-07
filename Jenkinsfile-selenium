@@ -11,7 +11,6 @@ def jsonSlurpLax(String jsonText){
         .toString()
     )
 }
-
 void setBuildStatus(String message, String state) {
   step([
       $class: "GitHubCommitStatusSetter",
@@ -22,6 +21,9 @@ void setBuildStatus(String message, String state) {
   ]);
 }
 
+def getGitBranchName() {
+    return scm.branches[0].name
+}
 
 def prepareAppSettings() {
     def apiPort = '5503'

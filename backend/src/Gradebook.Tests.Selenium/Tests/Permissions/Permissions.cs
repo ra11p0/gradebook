@@ -4,11 +4,9 @@ using Gradebook.Tests.Selenium.QuickActionsExtensions;
 namespace Gradebook.Tests.Selenium.Tests.Permissions;
 
 [Category("Selenium")]
-[Order(3)]
 public class Permissions
 {
     [Test]
-    [Order(1)]
     public void CanSetOwnPermission()
     {
         using var driver = WebDriverBuilder.BuildWebDriver();
@@ -46,7 +44,6 @@ public class Permissions
         Assert.That(driver.WaitFor("div.permission_1.row .MuiSelect-select", d => d.Text != permissionText));
     }
     [Test]
-    [Order(2)]
     public void CanSetOthersPermission()
     {
         using var driver = WebDriverBuilder.BuildWebDriver();

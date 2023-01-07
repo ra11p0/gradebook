@@ -1,8 +1,8 @@
-import React, { ReactElement } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Col, Row } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ReactElement } from 'react';
+import { Col, Row } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import SchoolRolesEnum from '../../Common/Enums/SchoolRolesEnum';
 interface PersonProps {
@@ -19,11 +19,11 @@ const Person = (props: PersonProps): ReactElement => {
   return (
     <Link
       to={props.noLink ? `javascript:;` : `/person/show/${props.guid}`}
-      className={`${props.noLink ? 'disabled text-reset' : ''} ${
+      className={`person-element ${props.noLink ? 'disabled text-reset' : ''} ${
         props.className ?? ''
       } w-100 text-start btn btn-sm btn-outline-secondary`}
     >
-      <Row>
+      <Row data-testid={`personComponent-${props.guid}`}>
         <Col xs={1} className={`my-auto mx-2`}>
           <FontAwesomeIcon icon={faUser} />
         </Col>

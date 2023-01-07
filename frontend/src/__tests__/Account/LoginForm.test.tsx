@@ -1,16 +1,15 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { store } from '../../store';
-import { act } from 'react-dom/test-utils';
-import i18n from '../../i18n/config';
-import { I18nextProvider } from 'react-i18next';
-import LoginForm from '../../Components/Account/Login/LoginForm';
-import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
-import AccountsProxy from '../../ApiClient/Accounts/AccountsProxy';
+import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { wait } from '@testing-library/user-event/dist/utils';
+import { act } from 'react-dom/test-utils';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { vi } from 'vitest';
+import AccountsProxy from '../../ApiClient/Accounts/AccountsProxy';
+import LoginForm from '../../Components/Account/Login/LoginForm';
+import { store } from '../../store';
 
 vi.mock('axios', () => ({
   default: {
@@ -29,34 +28,28 @@ vi.mock('axios', () => ({
 
 describe('<LoginForm/>', () => {
   it('Should disable login button while logging in', async () => {
-    vi.spyOn(AccountsProxy, 'logIn').mockImplementationOnce(async () => {
-      return await new Promise((resolve, reject) => {
-        void new Promise((resolve) => setTimeout(resolve, 1000)).then(() =>
-          reject(new Error())
-        );
-      });
-    });
+    vi.spyOn(AccountsProxy, 'logIn').mockImplementationOnce(
+      async () => (await wait(1000)) as any
+    );
 
     await act(() => {
       render(
         <Provider store={store}>
           <BrowserRouter>
-            <I18nextProvider i18n={i18n}>
-              <LoginForm />
-            </I18nextProvider>
+            <LoginForm />
           </BrowserRouter>
         </Provider>
       );
     });
     await act(() => {
       userEvent.type(
-        screen.getByRole('textbox', { name: 'Email' }),
+        screen.getByRole('textbox', { name: 'email' }),
         'fake@email.on'
       );
       userEvent.type(screen.getByTestId('password'), 'fake@email.on');
-      fireEvent.click(screen.getByRole('button', { name: 'Login' }));
+      fireEvent.click(screen.getByRole('button', { name: 'logIn' }));
     });
-    expect(screen.getByRole('button', { name: 'Login' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'logIn' })).toBeDisabled();
   });
 
   it('Should validate filled email empty', async () => {
@@ -64,18 +57,16 @@ describe('<LoginForm/>', () => {
       render(
         <Provider store={store}>
           <BrowserRouter>
-            <I18nextProvider i18n={i18n}>
-              <LoginForm />
-            </I18nextProvider>
+            <LoginForm />
           </BrowserRouter>
         </Provider>
       );
     });
     await act(() => {
       userEvent.type(screen.getByTestId('password'), 'fake@email.on');
-      fireEvent.click(screen.getByRole('button', { name: 'Login' }));
+      fireEvent.click(screen.getByRole('button', { name: 'logIn' }));
     });
-    expect(screen.getByRole('textbox', { name: 'Email' })).toHaveClass(
+    expect(screen.getByRole('textbox', { name: 'email' })).toHaveClass(
       'is-invalid'
     );
   });
@@ -85,19 +76,17 @@ describe('<LoginForm/>', () => {
       render(
         <Provider store={store}>
           <BrowserRouter>
-            <I18nextProvider i18n={i18n}>
-              <LoginForm />
-            </I18nextProvider>
+            <LoginForm />
           </BrowserRouter>
         </Provider>
       );
     });
     await act(() => {
       userEvent.type(
-        screen.getByRole('textbox', { name: 'Email' }),
+        screen.getByRole('textbox', { name: 'email' }),
         'fake@email.on'
       );
-      fireEvent.click(screen.getByRole('button', { name: 'Login' }));
+      fireEvent.click(screen.getByRole('button', { name: 'logIn' }));
     });
     expect(screen.getByTestId('password')).toHaveClass('is-invalid');
   });
@@ -116,20 +105,18 @@ describe('<LoginForm/>', () => {
       render(
         <Provider store={store}>
           <BrowserRouter>
-            <I18nextProvider i18n={i18n}>
-              <LoginForm />
-            </I18nextProvider>
+            <LoginForm />
           </BrowserRouter>
         </Provider>
       );
     });
     await act(async () => {
       userEvent.type(
-        screen.getByRole('textbox', { name: 'Email' }),
+        screen.getByRole('textbox', { name: 'email' }),
         'fake@email.on'
       );
       userEvent.type(screen.getByTestId('password'), 'fake@email.on');
-      fireEvent.click(screen.getByRole('button', { name: 'Login' }));
+      fireEvent.click(screen.getByRole('button', { name: 'logIn' }));
     });
 
     expect(swalMock).toBeCalledTimes(1);
@@ -149,20 +136,18 @@ describe('<LoginForm/>', () => {
       render(
         <Provider store={store}>
           <BrowserRouter>
-            <I18nextProvider i18n={i18n}>
-              <LoginForm />
-            </I18nextProvider>
+            <LoginForm />
           </BrowserRouter>
         </Provider>
       );
     });
     await act(async () => {
       userEvent.type(
-        screen.getByRole('textbox', { name: 'Email' }),
+        screen.getByRole('textbox', { name: 'email' }),
         'fake@email.on'
       );
       userEvent.type(screen.getByTestId('password'), 'fake@email.on');
-      fireEvent.click(screen.getByRole('button', { name: 'Login' }));
+      fireEvent.click(screen.getByRole('button', { name: 'logIn' }));
     });
 
     expect(swalMock).toBeCalledTimes(1);

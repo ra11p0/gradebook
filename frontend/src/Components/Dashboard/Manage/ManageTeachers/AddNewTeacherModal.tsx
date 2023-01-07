@@ -1,13 +1,13 @@
 import { Button } from '@mui/material';
 import { useFormik } from 'formik';
-import React, { ReactElement } from 'react';
+import moment from 'moment';
+import { ReactElement } from 'react';
 import { Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import SchoolsProxy from '../../../../ApiClient/Schools/SchoolsProxy';
 import { connect } from 'react-redux';
 import NewTeacherRequest from '../../../../ApiClient/Schools/Definitions/Requests/NewTeacherRequest';
-import ReactDatePicker from 'react-datepicker';
-import moment from 'moment';
+import SchoolsProxy from '../../../../ApiClient/Schools/SchoolsProxy';
+import Notifications from '../../../../Notifications/Notifications';
 import getApplicationLanguageReduxProxy from '../../../../Redux/ReduxQueries/account/getApplicationLanguageRedux';
 import FormikInput from '../../../Shared/FormikInput';
 
@@ -46,7 +46,10 @@ function AddNewTeacherModal(props: Props): ReactElement {
       await SchoolsProxy.addNewTeacher(
         { ...teacher, Birthday: moment(teacher.Birthday).utc().toDate() },
         props.currentSchoolGuid!
-      ).then(props.onHide);
+      )
+        .then(props.onHide)
+        .then(() => Notifications.showSuccessNotification())
+        .catch(Notifications.showApiError);
     },
   });
   return (

@@ -1,14 +1,12 @@
-import React from 'react';
 import { render } from '@testing-library/react';
-
-import Header from '../../Components/Dashboard/Manage/EducationCycle/CyclesList/Header';
-import { BrowserRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { store } from '../../store';
-import setPermissionsRedux from '../../Redux/ReduxCommands/account/setPermissionsRedux';
-import PermissionLevelEnum from '../../Common/Enums/Permissions/PermissionLevelEnum';
 import { I18nextProvider } from 'react-i18next';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import PermissionLevelEnum from '../../Common/Enums/Permissions/PermissionLevelEnum';
+import Header from '../../Components/Dashboard/Manage/EducationCycle/CyclesList/Header';
 import i18n from '../../i18n/config';
+import setPermissionsRedux from '../../Redux/ReduxCommands/account/setPermissionsRedux';
+import { store } from '../../store';
 
 describe('<Header />', () => {
   it('Should not show `add new education cycle` button - EducationCycles_ViewOnly', async () => {

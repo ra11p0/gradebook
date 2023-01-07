@@ -1,19 +1,19 @@
-import React, { ReactElement, useState } from 'react';
-import { connect } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { Button, Table } from 'react-bootstrap';
-import AddInvitationModal from './AddInvitationModal';
-import InvitationResponse from '../../../../ApiClient/Invitations/Definitions/Responses/InvitationResponse';
-import { Stack, List } from '@mui/material';
-import InfiniteScrollWrapper from '../../../Shared/InfiniteScrollWrapper';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import moment from 'moment';
-import Person from '../../../Shared/Person';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { List, Stack } from '@mui/material';
+import moment from 'moment';
+import { ReactElement, useState } from 'react';
+import { Button, Table } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+import InvitationResponse from '../../../../ApiClient/Invitations/Definitions/Responses/InvitationResponse';
 import SchoolsProxy from '../../../../ApiClient/Schools/SchoolsProxy';
-import getCurrentSchoolReduxProxy from '../../../../Redux/ReduxQueries/account/getCurrentSchoolRedux';
-import PermissionsBlocker from '../../../Shared/PermissionsBlocker';
 import PermissionLevelEnum from '../../../../Common/Enums/Permissions/PermissionLevelEnum';
+import getCurrentSchoolReduxProxy from '../../../../Redux/ReduxQueries/account/getCurrentSchoolRedux';
+import InfiniteScrollWrapper from '../../../Shared/InfiniteScrollWrapper';
+import PermissionsBlocker from '../../../Shared/PermissionsBlocker';
+import Person from '../../../Shared/Person';
+import AddInvitationModal from './AddInvitationModal';
 
 interface InvitationsProps {
   currentSchool: any;
@@ -34,7 +34,7 @@ const Invitations = (props: InvitationsProps): ReactElement => {
                 className="addInvitationButton"
                 onClick={() => setShowInvitationModal(true)}
               >
-                {t('inviteStudent')}
+                {t('invitePeople')}
               </Button>
               <AddInvitationModal
                 show={showInvitationModal}
@@ -61,7 +61,9 @@ const Invitations = (props: InvitationsProps): ReactElement => {
               )}
               mapper={(invitation: InvitationResponse, index) => (
                 <tr key={index}>
-                  <td>{invitation.invitationCode}</td>
+                  <td className="invitation-code">
+                    {invitation.invitationCode}
+                  </td>
                   <td>
                     <FontAwesomeIcon
                       icon={invitation.isUsed ? faCheck : faTimes}

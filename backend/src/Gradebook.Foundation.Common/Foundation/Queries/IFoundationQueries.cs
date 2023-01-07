@@ -2,7 +2,8 @@ using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 
 namespace Gradebook.Foundation.Common.Foundation.Queries;
 
-public interface IFoundationQueries : IFoundationEducationCyclesQueries, IFoundationClassesQueries
+public interface IFoundationQueries : IFoundationEducationCyclesQueries,
+    IFoundationClassesQueries, IFoundationPeopleQueries
 {
     Task<ResponseWithStatus<IEnumerable<TeacherDto>, bool>> GetAllAccessibleTeachers(Guid schoolGuid);
     Task<ResponseWithStatus<Guid>> GetCurrentPersonGuidBySubjectGuid(Guid subjectGuid);

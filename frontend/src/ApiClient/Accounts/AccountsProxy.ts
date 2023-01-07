@@ -80,11 +80,11 @@ async function refreshAccessToken(
   });
 }
 
-const getAccessibleSchools = async (
+async function getAccessibleSchools(
   userGuid: string = getCurrentUserIdRedux()
-): Promise<AxiosResponse<GetAccessibleSchoolsResponse[]>> => {
+): Promise<AxiosResponse<GetAccessibleSchoolsResponse[]>> {
   return await axiosApiAuthorized.get(API_URL + `/account/${userGuid}/schools`);
-};
+}
 
 const getMe = async (): Promise<AxiosResponse<MeResponse>> => {
   return await axiosApiAuthorized.get(API_URL + `/account/Me`);

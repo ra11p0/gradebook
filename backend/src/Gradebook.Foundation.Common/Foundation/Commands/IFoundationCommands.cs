@@ -1,5 +1,4 @@
 using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
-using Gradebook.Foundation.Common.Foundation.Enums;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 
 namespace Gradebook.Foundation.Common.Foundation.Commands;
@@ -14,8 +13,8 @@ public interface IFoundationCommands : IFoundationClassesCommands
     Task<StatusResponse> DeleteSchool(Guid schoolGuid);
     Task<StatusResponse<bool>> NewAdministrator(NewAdministratorCommand command);
     Task<StatusResponse<bool>> NewAdministratorWithSchool(NewAdministratorCommand administratorCommand, NewSchoolCommand schoolCommand);
-    Task<ResponseWithStatus<string, bool>> GenerateSystemInvitation(Guid personGuid, SchoolRoleEnum role, Guid schoolGuid);
-    Task<ResponseWithStatus<string[], bool>> GenerateMultipleSystemInvitation(Guid[] peopleGuid, SchoolRoleEnum role, Guid schoolGuid);
+    Task<ResponseWithStatus<string, bool>> GenerateSystemInvitation(Guid personGuid, Guid schoolGuid);
+    Task<ResponseWithStatus<string[], bool>> GenerateMultipleSystemInvitation(Guid[] peopleGuid, Guid schoolGuid);
     Task<StatusResponse<bool>> AddPersonToSchool(Guid schoolGuid, Guid? personGuid = null);
     Task<StatusResponse<bool>> ActivatePerson(string activationCode);
     Task<ResponseWithStatus<Guid>> AddNewClass(NewClassCommand command);

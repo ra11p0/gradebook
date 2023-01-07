@@ -1,11 +1,12 @@
 import { Button } from '@mui/material';
-import React, { ReactElement, useState } from 'react';
+import { ReactElement, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ClassesProxy from '../../ApiClient/Classes/ClassesProxy';
 import TeachersInClassResponse from '../../ApiClient/Classes/Definitions/Responses/TeachersInClassResponse';
-import SchoolsProxy from '../../ApiClient/Schools/SchoolsProxy';
+import PeopleProxy from '../../ApiClient/People/PeopleProxy';
+import SchoolRolesEnum from '../../Common/Enums/SchoolRolesEnum';
 import Notifications from '../../Notifications/Notifications';
-import PeoplePicker from '../Shared/PeoplePicker';
+import PeoplePicker from '../Shared/PeoplePicker/PeoplePicker';
 
 interface Props {
   classGuid: string;
@@ -20,6 +21,7 @@ function ManageClassOwners(props: Props): ReactElement {
   return (
     <>
       <Button
+        id="manageClassOwners"
         variant="outlined"
         onClick={() => {
           setShowTeachersPicker((e) => !e);
@@ -41,14 +43,12 @@ function ManageClassOwners(props: Props): ReactElement {
             .catch(Notifications.showApiError);
         }}
         selectedPeople={props.classOwners.map((o) => o.guid)}
-        getPeople={async (
-          schoolGuid,
-          discriminator: string,
-          query: string,
-          page: number
-        ) => {
+        getPeople={async (pickerData, page) => {
           return (
-            await SchoolsProxy.searchPeople(schoolGuid, 'Teacher', query, page)
+            await PeopleProxy.searchPeople(
+              { ...pickerData, schoolRole: SchoolRolesEnum.Teacher },
+              page
+            )
           ).data;
         }}
       />

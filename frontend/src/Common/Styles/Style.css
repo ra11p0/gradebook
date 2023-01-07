@@ -10,8 +10,24 @@
   background-color: #f3f3f4;
 }
 
-.max-vh-50 {
+.mvh-50 {
   max-height: 50vh !important;
+}
+
+.mvh-75 {
+  max-height: 75vh !important;
+}
+
+.mh-50 {
+  max-height: 50% !important;
+}
+
+.mh-75 {
+  max-height: 75% !important;
+}
+
+.h-100 {
+  height: 100% !important;
 }
 
 .vh-75 {
@@ -53,4 +69,20 @@
 
 .fs-8 {
   font-size: 0.5rem !important;
+}
+
+.overflow-y-hidden {
+  overflow-y: hidden !important;
+}
+
+.overflow-x-scroll {
+  overflow-x: scroll !important;
+}
+
+.overflow-y-hidden {
+  overflow-y: hidden !important;
+}
+
+.overflow-x-scroll {
+  overflow-x: scroll !important;
 }

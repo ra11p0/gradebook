@@ -1,24 +1,24 @@
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from '@mui/material';
 import { Stack } from '@mui/system';
-import moment from 'moment';
-import React, { ReactElement, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import ClassResponse from '../../../../ApiClient/Schools/Definitions/Responses/ClassResponse';
-import InfiniteScrollWrapper from '../../../Shared/InfiniteScrollWrapper';
-import AddClassModal from './AddClassModal';
-import { connect } from 'react-redux';
-import SchoolsProxy from '../../../../ApiClient/Schools/SchoolsProxy';
-import { useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import Swal from 'sweetalert2';
-import Notifications from '../../../../Notifications/Notifications';
-import ClassesProxy from '../../../../ApiClient/Classes/ClassesProxy';
-import getCurrentSchoolReduxProxy from '../../../../Redux/ReduxQueries/account/getCurrentSchoolRedux';
-import PermissionsBlocker from '../../../Shared/PermissionsBlocker';
-import PermissionLevelEnum from '../../../../Common/Enums/Permissions/PermissionLevelEnum';
+import moment from 'moment';
+import { ReactElement, useState } from 'react';
 import { Table } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import ClassesProxy from '../../../../ApiClient/Classes/ClassesProxy';
+import ClassResponse from '../../../../ApiClient/Schools/Definitions/Responses/ClassResponse';
+import SchoolsProxy from '../../../../ApiClient/Schools/SchoolsProxy';
+import PermissionLevelEnum from '../../../../Common/Enums/Permissions/PermissionLevelEnum';
+import Notifications from '../../../../Notifications/Notifications';
+import getCurrentSchoolReduxProxy from '../../../../Redux/ReduxQueries/account/getCurrentSchoolRedux';
+import InfiniteScrollWrapper from '../../../Shared/InfiniteScrollWrapper';
+import PermissionsBlocker from '../../../Shared/PermissionsBlocker';
+import AddClassModal from './AddClassModal';
 
 interface Props {
   currentSchool: any;
@@ -65,6 +65,7 @@ function ManageClasses(props: Props): ReactElement {
               ]}
             >
               <Button
+                id="addClassButton"
                 onClick={() => setShowAddClassModal(true)}
                 variant="outlined"
               >

@@ -1,13 +1,13 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
 import { Button, Card, Col, Row } from 'react-bootstrap';
+import { withTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+import getIsLoggedInReduxProxy from '../../../Redux/ReduxQueries/account/getIsLoggedInRedux';
+import getIsUserActivatedReduxProxy from '../../../Redux/ReduxQueries/account/getIsUserActivatedRedux';
+import ActivateAdministrator from './ActivateAdministrator';
+import { ActivateAdministratorPersonValues } from './ActivateAdministratorPerson';
 import ActivateStudent from './ActivateStudent';
 import ActivateTeacher from './ActivateTeacher';
-import ActivateAdministrator from './ActivateAdministrator';
-import getIsUserActivatedReduxProxy from '../../../Redux/ReduxQueries/account/getIsUserActivatedRedux';
-import getIsLoggedInReduxProxy from '../../../Redux/ReduxQueries/account/getIsLoggedInRedux';
-import { ActivateAdministratorPersonValues } from './ActivateAdministratorPerson';
 
 interface ActivateAccountProps {
   t: any;
@@ -128,12 +128,10 @@ class ActivateAccount extends React.Component<
   }
 }
 
-export default withTranslation('activateAccount')(
-  connect(
-    (state: any) => ({
-      isUserLoggedIn: getIsLoggedInReduxProxy(state),
-      isUserActivated: getIsUserActivatedReduxProxy(state),
-    }),
-    () => ({})
-  )(ActivateAccount)
-);
+export default connect(
+  (state: any) => ({
+    isUserLoggedIn: getIsLoggedInReduxProxy(state),
+    isUserActivated: getIsUserActivatedReduxProxy(state),
+  }),
+  () => ({})
+)(withTranslation('activateAccount')(ActivateAccount));

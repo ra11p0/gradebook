@@ -1,4 +1,3 @@
-using Api.Models.Invitations;
 using AutoMapper;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
@@ -55,31 +54,6 @@ public partial class SchoolsController : ControllerBase
     {
         var resp = await _foundationCommands.Service.DeleteSchool(schoolGuid);
         return resp.Status ? Ok() : BadRequest(resp.Message);
-    }
-    #endregion
-
-    #region invitations
-    [HttpPost]
-    [Route("{schoolGuid}/Invitations")]
-    [ProducesResponseType(typeof(string[]), 200)]
-    [ProducesErrorResponseType(typeof(string))]
-    public async Task<IActionResult> AddMultipleNewInvitations([FromBody] NewMultipleInvitationModel model, [FromRoute] Guid schoolGuid)
-    {
-        var currentPersonGuid = await _foundationQueries.Service.GetCurrentPersonGuid(schoolGuid);
-        if (!currentPersonGuid.Status) return BadRequest(currentPersonGuid.Message);
-        if (!await _foundationPermissions.Service.CanInviteToSchool(currentPersonGuid.Response!)) return Forbid();
-        var resp = await _foundationCommands.Service.GenerateMultipleSystemInvitation(model.InvitedPersonGuidArray, model.Role, schoolGuid);
-        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
-    }
-
-    [HttpGet]
-    [Route("{schoolGuid}/Invitations")]
-    [ProducesResponseType(typeof(IPagedList<InvitationDto>), 200)]
-    [ProducesErrorResponseType(typeof(string))]
-    public async Task<IActionResult> GetMyInvitations([FromRoute] Guid schoolGuid, [FromQuery] int page = 1)
-    {
-        var resp = await _foundationQueries.Service.GetInvitationsToSchool(schoolGuid, page);
-        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
     }
     #endregion
 

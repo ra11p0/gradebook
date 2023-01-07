@@ -9,7 +9,7 @@ using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
 using Gradebook.Foundation.Logic.Queries;
 using Gradebook.Foundation.Logic.Commands.Repositories;
-using Gradebook.Foundation.Logic.Queries.Repositories;
+using Gradebook.Foundation.Logic.Queries.Repositories.Interfaces;
 
 namespace Gradebook.Foundation.Tests;
 
@@ -32,7 +32,7 @@ public class Activation
     }
 
     [Test]
-    public async Task ShouldActivatePerson()
+    public async Task ShouldActivatePersonAsStudent()
     {
         identityLogic.Setup(e => e.CurrentUserId())
         .ReturnsAsync(new ResponseWithStatus<string, bool>("userId", true));
@@ -43,8 +43,10 @@ public class Activation
             InvitedPersonGuid = Guid.NewGuid(),
             SchoolRole = Common.Foundation.Enums.SchoolRoleEnum.Student
         });
+
         foundationCommandsRepository.Setup(e => e.UseInvitation(It.IsAny<UseInvitationCommand>()))
         .ReturnsAsync(new StatusResponse<bool>(true));
+
         foundationCommandsRepository.Setup(e => e.AssignUserToStudent(It.IsAny<string>(), It.IsAny<Guid>()))
         .ReturnsAsync(new StatusResponse<bool>(true));
 
@@ -52,6 +54,57 @@ public class Activation
         var resp = await foundationCommands!.ActivatePerson(activationCode);
         Assert.That(resp.Status, Is.True);
         Assert.That(resp.StatusCode, Is.EqualTo(200));
+        foundationCommandsRepository.Verify(e => e.AssignUserToStudent(It.IsAny<string>(), It.IsAny<Guid>()), Times.Exactly(1));
+    }
+    [Test]
+    public async Task ShouldActivatePersonAsTeacher()
+    {
+        identityLogic.Setup(e => e.CurrentUserId())
+        .ReturnsAsync(new ResponseWithStatus<string, bool>("userId", true));
+        foundationQueriesRepository.Setup(e => e.GetInvitationByActivationCode(It.IsAny<string>()))
+        .ReturnsAsync(new InvitationDto()
+        {
+            ExprationDate = Time.UtcNow.AddMinutes(10),
+            InvitedPersonGuid = Guid.NewGuid(),
+            SchoolRole = Common.Foundation.Enums.SchoolRoleEnum.Teacher
+        });
+
+        foundationCommandsRepository.Setup(e => e.UseInvitation(It.IsAny<UseInvitationCommand>()))
+        .ReturnsAsync(new StatusResponse<bool>(true));
+
+        foundationCommandsRepository.Setup(e => e.AssignUserToTeacher(It.IsAny<string>(), It.IsAny<Guid>()))
+        .ReturnsAsync(new StatusResponse<bool>(true));
+
+        var activationCode = "QWERTY";
+        var resp = await foundationCommands!.ActivatePerson(activationCode);
+        Assert.That(resp.Status, Is.True);
+        Assert.That(resp.StatusCode, Is.EqualTo(200));
+        foundationCommandsRepository.Verify(e => e.AssignUserToTeacher(It.IsAny<string>(), It.IsAny<Guid>()), Times.Exactly(1));
+    }
+    [Test]
+    public async Task ShouldActivatePersonAsAdmin()
+    {
+        identityLogic.Setup(e => e.CurrentUserId())
+        .ReturnsAsync(new ResponseWithStatus<string, bool>("userId", true));
+        foundationQueriesRepository.Setup(e => e.GetInvitationByActivationCode(It.IsAny<string>()))
+        .ReturnsAsync(new InvitationDto()
+        {
+            ExprationDate = Time.UtcNow.AddMinutes(10),
+            InvitedPersonGuid = Guid.NewGuid(),
+            SchoolRole = Common.Foundation.Enums.SchoolRoleEnum.Admin
+        });
+
+        foundationCommandsRepository.Setup(e => e.UseInvitation(It.IsAny<UseInvitationCommand>()))
+        .ReturnsAsync(new StatusResponse<bool>(true));
+
+        foundationCommandsRepository.Setup(e => e.AssignUserToAdministrator(It.IsAny<string>(), It.IsAny<Guid>()))
+        .ReturnsAsync(new StatusResponse<bool>(true));
+
+        var activationCode = "QWERTY";
+        var resp = await foundationCommands!.ActivatePerson(activationCode);
+        Assert.That(resp.Status, Is.True);
+        Assert.That(resp.StatusCode, Is.EqualTo(200));
+        foundationCommandsRepository.Verify(e => e.AssignUserToAdministrator(It.IsAny<string>(), It.IsAny<Guid>()), Times.Exactly(1));
     }
     [Test]
     public async Task ShouldNotActivatePerson_ExpiredInvitation()
