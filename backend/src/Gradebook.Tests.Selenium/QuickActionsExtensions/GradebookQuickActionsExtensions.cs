@@ -66,6 +66,11 @@ public static class GradebookQuickActionsExtensions
         driver.GoTo($"{ConfigurationManager.GetValue("Urls:ApplicationUrl")}dashboard/manageTeachers");
         return driver;
     }
+    public static IWebDriver GoToStudentsTab(this IWebDriver driver)
+    {
+        driver.GoTo($"{ConfigurationManager.GetValue("Urls:ApplicationUrl")}dashboard/manageStudents");
+        return driver;
+    }
     public static IWebDriver GoToSchoolsTab(this IWebDriver driver)
     {
         driver.GoTo(ConfigurationManager.GetValue("Urls:ApplicationUrl") + "dashboard/manageSchool");
@@ -94,8 +99,7 @@ public static class GradebookQuickActionsExtensions
     }
     public static IWebDriver AddNewStudent(this IWebDriver driver, string studentName, string studentSurname, string studentBirthday)
     {
-        driver.GoToGradebookHomepage();
-        driver.ClickOn("a[href='/dashboard/manageStudents']");
+        driver.GoToStudentsTab();
         driver.ClickOn("button.addNewStudentButton");
         driver.WaitFor("input[name='name']").SendKeys(studentName);
         driver.WaitFor("input[name='surname']").SendKeys(studentSurname);
