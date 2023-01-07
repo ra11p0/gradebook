@@ -8,6 +8,7 @@ using StudentsView = Gradebook.Tests.Selenium.Constraints.Views.Dashboard.Studen
 namespace Gradebook.Tests.Selenium.Tests.People;
 
 [Category("Selenium")]
+[Order(3)]
 public class PeopleAndInvitations
 {
     private readonly Dictionary<string, string> _storage = new();
@@ -21,6 +22,7 @@ public class PeopleAndInvitations
     }
 
     [Test]
+    [Order(3)]
     public void CanCreateNewStudent()
     {
         using var driver = WebDriverBuilder.BuildWebDriver();
@@ -38,6 +40,7 @@ public class PeopleAndInvitations
     }
 
     [Test]
+    [Order(4)]
     public void CanInviteStudent()
     {
         using var driver = WebDriverBuilder.BuildWebDriver();
@@ -63,6 +66,7 @@ public class PeopleAndInvitations
     }
 
     [Test]
+    [Order(5)]
     public void CanRegisterAsStudent()
     {
         using var driver = WebDriverBuilder.BuildWebDriver();
@@ -76,6 +80,7 @@ public class PeopleAndInvitations
     }
 
     [Test]
+    [Order(6)]
     public void CanAddTeacher()
     {
         const string teacherName = "Mariusz";
@@ -95,6 +100,7 @@ public class PeopleAndInvitations
     }
 
     [Test]
+    [Order(7)]
     public void ShouldNotBePossibleToInvitePersonTwice()
     {
         using var driver = WebDriverBuilder.BuildWebDriver();
