@@ -1,11 +1,11 @@
-import React, { ReactElement } from 'react';
-import { connect } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
+import moment from 'moment';
+import { ReactElement } from 'react';
 import { Button } from 'react-bootstrap';
 import ReactDatePicker from 'react-datepicker';
+import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
 import getApplicationLanguageReduxProxy from '../../../Redux/ReduxQueries/account/getApplicationLanguageRedux';
-import moment from 'moment';
 import { GlobalState } from '../../../store';
 interface ActivateAdministratorPersonProps {
   onSubmit: (values: ActivateAdministratorPersonValues) => void;
