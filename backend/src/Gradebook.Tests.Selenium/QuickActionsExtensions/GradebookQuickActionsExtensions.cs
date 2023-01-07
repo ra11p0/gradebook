@@ -71,6 +71,11 @@ public static class GradebookQuickActionsExtensions
         driver.GoTo($"{ConfigurationManager.GetValue("Urls:ApplicationUrl")}dashboard/manageStudents");
         return driver;
     }
+    public static IWebDriver GoToClassesTab(this IWebDriver driver)
+    {
+        driver.GoTo($"{ConfigurationManager.GetValue("Urls:ApplicationUrl")}dashboard/manageClasses");
+        return driver;
+    }
     public static IWebDriver GoToSchoolsTab(this IWebDriver driver)
     {
         driver.GoTo(ConfigurationManager.GetValue("Urls:ApplicationUrl") + "dashboard/manageSchool");
@@ -117,7 +122,7 @@ public static class GradebookQuickActionsExtensions
     public static IWebDriver AddNewClass(this IWebDriver driver, string className)
     {
         driver.GoToGradebookHomepage();
-        driver.ClickOn(Common.ClassesButton);
+        driver.GoToClassesTab();
         driver.ClickOn(Classes.AddClassButton);
 
         driver.WaitFor(Classes.AddClass_ClassNameField).SendKeys(className);
