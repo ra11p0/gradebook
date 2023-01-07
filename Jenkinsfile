@@ -126,7 +126,7 @@ pipeline{
             parallel{
                 stage('backend unit tests') {
                     steps {
-                        sh 'cd backend; dotnet test --filter TestCategory=Unit'
+                        sh 'cd backend; dotnet test --filter TestCategory=Unit -l "console;verbosity=normal"'
                     }
                 }
                 stage('frontend test'){

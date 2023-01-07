@@ -152,7 +152,7 @@ pipeline {
                     println jsonPrepared
                     writeFile(file:env.WORKSPACE+'/backend/src/Gradebook.Tests.Selenium/testsettings.json', text: jsonPrepared)
                 }
-                sh 'cd backend; dotnet test --filter TestCategory=Selenium'
+                sh 'cd backend; dotnet test --filter TestCategory=Selenium -l "console;verbosity=normal"'
             }
         }
    
