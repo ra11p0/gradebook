@@ -1,17 +1,18 @@
-import React, { ReactElement, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import AccountProxy from '../../../ApiClient/Accounts/AccountsProxy';
-import { useTranslation } from 'react-i18next';
-import { Form } from 'react-bootstrap';
-import setLoginReduxWrapper from '../../../Redux/ReduxCommands/account/setLoginRedux';
-import setAppLoadReduxWrapper from '../../../Redux/ReduxCommands/account/setAppLoadRedux';
-import { store } from '../../../store';
-import { useFormik } from 'formik';
-import FormikInput from '../../Shared/FormikInput';
-import * as yup from 'yup';
 import LoadingButton from '@mui/lab/LoadingButton';
-import Swal from 'sweetalert2';
 import { Link } from '@mui/material';
+import { useFormik } from 'formik';
+import moment from 'moment';
+import { ReactElement, useState } from 'react';
+import { Form } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { Link as RouterLink } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import * as yup from 'yup';
+import AccountProxy from '../../../ApiClient/Accounts/AccountsProxy';
+import setAppLoadReduxWrapper from '../../../Redux/ReduxCommands/account/setAppLoadRedux';
+import setLoginReduxWrapper from '../../../Redux/ReduxCommands/account/setLoginRedux';
+import { store } from '../../../store';
+import FormikInput from '../../Shared/FormikInput';
 import ChangePasswordModal from '../ChangePassword/ChangePasswordModal';
 
 function LoginForm(): ReactElement {
@@ -40,6 +41,7 @@ function LoginForm(): ReactElement {
           await setLoginReduxWrapper({
             refreshToken: loginResponse.data.refresh_token,
             accessToken: loginResponse.data.access_token,
+            expiresIn: moment().add(loginResponse.data.expires_in, 'seconds'),
           });
         })
         .catch(async (resp) => {

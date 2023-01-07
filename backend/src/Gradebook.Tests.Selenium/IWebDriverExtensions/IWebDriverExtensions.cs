@@ -60,7 +60,6 @@ public static class IWebDriverExtensions
 
     public static IWebDriver GoTo(this IWebDriver driver, string url, bool dontWaitForReactApp = false)
     {
-        driver.WaitForPageFullyLoaded();
         driver!.Navigate().GoToUrl(url);
         driver.WaitForPageFullyLoaded();
         return driver;
@@ -68,7 +67,6 @@ public static class IWebDriverExtensions
 
     public static IWebDriver Refresh(this IWebDriver driver)
     {
-        driver.WaitForPageFullyLoaded();
         driver.Navigate().Refresh();
         driver.WaitForPageFullyLoaded();
         return driver;
@@ -77,5 +75,9 @@ public static class IWebDriverExtensions
     {
         driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(timeoutInSeconds);
         return driver;
+    }
+    public static void Pause(int timestampInMs)
+    {
+        Task.Delay(timestampInMs).Wait();
     }
 }

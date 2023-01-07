@@ -1,6 +1,7 @@
 import axios from 'axios';
-import getSessionRedux from '../Redux/ReduxQueries/account/getSessionRedux';
+import moment from 'moment';
 import setLoginReduxWrapper from '../Redux/ReduxCommands/account/setLoginRedux';
+import getSessionRedux from '../Redux/ReduxQueries/account/getSessionRedux';
 import AccountProxy from './Accounts/AccountsProxy';
 
 const axiosApiAuthorized = axios.create();
@@ -48,13 +49,15 @@ async function refreshAccessToken(): Promise<string> {
   await setLoginReduxWrapper({
     accessToken: refreshResponse.data.access_token,
     refreshToken: refreshResponse.data.refresh_token,
+    expiresIn: moment().add(refreshResponse.data.expires_in, 'seconds'),
   });
   return refreshResponse.data.access_token;
 }
 
-function getAccessToken(): string {
+async function getAccessToken(): Promise<string> {
   const session = getSessionRedux();
   if (!session) throw new Error('session should not be null');
+  if (session.expiresIn.isBefore(moment())) return await refreshAccessToken();
   return session.accessToken;
 }
 

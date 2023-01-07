@@ -16,6 +16,7 @@ export interface State {
   session?: {
     accessToken: string;
     refreshToken: string;
+    expiresIn: string;
   };
   schoolsList?: Array<{
     person: {
@@ -67,6 +68,7 @@ export default (
         session: {
           accessToken: action.payload.accessToken,
           refreshToken: action.payload.refreshToken,
+          expiresIn: action.payload.expiresIn,
         },
       };
     case ActionType.LogOut:
