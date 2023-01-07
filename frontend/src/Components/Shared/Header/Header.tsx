@@ -44,7 +44,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       <div className="py-4 px-2 bg-grey-light bg-gradient">
         <Navbar expand="lg">
           <Container fluid>
-            <Navbar.Brand>
+            <Navbar.Brand data-testid="brand">
               <Link to="/" className="text-reset">
                 Gradebook
               </Link>

@@ -1,14 +1,14 @@
-import React, { ReactElement, useState } from 'react';
-import { connect } from 'react-redux';
 import { useFormik } from 'formik';
-import { useTranslation } from 'react-i18next';
-import { Button, Col, Row } from 'react-bootstrap';
-import InvitationsProxy from '../../../ApiClient/Invitations/InvitationsProxy';
 import moment from 'moment';
+import { ReactElement, useState } from 'react';
+import { Button, Col, Row } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+import InvitationsProxy from '../../../ApiClient/Invitations/InvitationsProxy';
 import PeopleProxy from '../../../ApiClient/People/PeopleProxy';
 import Notifications from '../../../Notifications/Notifications';
-import getCurrentUserIdReduxProxy from '../../../Redux/ReduxQueries/account/getCurrentUserIdRedux';
 import setLoginReduxWrapper from '../../../Redux/ReduxCommands/account/setLoginRedux';
+import getCurrentUserIdReduxProxy from '../../../Redux/ReduxQueries/account/getCurrentUserIdRedux';
 import getSessionRedux from '../../../Redux/ReduxQueries/account/getSessionRedux';
 
 interface ActivateStudentFormProps {
@@ -46,10 +46,7 @@ const ActivateStudentForm = (props: ActivateStudentFormProps): ReactElement => {
         .then(() => {
           const session = getSessionRedux();
           if (!session) return;
-          void setLoginReduxWrapper({
-            accessToken: session.accessToken,
-            refreshToken: session.refreshToken,
-          });
+          void setLoginReduxWrapper(session);
           if (props.onSubmit) props.onSubmit();
         })
         .catch(Notifications.showApiError);

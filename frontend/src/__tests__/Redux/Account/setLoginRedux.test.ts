@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom';
+import moment from 'moment';
 import { vi } from 'vitest';
 import AccountsProxy from '../../../ApiClient/Accounts/AccountsProxy';
 import HubProxy from '../../../ApiClient/SignalR/HubProxy';
@@ -52,6 +53,7 @@ describe('setLogInRedux', () => {
     await setLoginRedux({
       accessToken: 'fakeAccessToken',
       refreshToken: 'fakeRefreshToken',
+      expiresIn: moment().add(50, 'seconds'),
     });
     expect(connectMock).toBeCalled();
   });
@@ -71,6 +73,7 @@ describe('setLogInRedux', () => {
     await setLoginRedux({
       accessToken: 'fakeAccessToken',
       refreshToken: 'fakeRefreshToken',
+      expiresIn: moment().add(50, 'seconds'),
     });
     expect(setApplicationLanguageReduxMocked).toBeCalledTimes(1);
     expect(setApplicationLanguageReduxMocked).toBeCalledWith('testLanguage');
@@ -88,6 +91,7 @@ describe('setLogInRedux', () => {
     await setLoginRedux({
       accessToken: 'fakeAccessToken',
       refreshToken: 'fakeRefreshToken',
+      expiresIn: moment().add(50, 'seconds'),
     });
     expect(setItemMock).toBeCalledWith('access_token', 'fakeAccessToken');
     expect(setItemMock).toBeCalledWith('refresh_token', 'fakeRefreshToken');

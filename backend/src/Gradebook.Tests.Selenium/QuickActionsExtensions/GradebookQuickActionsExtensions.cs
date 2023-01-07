@@ -6,6 +6,7 @@ using Gradebook.Tests.Selenium.Helpers;
 using Gradebook.Tests.Selenium.IWebDriverExtensions;
 using LoginView = Gradebook.Tests.Selenium.Constraints.Views.Login;
 using RegisterView = Gradebook.Tests.Selenium.Constraints.Views.Register;
+using Wdext = Gradebook.Tests.Selenium.IWebDriverExtensions.IWebDriverExtensions;
 
 namespace Gradebook.Tests.Selenium.QuickActionsExtensions;
 
@@ -13,9 +14,13 @@ public static class GradebookQuickActionsExtensions
 {
     public static IWebDriver ScrollTo(this IWebDriver driver, IWebElement element)
     {
-        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'});", element);
-
-        Thread.Sleep(500);
+        ((IJavaScriptExecutor)driver).ExecuteScript("await arguments[0].scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'});", element);
+        Wdext.Pause(500);
+        return driver;
+    }
+    public static IWebDriver WaitForPageFullyLoaded(this IWebDriver driver)
+    {
+        driver.WaitFor("[data-testid='brand']");
         return driver;
     }
     public static IWebDriver Login(this IWebDriver driver, string email, string password)
@@ -121,7 +126,6 @@ public static class GradebookQuickActionsExtensions
         => driver.AddNewStudent(studentName, studentSurname, studentBirthday.ToString("dd.MM.yyyy"));
     public static IWebDriver AddNewClass(this IWebDriver driver, string className)
     {
-        driver.GoToGradebookHomepage();
         driver.GoToClassesTab();
         driver.ClickOn(Classes.AddClassButton);
 

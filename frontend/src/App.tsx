@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React from 'react';
 import { ReactNotifications } from 'react-notifications-component';
 import { connect } from 'react-redux';
@@ -47,12 +48,14 @@ class App extends React.Component<AppProps> {
     await setApplicationLanguageReduxWrapper(userLang);
     const access = localStorage.getItem('access_token');
     const refresh = localStorage.getItem('refresh_token');
+    const expiresIn = localStorage.getItem('expires_in');
     if (access && refresh) {
       await AccountProxy.refreshAccessToken(access, refresh)
         .then(async (refreshAccessTokenResponse) => {
           await setLoginReduxWrapper({
             accessToken: refreshAccessTokenResponse.data.access_token,
             refreshToken: refreshAccessTokenResponse.data.refresh_token,
+            expiresIn: moment(expiresIn),
           });
         })
         .catch(async () => {
