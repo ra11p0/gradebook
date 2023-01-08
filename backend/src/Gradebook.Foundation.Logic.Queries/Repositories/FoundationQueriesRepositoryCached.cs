@@ -175,4 +175,7 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
 
     public Task<IPagedList<PersonDto>> SearchPeople(PeoplePickerData pickerData, Pager pager)
         => Base.SearchPeople(pickerData, pager);
+
+    public Task<AdminDto> GetAdminByGuid(Guid guid)
+        => Base.GetAdminByGuid(guid);
 }

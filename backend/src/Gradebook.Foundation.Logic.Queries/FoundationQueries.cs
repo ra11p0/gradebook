@@ -24,12 +24,12 @@ public partial class FoundationQueries : BaseLogic<IFoundationQueriesRepository>
         _foundationPermissionLogic = serviceProvider.GetResolver<IFoundationPermissionsLogic>();
     }
 
-    public async Task<ResponseWithStatus<ActivationCodeInfoDto>> GetActivationCodeInfo(string activationCode, string method)
+    public async Task<ResponseWithStatus<ActivationCodeInfoDto>> GetActivationCodeInfo(string activationCode)
     {
         var invitationResponse = await GetInvitationByActivationCode(activationCode);
         if (!invitationResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto>(invitationResponse.StatusCode, invitationResponse.Message);
-        if (invitationResponse.Response!.IsUsed) return new ResponseWithStatus<ActivationCodeInfoDto>("Invitation code is used");
-        if (invitationResponse.Response!.ExprationDate < Time.UtcNow) return new ResponseWithStatus<ActivationCodeInfoDto>("Invitation code expired");
+        if (invitationResponse.Response!.IsUsed) return new ResponseWithStatus<ActivationCodeInfoDto>(418, "Invitation code is used");
+        if (invitationResponse.Response!.ExprationDate < Time.UtcNow) return new ResponseWithStatus<ActivationCodeInfoDto>(410, "Invitation code expired");
 
         var invitation = invitationResponse.Response!;
         var invitedPersonGuid = invitation.InvitedPersonGuid;
@@ -37,21 +37,10 @@ public partial class FoundationQueries : BaseLogic<IFoundationQueriesRepository>
 
         var response = new ActivationCodeInfoDto();
 
-        switch (method)
-        {
-            case "student":
-                var studentResponse = await GetStudentByGuid(invitedPersonGuid.Value);
-                if (!studentResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto>(studentResponse.Message);
-                response.Person = _mapper.Service.Map<PersonDto>(studentResponse.Response);
-                break;
-            case "teacher":
-                var teacherResponse = await GetTeacherByGuid(invitedPersonGuid.Value);
-                if (!teacherResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto>(teacherResponse.Message);
-                response.Person = _mapper.Service.Map<PersonDto>(teacherResponse.Response);
-                break;
-            default:
-                return new ResponseWithStatus<ActivationCodeInfoDto>("Method not found");
-        }
+        var studentResponse = await GetPersonByGuid(invitedPersonGuid.Value);
+        if (!studentResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto>(studentResponse.Message);
+        response.Person = _mapper.Service.Map<PersonDto>(studentResponse.Response);
+
         return new ResponseWithStatus<ActivationCodeInfoDto>(response, true);
     }
 
@@ -133,7 +122,7 @@ public partial class FoundationQueries : BaseLogic<IFoundationQueriesRepository>
     public async Task<ResponseWithStatus<InvitationDto, bool>> GetInvitationByActivationCode(string activationCode)
     {
         var invitation = await Repository.GetInvitationByActivationCode(activationCode);
-        if (invitation is null) return new ResponseWithStatus<InvitationDto, bool>(statusCode: 404, status: false, message: "Invitation does not exist");
+        if (invitation is null) return new ResponseWithStatus<InvitationDto, bool>(statusCode: 404, message: "Invitation does not exist");
         return new ResponseWithStatus<InvitationDto, bool>(invitation, true);
     }
 
@@ -180,7 +169,7 @@ public partial class FoundationQueries : BaseLogic<IFoundationQueriesRepository>
     public async Task<ResponseWithStatus<PersonDto, bool>> GetPersonByGuid(Guid guid)
     {
         var resp = await Repository.GetPersonByGuid(guid);
-        if (resp is null) return new ResponseWithStatus<PersonDto, bool>(null, false, "Person does not exist");
+        if (resp is null) return new ResponseWithStatus<PersonDto, bool>(404, "Person does not exist");
         if (resp.SchoolRole is Common.Foundation.Enums.SchoolRoleEnum.Student && resp.ActiveClassGuid is not null)
             resp.ActiveClass = await Repository.GetClassByGuid(resp.ActiveClassGuid.Value);
         return new ResponseWithStatus<PersonDto, bool>(resp, true);
@@ -215,13 +204,6 @@ public partial class FoundationQueries : BaseLogic<IFoundationQueriesRepository>
         return new ResponseWithStatus<IEnumerable<SchoolWithRelatedPersonDto>, bool>(schoolsWithRelatedPeople, true);
     }
 
-    public async Task<ResponseWithStatus<StudentDto, bool>> GetStudentByGuid(Guid guid)
-    {
-        var resp = await Repository.GetStudentByGuid(guid);
-        if (resp is null) return new ResponseWithStatus<StudentDto, bool>(null, false, "Student does not exist");
-        return new ResponseWithStatus<StudentDto, bool>(resp, true);
-    }
-
     public async Task<ResponseWithStatus<IPagedList<StudentDto>>> GetStudentsInClass(Guid classGuid, int page)
     {
         var pager = new Pager(page);
@@ -245,7 +227,7 @@ public partial class FoundationQueries : BaseLogic<IFoundationQueriesRepository>
         //  end tests
 
         var resp = await Repository.GetSubject(subjectGuid);
-        if (resp is null) return new ResponseWithStatus<SubjectDto>(404, false, "Not found");
+        if (resp is null) return new ResponseWithStatus<SubjectDto>(404, "Not found");
         return new ResponseWithStatus<SubjectDto>(resp, true);
     }
 
@@ -261,13 +243,6 @@ public partial class FoundationQueries : BaseLogic<IFoundationQueriesRepository>
         var pager = new Pager(page);
         var response = await Repository.GetSubjectsForTeacher(teacherGuid, pager);
         return new ResponseWithStatus<IPagedList<SubjectDto>>(response);
-    }
-
-    public async Task<ResponseWithStatus<TeacherDto, bool>> GetTeacherByGuid(Guid guid)
-    {
-        var resp = await Repository.GetTeacherByGuid(guid);
-        if (resp is null) return new ResponseWithStatus<TeacherDto, bool>(null, false, "Teacher does not exist");
-        return new ResponseWithStatus<TeacherDto, bool>(resp, true);
     }
 
     public async Task<ResponseWithStatus<IPagedList<TeacherDto>>> GetTeachersForSubject(Guid subjectGuid, int page, string? query)
@@ -300,7 +275,7 @@ public partial class FoundationQueries : BaseLogic<IFoundationQueriesRepository>
     public async Task<ResponseWithStatus<Guid>> RecogniseCurrentPersonByClassGuid(Guid classGuid)
     {
         var _class = await Repository.GetClassByGuid(classGuid);
-        if (_class is null) return new ResponseWithStatus<Guid>(false, "Could not find class");
+        if (_class is null) return new ResponseWithStatus<Guid>(404, "Could not find class");
         return await RecogniseCurrentPersonBySchoolGuid(_class.SchoolGuid);
     }
 

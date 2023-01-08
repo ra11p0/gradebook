@@ -186,7 +186,7 @@ public class Activation
             .Setup(e => e.GetInvitationByActivationCode(It.IsAny<string>()))
             .ReturnsAsync(default(InvitationDto));
 
-        var info = await foundationQueries!.GetActivationCodeInfo("fakeCode", "student");
+        var info = await foundationQueries!.GetActivationCodeInfo("fakeCode");
         Assert.That(info.Status, Is.False);
         Assert.That(info.StatusCode, Is.EqualTo(404));
     }

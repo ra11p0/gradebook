@@ -12,6 +12,7 @@ public interface IFoundationQueriesPeopleRepository
     Task<PersonDto> GetPersonByGuid(Guid guid);
     Task<StudentDto> GetStudentByGuid(Guid guid);
     Task<TeacherDto> GetTeacherByGuid(Guid guid);
+    Task<AdminDto> GetAdminByGuid(Guid guid);
     Task<IPagedList<PersonDto>> GetPeopleByGuids(IEnumerable<Guid> guids, Pager pager);
     Task<IPagedList<PersonDto>> SearchPeople(PeoplePickerData pickerData, Pager pager);
 }

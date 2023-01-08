@@ -1,3 +1,4 @@
+import { LoadingButton } from '@mui/lab';
 import { useFormik } from 'formik';
 import moment from 'moment';
 import { ReactElement, useState } from 'react';
@@ -6,29 +7,35 @@ import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import InvitationsProxy from '../../../ApiClient/Invitations/InvitationsProxy';
 import PeopleProxy from '../../../ApiClient/People/PeopleProxy';
+import SchoolRolesEnum from '../../../Common/Enums/SchoolRolesEnum';
 import Notifications from '../../../Notifications/Notifications';
 import setLoginReduxWrapper from '../../../Redux/ReduxCommands/account/setLoginRedux';
 import getCurrentUserIdReduxProxy from '../../../Redux/ReduxQueries/account/getCurrentUserIdRedux';
 import getSessionRedux from '../../../Redux/ReduxQueries/account/getSessionRedux';
 
-interface ActivateStudentFormProps {
+interface ActivateWithCodeFormProps {
   defaultOnBackHandler: () => void;
   userId?: string;
   onSubmit?: () => void;
 }
 
-interface ActivateStudentFormValues {
+interface ActivateWithCodeFormValues {
   accessCode: string;
 }
 
-const ActivateStudentForm = (props: ActivateStudentFormProps): ReactElement => {
-  const { t } = useTranslation('ActivateStudent');
-
+const ActivateWithCodeForm = (
+  props: ActivateWithCodeFormProps
+): ReactElement => {
+  const { t } = useTranslation('activateAccount');
+  const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
   const [birthday, setBirthday] = useState('');
+  const [schoolRole, setSchoolRole] = useState<SchoolRolesEnum | undefined>(
+    undefined
+  );
 
-  const validate = (values: ActivateStudentFormValues): any => {
+  const validate = (values: ActivateWithCodeFormValues): any => {
     const errors: any = {};
     if (values.accessCode.length !== 6) {
       errors.accessCode = t('wrongAccessCodeLength');
@@ -41,8 +48,9 @@ const ActivateStudentForm = (props: ActivateStudentFormProps): ReactElement => {
       accessCode: '',
     },
     validate,
-    onSubmit: (values: ActivateStudentFormValues) => {
-      PeopleProxy.activatePerson(values.accessCode)
+    onSubmit: async (values: ActivateWithCodeFormValues) => {
+      setIsLoading(true);
+      await PeopleProxy.activatePerson(values.accessCode)
         .then(() => {
           const session = getSessionRedux();
           if (!session) return;
@@ -50,22 +58,25 @@ const ActivateStudentForm = (props: ActivateStudentFormProps): ReactElement => {
           if (props.onSubmit) props.onSubmit();
         })
         .catch(Notifications.showApiError);
+      setIsLoading(false);
     },
   });
 
   const handleAccessCodeChange = function (e: any): void {
     if (e.target.value.length === 6) {
-      InvitationsProxy.getInvitationDetailsForStudent(e.target.value)
+      InvitationsProxy.getInvitationDetails(e.target.value)
         .then((resp) => {
           const data = resp.data;
           setName(data.person.name);
           setSurname(data.person.surname);
           setBirthday(moment.utc(data.person.birthday).local().format('L'));
+          setSchoolRole(data.person.schoolRole);
         })
         .catch(() => {
           setName('');
           setSurname('');
           setBirthday('');
+          setSchoolRole(undefined);
         })
         .catch(Notifications.showApiError);
     }
@@ -77,7 +88,7 @@ const ActivateStudentForm = (props: ActivateStudentFormProps): ReactElement => {
         {t('back')}
       </Button>
       <Row className="text-center">
-        <div className="h4">{t('ActivateStudent')}</div>
+        <div className="h4">{t('ActivateWithCode')}</div>
       </Row>
       <form onSubmit={formik.handleSubmit}>
         <div className="m-1 p-1">
@@ -98,7 +109,7 @@ const ActivateStudentForm = (props: ActivateStudentFormProps): ReactElement => {
           ) : null}
         </div>
         <Row>
-          <Col>
+          <Col xs={12} lg={6}>
             <div className="m-1 p-1">
               <label>{t('name')}</label>
               <input
@@ -109,7 +120,7 @@ const ActivateStudentForm = (props: ActivateStudentFormProps): ReactElement => {
               />
             </div>
           </Col>
-          <Col>
+          <Col xs={12} lg={6}>
             <div className="m-1 p-1">
               <label>{t('surname')}</label>
               <input
@@ -134,10 +145,22 @@ const ActivateStudentForm = (props: ActivateStudentFormProps): ReactElement => {
             </div>
           </Col>
         </Row>
-
-        <Button variant="outline-primary" type="submit">
+        <Row>
+          <Col>
+            <div className="m-1 p-1">
+              <label>{t('role')}</label>
+              <input
+                className="form-control"
+                type="text"
+                defaultValue={schoolRole ? t(SchoolRolesEnum[schoolRole]) : ''}
+                disabled
+              />
+            </div>
+          </Col>
+        </Row>
+        <LoadingButton variant="contained" type="submit" loading={isLoading}>
           {t('confirmInformation')}
-        </Button>
+        </LoadingButton>
       </form>
     </div>
   );
@@ -148,4 +171,4 @@ export default connect(
     userId: getCurrentUserIdReduxProxy(state),
   }),
   () => ({})
-)(ActivateStudentForm);
+)(ActivateWithCodeForm);

@@ -1,0 +1,8 @@
+.bg-grey-light {
+  background-color: #f3f3f4;
+}
+
+.accordion-header-danger > .accordion-button {
+  --bs-bg-opacity: 1;
+  background-color: rgba(var(--bs-danger-rgb), var(--bs-bg-opacity)) !important;
+}

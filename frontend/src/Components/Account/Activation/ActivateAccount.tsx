@@ -6,8 +6,13 @@ import getIsLoggedInReduxProxy from '../../../Redux/ReduxQueries/account/getIsLo
 import getIsUserActivatedReduxProxy from '../../../Redux/ReduxQueries/account/getIsUserActivatedRedux';
 import ActivateAdministrator from './ActivateAdministrator';
 import { ActivateAdministratorPersonValues } from './ActivateAdministratorPerson';
-import ActivateStudent from './ActivateStudent';
-import ActivateTeacher from './ActivateTeacher';
+import ActivateWithCode from './ActivateWithCode';
+
+enum ActivateWith {
+  Code,
+  New,
+  Unset,
+}
 
 interface ActivateAccountProps {
   t: any;
@@ -18,7 +23,7 @@ interface ActivateAccountProps {
 }
 
 interface ActivateAccountState {
-  role?: string;
+  activateWith?: ActivateWith;
 }
 
 class ActivateAccount extends React.Component<
@@ -28,7 +33,7 @@ class ActivateAccount extends React.Component<
   constructor(props: ActivateAccountProps) {
     super(props);
     this.state = {
-      role: undefined,
+      activateWith: ActivateWith.Unset,
     };
   }
 
@@ -38,7 +43,7 @@ class ActivateAccount extends React.Component<
     const defaultOnBackHandler = (): void => {
       this.setState({
         ...this.state,
-        role: undefined,
+        activateWith: ActivateWith.Unset,
       });
     };
 
@@ -48,77 +53,66 @@ class ActivateAccount extends React.Component<
           <Card.Body>
             <div>
               <div className="display-6">{t('activateToUseGradebook')}</div>
-              <Row className="m-3 p-3">
-                <Col lg={1} md={3} />
+              <Row className="m-lg-3 p-lg-3 m-sm-1 p-sm-1">
+                <Col lg={1} md={2} xs={0} />
                 <Col className="text-center">
-                  {!this.state.role && (
+                  {this.state.activateWith === ActivateWith.Unset && (
                     <>
                       <Row className="text-center">
-                        <div>{t('iAmA')}</div>
+                        <div>{t('activationMethod')}</div>
                       </Row>
                       <Row>
-                        <Col>
-                          <Button
-                            className="fs-3 m-3 p-3 activateStudent"
-                            variant="outline-secondary"
-                            onClick={() =>
-                              this.setState({
-                                ...this.state,
-                                role: 'student',
-                              })
-                            }
-                          >
-                            {t('student')}
-                          </Button>
-                          <Button
-                            className="fs-3 m-3 p-3 activateTeacher"
-                            variant="outline-secondary"
-                            onClick={() =>
-                              this.setState({
-                                ...this.state,
-                                role: 'teacher',
-                              })
-                            }
-                          >
-                            {t('teacher')}
-                          </Button>
-                          <Button
-                            className="fs-3 m-3 p-3 activateAdministrator"
-                            variant="outline-secondary"
-                            onClick={() =>
-                              this.setState({
-                                ...this.state,
-                                role: 'administrator',
-                              })
-                            }
-                          >
-                            {t('administrator')}
-                          </Button>
+                        <Col xs={12} lg={8} className={'mx-auto '}>
+                          <Row className="children-m-1">
+                            <Col>
+                              <Button
+                                className="fs-3 p-3 activateStudent w-100"
+                                variant="outline-secondary"
+                                onClick={() =>
+                                  this.setState({
+                                    ...this.state,
+                                    activateWith: ActivateWith.Code,
+                                  })
+                                }
+                              >
+                                {t('ActivateWithCode')}
+                              </Button>
+                            </Col>
+
+                            <Col>
+                              <Button
+                                className="fs-3 p-3 activateAdministrator w-100"
+                                variant="outline-secondary"
+                                onClick={() =>
+                                  this.setState({
+                                    ...this.state,
+                                    activateWith: ActivateWith.New,
+                                  })
+                                }
+                              >
+                                {t('administrator')}
+                              </Button>
+                            </Col>
+                          </Row>
                         </Col>
                       </Row>
                     </>
                   )}
-                  {this.state.role === 'teacher' && (
-                    <ActivateTeacher
-                      defaultOnBackHandler={defaultOnBackHandler}
-                      onSubmit={this.props.onSubmit}
-                    />
-                  )}
-                  {this.state.role === 'administrator' && (
+                  {this.state.activateWith === ActivateWith.New && (
                     <ActivateAdministrator
                       defaultOnBackHandler={defaultOnBackHandler}
                       onSubmit={this.props.onSubmit}
                       person={this.props.person}
                     />
                   )}
-                  {this.state.role === 'student' && (
-                    <ActivateStudent
+                  {this.state.activateWith === ActivateWith.Code && (
+                    <ActivateWithCode
                       defaultOnBackHandler={defaultOnBackHandler}
                       onSubmit={this.props.onSubmit}
                     />
                   )}
                 </Col>
-                <Col lg={1} md={3} />
+                <Col lg={1} md={2} xs={0} />
               </Row>
             </div>
           </Card.Body>
