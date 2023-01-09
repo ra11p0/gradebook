@@ -30,7 +30,69 @@ public class Activation
         foundationCommands = new FoundationCommands(foundationCommandsRepository.Object, serviceCollection.BuildServiceProvider());
         foundationQueries = new FoundationQueries(foundationQueriesRepository.Object, serviceCollection.BuildServiceProvider());
     }
+    [Test]
+    public async Task ShouldNotActivatePersonAlreadyActivated()
+    {
+        foundationCommandsRepository.Invocations.Clear();
+        var invitedPersonGuid = Guid.NewGuid();
+        identityLogic.Setup(e => e.CurrentUserId())
+            .ReturnsAsync(new ResponseWithStatus<string, bool>("userId", true));
+        foundationQueriesRepository.Setup(e => e.GetInvitationByActivationCode(It.IsAny<string>()))
+            .ReturnsAsync(new InvitationDto()
+            {
+                ExprationDate = Time.UtcNow.AddMinutes(10),
+                InvitedPersonGuid = invitedPersonGuid,
+                SchoolRole = Common.Foundation.Enums.SchoolRoleEnum.Student
+            });
+        foundationQueriesRepository.Setup(e => e.GetPersonByGuid(It.IsAny<Guid>()))
+            .ReturnsAsync(new PersonDto()
+            {
+                UserId = "fakeUserId"
+            });
 
+        foundationCommandsRepository.Setup(e => e.UseInvitation(It.IsAny<UseInvitationCommand>()))
+            .ReturnsAsync(new StatusResponse<bool>(true));
+
+        foundationCommandsRepository.Setup(e => e.AssignUserToStudent(It.IsAny<string>(), It.IsAny<Guid>()))
+            .ReturnsAsync(new StatusResponse<bool>(true));
+
+        var activationCode = "QWERTY";
+        var resp = await foundationCommands!.ActivatePerson(activationCode);
+        Assert.That(resp.Status, Is.False);
+        Assert.That(resp.StatusCode, Is.EqualTo(418));
+        foundationCommandsRepository.Verify(e => e.AssignUserToStudent(It.IsAny<string>(), It.IsAny<Guid>()), Times.Never);
+        foundationCommandsRepository.Verify(e => e.UseInvitation(It.IsAny<UseInvitationCommand>()), Times.Never);
+    }
+    [Test]
+    public async Task ShouldNotShowInvitationDetailsPersonAlreadyActivated()
+    {
+        var invitedPersonGuid = Guid.NewGuid();
+        identityLogic.Setup(e => e.CurrentUserId())
+            .ReturnsAsync(new ResponseWithStatus<string, bool>("userId", true));
+        foundationQueriesRepository.Setup(e => e.GetInvitationByActivationCode(It.IsAny<string>()))
+            .ReturnsAsync(new InvitationDto()
+            {
+                ExprationDate = Time.UtcNow.AddMinutes(10),
+                InvitedPersonGuid = invitedPersonGuid,
+                SchoolRole = Common.Foundation.Enums.SchoolRoleEnum.Student
+            });
+        foundationQueriesRepository.Setup(e => e.GetPersonByGuid(It.IsAny<Guid>()))
+            .ReturnsAsync(new PersonDto()
+            {
+                UserId = "fakeUserId"
+            });
+
+        foundationCommandsRepository.Setup(e => e.UseInvitation(It.IsAny<UseInvitationCommand>()))
+            .ReturnsAsync(new StatusResponse<bool>(true));
+
+        foundationCommandsRepository.Setup(e => e.AssignUserToStudent(It.IsAny<string>(), It.IsAny<Guid>()))
+            .ReturnsAsync(new StatusResponse<bool>(true));
+
+        var activationCode = "QWERTY";
+        var resp = await foundationQueries!.GetActivationCodeInfo(activationCode);
+        Assert.That(resp.Status, Is.False);
+        Assert.That(resp.StatusCode, Is.EqualTo(418));
+    }
     [Test]
     public async Task ShouldActivatePersonAsStudent()
     {
@@ -43,7 +105,11 @@ public class Activation
             InvitedPersonGuid = Guid.NewGuid(),
             SchoolRole = Common.Foundation.Enums.SchoolRoleEnum.Student
         });
-
+        foundationQueriesRepository.Setup(e => e.GetPersonByGuid(It.IsAny<Guid>()))
+            .ReturnsAsync(new PersonDto()
+            {
+                UserId = null
+            });
         foundationCommandsRepository.Setup(e => e.UseInvitation(It.IsAny<UseInvitationCommand>()))
         .ReturnsAsync(new StatusResponse<bool>(true));
 
@@ -67,6 +133,11 @@ public class Activation
             ExprationDate = Time.UtcNow.AddMinutes(10),
             InvitedPersonGuid = Guid.NewGuid(),
             SchoolRole = Common.Foundation.Enums.SchoolRoleEnum.Teacher
+        });
+        foundationQueriesRepository.Setup(e => e.GetPersonByGuid(It.IsAny<Guid>()))
+        .ReturnsAsync(new PersonDto()
+        {
+            UserId = null
         });
 
         foundationCommandsRepository.Setup(e => e.UseInvitation(It.IsAny<UseInvitationCommand>()))
@@ -93,6 +164,11 @@ public class Activation
             InvitedPersonGuid = Guid.NewGuid(),
             SchoolRole = Common.Foundation.Enums.SchoolRoleEnum.Admin
         });
+        foundationQueriesRepository.Setup(e => e.GetPersonByGuid(It.IsAny<Guid>()))
+            .ReturnsAsync(new PersonDto()
+            {
+                UserId = null
+            });
 
         foundationCommandsRepository.Setup(e => e.UseInvitation(It.IsAny<UseInvitationCommand>()))
         .ReturnsAsync(new StatusResponse<bool>(true));

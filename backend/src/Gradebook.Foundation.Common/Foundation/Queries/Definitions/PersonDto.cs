@@ -12,4 +12,5 @@ public class PersonDto
     public Guid? ActiveClassGuid { get; set; }
     public DateTime? Birthday { get; set; }
     public ClassDto? ActiveClass { get; set; }
+    public string? UserId { get; set; }
 }

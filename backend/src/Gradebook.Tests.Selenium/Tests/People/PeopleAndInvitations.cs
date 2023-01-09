@@ -102,7 +102,6 @@ public class PeopleAndInvitations
         Assert.That(driver.WaitFor("tbody", e => e.ContainsText(teacherName)), "Could not find teacher name in teachers list");
         Assert.That(driver.WaitFor("tbody", e => e.ContainsText(teacherSurname)), "Could not find teacher surname in teachers list");
     }
-
     [Test]
     [Order(7)]
     public void ShouldNotBePossibleToInvitePersonTwice()

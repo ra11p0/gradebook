@@ -33,13 +33,16 @@ public partial class FoundationQueries : BaseLogic<IFoundationQueriesRepository>
 
         var invitation = invitationResponse.Response!;
         var invitedPersonGuid = invitation.InvitedPersonGuid;
-        if (invitedPersonGuid is null) return new ResponseWithStatus<ActivationCodeInfoDto>(404, "There is no information about activation code");
+        if (invitedPersonGuid is null)
+            return new ResponseWithStatus<ActivationCodeInfoDto>(404, "There is no information about activation code");
 
-        var response = new ActivationCodeInfoDto();
+        if (!string.IsNullOrEmpty(invitation.InvitedPerson!.UserId))
+            return new ResponseWithStatus<ActivationCodeInfoDto>(418, "Person already has bound account");
 
-        var studentResponse = await GetPersonByGuid(invitedPersonGuid.Value);
-        if (!studentResponse.Status) return new ResponseWithStatus<ActivationCodeInfoDto>(studentResponse.Message);
-        response.Person = _mapper.Service.Map<PersonDto>(studentResponse.Response);
+        var response = new ActivationCodeInfoDto()
+        {
+            Person = invitation.InvitedPerson!
+        };
 
         return new ResponseWithStatus<ActivationCodeInfoDto>(response, true);
     }
@@ -123,6 +126,10 @@ public partial class FoundationQueries : BaseLogic<IFoundationQueriesRepository>
     {
         var invitation = await Repository.GetInvitationByActivationCode(activationCode);
         if (invitation is null) return new ResponseWithStatus<InvitationDto, bool>(statusCode: 404, message: "Invitation does not exist");
+        if (!invitation.InvitedPersonGuid.HasValue) return new ResponseWithStatus<InvitationDto, bool>(404, "Invited person does not exist");
+        var invitedPerson = await GetPersonByGuid(invitation.InvitedPersonGuid.Value);
+        if (!invitedPerson.Status) return new ResponseWithStatus<InvitationDto, bool>(invitedPerson.StatusCode, invitedPerson.Message);
+        invitation.InvitedPerson = invitedPerson.Response;
         return new ResponseWithStatus<InvitationDto, bool>(invitation, true);
     }
 
