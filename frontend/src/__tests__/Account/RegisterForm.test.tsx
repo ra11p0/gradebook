@@ -18,7 +18,7 @@ describe('<RegisterForm/>', () => {
       await wait(1000);
     }) as any);
 
-    await act(() => {
+    await act(async () => {
       render(
         <Provider store={store}>
           <BrowserRouter>
@@ -27,7 +27,7 @@ describe('<RegisterForm/>', () => {
         </Provider>
       );
     });
-    await act(() => {
+    await act(async () => {
       userEvent.type(
         screen.getByRole('textbox', { name: 'email' }),
         'fake@email.on'
@@ -47,7 +47,7 @@ describe('<RegisterForm/>', () => {
   });
 
   it('Should validate filled email empty', async () => {
-    await act(() => {
+    await act(async () => {
       render(
         <Provider store={store}>
           <BrowserRouter>
@@ -56,14 +56,11 @@ describe('<RegisterForm/>', () => {
         </Provider>
       );
     });
-    await act(() => {
+    await act(async () => {
       userEvent.type(screen.getByTestId('password'), 'fake@emaI2l.on');
       userEvent.type(screen.getByTestId('password2'), 'fake@emaI2l.on');
       fireEvent.click(
         screen.getByRole('checkbox', { name: 'termsAndConditions' })
-      );
-      fireEvent.click(
-        screen.getByRole('button', { name: 'registerButtonLabel' })
       );
     });
     expect(screen.getByRole('textbox', { name: 'email' })).toHaveClass(
@@ -72,7 +69,7 @@ describe('<RegisterForm/>', () => {
   });
 
   it('Should validate filled password empty', async () => {
-    await act(() => {
+    await act(async () => {
       render(
         <Provider store={store}>
           <BrowserRouter>
@@ -81,7 +78,7 @@ describe('<RegisterForm/>', () => {
         </Provider>
       );
     });
-    await act(() => {
+    await act(async () => {
       userEvent.type(
         screen.getByRole('textbox', { name: 'email' }),
         'fake@email.on'
@@ -98,7 +95,7 @@ describe('<RegisterForm/>', () => {
   });
 
   it('Should validate filled passwords not matched', async () => {
-    await act(() => {
+    await act(async () => {
       render(
         <Provider store={store}>
           <BrowserRouter>
@@ -107,7 +104,7 @@ describe('<RegisterForm/>', () => {
         </Provider>
       );
     });
-    await act(() => {
+    await act(async () => {
       userEvent.type(
         screen.getByRole('textbox', { name: 'email' }),
         'fake@email.on'
@@ -127,7 +124,7 @@ describe('<RegisterForm/>', () => {
   });
 
   it('Should validate filled password empty', async () => {
-    await act(() => {
+    await act(async () => {
       render(
         <Provider store={store}>
           <BrowserRouter>
@@ -136,7 +133,7 @@ describe('<RegisterForm/>', () => {
         </Provider>
       );
     });
-    await act(() => {
+    await act(async () => {
       userEvent.type(
         screen.getByRole('textbox', { name: 'email' }),
         'fake@email.on'
@@ -157,7 +154,7 @@ describe('<RegisterForm/>', () => {
       .spyOn(AccountsProxy, 'register')
       .mockRejectedValueOnce({ response: { data: 'fakeError' } });
     const mockedNotifications = vi.spyOn(Notifications, 'showApiError');
-    await act(() => {
+    await act(async () => {
       render(
         <Provider store={store}>
           <BrowserRouter>
@@ -167,7 +164,7 @@ describe('<RegisterForm/>', () => {
         </Provider>
       );
     });
-    await act(() => {
+    await act(async () => {
       userEvent.type(
         screen.getByRole('textbox', { name: 'email' }),
         'fake@email.on'
