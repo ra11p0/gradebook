@@ -62,6 +62,9 @@ describe('<RegisterForm/>', () => {
       fireEvent.click(
         screen.getByRole('checkbox', { name: 'termsAndConditions' })
       );
+      fireEvent.click(
+        screen.getByRole('button', { name: 'registerButtonLabel' })
+      );
     });
     expect(screen.getByRole('textbox', { name: 'email' })).toHaveClass(
       'is-invalid'
