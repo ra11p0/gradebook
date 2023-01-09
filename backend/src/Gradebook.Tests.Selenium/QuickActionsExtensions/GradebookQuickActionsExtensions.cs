@@ -60,17 +60,9 @@ public static class GradebookQuickActionsExtensions
     public static IWebDriver GoToGradebookHomepage(this IWebDriver driver)
         => driver.GoTo(ConfigurationManager.GetValue("Urls:ApplicationUrl"));
     public static IWebDriver GoToInvitationsTab(this IWebDriver driver)
-    {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-        driver.GoToGradebookHomepage();
-        wait.Until(d => d.FindElement(By.CssSelector("a[href='/manageInvitations']"))).Click();
-        return driver;
-    }
+        => driver.GoTo($"{ConfigurationManager.GetValue("Urls:ApplicationUrl")}dashboard/manageinvitations");
     public static IWebDriver GoToTeachersTab(this IWebDriver driver)
-    {
-        driver.GoTo($"{ConfigurationManager.GetValue("Urls:ApplicationUrl")}dashboard/manageTeachers");
-        return driver;
-    }
+        => driver.GoTo($"{ConfigurationManager.GetValue("Urls:ApplicationUrl")}dashboard/manageTeachers");
     public static IWebDriver GoToStudentsTab(this IWebDriver driver)
     {
         driver.GoTo($"{ConfigurationManager.GetValue("Urls:ApplicationUrl")}dashboard/manageStudents");
@@ -140,7 +132,6 @@ public static class GradebookQuickActionsExtensions
     }
     public static IWebDriver AddNewTeacher(this IWebDriver driver, string teacherName, string teacherSurname, DateTime birthday)
     {
-        driver.GoToGradebookHomepage();
         driver.GoToTeachersTab();
         driver.ClickOn("[test-id='addNewTeacherButton']");
         driver.WaitFor("input[name='name']").SendKeys(teacherName);
@@ -153,7 +144,6 @@ public static class GradebookQuickActionsExtensions
         Assert.That(driver.WaitFor("tbody", e => e.ContainsText(teacherSurname)), "Could not find teacher surname in teachers list");
         return driver;
     }
-
     public static IWebDriver AddStudentToClass(this IWebDriver driver, string className, string studentName, string studentSurname)
     {
         driver.GoToGradebookHomepage();
@@ -168,5 +158,39 @@ public static class GradebookQuickActionsExtensions
 
         Assert.That(driver.WaitFor("h2", e => e.ContainsText(className)));
         return driver;
+    }
+    public static string InvitePerson(this IWebDriver driver, string personFullName)
+    {
+        driver.GoToInvitationsTab();
+        driver.ClickOn(Common.InvitationsButton);
+        driver.ClickOn("button.addInvitationButton");
+        driver.WaitFor(PeoplePicker.SearchQueryInput).SendKeys($"{personFullName}");
+        driver.ClickOn($"[data-person-full-name='{personFullName}']");
+        Assert.That(driver.WaitFor(".selected-people .person-element", 10).ContainsText($"{personFullName}"));
+        driver.ClickOn("button[type='submit']");
+        driver.WaitForSuccessNotification();
+        driver.Refresh();
+        Assert.That(driver.WaitForElementContaining(personFullName).Displayed);
+
+        var invitationCode = driver
+            .WaitForElementContaining(personFullName, 10)
+            .Parent("tr")
+            .Children(".invitation-code")
+            .First().Text.Trim();
+
+        Assert.That(!string.IsNullOrEmpty(invitationCode));
+        return invitationCode;
+    }
+    public static (string name, string surname) ActivatePersonWithCode(this IWebDriver driver, string code)
+    {
+        driver.ClickOn("button.activateWithCode");
+        driver.WaitFor("input[name='accessCode']").SendKeys(code);
+        driver.WaitFor($"input[data-testid='nameField']", e => !string.IsNullOrEmpty(e.GetAttribute("value")));
+
+        var name = driver.WaitFor($"input[data-testid='nameField']").GetAttribute("value");
+        var surname = driver.WaitFor($"input[data-testid='surnameField']").GetAttribute("value");
+        driver.ClickOn("button[type='submit']");
+        Assert.That(driver.WaitFor("a[href='/account/profile']").Displayed);
+        return (name, surname);
     }
 }

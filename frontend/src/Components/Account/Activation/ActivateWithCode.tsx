@@ -113,6 +113,7 @@ const ActivateWithCodeForm = (
             <div className="m-1 p-1">
               <label>{t('name')}</label>
               <input
+                data-testid="nameField"
                 className="form-control"
                 type="text"
                 defaultValue={name}
@@ -124,6 +125,7 @@ const ActivateWithCodeForm = (
             <div className="m-1 p-1">
               <label>{t('surname')}</label>
               <input
+                data-testid="surnameField"
                 className="form-control"
                 type="text"
                 defaultValue={surname}

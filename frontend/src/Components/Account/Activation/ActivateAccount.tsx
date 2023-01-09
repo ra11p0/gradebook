@@ -66,7 +66,7 @@ class ActivateAccount extends React.Component<
                           <Row className="children-m-1">
                             <Col>
                               <Button
-                                className="fs-3 p-3 activateStudent w-100"
+                                className="fs-3 p-3 activateWithCode w-100"
                                 variant="outline-secondary"
                                 onClick={() =>
                                   this.setState({

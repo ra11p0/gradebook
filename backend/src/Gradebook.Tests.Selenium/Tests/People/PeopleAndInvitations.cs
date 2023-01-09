@@ -1,3 +1,4 @@
+using Gradebook.Tests.Selenium.Constraints.Views;
 using Gradebook.Tests.Selenium.Constraints.Views.Dashboard;
 using Gradebook.Tests.Selenium.Constraints.Views.Shared;
 using Gradebook.Tests.Selenium.Helpers;
@@ -71,12 +72,15 @@ public class PeopleAndInvitations
     {
         using var driver = WebDriverBuilder.BuildWebDriver();
         driver.Register(_storage["studentEmail"], _storage["studentPassword"]);
-        driver.ClickOn("button.activateStudent");
+        driver.ClickOn("button.activateWithCode");
         driver.WaitFor("input[name='accessCode']").SendKeys(_storage["newStudentInvitationCode"]);
         Assert.That(driver.WaitFor($"input[value='{_storage["studentName"]}']").Displayed);
         Assert.That(driver.WaitFor($"input[value='{_storage["studentSurname"]}']").Displayed);
         driver.ClickOn("button[type='submit']");
         Assert.That(driver.WaitFor("a[href='/account/profile']").Displayed);
+        driver.ClickOn(Header.AccountButton);
+        var role = driver.WaitFor("[data-testid='schoolRolePersonHeaderHolder']").Text;
+        Assert.That(role, Is.EqualTo("Student"));
     }
 
     [Test]
@@ -114,5 +118,25 @@ public class PeopleAndInvitations
             .FindElements(By.CssSelector($"[data-person-full-name='{_storage["studentName"] + ' ' + _storage["studentSurname"]}']"))
             .Any()
             , Is.False);
+    }
+    [Test]
+    [Order(4)]
+    public void CanRegisterInvitedTeacher()
+    {
+        const string newTeacherName = "Mateusz";
+        const string newTeacherLastName = "Wiliński";
+        using var driver = WebDriverBuilder.BuildWebDriver();
+        driver.Login(CommonResources.GetValue("email")!, CommonResources.GetValue(key: "password")!);
+        driver.AddNewTeacher(newTeacherName, newTeacherLastName, new DateTime(1993, 12, 16));
+        var invitationCode = driver.InvitePerson($"{newTeacherName} {newTeacherLastName}");
+        driver.Logout();
+        driver.Register("mateusz.wilinski3@szkola.pl", "!QAZ2wsx");
+        var (name, surname) = driver.ActivatePersonWithCode(invitationCode);
+        Assert.That(name, Is.EqualTo(newTeacherName));
+        Assert.That(surname, Is.EqualTo(newTeacherLastName));
+        driver.ClickOn(Header.AccountButton);
+        var role = driver.WaitFor("[data-testid='schoolRolePersonHeaderHolder']").Text;
+        Assert.That(role, Is.EqualTo("Teacher"));
+        Assert.That(!string.IsNullOrEmpty(invitationCode));
     }
 }
