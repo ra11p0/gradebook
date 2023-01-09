@@ -1,4 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
 using Api.Models.Account;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
@@ -113,41 +112,15 @@ public class AccountController : ControllerBase
     [Route("refresh-token")]
     public async Task<IActionResult> RefreshToken(TokenModel tokenModel)
     {
+        var resp = await _identityLogic.Service.RefreshToken(tokenModel.AccessToken, tokenModel.RefreshToken);
 
-        string? accessToken = tokenModel.AccessToken;
-        string? refreshToken = tokenModel.RefreshToken;
-
-        if (string.IsNullOrEmpty(accessToken) | string.IsNullOrEmpty(refreshToken)) return BadRequest("Invalid access token or refresh token");
-
-        var principal = _identityLogic.Service.GetPrincipalFromExpiredToken(accessToken);
-        if (principal == null)
-        {
-            return BadRequest("Invalid access token or refresh token");
-        }
-
-        string username = principal.Identity!.Name!;
-
-        var user = await _userManager.Service.FindByNameAsync(username);
-
-        if (user == null ||
-        !(await _identityLogic.Service.IsValidRefreshTokenForUser(user.Id, refreshToken!)))
-        {
-            return BadRequest("Invalid access token or refresh token");
-        }
-
-        var newAccessToken = _identityLogic.Service.CreateToken(principal.Claims.ToList());
-        var newRefreshToken = _identityLogic.Service.GenerateRefreshToken();
-
-        await _identityLogic.Service.RemoveRefreshTokenFromUser(user.Id, refreshToken!);
-        await _identityLogic.Service.AssignRefreshTokenToUser(user.Id, newRefreshToken);
-
-        _identityLogic.Service.SaveDatabaseChanges();
+        if (!resp.Status) return resp.ObjectResult;
 
         return new ObjectResult(new
         {
-            access_token = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
-            refresh_token = newRefreshToken,
-            expires_in = int.Parse(_configuration.Service["JWT:TokenValidityInMinutes"]) * 60,
+            access_token = resp.Response!.AccessToken,
+            refresh_token = resp.Response!.RefreshToken,
+            expires_in = resp.Response!.ExpiresIn
         });
     }
 

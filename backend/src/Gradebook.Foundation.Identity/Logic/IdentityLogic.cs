@@ -36,7 +36,7 @@ public class IdentityLogic : IIdentityLogic
         _mailClient = serviceProvider.GetResolver<IMailClient>();
         _context = serviceProvider.GetResolver<Context>().Service;
     }
-    public JwtSecurityToken CreateToken(List<Claim> authClaims)
+    public JwtSecurityToken CreateAccessToken(List<Claim> authClaims)
     {
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.Service["JWT:Secret"]));
         var _ = int.TryParse(_configuration.Service["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes);
@@ -73,7 +73,7 @@ public class IdentityLogic : IIdentityLogic
             }
         }
     }
-    public string GenerateRefreshToken()
+    public string CreateRefreshToken()
     {
         var randomNumber = new byte[64];
         using var rng = RandomNumberGenerator.Create();
@@ -201,8 +201,8 @@ public class IdentityLogic : IIdentityLogic
         foreach (var userRole in userRoles)
             authClaims.Add(new Claim(ClaimTypes.Role, userRole));
 
-        var token = CreateToken(authClaims);
-        var refreshToken = GenerateRefreshToken();
+        var token = CreateAccessToken(authClaims);
+        var refreshToken = CreateRefreshToken();
 
         await AssignRefreshTokenToUser(user.Id, refreshToken);
 
@@ -257,7 +257,6 @@ public class IdentityLogic : IIdentityLogic
         await _userManager.Service.UpdateAsync(user);
         return new StatusResponse(true);
     }
-
     public async Task<StatusResponse> RemindPassword(string email)
     {
         using var transaction = await _identityContext.Service.Database.BeginTransactionAsync();
@@ -270,7 +269,6 @@ public class IdentityLogic : IIdentityLogic
         await transaction.CommitAsync();
         return new StatusResponse(true);
     }
-
     public async Task<StatusResponse> SetNewPassword(string userId, string authCode, string password, string confirmPassword)
     {
         if (password != confirmPassword) return new StatusResponse("PasswordsNotTheSame");
@@ -284,7 +282,6 @@ public class IdentityLogic : IIdentityLogic
         await transaction.CommitAsync();
         return new StatusResponse(true);
     }
-
     public async Task<StatusResponse> SetNewPasswordAuthorized(string password, string confirmPassword, string oldPassword)
     {
         if (password != confirmPassword) return new StatusResponse("PasswordsNotTheSame");
@@ -294,5 +291,38 @@ public class IdentityLogic : IIdentityLogic
         await _userManager.Service.RemovePasswordAsync(user);
         await _userManager.Service.AddPasswordAsync(user, password);
         return new StatusResponse(200);
+    }
+    public async Task<ResponseWithStatus<RefreshTokenResponse>> RefreshToken(string? accessToken, string? refreshToken)
+    {
+        if (string.IsNullOrEmpty(accessToken) | string.IsNullOrEmpty(refreshToken)) return new ResponseWithStatus<RefreshTokenResponse>("Invalid access token or refresh token");
+
+        var principal = GetPrincipalFromExpiredToken(accessToken);
+        if (principal == null)
+            return new ResponseWithStatus<RefreshTokenResponse>("Invalid access token or refresh token");
+
+        string username = principal.Identity!.Name!;
+
+        var user = await _userManager.Service.FindByNameAsync(username);
+        var newAccessToken = CreateAccessToken(principal.Claims.ToList());
+        var newRefreshToken = CreateRefreshToken();
+        using (var t = await _identityContext.Service.Database.BeginTransactionAsync())
+        {
+            if (user == null ||
+            !(await IsValidRefreshTokenForUser(user.Id, refreshToken!)))
+            {
+                await t.RollbackAsync();
+                return new ResponseWithStatus<RefreshTokenResponse>("Invalid access token or refresh token");
+            }
+            await AssignRefreshTokenToUser(user.Id, newRefreshToken);
+            SaveDatabaseChanges();
+            await t.CommitAsync();
+        }
+
+        return new ResponseWithStatus<RefreshTokenResponse>(new RefreshTokenResponse()
+        {
+            AccessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
+            RefreshToken = newRefreshToken,
+            ExpiresIn = int.Parse(_configuration.Service["JWT:TokenValidityInMinutes"]) * 60,
+        });
     }
 }
