@@ -120,7 +120,7 @@ public class PeopleAndInvitations
             , Is.False);
     }
     [Test]
-    [Order(4)]
+    [Order(8)]
     public void CanRegisterInvitedTeacher()
     {
         const string newTeacherName = "Mateusz";
