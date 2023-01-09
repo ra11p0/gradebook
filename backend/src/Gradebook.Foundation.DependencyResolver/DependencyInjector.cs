@@ -1,12 +1,14 @@
 using Gradebook.Foundation.DependencyResolver.Services;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Gradebook.Foundation.DependencyResolver;
-public class DependencyInjector
+public static class DependencyInjector
 {
-    public static void Inject(IServiceCollection services, IConfigurationRoot configuration)
+    public static void Inject(this WebApplicationBuilder builder)
     {
+        var services = builder.Services;
+        var configuration = builder.Configuration;
         services.AddHttpContextAccessor();
         AutoMapperService.Inject(services, configuration);
         IdentityService.Inject(services, configuration);

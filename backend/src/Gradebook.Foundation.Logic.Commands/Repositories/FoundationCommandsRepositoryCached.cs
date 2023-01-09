@@ -1,6 +1,5 @@
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
-using Gradebook.Foundation.Common.Foundation.Enums;
 
 namespace Gradebook.Foundation.Logic.Commands.Repositories;
 
@@ -34,8 +33,8 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
     public Task<StatusResponse<bool>> AssignUserToTeacher(string userId, Guid personGuid)
         => Base.AssignUserToTeacher(userId, personGuid);
 
-    public Task<string?> GenerateSystemInvitation(Guid invitedPersonGuid, Guid invitingPersonGuid, SchoolRoleEnum role, Guid schoolGuid)
-        => Base.GenerateSystemInvitation(invitedPersonGuid, invitingPersonGuid, role, schoolGuid);
+    public Task<string?> GenerateSystemInvitation(Guid invitedPersonGuid, Guid invitingPersonGuid, Guid schoolGuid)
+        => Base.GenerateSystemInvitation(invitedPersonGuid, invitingPersonGuid, schoolGuid);
     public void BeginTransaction()
     {
         Base.BeginTransaction();

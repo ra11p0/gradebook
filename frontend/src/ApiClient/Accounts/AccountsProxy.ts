@@ -12,7 +12,7 @@ import UserSettings from './Definitions/Responses/UserSettings';
 import getApplicationLanguageRedux from '../../Redux/ReduxQueries/account/getApplicationLanguageRedux';
 import getCurrentUserIdRedux from '../../Redux/ReduxQueries/account/getCurrentUserIdRedux';
 
-const API_URL = process.env.REACT_APP_API_URL!;
+const API_URL: string = import.meta.env.VITE_APP_API_URL ?? 'api';
 
 async function logIn(
   request: LoginRequest
@@ -21,6 +21,36 @@ async function logIn(
     headers: {
       'Content-Type': 'multipart/form-data',
     },
+  });
+}
+
+async function forgotPassword(email: string): Promise<AxiosResponse<string>> {
+  return await axios.post(`${API_URL}/Account/RemindPassword`, email, {
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
+
+async function setNewPassword(
+  password: string,
+  confirmPassword: string,
+  userId: string,
+  authCode: string
+): Promise<AxiosResponse<string>> {
+  return await axios.post(
+    `${API_URL}/Account/SetNewPassword/${userId}/${authCode}`,
+    { password, confirmPassword }
+  );
+}
+
+async function setNewPasswordAuthorized(
+  password: string,
+  confirmPassword: string,
+  oldPassword: string
+): Promise<AxiosResponse<string>> {
+  return await axiosApiAuthorized.post(`${API_URL}/Account/SetNewPassword`, {
+    password,
+    confirmPassword,
+    oldPassword,
   });
 }
 
@@ -50,11 +80,11 @@ async function refreshAccessToken(
   });
 }
 
-const getAccessibleSchools = async (
+async function getAccessibleSchools(
   userGuid: string = getCurrentUserIdRedux()
-): Promise<AxiosResponse<GetAccessibleSchoolsResponse[]>> => {
+): Promise<AxiosResponse<GetAccessibleSchoolsResponse[]>> {
   return await axiosApiAuthorized.get(API_URL + `/account/${userGuid}/schools`);
-};
+}
 
 const getMe = async (): Promise<AxiosResponse<MeResponse>> => {
   return await axiosApiAuthorized.get(API_URL + `/account/Me`);
@@ -102,6 +132,9 @@ export default {
   logIn,
   refreshAccessToken,
   register,
+  forgotPassword,
+  setNewPassword,
+  setNewPasswordAuthorized,
   settings: {
     setLanguage,
     setSettings,

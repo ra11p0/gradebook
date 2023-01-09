@@ -1,18 +1,18 @@
 import React from 'react';
+import { Button, Container, Nav, Navbar } from 'react-bootstrap';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import setLogOutRedux from '../../../Redux/ReduxCommands/account/setLogOutRedux';
 import getCurrentPersonReduxProxy, {
   CurrentPersonProxyResult,
 } from '../../../Redux/ReduxQueries/account/getCurrentPersonRedux';
 import getIsLoggedInReduxProxy from '../../../Redux/ReduxQueries/account/getIsLoggedInRedux';
 import getIsUserActivatedReduxProxy from '../../../Redux/ReduxQueries/account/getIsUserActivatedRedux';
-import LoadingScreen from '../LoadingScreen';
-import SchoolSelect from './SchoolSelect';
-import LanguageSelect from './LanguageSelect';
 import { GlobalState } from '../../../store';
-import setLogOutRedux from '../../../Redux/ReduxCommands/account/setLogOutRedux';
-import { Button, Container, Nav, Navbar } from 'react-bootstrap';
+import LoadingScreen from '../LoadingScreen';
+import LanguageSelect from './LanguageSelect';
+import SchoolSelect from './SchoolSelect';
 
 interface HeaderProps {
   isLoggedIn?: boolean;
@@ -44,7 +44,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       <div className="py-4 px-2 bg-grey-light bg-gradient">
         <Navbar expand="lg">
           <Container fluid>
-            <Navbar.Brand>
+            <Navbar.Brand data-testid="brand">
               <Link to="/" className="text-reset">
                 Gradebook
               </Link>
@@ -60,13 +60,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                           {t('dashboard')}
                         </Link>
                         <LoadingScreen isReady={!!this.props.currentPerson}>
-                          <>
+                          {this.props.currentPerson && (
                             <Link to="/account/profile" className="nav-link">
-                              {`${this.props.currentPerson!.name} ${
-                                this.props.currentPerson!.surname
-                              }`}
+                              {`${this.props.currentPerson.name} ${this.props.currentPerson.surname}`}
                             </Link>
-                          </>
+                          )}
                         </LoadingScreen>
                       </>
                     )}
@@ -85,6 +83,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 {this.props.isLoggedIn && (
                   <div className="w-auto">
                     <Button
+                      id="logOutButton"
                       variant="outline-danger"
                       onClick={async () => await this.logOut()}
                     >
@@ -101,13 +100,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   }
 }
 
-export default withTranslation('header')(
-  connect(
-    (state: GlobalState) => ({
-      isLoggedIn: getIsLoggedInReduxProxy(state),
-      currentPerson: getCurrentPersonReduxProxy(state),
-      isActive: getIsUserActivatedReduxProxy(state),
-    }),
-    () => ({})
-  )(Header)
-);
+export default connect(
+  (state: GlobalState) => ({
+    isLoggedIn: getIsLoggedInReduxProxy(state),
+    currentPerson: getCurrentPersonReduxProxy(state),
+    isActive: getIsUserActivatedReduxProxy(state),
+  }),
+  () => ({})
+)(withTranslation('header')(Header));

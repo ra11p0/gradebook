@@ -3,7 +3,7 @@ import { axiosApiAuthorized } from '../AxiosInterceptor';
 import NewAdministratorRequest from './Definitions/Requests/NewAdministratorRequest';
 import NewSchoolRequest from './Definitions/Requests/NewSchoolRequest';
 
-const API_URL = process.env.REACT_APP_API_URL!;
+const API_URL: string = import.meta.env.VITE_APP_API_URL ?? 'api';
 
 const newAdministrator = async (
   admin: NewAdministratorRequest

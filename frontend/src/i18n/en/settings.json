@@ -1,0 +1,10 @@
+{
+  "accountSettings": "Account",
+  "permissionsSettings": "Permissions",
+  "systemSettings": "System",
+  "defaultSchool": "Default school",
+  "defaultSchoolDescription": "School that will be selected by default after logging in to Gradebook.",
+  "saveChanges": "Save changes",
+  "changePassword": "Change password",
+  "changePasswordDescription": "Change password to your Gradebook account."
+}

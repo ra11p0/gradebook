@@ -6,7 +6,7 @@ import EducationCyclesInClassResponse from './Definitions/Responses/EducationCyc
 import StudentInClassResponse from './Definitions/Responses/StudentInClassResponse';
 import TeachersInClassResponse from './Definitions/Responses/TeachersInClassResponse';
 
-const API_URL = process.env.REACT_APP_API_URL!;
+const API_URL: string = import.meta.env.VITE_APP_API_URL ?? 'api';
 
 const removeClass = async (classGuid: string): Promise<AxiosResponse> => {
   return await axiosApiAuthorized.delete(API_URL + `/Classes/${classGuid}`);

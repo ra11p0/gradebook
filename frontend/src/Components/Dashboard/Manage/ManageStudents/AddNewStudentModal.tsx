@@ -1,17 +1,17 @@
-import React, { ReactElement, useEffect } from 'react';
-import { connect } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { Button, Modal } from 'react-bootstrap';
 import { useFormik } from 'formik';
+import moment from 'moment';
+import { ReactElement, useEffect } from 'react';
+import { Button, Modal } from 'react-bootstrap';
+import ReactDatePicker from 'react-datepicker';
+import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
 import NewStudentRequest from '../../../../ApiClient/Schools/Definitions/Requests/NewStudentRequest';
 import SchoolsProxy from '../../../../ApiClient/Schools/SchoolsProxy';
-import getCurrentSchoolReduxProxy from '../../../../Redux/ReduxQueries/account/getCurrentSchoolRedux';
 import Notifications from '../../../../Notifications/Notifications';
-import ReactDatePicker from 'react-datepicker';
 import getApplicationLanguageReduxProxy from '../../../../Redux/ReduxQueries/account/getApplicationLanguageRedux';
-import moment from 'moment';
-import FormikInput from '../../../Shared/FormikInput';
+import getCurrentSchoolReduxProxy from '../../../../Redux/ReduxQueries/account/getCurrentSchoolRedux';
 import { GlobalState } from '../../../../store';
+import FormikInput from '../../../Shared/FormikInput';
 
 interface formValues {
   name: string;
@@ -53,6 +53,7 @@ const AddNewStudentModal = (props: AddNewStudentModalProps): ReactElement => {
         props.currentSchool.schoolGuid!
       )
         .then(props.onHide)
+        .then(() => Notifications.showSuccessNotification())
         .catch(Notifications.showApiError);
     },
   });

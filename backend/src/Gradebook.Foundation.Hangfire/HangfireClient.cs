@@ -2,11 +2,15 @@ using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Hangfire;
 using Hangfire;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Gradebook.Foundation.Hangfire;
 
-public class HangfireClient
+public interface IHangfireClient
+{
+    void SendMessage<I>(I message) where I : BaseHangfireWorkerMessage;
+}
+
+public class HangfireClient : IHangfireClient
 {
     private readonly Context _context;
     private readonly IServiceProvider _serviceProvider;

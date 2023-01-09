@@ -36,6 +36,7 @@ public class MailService
         #region mail types
 
         services.AddScoped<IMailType<ActivateAccountMailTypeModel>, ActivateAccountMailType>();
+        services.AddScoped<IMailType<RemindPasswordMailTypeModel>, RemindPasswordMailType>();
 
         #endregion
     }

@@ -1,12 +1,20 @@
-using System.Configuration;
 using System.Net.Mail;
+using Gradebook.Foundation.Common;
+using Gradebook.Foundation.Common.Hangfire;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 using Gradebook.Foundation.Common.Mailservice;
 using Gradebook.Foundation.Common.Settings.Commands;
+using Gradebook.Foundation.Database;
+using Gradebook.Foundation.Hangfire;
+using Gradebook.Foundation.Hangfire.Messages;
+using Gradebook.Foundation.Hangfire.Workers;
 using Gradebook.Foundation.Mailservice;
 using Gradebook.Foundation.Mailservice.MailMessages;
 using Gradebook.Foundation.Mailservice.MailTypes;
 using Gradebook.Foundation.Mailservice.MailTypesModels;
+using Gradebook.Foundation.Tests.Utils;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -34,6 +42,14 @@ public class Mailservice
             services.AddRazorTemplating();
             services.AddLogging();
             services.AddLocalization();
+            services.AddScoped<IHangfireClient, FakeHangfireClient>();
+            services.AddScoped<BaseHangfireWorker<SendEmailWorkerMessage>, SendEmailWorker>();
+            services.AddScoped<Context>();
+            services.AddDbContext<FoundationDatabaseContext>(o =>
+                {
+                    o.UseInMemoryDatabase("fakeDb");
+                    o.ConfigureWarnings(e => e.Ignore(InMemoryEventId.TransactionIgnoredWarning));
+                });
             return services;
         }
     }
@@ -42,6 +58,7 @@ public class Mailservice
     private Mock<IIdentityLogic> _identityLogic { get; set; } = new();
     private Mock<ISettingsQueries> _settingsQueries { get; set; } = new();
     private Mock<IConfiguration> _configuration { get; set; } = new();
+    private Mock<IHangfireClient> _hangfireClient { get; set; } = new();
     [Test]
     public async Task ShouldSendMail()
     {

@@ -1,9 +1,14 @@
 {
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
   "env": {
-    "browser": true,
-    "es2021": true
+    "browser": true
   },
   "extends": [
+    "plugin:i18n-json/recommended",
     "plugin:react/recommended",
     "standard-with-typescript",
     "prettier"
@@ -12,11 +17,6 @@
   "overrides": [
     {
       "files": ["*.ts", "*.tsx"], // Your TypeScript files extension
-
-      // As mentioned in the comments, you should extend TypeScript plugins here,
-      // instead of extending them outside the `overrides`.
-      // If you don't want to extend any rules, you don't need an `extends` attribute.
-      "extends": [],
       "parserOptions": {
         "project": ["./tsconfig.json"] // Specify it only for TypeScript files
       }
@@ -26,11 +26,18 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
+  "ignorePatterns": [
+    "**/__tests__/**",
+    "vite.config.ts",
+    "coverage/**",
+    "index.html"
+  ],
   "plugins": ["react", "@typescript-eslint"],
   "rules": {
     "@typescript-eslint/no-misused-promises": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",
     "@typescript-eslint/consistent-type-assertions": "off",
-    "@typescript-eslint/no-non-null-assertion": "off"
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "react/react-in-jsx-scope": "off"
   }
 }

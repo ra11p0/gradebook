@@ -3,8 +3,10 @@
 .vs
 bin
 obj
+.DS_Store
 **/build
 **/node_modules
 **/package-lock.json
 **/dist
-.DS_Store
+**/.DS_Store
+**/coverage/**

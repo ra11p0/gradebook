@@ -1,19 +1,19 @@
-import React, { ReactElement, useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-import { useTranslation } from 'react-i18next';
+import moment from 'moment';
+import { ReactElement, useEffect, useState } from 'react';
 import { Button, Row } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
 import AdministratorsProxy from '../../../ApiClient/Administrators/AdministratorsProxy';
 import Notifications from '../../../Notifications/Notifications';
+import setLoginReduxWrapper from '../../../Redux/ReduxCommands/account/setLoginRedux';
 import getCurrentUserIdReduxProxy from '../../../Redux/ReduxQueries/account/getCurrentUserIdRedux';
+import getSessionRedux from '../../../Redux/ReduxQueries/account/getSessionRedux';
 import ActivateAdministratorPerson, {
   ActivateAdministratorPersonValues,
 } from './ActivateAdministratorPerson';
 import ActivateAdministratorSchool, {
   ActivateAdministratorSchoolValues,
 } from './ActivateAdministratorSchool';
-import setLoginReduxWrapper from '../../../Redux/ReduxCommands/account/setLoginRedux';
-import moment from 'moment';
-import getSessionRedux from '../../../Redux/ReduxQueries/account/getSessionRedux';
 
 interface ActivateAdministratorFormProps {
   defaultOnBackHandler: () => void;
@@ -51,6 +51,7 @@ const ActivateAdministratorForm = (
         await setLoginReduxWrapper({
           accessToken: session.accessToken,
           refreshToken: session.refreshToken,
+          expiresIn: session.expiresIn,
         });
         if (props.onSubmit) props.onSubmit();
       })

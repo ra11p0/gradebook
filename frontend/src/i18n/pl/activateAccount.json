@@ -1,0 +1,20 @@
+{
+  "activationMethod": "Metoda aktywacji konta: ",
+  "administrator": "Konto z nową szkołą",
+  "student": "Uczeń",
+  "teacher": "Nauczyciel",
+  "schoolAdmin": "Administrator szkoły",
+  "joinSchool": "Dołącz do szkoły",
+  "activateToUseGradebook": "Przygotuj swoje konto.",
+  "accessCode": "Kod dostępu",
+  "group": "Grupa",
+  "class": "Klasa",
+  "back": "Wstecz",
+  "birthday": "Data urodzenia",
+  "name": "Imię",
+  "surname": "Nazwisko",
+  "confirmInformation": "Potwierdź informacje",
+  "wrongAccessCodeLength": "Nieprawidłowa długość kodu dostępu",
+  "ActivateWithCode": "Aktywuj konto kodem",
+  "role": "Rola"
+}

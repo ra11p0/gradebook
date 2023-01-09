@@ -1,16 +1,15 @@
-import React from 'react';
-import { render, screen, fireEvent, getByTestId } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { BrowserRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { store } from '../../store';
-import setPermissionsRedux from '../../Redux/ReduxCommands/account/setPermissionsRedux';
-import PermissionLevelEnum from '../../Common/Enums/Permissions/PermissionLevelEnum';
-import NewCycleForm from '../../Components/Dashboard/Manage/EducationCycle/NewCycleForm/NewCycleForm';
-import { I18nextProvider } from 'react-i18next';
-import i18n from '../../i18n/config';
+import { fireEvent, getByTestId, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
+import { I18nextProvider } from 'react-i18next';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import PermissionLevelEnum from '../../Common/Enums/Permissions/PermissionLevelEnum';
+import NewCycleForm from '../../Components/Dashboard/Manage/EducationCycle/NewCycleForm/NewCycleForm';
+import i18n from '../../i18n/config';
+import setPermissionsRedux from '../../Redux/ReduxCommands/account/setPermissionsRedux';
+import { store } from '../../store';
 
 describe('<NewCycleForm />', () => {
   it('Should validate name not empty', async () => {
@@ -86,8 +85,6 @@ describe('<NewCycleForm />', () => {
       const submit = getByTestId(form, 'submit');
       fireEvent.click(submit);
     });
-    await expect(
-      await screen.findByText('At least one step required')
-    ).toBeTruthy();
+    expect(await screen.findByText('atLeastOneStep')).toBeTruthy();
   });
 });

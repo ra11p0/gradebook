@@ -32,11 +32,12 @@ public class HangfireService
              })));
         services.AddHangfireServer();
 
-        services.AddScoped<HangfireClient>();
+        services.AddScoped<IHangfireClient, HangfireClient>();
 
         #region workers 
 
         services.AddScoped<BaseHangfireWorker<NotificationsWorkerMessage>, NotificationsWorker>();
+        services.AddScoped<BaseHangfireWorker<SendEmailWorkerMessage>, SendEmailWorker>();
 
         #endregion
     }

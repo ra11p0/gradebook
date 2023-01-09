@@ -15,17 +15,18 @@ using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Gradebook.Foundation.Common.Extensions;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Gradebook.Foundation.Hangfire;
+using Gradebook.Foundation.Common.Hangfire;
+using Gradebook.Foundation.Hangfire.Messages;
+using Gradebook.Foundation.Hangfire.Workers;
+using Gradebook.Foundation.Tests.Utils;
+using Gradebook.Foundation.Database;
 
 namespace Gradebook.Foundation.Tests.Identity;
 
 [Category("Unit")]
 public class IdentityLogic
 {
-    #region const
-    private const string HOST = "fakeHost";
-    private const int PORT = 25;
-    private const string SENDER = "fakeSender@sender.com";
-    #endregion
     private ServiceCollection _serviceCollection
     {
         get
@@ -38,7 +39,15 @@ public class IdentityLogic
             services.AddScoped<ISettingsCommands>(e => _settingsCommands.Object);
             services.AddScoped<ISmtpClient>(e => _smtpClient.Object);
             services.AddScoped<IIdentityLogic>(e => _identityLogicMocked.Object);
+            services.AddScoped<IHangfireClient, FakeHangfireClient>();
+            services.AddScoped<BaseHangfireWorker<SendEmailWorkerMessage>, SendEmailWorker>();
+            services.AddScoped<Context>();
             services.AddDbContext<ApplicationIdentityDatabaseContext>(o =>
+                {
+                    o.UseInMemoryDatabase("fakeDb");
+                    o.ConfigureWarnings(e => e.Ignore(InMemoryEventId.TransactionIgnoredWarning));
+                });
+            services.AddDbContext<FoundationDatabaseContext>(o =>
                 {
                     o.UseInMemoryDatabase("fakeDb");
                     o.ConfigureWarnings(e => e.Ignore(InMemoryEventId.TransactionIgnoredWarning));
@@ -139,6 +148,7 @@ public class IdentityLogic
         Assert.That(db.Users!.Include(e => e.AuthorizationCodes).First(e => e.Id == fakeUser.Id).AuthorizationCodes!.Any(e => e.Code == resp.Response));
     }
     [Test]
+    [Obsolete]
     public async Task ShouldReturnAuthCodeInvalid()
     {
         var provider = _serviceProvider;

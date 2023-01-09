@@ -2,7 +2,8 @@ using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 
 namespace Gradebook.Foundation.Common.Foundation.Queries;
 
-public interface IFoundationQueries : IFoundationEducationCyclesQueries, IFoundationClassesQueries
+public interface IFoundationQueries : IFoundationEducationCyclesQueries,
+    IFoundationClassesQueries, IFoundationPeopleQueries
 {
     Task<ResponseWithStatus<IEnumerable<TeacherDto>, bool>> GetAllAccessibleTeachers(Guid schoolGuid);
     Task<ResponseWithStatus<Guid>> GetCurrentPersonGuidBySubjectGuid(Guid subjectGuid);
@@ -22,9 +23,7 @@ public interface IFoundationQueries : IFoundationEducationCyclesQueries, IFounda
     Task<ResponseWithStatus<IPagedList<InvitationDto>, bool>> GetInvitationsToSchool(Guid schoolGuid, int page);
     Task<ResponseWithStatus<InvitationDto, bool>> GetInvitationByActivationCode(string activationCode);
     Task<ResponseWithStatus<PersonDto, bool>> GetPersonByGuid(Guid guid);
-    Task<ResponseWithStatus<ActivationCodeInfoDto>> GetActivationCodeInfo(string activationCode, string method);
-    Task<ResponseWithStatus<StudentDto, bool>> GetStudentByGuid(Guid guid);
-    Task<ResponseWithStatus<TeacherDto, bool>> GetTeacherByGuid(Guid guid);
+    Task<ResponseWithStatus<ActivationCodeInfoDto>> GetActivationCodeInfo(string activationCode);
     Task<ResponseWithStatus<IPagedList<StudentDto>>> GetStudentsInSchool(Guid schoolGuid, int page);
     Task<ResponseWithStatus<IPagedList<TeacherDto>>> GetTeachersInSchool(Guid schoolGuid, int page);
     Task<ResponseWithStatus<IPagedList<PersonDto>>> GetPeopleInSchool(Guid schoolGuid, string discriminator, string query, int page);

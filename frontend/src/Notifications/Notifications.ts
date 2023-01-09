@@ -54,7 +54,10 @@ const showApiError = (err: { response: any; message?: string }): void => {
   });
 };
 
-const showSuccessNotification = (title: string, message: string): void => {
+const showSuccessNotification = (
+  title: string = 'success',
+  message: string = ''
+): void => {
   NorificationsStore.addNotification({
     ...defaultConfig,
     title: t(title, { ns: 'notifications' }).toString(),

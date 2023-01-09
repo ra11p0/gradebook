@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react';
+import { ReactElement, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -23,7 +23,18 @@ function PersonHeader(props: Props): ReactElement {
       <Row>
         <Col>
           <Row>
-            <Col className="fs-3">{`${props.personName} ${props.personSurname}`}</Col>
+            <Col>
+              <Row>
+                <Col className="fs-3">{`${props.personName} ${props.personSurname}`}</Col>
+              </Row>
+              <Row>
+                <Col>
+                  <small data-testid="schoolRolePersonHeaderHolder">
+                    {t(SchoolRolesEnum[props.personSchoolRole])}
+                  </small>
+                </Col>
+              </Row>
+            </Col>
             {props.personSchoolRole === SchoolRolesEnum.Student &&
               props.activeClass && (
                 <Col>

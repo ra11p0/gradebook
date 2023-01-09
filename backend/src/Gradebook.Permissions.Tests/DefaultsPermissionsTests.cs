@@ -3,7 +3,7 @@ using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Common.Permissions.Enums;
 using Gradebook.Foundation.Common.Permissions.Queries;
 using Gradebook.Foundation.Logic.Queries;
-using Gradebook.Foundation.Logic.Queries.Repositories;
+using Gradebook.Foundation.Logic.Queries.Repositories.Interfaces;
 using Gradebook.Permissions.Logic.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;

@@ -1,3 +1,4 @@
+import { Moment } from 'moment';
 import AccountsProxy from '../../../ApiClient/Accounts/AccountsProxy';
 import { connectAllHubs } from '../../../ApiClient/SignalR/HubsResolver';
 import { store } from '../../../store';
@@ -12,6 +13,7 @@ const logIn = {
 export interface logInAction {
   accessToken: string;
   refreshToken: string;
+  expiresIn: Moment;
 }
 
 export default async (
@@ -20,11 +22,15 @@ export default async (
 ): Promise<void> => {
   localStorage.setItem('access_token', action.accessToken);
   localStorage.setItem('refresh_token', action.refreshToken);
+  localStorage.setItem('expires_in', action.expiresIn.toISOString());
 
-  dispatch({ ...logIn, payload: { ...action } });
+  dispatch({
+    ...logIn,
+    payload: { ...action, expiresIn: action.expiresIn.toISOString() },
+  });
   const getMeResponse = await AccountsProxy.getMe();
 
-  await setSchoolsListReduxWrapper({
+  setSchoolsListReduxWrapper({
     schoolsList: getMeResponse.data.schools,
   });
 

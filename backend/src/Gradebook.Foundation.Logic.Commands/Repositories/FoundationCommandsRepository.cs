@@ -2,7 +2,6 @@ using AutoMapper;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
 using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
-using Gradebook.Foundation.Common.Foundation.Enums;
 using Gradebook.Foundation.Database;
 using Gradebook.Foundation.Domain.Models;
 using Microsoft.EntityFrameworkCore;
@@ -99,11 +98,10 @@ public partial class FoundationCommandsRepository : BaseRepository<FoundationDat
         return new StatusResponse<bool>(true);
     }
 
-    public async Task<string?> GenerateSystemInvitation(Guid invitedPersonGuid, Guid invitingPersonGuid, SchoolRoleEnum role, Guid schoolGuid)
+    public async Task<string?> GenerateSystemInvitation(Guid invitedPersonGuid, Guid invitingPersonGuid, Guid schoolGuid)
     {
         SystemInvitation systemInvitation = new()
         {
-            SchoolRole = role,
             CreatorGuid = invitingPersonGuid,
             InvitedPersonGuid = invitedPersonGuid,
             SchoolGuid = schoolGuid

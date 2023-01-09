@@ -1,10 +1,10 @@
 import { Button } from '@mui/material';
-import React, { ReactElement, useState } from 'react';
+import { ReactElement, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ClassesProxy from '../../ApiClient/Classes/ClassesProxy';
 import StudentInClassResponse from '../../ApiClient/Classes/Definitions/Responses/StudentInClassResponse';
 import Notifications from '../../Notifications/Notifications';
-import PeoplePicker from '../Shared/PeoplePicker';
+import PeoplePicker from '../Shared/PeoplePicker/PeoplePicker';
 
 interface Props {
   classGuid: string;
@@ -20,6 +20,7 @@ function ManageStudentsInClass(props: Props): ReactElement {
   return (
     <>
       <Button
+        id="manageClassStudents"
         variant="outlined"
         onClick={() => {
           setShowStudentsPicker((e) => !e);
@@ -41,16 +42,11 @@ function ManageStudentsInClass(props: Props): ReactElement {
             .catch(Notifications.showApiError);
         }}
         selectedPeople={props.studentsInClass.map((s) => s.guid)}
-        getPeople={async (
-          schoolGuid,
-          discriminator: string,
-          query: string,
-          page: number
-        ) => {
+        getPeople={async (pickerData, page) => {
           return (
             await ClassesProxy.searchStudentsCandidatesToClassWithCurrent(
               props.classGuid ?? '',
-              query,
+              pickerData.query ?? '',
               page
             )
           ).data;

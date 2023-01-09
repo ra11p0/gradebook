@@ -1,31 +1,32 @@
+import moment from 'moment';
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Header from './Components/Shared/Header/Header';
-import Index from './Routes/Index';
-import Dashboard from './Routes/Dashboard';
+import { ReactNotifications } from 'react-notifications-component';
 import { connect } from 'react-redux';
-import Account from './Routes/Account';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import AccountProxy from './ApiClient/Accounts/AccountsProxy';
+import PermissionLevelEnum from './Common/Enums/Permissions/PermissionLevelEnum';
 import ActivateAccount from './Components/Account/Activation/ActivateAccount';
 import RegisterForm from './Components/Account/Register/RegisterForm';
-import { ReactNotifications } from 'react-notifications-component';
-import School from './Routes/School';
-import Student from './Routes/Student';
-import Person from './Routes/Person';
-import Class from './Routes/Class';
+import Header from './Components/Shared/Header/Header';
+import LoadingScreen from './Components/Shared/LoadingScreen';
+import setApplicationLanguageReduxWrapper from './Redux/ReduxCommands/account/setApplicationLanguageRedux';
+import setAppLoadReduxWrapper from './Redux/ReduxCommands/account/setAppLoadRedux';
+import setLoginReduxWrapper from './Redux/ReduxCommands/account/setLoginRedux';
+import setLogOutReduxWrapper from './Redux/ReduxCommands/account/setLogOutRedux';
+import getHasPermissionRedux from './Redux/ReduxQueries/account/getHasPermissionRedux';
 import getIsLoggedInReduxProxy from './Redux/ReduxQueries/account/getIsLoggedInRedux';
 import getIsUserActivatedReduxProxy from './Redux/ReduxQueries/account/getIsUserActivatedRedux';
-import setAppLoadReduxWrapper from './Redux/ReduxCommands/account/setAppLoadRedux';
-import LoadingScreen from './Components/Shared/LoadingScreen';
-import AccountProxy from './ApiClient/Accounts/AccountsProxy';
-import setLoginReduxWrapper from './Redux/ReduxCommands/account/setLoginRedux';
-import { GlobalState } from './store';
-import setLogOutReduxWrapper from './Redux/ReduxCommands/account/setLogOutRedux';
-import setApplicationLanguageReduxWrapper from './Redux/ReduxCommands/account/setApplicationLanguageRedux';
-import Subject from './Routes/Subject';
+import Account from './Routes/Account';
+import Class from './Routes/Class';
+import Dashboard from './Routes/Dashboard';
 import EducationCycle from './Routes/EducationCycle';
-import PermissionLevelEnum from './Common/Enums/Permissions/PermissionLevelEnum';
-import getHasPermissionRedux from './Redux/ReduxQueries/account/getHasPermissionRedux';
+import Index from './Routes/Index';
+import Person from './Routes/Person';
+import School from './Routes/School';
 import Service from './Routes/Service';
+import Student from './Routes/Student';
+import Subject from './Routes/Subject';
+import { GlobalState } from './store';
 
 interface AppProps {
   onLoad: (isAppLoaded: boolean) => void;
@@ -47,12 +48,14 @@ class App extends React.Component<AppProps> {
     await setApplicationLanguageReduxWrapper(userLang);
     const access = localStorage.getItem('access_token');
     const refresh = localStorage.getItem('refresh_token');
+    const expiresIn = localStorage.getItem('expires_in');
     if (access && refresh) {
       await AccountProxy.refreshAccessToken(access, refresh)
         .then(async (refreshAccessTokenResponse) => {
           await setLoginReduxWrapper({
             accessToken: refreshAccessTokenResponse.data.access_token,
             refreshToken: refreshAccessTokenResponse.data.refresh_token,
+            expiresIn: moment(expiresIn),
           });
         })
         .catch(async () => {
@@ -65,8 +68,8 @@ class App extends React.Component<AppProps> {
   render(): React.ReactNode {
     return (
       <div>
-        {process.env.REACT_APP_BUILD && (
-          <div className="position-fixed">{process.env.REACT_APP_BUILD}</div>
+        {import.meta.env.VITE_APP_BUILD && (
+          <div className="position-fixed">{import.meta.env.VITE_APP_BUILD}</div>
         )}
 
         <LoadingScreen isReady={this.props.appLoaded}>

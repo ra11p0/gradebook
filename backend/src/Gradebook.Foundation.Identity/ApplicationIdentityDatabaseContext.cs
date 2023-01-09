@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Gradebook.Foundation.Identity.Models;
 
@@ -40,5 +39,10 @@ public class ApplicationIdentityDatabaseContext : IdentityDbContext<ApplicationU
                 e => e.MigrationsHistoryTable("__IdentityMigrationsHistory")
             );
         }
+    }
+
+    public async Task Migrate()
+    {
+        await this.Database.MigrateAsync();
     }
 }

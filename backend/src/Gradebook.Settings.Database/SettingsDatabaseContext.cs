@@ -42,4 +42,9 @@ public class SettingsDatabaseContext : DbContext
             );
         }
     }
+
+    public async Task Migrate()
+    {
+        await this.Database.MigrateAsync();
+    }
 }

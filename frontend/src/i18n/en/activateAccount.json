@@ -1,0 +1,20 @@
+{
+  "activationMethod": "Account activation method: ",
+  "administrator": "Account with new school",
+  "student": "Student",
+  "teacher": "Teacher",
+  "schoolAdmin": "School Admin",
+  "joinSchool": "Join school",
+  "activateToUseGradebook": "Set up your account.",
+  "accessCode": "Access code",
+  "group": "Group",
+  "class": "Class",
+  "back": "Back",
+  "birthday": "Birthday",
+  "name": "Name",
+  "surname": "Surname",
+  "confirmInformation": "Confirm information",
+  "wrongAccessCodeLength": "Wrong access code length",
+  "ActivateWithCode": "Activate account with code",
+  "role": "Role"
+}

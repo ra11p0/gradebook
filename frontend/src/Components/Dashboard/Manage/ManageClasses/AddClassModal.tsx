@@ -1,11 +1,11 @@
 import { Button } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import { Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
 import * as Yup from 'yup';
 import SchoolsProxy from '../../../../ApiClient/Schools/SchoolsProxy';
-import { connect } from 'react-redux';
 import Notifications from '../../../../Notifications/Notifications';
 import getCurrentSchoolReduxProxy from '../../../../Redux/ReduxQueries/account/getCurrentSchoolRedux';
 
@@ -39,11 +39,13 @@ function AddClassModal(props: Props): ReactElement {
           description: '',
         }}
         validationSchema={formValuesSchema}
-        onSubmit={(values: FormValues) => {
-          SchoolsProxy.addNewClass(values, props.currentSchool.schoolGuid!)
-            .then(() => {
-              props.onHide();
-            })
+        onSubmit={async (values: FormValues) => {
+          await SchoolsProxy.addNewClass(
+            values,
+            props.currentSchool.schoolGuid!
+          )
+            .then(props.onHide)
+            .then(() => Notifications.showSuccessNotification())
             .catch(Notifications.showApiError);
         }}
       >

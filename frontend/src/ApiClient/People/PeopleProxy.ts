@@ -3,11 +3,13 @@ import { axiosApiAuthorized } from '../AxiosInterceptor';
 import GetPermissionsResponse from './Definitions/Responses/GetPermissionsResponse';
 import PersonResponse, {
   ClassResponse,
+  SimplePersonResponse,
 } from './Definitions/Responses/PersonResponse';
 import SetPermissionsRequest from './Definitions/Requests/SetPermissionsRequest';
 import SubjectsForTeacherResponse from './Definitions/Responses/SubjectsForTeacherResponse';
+import PeoplePickerData from './Definitions/Requests/PeoplePickerData';
 
-const API_URL = process.env.REACT_APP_API_URL!;
+const API_URL: string = import.meta.env.VITE_APP_API_URL ?? 'api';
 
 const activatePerson = async (
   activationCode: string
@@ -66,11 +68,39 @@ const getSubjectsForTeacher = async (
   );
 };
 
+async function getPeopleDetails(
+  peopleGuids: string[],
+  page: number = 0
+): Promise<AxiosResponse<PersonResponse[]>> {
+  return await axiosApiAuthorized.post(
+    `${API_URL}/people/details`,
+    peopleGuids,
+    {
+      params: { page },
+    }
+  );
+}
+
+async function searchPeople(
+  peoplePickerData: PeoplePickerData,
+  page: number = 0
+): Promise<AxiosResponse<SimplePersonResponse[]>> {
+  return await axiosApiAuthorized.post(
+    `${API_URL}/people/search`,
+    peoplePickerData,
+    {
+      params: { page },
+    }
+  );
+}
+
 export default {
   getPerson,
   activatePerson,
   removePerson,
   getClassesForPerson,
+  getPeopleDetails,
+  searchPeople,
   permissions: {
     getPermissions,
     setPermissions,

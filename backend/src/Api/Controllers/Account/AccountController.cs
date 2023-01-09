@@ -1,5 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using Api.Models.Account;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
@@ -114,49 +112,42 @@ public class AccountController : ControllerBase
     [Route("refresh-token")]
     public async Task<IActionResult> RefreshToken(TokenModel tokenModel)
     {
+        var resp = await _identityLogic.Service.RefreshToken(tokenModel.AccessToken, tokenModel.RefreshToken);
 
-        string? accessToken = tokenModel.AccessToken;
-        string? refreshToken = tokenModel.RefreshToken;
-
-        if (accessToken is null || refreshToken is null) return BadRequest("Invalid access token or refresh token");
-
-        var principal = _identityLogic.Service.GetPrincipalFromExpiredToken(accessToken);
-        if (principal == null)
-        {
-            return BadRequest("Invalid access token or refresh token");
-        }
-
-        string username = principal.Identity!.Name!;
-
-        var user = await _userManager.Service.FindByNameAsync(username);
-
-        if (user == null ||
-        !(await _identityLogic.Service.IsValidRefreshTokenForUser(user.Id, refreshToken)))
-        {
-            return BadRequest("Invalid access token or refresh token");
-        }
-
-        var newAccessToken = _identityLogic.Service.CreateToken(principal.Claims.ToList());
-        var newRefreshToken = _identityLogic.Service.GenerateRefreshToken();
-
-        await _identityLogic.Service.RemoveRefreshTokenFromUser(user.Id, refreshToken);
-        await _identityLogic.Service.AssignRefreshTokenToUser(user.Id, newRefreshToken);
-
-        _identityLogic.Service.SaveDatabaseChanges();
+        if (!resp.Status) return resp.ObjectResult;
 
         return new ObjectResult(new
         {
-            access_token = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
-            refresh_token = newRefreshToken,
+            access_token = resp.Response!.AccessToken,
+            refresh_token = resp.Response!.RefreshToken,
+            expires_in = resp.Response!.ExpiresIn
         });
     }
 
+    [HttpPost("RemindPassword")]
+    public async Task<ObjectResult> RemindPassword([FromBody] string email)
+    {
+        return (await _identityLogic.Service.RemindPassword(email)).ObjectResult;
+    }
+
+    [HttpPost("SetNewPassword/{userId}/{authCode}/")]
+    public async Task<ObjectResult> SetNewPassword([FromBody] SetNewPasswordModel model, [FromRoute] string authCode, [FromRoute] string userId)
+    {
+        return (await _identityLogic.Service.SetNewPassword(userId, authCode, model.Password!, model.ConfirmPassword!)).ObjectResult;
+    }
+
+    [HttpPost("SetNewPassword")]
+    [Authorize]
+    public async Task<ObjectResult> SetNewPasswordAuthorized([FromBody] SetNewPasswordAuthorizedModel model)
+    {
+        return (await _identityLogic.Service.SetNewPasswordAuthorized(model.Password!, model.ConfirmPassword!, model.OldPassword!)).ObjectResult;
+    }
     #endregion
 
     #region roles
     [HttpPost]
     [Route("{userGuid}/roles")]
-    public async Task<IActionResult> PostRoles([FromRoute] string userGuid, [FromBody] string[] roles)
+    public IActionResult PostRoles([FromRoute] string userGuid, [FromBody] string[] roles)
     {
         return NotFound();
         /*await _identityLogic.Service.EditUserRoles(roles, userGuid);

@@ -20,9 +20,9 @@ public class InvitationsController : ControllerBase
     }
     [HttpGet]
     [Route("Activation/Code")]
-    public async Task<IActionResult> GetActivationCodeInfo([FromQuery] string activationCode, [FromQuery] string method)
+    public async Task<IActionResult> GetActivationCodeInfo([FromQuery] string activationCode)
     {
-        var resp = await _foundationQueries.Service.GetActivationCodeInfo(activationCode, method);
-        return resp.Status ? Ok(resp.Response) : BadRequest(resp.Message);
+        var resp = await _foundationQueries.Service.GetActivationCodeInfo(activationCode);
+        return resp.ObjectResult;
     }
 }

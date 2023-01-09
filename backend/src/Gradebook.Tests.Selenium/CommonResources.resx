@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
     <data name="email" xml:space="preserve">
-        <value>marcel.golaczynski@school.pl</value>
+        <value>marceli.golaczynski@school.pl</value>
     </data>
     <data name="password" xml:space="preserve">
         <value>hEll0worldpl112!A</value>
@@ -13,9 +13,9 @@
         <value>Gołczyński</value>
     </data>
     <data name="birthday" xml:space="preserve">
-        <value>02.02.1994</value>
+        <value>02/02/1994</value>
     </data>
-    <data name="schoolName" xml:space="preserve">
+    <data name="secondSchoolName" xml:space="preserve">
         <value>ZS nr 3</value>
     </data>
     <data name="schoolAddress" xml:space="preserve">
@@ -36,7 +36,7 @@
     <data name="secondSchoolBirthday" xml:space="preserve">
         <value>02.02.1994</value>
     </data>
-    <data name="secondSchoolName" xml:space="preserve">
+    <data name="schoolName" xml:space="preserve">
         <value>Gołkowska szkoła policealna nr 6</value>
     </data>
     <data name="secondSchoolAddress" xml:space="preserve">

@@ -46,7 +46,7 @@ def jsonSlurpLax(String jsonText){
 }
 
 def prepareAppSettings() {
-    def appsettingsTemplateText = new File(env.WORKSPACE+"/ci/appsettings.template.json").text
+    def appsettingsTemplateText = readFile env.WORKSPACE+"/ci/appsettings.template.json"
 
     println appsettingsTemplateText
 
@@ -72,7 +72,7 @@ def prepareAppSettings() {
     println jsonPrepared
     writeFile(file:'ci/appsettings.Production.json', text: jsonPrepared)
     
-    def envFileText = new File(env.WORKSPACE + '/ci/.env.template').text
+    def envFileText = readFile env.WORKSPACE + '/ci/.env.template'
     
     envFileText = envFileText.replace('{apiUrl}', params.nodeApiUrl)
     envFileText = envFileText.replace("{environment}", params.environment)
@@ -126,7 +126,7 @@ pipeline{
             parallel{
                 stage('backend unit tests') {
                     steps {
-                        sh 'cd backend; dotnet test --filter TestCategory=Unit'
+                        sh 'cd backend; dotnet test --filter TestCategory=Unit -l "console;verbosity=normal"'
                     }
                 }
                 stage('frontend test'){
@@ -190,3 +190,4 @@ pipeline{
         }
 }
     
+

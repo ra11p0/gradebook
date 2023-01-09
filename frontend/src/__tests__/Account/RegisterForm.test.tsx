@@ -1,188 +1,186 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { store } from '../../store';
-import { act } from 'react-dom/test-utils';
-import i18n from '../../i18n/config';
-import { I18nextProvider } from 'react-i18next';
-import RegisterForm from '../../Components/Account/Register/RegisterForm';
-import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
-import AccountsProxy from '../../ApiClient/Accounts/AccountsProxy';
-import Notifications from '../../Notifications/Notifications';
+import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { wait } from '@testing-library/user-event/dist/utils';
+import { act } from 'react-dom/test-utils';
 import { ReactNotifications } from 'react-notifications-component';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import { vi } from 'vitest';
+import AccountsProxy from '../../ApiClient/Accounts/AccountsProxy';
+import RegisterForm from '../../Components/Account/Register/RegisterForm';
+import Notifications from '../../Notifications/Notifications';
+import { store } from '../../store';
 
 describe('<RegisterForm/>', () => {
   it('Should disable register button while registering', async () => {
-    jest.spyOn(AccountsProxy, 'register').mockImplementationOnce(async () => {
-      return await new Promise((resolve, reject) => {
-        void new Promise((resolve) => setTimeout(resolve, 1000)).then(() => {
-          reject(new Error());
-        });
-      });
-    });
+    vi.spyOn(AccountsProxy, 'register').mockImplementationOnce((async () => {
+      await wait(1000);
+    }) as any);
 
-    await act(() => {
+    await act(async () => {
       render(
         <Provider store={store}>
           <BrowserRouter>
-            <I18nextProvider i18n={i18n}>
-              <RegisterForm />
-            </I18nextProvider>
+            <RegisterForm />
           </BrowserRouter>
         </Provider>
       );
     });
-    await act(() => {
+    await act(async () => {
       userEvent.type(
-        screen.getByRole('textbox', { name: 'Email' }),
+        screen.getByRole('textbox', { name: 'email' }),
         'fake@email.on'
       );
       userEvent.type(screen.getByTestId('password'), 'fake@emaI2l.on');
       userEvent.type(screen.getByTestId('password2'), 'fake@emaI2l.on');
       fireEvent.click(
-        screen.getByRole('checkbox', { name: 'I accept terms and conditions.' })
+        screen.getByRole('checkbox', { name: 'termsAndConditions' })
       );
-      fireEvent.click(screen.getByRole('button', { name: 'Register' }));
+      fireEvent.click(
+        screen.getByRole('button', { name: 'registerButtonLabel' })
+      );
     });
-    expect(screen.getByRole('button', { name: 'Register' })).toBeDisabled();
+    expect(
+      screen.getByRole('button', { name: 'registerButtonLabel' })
+    ).toBeDisabled();
   });
 
   it('Should validate filled email empty', async () => {
-    await act(() => {
+    await act(async () => {
       render(
         <Provider store={store}>
           <BrowserRouter>
-            <I18nextProvider i18n={i18n}>
-              <RegisterForm />
-            </I18nextProvider>
+            <RegisterForm />
           </BrowserRouter>
         </Provider>
       );
     });
-    await act(() => {
+    await act(async () => {
       userEvent.type(screen.getByTestId('password'), 'fake@emaI2l.on');
       userEvent.type(screen.getByTestId('password2'), 'fake@emaI2l.on');
       fireEvent.click(
-        screen.getByRole('checkbox', { name: 'I accept terms and conditions.' })
+        screen.getByRole('checkbox', { name: 'termsAndConditions' })
       );
-      fireEvent.click(screen.getByRole('button', { name: 'Register' }));
+      fireEvent.click(
+        screen.getByRole('button', { name: 'registerButtonLabel' })
+      );
     });
-    expect(screen.getByRole('textbox', { name: 'Email' })).toHaveClass(
+    expect(screen.getByRole('textbox', { name: 'email' })).toHaveClass(
       'is-invalid'
     );
   });
 
   it('Should validate filled password empty', async () => {
-    await act(() => {
+    await act(async () => {
       render(
         <Provider store={store}>
           <BrowserRouter>
-            <I18nextProvider i18n={i18n}>
-              <RegisterForm />
-            </I18nextProvider>
+            <RegisterForm />
           </BrowserRouter>
         </Provider>
       );
     });
-    await act(() => {
+    await act(async () => {
       userEvent.type(
-        screen.getByRole('textbox', { name: 'Email' }),
+        screen.getByRole('textbox', { name: 'email' }),
         'fake@email.on'
       );
       userEvent.type(screen.getByTestId('password2'), 'fake@emaI2l.on');
       fireEvent.click(
-        screen.getByRole('checkbox', { name: 'I accept terms and conditions.' })
+        screen.getByRole('checkbox', { name: 'termsAndConditions' })
       );
-      fireEvent.click(screen.getByRole('button', { name: 'Register' }));
+      fireEvent.click(
+        screen.getByRole('button', { name: 'registerButtonLabel' })
+      );
     });
     expect(screen.getByTestId('password')).toHaveClass('is-invalid');
   });
 
   it('Should validate filled passwords not matched', async () => {
-    await act(() => {
+    await act(async () => {
       render(
         <Provider store={store}>
           <BrowserRouter>
-            <I18nextProvider i18n={i18n}>
-              <RegisterForm />
-            </I18nextProvider>
+            <RegisterForm />
           </BrowserRouter>
         </Provider>
       );
     });
-    await act(() => {
+    await act(async () => {
       userEvent.type(
-        screen.getByRole('textbox', { name: 'Email' }),
+        screen.getByRole('textbox', { name: 'email' }),
         'fake@email.on'
       );
       userEvent.type(screen.getByTestId('password'), 'fake@emaI2l.on');
       userEvent.type(screen.getByTestId('password2'), 'fake@emaId2l.on');
       fireEvent.click(
         screen.getByRole('checkbox', {
-          name: 'I accept terms and conditions.',
+          name: 'termsAndConditions',
         })
       );
-      fireEvent.click(screen.getByRole('button', { name: 'Register' }));
+      fireEvent.click(
+        screen.getByRole('button', { name: 'registerButtonLabel' })
+      );
     });
     expect(screen.getByTestId('password2')).toHaveClass('is-invalid');
   });
 
   it('Should validate filled password empty', async () => {
-    await act(() => {
+    await act(async () => {
       render(
         <Provider store={store}>
           <BrowserRouter>
-            <I18nextProvider i18n={i18n}>
-              <RegisterForm />
-            </I18nextProvider>
+            <RegisterForm />
           </BrowserRouter>
         </Provider>
       );
     });
-    await act(() => {
+    await act(async () => {
       userEvent.type(
-        screen.getByRole('textbox', { name: 'Email' }),
+        screen.getByRole('textbox', { name: 'email' }),
         'fake@email.on'
       );
       userEvent.type(screen.getByTestId('password2'), 'fake@emaI2l.on');
       fireEvent.click(
-        screen.getByRole('checkbox', { name: 'I accept terms and conditions.' })
+        screen.getByRole('checkbox', { name: 'termsAndConditions' })
       );
-      fireEvent.click(screen.getByRole('button', { name: 'Register' }));
+      fireEvent.click(
+        screen.getByRole('button', { name: 'registerButtonLabel' })
+      );
     });
     expect(screen.getByTestId('password')).toHaveClass('is-invalid');
   });
 
   it('Should show error alert', async () => {
-    const mockekdAccountsProxy = jest
+    const mockekdAccountsProxy = vi
       .spyOn(AccountsProxy, 'register')
       .mockRejectedValueOnce({ response: { data: 'fakeError' } });
-    const mockedNotifications = jest.spyOn(Notifications, 'showApiError');
-    await act(() => {
+    const mockedNotifications = vi.spyOn(Notifications, 'showApiError');
+    await act(async () => {
       render(
         <Provider store={store}>
           <BrowserRouter>
-            <I18nextProvider i18n={i18n}>
-              <ReactNotifications />
-              <RegisterForm />
-            </I18nextProvider>
+            <ReactNotifications />
+            <RegisterForm />
           </BrowserRouter>
         </Provider>
       );
     });
-    await act(() => {
+    await act(async () => {
       userEvent.type(
-        screen.getByRole('textbox', { name: 'Email' }),
+        screen.getByRole('textbox', { name: 'email' }),
         'fake@email.on'
       );
       userEvent.type(screen.getByTestId('password'), 'fake@emaI2l.on');
       userEvent.type(screen.getByTestId('password2'), 'fake@emaI2l.on');
       fireEvent.click(
-        screen.getByRole('checkbox', { name: 'I accept terms and conditions.' })
+        screen.getByRole('checkbox', { name: 'termsAndConditions' })
       );
-      fireEvent.click(screen.getByRole('button', { name: 'Register' }));
+
+      fireEvent.click(
+        screen.getByRole('button', { name: 'registerButtonLabel' })
+      );
     });
     expect(mockekdAccountsProxy).toBeCalledTimes(1);
     expect(mockedNotifications).toBeCalledTimes(1);

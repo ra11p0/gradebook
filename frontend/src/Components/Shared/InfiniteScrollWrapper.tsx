@@ -1,9 +1,10 @@
 import { faFlagCheckered, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import LoadingScreen from './LoadingScreen';
 
 interface Props<T> {
   mapper: (item: T, index: number) => ReactElement;
@@ -51,54 +52,43 @@ function EndMessage(): ReactElement {
 }
 
 function InfiniteScrollWrapper<T>(props: Props<T>): ReactElement {
-  const [items, setItems] = useState([]);
-  const [itemsCount, setItemsCount] = useState(0);
+  const [items, setItems] = useState<T[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [isReady, setIsReady] = useState(false);
-
+  const [lock, setLock] = useState(false);
   useEffect(() => {
-    setIsReady(true);
-    void fetch(1, true);
+    if (lock) return;
+    setHasMore(true);
+    setPage(1);
+    setItems([]);
+    void fetch(1);
   }, [...(props.effect ?? [])]);
 
-  const fetch = async (
-    fetchPage: number,
-    withReset: boolean = false
-  ): Promise<unknown> => {
-    if (!isReady && !withReset)
-      return await new Promise((resolve, reject): void => resolve(null));
+  const fetch = async (fetchPage: number = page): Promise<void> => {
+    setLock(true);
+    setPage(fetchPage + 1);
     return await props.fetch(fetchPage).then((result) => {
-      if (withReset) {
-        setItemsCount(0);
-        setHasMore(true);
-        setPage(1);
-        setItems([]);
-      }
-      setItemsCount((c) => c + result.length);
-      setItems((i) => i.concat(result as []));
-      if (result.length === 0) {
-        setHasMore(false);
-        return;
-      }
-      setPage((p) => p + 1);
+      setItems((i) => [...i, ...result]);
+      if (result.length === 0) setHasMore(false);
+      setLock(false);
     });
   };
 
   return (
-    <InfiniteScroll
-      scrollableTarget={props.scrollableTarget}
-      dataLength={itemsCount}
-      next={async () => await fetch(page)}
-      hasMore={hasMore}
-      loader={<LoadingSpinner />}
-      endMessage={itemsCount !== 0 && <EndMessage />}
-    >
-      {props.wrapper && <>{props.wrapper(items.map(props.mapper))}</>}
-      {!props.wrapper && <>{items.map(props.mapper)}</>}
-      {itemsCount === 0 && !hasMore && <NoResults />}
-      {itemsCount === 0 && hasMore && <LoadingSpinner />}
-    </InfiniteScroll>
+    <LoadingScreen isReady={!(items.length === 0 && hasMore)}>
+      <InfiniteScroll
+        scrollableTarget={props.scrollableTarget}
+        dataLength={items.length}
+        next={async () => await fetch()}
+        hasMore={hasMore}
+        loader={<LoadingSpinner />}
+        endMessage={items.length !== 0 && <EndMessage />}
+      >
+        {props.wrapper && <>{props.wrapper(items.map(props.mapper))}</>}
+        {!props.wrapper && <>{items.map(props.mapper)}</>}
+        {items.length === 0 && !hasMore && <NoResults />}
+      </InfiniteScroll>
+    </LoadingScreen>
   );
 }
 

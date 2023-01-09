@@ -1,16 +1,19 @@
-import React, { ReactElement, useState } from 'react';
-import { Link } from 'react-router-dom';
-import AccountProxy from '../../../ApiClient/Accounts/AccountsProxy';
-import { useTranslation } from 'react-i18next';
-import { Form } from 'react-bootstrap';
-import setLoginReduxWrapper from '../../../Redux/ReduxCommands/account/setLoginRedux';
-import setAppLoadReduxWrapper from '../../../Redux/ReduxCommands/account/setAppLoadRedux';
-import { store } from '../../../store';
-import { useFormik } from 'formik';
-import FormikInput from '../../Shared/FormikInput';
-import * as yup from 'yup';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { Link } from '@mui/material';
+import { useFormik } from 'formik';
+import moment from 'moment';
+import { ReactElement, useState } from 'react';
+import { Form } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { Link as RouterLink } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import * as yup from 'yup';
+import AccountProxy from '../../../ApiClient/Accounts/AccountsProxy';
+import setAppLoadReduxWrapper from '../../../Redux/ReduxCommands/account/setAppLoadRedux';
+import setLoginReduxWrapper from '../../../Redux/ReduxCommands/account/setLoginRedux';
+import { store } from '../../../store';
+import FormikInput from '../../Shared/FormikInput';
+import ChangePasswordModal from '../ChangePassword/ChangePasswordModal';
 
 function LoginForm(): ReactElement {
   const { t } = useTranslation('loginForm');
@@ -38,6 +41,7 @@ function LoginForm(): ReactElement {
           await setLoginReduxWrapper({
             refreshToken: loginResponse.data.refresh_token,
             accessToken: loginResponse.data.access_token,
+            expiresIn: moment().add(loginResponse.data.expires_in, 'seconds'),
           });
         })
         .catch(async (resp) => {
@@ -73,9 +77,7 @@ function LoginForm(): ReactElement {
                 formik={formik}
               />
               <div className="text-end fs-7">
-                <Link className="text-secondary" to={''}>
-                  {t('forgotPassword')}
-                </Link>
+                <ForgotPasswordSection />
               </div>
               <div className="text-center">
                 <LoadingButton
@@ -94,10 +96,31 @@ function LoginForm(): ReactElement {
       </div>
       <p className="text-center ">
         {t('dontHaveAccount')} &nbsp;
-        <Link className="text-secondary" to={'register'}>
+        <RouterLink className="text-secondary" to={'register'}>
           {t('register')}
-        </Link>
+        </RouterLink>
       </p>
+    </>
+  );
+}
+
+function ForgotPasswordSection(): ReactElement {
+  const { t } = useTranslation('loginForm');
+  const [changePasswordModalVisible, setChangePasswordModalVisible] =
+    useState(false);
+  return (
+    <>
+      <ChangePasswordModal
+        show={changePasswordModalVisible}
+        onHide={() => setChangePasswordModalVisible(false)}
+      />
+      <Link
+        className="text-secondary cursor-pointer"
+        test-id="forgotPassword"
+        onClick={() => setChangePasswordModalVisible(true)}
+      >
+        {t('forgotPassword')}
+      </Link>
     </>
   );
 }
