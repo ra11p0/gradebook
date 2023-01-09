@@ -1,0 +1,83 @@
+//  Max viewport height
+@for $i from 1 through 4 {
+  $maxheight: 25vh * $i;
+  .mvh-#{$i*25} {
+    max-height: $maxheight !important;
+  }
+}
+
+@for $i from 1 through 2 {
+  $maxheight: 33vh * $i;
+  .mvh-#{$i*33} {
+    max-height: $maxheight !important;
+  }
+}
+
+//  Max height
+@for $i from 1 through 4 {
+  $maxheight: 25% * $i;
+  .mh-#{$i*25} {
+    max-height: $maxheight !important;
+  }
+}
+
+@for $i from 1 through 2 {
+  $maxheight: 33% * $i;
+  .mh-#{$i*33} {
+    max-height: $maxheight !important;
+  }
+}
+
+//  Viewport height
+@for $i from 1 through 4 {
+  $height: 25vh * $i;
+  .vh-#{$i*25} {
+    height: $height !important;
+  }
+}
+
+@for $i from 1 through 2 {
+  $height: 33vh * $i;
+  .vh-#{$i*33} {
+    height: $height !important;
+  }
+}
+
+//  Height
+@for $i from 1 through 4 {
+  $height: 25% * $i;
+  .h-#{$i*25} {
+    height: $height !important;
+  }
+}
+
+@for $i from 1 through 2 {
+  $height: 33% * $i;
+  .h-#{$i*33} {
+    height: $height !important;
+  }
+}
+
+//  Width
+@for $i from 1 through 4 {
+  $width: 25% * $i;
+  .w-#{$i*25} {
+    width: $width !important;
+  }
+}
+
+@for $i from 1 through 2 {
+  $width: 33% * $i;
+  .w-#{$i*33} {
+    width: $width !important;
+  }
+}
+
+//  Fonts
+.fs-7 {
+  font-size: 0.75rem !important;
+}
+
+.fs-8 {
+  font-size: 0.5rem !important;
+}

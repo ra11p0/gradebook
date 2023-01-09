@@ -5,7 +5,7 @@ import InvitationResponse from './Definitions/Responses/InvitationResponse';
 
 const API_URL: string = import.meta.env.VITE_APP_API_URL ?? 'api';
 
-const getInvitationDetailsForStudent = async (
+const getInvitationDetails = async (
   activationCode: string
 ): Promise<AxiosResponse<InvitationDetailsResponse>> => {
   return await axiosApiAuthorized.get(
@@ -13,7 +13,6 @@ const getInvitationDetailsForStudent = async (
     {
       params: {
         activationCode,
-        method: 'student',
       },
     }
   );
@@ -26,6 +25,6 @@ const getUsersInvitations = async (): Promise<
 };
 
 export default {
-  getInvitationDetailsForStudent,
+  getInvitationDetails,
   getUsersInvitations,
 };

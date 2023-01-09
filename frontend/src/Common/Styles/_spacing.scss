@@ -1,0 +1,15 @@
+//  Children margin
+@for $i from 1 through 4 {
+  $margin: 0.25rem * $i;
+  .children-m-#{$i} > * {
+    margin: $margin !important;
+  }
+}
+
+//  Children padding
+@for $i from 1 through 4 {
+  $padding: 0.25rem * $i;
+  .children-p-#{$i} > * {
+    padding: $padding !important;
+  }
+}

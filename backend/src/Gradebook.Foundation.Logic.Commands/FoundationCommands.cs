@@ -37,6 +37,10 @@ public partial class FoundationCommands : BaseLogic<IFoundationCommandsRepositor
         if (invitation.IsUsed) return new StatusResponse<bool>("Invitation already used");
         if (invitation.ExprationDate < Time.UtcNow) return new StatusResponse<bool>("Invitation expired");
 
+        var person = invitation.InvitedPerson;
+        if (!string.IsNullOrEmpty(person!.UserId))
+            return new StatusResponse<bool>(418, false, "Person already has bound account");
+
         var useInvitationResult = await Repository.UseInvitation(new UseInvitationCommand()
         {
             InvitationGuid = invitation.Guid,

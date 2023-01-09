@@ -2,6 +2,7 @@ using Dapper;
 using DbExtensions;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Extensions;
+using Gradebook.Foundation.Common.Foundation.Enums;
 using Gradebook.Foundation.Common.Foundation.Models;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Logic.Queries.Repositories.Interfaces;
@@ -91,7 +92,7 @@ public partial class FoundationQueriesRepository : IFoundationQueriesPeopleRepos
         return await cn.QueryFirstOrDefaultAsync<StudentDto>(@"
                 SELECT Name, Surname, SchoolRole, Birthday, CreatorGuid, Guid, UserGuid, SchoolGuid
                 FROM Person
-                WHERE Discriminator = 'Student'
+                WHERE SchoolRole = {(int)SchoolRoleEnum.Student}
                     AND Guid = @guid
                     AND IsDeleted = 0
             ", new
@@ -105,7 +106,7 @@ public partial class FoundationQueriesRepository : IFoundationQueriesPeopleRepos
         return await cn.QueryFirstOrDefaultAsync<TeacherDto>(@"
                 SELECT Name, Surname, SchoolRole, Birthday, CreatorGuid, Guid, UserGuid, SchoolGuid
                 FROM Person
-                WHERE Discriminator = 'Teacher'
+                WHERE SchoolRole = {(int)SchoolRoleEnum.Teacher}
                     AND Guid = @guid
                     AND IsDeleted = 0
             ", new
@@ -124,7 +125,6 @@ public partial class FoundationQueriesRepository : IFoundationQueriesPeopleRepos
                 ORDER BY Name, Surname
             ", new { guids }, pager);
     }
-
     public async Task<IPagedList<PersonDto>> SearchPeople(PeoplePickerData pickerData, Pager pager)
     {
         var builder = new SqlBuilder();
@@ -152,5 +152,19 @@ public partial class FoundationQueriesRepository : IFoundationQueriesPeopleRepos
 
         using var cn = await GetOpenConnectionAsync();
         return await cn.QueryPagedAsync<PersonDto>(builder.ToString(), pickerData, pager);
+    }
+    public async Task<AdminDto> GetAdminByGuid(Guid guid)
+    {
+        using var cn = await GetOpenConnectionAsync();
+        return await cn.QueryFirstOrDefaultAsync<AdminDto>($@"
+                SELECT Name, Surname, SchoolRole, Birthday, CreatorGuid, Guid, UserGuid, SchoolGuid
+                FROM Person
+                WHERE SchoolRole = {(int)SchoolRoleEnum.Admin}
+                    AND Guid = @guid
+                    AND IsDeleted = 0
+            ", new
+        {
+            guid
+        });
     }
 }

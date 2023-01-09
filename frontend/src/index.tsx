@@ -10,7 +10,7 @@ import 'react-notifications-component/dist/theme.css';
 import { Provider } from 'react-redux';
 import 'tippy.js/animations/scale.css';
 import 'tippy.js/dist/tippy.css';
-import './Common/Styles/Style.css';
+import './Common/Styles/Style.scss';
 import LoadingScreen from './Components/Shared/LoadingScreen';
 import i18n from './i18n/config';
 import { store } from './store';

@@ -7,7 +7,6 @@ const namespaces = [
   'loginForm',
   'registerForm',
   'activateAccount',
-  'ActivateStudent',
   'header',
   'notifications',
   'manageTeachers',
