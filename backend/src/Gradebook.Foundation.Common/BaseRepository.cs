@@ -20,10 +20,11 @@ public abstract class BaseRepository<T> : BaseRepository where T : DbContext
 
     public override void SaveChanges()
         => Context.SaveChanges();
-    public override void BeginTransaction()
+    public override IDbContextTransaction BeginTransaction()
     {
         if (_transaction is not null) _transactionBlocker++;
         else _transaction = Context.Database.BeginTransaction();
+        return _transaction;
     }
 
     public override void CommitTransaction()
@@ -75,7 +76,7 @@ public abstract class BaseRepository : IBaseRepository
 
     public abstract Task SaveChangesAsync();
 
-    public abstract void BeginTransaction();
+    public abstract IDbContextTransaction BeginTransaction();
 
     public abstract void CommitTransaction();
 
@@ -86,7 +87,7 @@ public interface IBaseRepository
 {
     void SaveChanges();
     Task SaveChangesAsync();
-    void BeginTransaction();
+    IDbContextTransaction BeginTransaction();
     void CommitTransaction();
     void RollbackTransaction();
 }

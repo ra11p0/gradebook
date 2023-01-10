@@ -1,5 +1,6 @@
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Settings.Enums;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Gradebook.Settings.Logic.Commands;
 
@@ -9,7 +10,7 @@ public class SettingsCommandsRepositoryCached : BaseRepositoryCached<SettingsCom
     {
     }
 
-    public void BeginTransaction() => Base.BeginTransaction();
+    public IDbContextTransaction BeginTransaction() => Base.BeginTransaction();
 
     public void CommitTransaction() => Base.CommitTransaction();
 
@@ -30,4 +31,9 @@ public class SettingsCommandsRepositoryCached : BaseRepositoryCached<SettingsCom
 
     public Task SetSettingForUserAsync<T>(string userGuid, SettingEnum settingType, T value)
         => Base.SetSettingForUserAsync(userGuid, settingType, value);
+
+    IDbContextTransaction IBaseRepository.BeginTransaction()
+    {
+        throw new NotImplementedException();
+    }
 }

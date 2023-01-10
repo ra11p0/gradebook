@@ -2,6 +2,7 @@ using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Foundation.Models;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Logic.Queries.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Gradebook.Foundation.Logic.Queries.Repositories;
 
@@ -50,7 +51,7 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
     public Task<TeacherDto> GetTeacherByGuid(Guid guid)
         => Base.GetTeacherByGuid(guid);
 
-    public void BeginTransaction()
+    public IDbContextTransaction BeginTransaction()
         => Base.BeginTransaction();
 
     public void CommitTransaction()
@@ -178,4 +179,9 @@ public class FoundationQueriesRepositoryCached : BaseRepositoryCached<Foundation
 
     public Task<AdminDto> GetAdminByGuid(Guid guid)
         => Base.GetAdminByGuid(guid);
+
+    IDbContextTransaction IBaseRepository.BeginTransaction()
+    {
+        throw new NotImplementedException();
+    }
 }

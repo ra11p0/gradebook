@@ -1,5 +1,6 @@
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Permissions.Enums;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Gradebook.Permissions.Logic.Commands;
 
@@ -9,10 +10,9 @@ public class PermissionsCommandsRepositoryCached : BaseRepositoryCached<Permissi
     {
     }
 
-    public void BeginTransaction()
-    {
-        Base.BeginTransaction();
-    }
+    public IDbContextTransaction BeginTransaction()
+        => Base.BeginTransaction();
+
 
     public void CommitTransaction()
     {
@@ -36,4 +36,9 @@ public class PermissionsCommandsRepositoryCached : BaseRepositoryCached<Permissi
 
     public Task SetPermissionsForPerson(Guid personGuid, Dictionary<PermissionEnum, PermissionLevelEnum> permissions)
         => Base.SetPermissionsForPerson(personGuid, permissions);
+
+    IDbContextTransaction IBaseRepository.BeginTransaction()
+    {
+        throw new NotImplementedException();
+    }
 }

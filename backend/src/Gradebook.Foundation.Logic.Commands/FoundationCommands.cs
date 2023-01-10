@@ -7,7 +7,6 @@ using Gradebook.Foundation.Common.Foundation.Enums;
 using Gradebook.Foundation.Common.Foundation.Queries;
 using Gradebook.Foundation.Common.Foundation.Queries.Definitions;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
-using Gradebook.Foundation.Identity.Models;
 using Gradebook.Foundation.Logic.Commands.Repositories;
 
 namespace Gradebook.Foundation.Logic.Commands;
@@ -302,8 +301,6 @@ public partial class FoundationCommands : BaseLogic<IFoundationCommandsRepositor
             command.UserGuid = currentUserId.Response;
         }
 
-        await _identityLogic.Service.AddUserRole(UserRoles.SuperAdmin);
-
         var resp = await Repository.AddNewAdministrator(command);
         if (resp.Status)
         {
@@ -322,8 +319,6 @@ public partial class FoundationCommands : BaseLogic<IFoundationCommandsRepositor
             if (!currentUserId.Status) return new StatusResponse<bool>(false);
             administratorCommand.UserGuid = currentUserId.Response;
         }
-
-        await _identityLogic.Service.AddUserRole(UserRoles.SuperAdmin);
 
         var respAdmin = await Repository.AddNewAdministrator(administratorCommand);
         var respSchool = await Repository.AddNewSchool(schoolCommand);

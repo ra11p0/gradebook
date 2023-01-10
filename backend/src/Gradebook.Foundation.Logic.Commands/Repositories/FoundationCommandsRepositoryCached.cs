@@ -1,5 +1,6 @@
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Foundation.Commands.Definitions;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Gradebook.Foundation.Logic.Commands.Repositories;
 
@@ -35,10 +36,8 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
 
     public Task<string?> GenerateSystemInvitation(Guid invitedPersonGuid, Guid invitingPersonGuid, Guid schoolGuid)
         => Base.GenerateSystemInvitation(invitedPersonGuid, invitingPersonGuid, schoolGuid);
-    public void BeginTransaction()
-    {
-        Base.BeginTransaction();
-    }
+    public IDbContextTransaction BeginTransaction()
+        => Base.BeginTransaction();
 
     public void CommitTransaction()
     {
@@ -133,4 +132,9 @@ public class FoundationCommandsRepositoryCached : BaseRepositoryCached<Foundatio
 
     public Task<StatusResponse> StopEducationCycleStepInstance(Guid educationCycleStepInstanceGuid)
         => Base.StopEducationCycleStepInstance(educationCycleStepInstanceGuid);
+
+    IDbContextTransaction IBaseRepository.BeginTransaction()
+    {
+        throw new NotImplementedException();
+    }
 }
