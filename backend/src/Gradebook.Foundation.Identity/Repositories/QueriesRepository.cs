@@ -21,17 +21,21 @@ public class QueriesRepository : BaseRepository<ApplicationIdentityDatabaseConte
     }
 
     public async Task<string?> GetEmailForUser(string userId)
-        => (await Context.Users.FirstOrDefaultAsync(e => e.Id == userId))?.Email;
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        return await _userManager.GetEmailAsync(user);
+    }
 
     public async Task<string?> GetUserIdByUserEmail(string email)
     {
-        return (await _userManager.FindByEmailAsync(email))?.Id;
+        var user = await _userManager.FindByEmailAsync(email);
+        return await _userManager.GetUserIdAsync(user);
     }
 
     public async Task<string> GetUserUsername(string userId)
     {
         var user = await _userManager.FindByIdAsync(userId);
-        return user.UserName;
+        return await _userManager.GetUserNameAsync(user);
     }
 
     public async Task<StatusResponse> IsAuthCodeValid(string userId, string code)
@@ -62,6 +66,6 @@ public class QueriesRepository : BaseRepository<ApplicationIdentityDatabaseConte
     public async Task<bool> UserHasEmailConfirmed(string userId)
     {
         var user = await _userManager.FindByIdAsync(userId);
-        return user.EmailConfirmed;
+        return await _userManager.IsEmailConfirmedAsync(user);
     }
 }

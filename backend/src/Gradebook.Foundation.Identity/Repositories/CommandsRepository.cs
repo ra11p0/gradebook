@@ -1,3 +1,4 @@
+using System.Net.Mail;
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Identity.Models;
 using Gradebook.Foundation.Identity.Repositories.Interfaces;
@@ -36,16 +37,17 @@ public class CommandsRepository : BaseRepository<ApplicationIdentityDatabaseCont
         return new ResponseWithStatus<string>(response: token.Code);
     }
 
-    public async Task<IdentityResult> CreateUser(string email, string password)
+    public async Task<(IdentityResult result, ApplicationUser user)> CreateUser(string email, string password)
     {
+        var mailAddress = new MailAddress(email);
         ApplicationUser user = new()
         {
-            Email = email,
+            Email = mailAddress.Address,
+            UserName = mailAddress.User,
             SecurityStamp = Guid.NewGuid().ToString(),
-            UserName = email,
         };
-
-        return await _userManager.CreateAsync(user, password);
+        var res = await _userManager.CreateAsync(user, password);
+        return (res, user);
     }
 
     public async Task RemoveRefreshTokenFromUser(string userId, string refreshToken)
@@ -65,4 +67,6 @@ public class CommandsRepository : BaseRepository<ApplicationIdentityDatabaseCont
           e.AuthorizationCodeValidUntil > Time.UtcNow);
         authCodeEntry.IsUsed = true;
     }
+
+
 }

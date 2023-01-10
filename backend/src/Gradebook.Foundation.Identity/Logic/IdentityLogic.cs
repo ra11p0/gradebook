@@ -22,6 +22,7 @@ public class IdentityLogic : IIdentityLogic
     private readonly ServiceResolver<IConfiguration> _configuration;
     private readonly ServiceResolver<ApplicationIdentityDatabaseContext> _identityContext;
     private readonly ServiceResolver<UserManager<ApplicationUser>> _userManager;
+    private readonly ServiceResolver<SignInManager<ApplicationUser>> _signInManager;
     private readonly ServiceResolver<ISettingsCommands> _settingsCommands;
     private readonly ServiceResolver<IMailClient> _mailClient;
     private readonly ServiceResolver<IQueriesRepository> _queriesRepository;
@@ -37,6 +38,7 @@ public class IdentityLogic : IIdentityLogic
         _context = serviceProvider.GetResolver<Context>().Service;
         _commandsRepository = serviceProvider.GetResolver<ICommandsRepository>();
         _queriesRepository = serviceProvider.GetResolver<IQueriesRepository>();
+        _signInManager = serviceProvider.GetResolver<SignInManager<ApplicationUser>>();
     }
     public async Task<ResponseWithStatus<string, bool>> CurrentUserId()
     {
@@ -64,44 +66,32 @@ public class IdentityLogic : IIdentityLogic
         => _queriesRepository.Service.GetEmailForUser(userId);
     public async Task<StatusResponse> RegisterUser(string email, string password, string language)
     {
-        if (await _queriesRepository.Service.AnyUserWithEmail(email))
-            return new StatusResponse("User already exists");
+        var (result, user) = await _commandsRepository.Service.CreateUser(email, password);
+        if (!result.Succeeded) return new StatusResponse(400, result.ToString());
 
-        using (var t = _commandsRepository.Service.BeginTransaction())
-        {
-            var result = await _commandsRepository.Service.CreateUser(email, password);
-            if (!result.Succeeded) return new StatusResponse(400);
-
-            var userId = await _queriesRepository.Service.GetUserIdByUserEmail(email);
-            if (string.IsNullOrEmpty(userId)) return new StatusResponse(400);
-
-            await SendAccountActivationEmail(userId);
-            await SetUserDefaultSettings(userId, language);
-            await _commandsRepository.Service.SaveChangesAsync();
-            await t.CommitAsync();
-        }
+        await SetUserDefaultSettings(user.Id, language);
+        await SendAccountActivationEmail(user.Id);
+        await _commandsRepository.Service.SaveChangesAsync();
 
         return new StatusResponse(true);
     }
     public async Task<ResponseWithStatus<LogInResponse>> LoginUser(string email, string password)
     {
-        if (!(await _queriesRepository.Service.AnyUserWithEmail(email)))
+        var user = await (_userManager.Service.FindByEmailAsync(email) ?? _userManager.Service.FindByNameAsync(email));
+        if (user is null)
             return new ResponseWithStatus<LogInResponse>(404, "User not found");
-
-        var userId = await _queriesRepository.Service.GetUserIdByUserEmail(email);
-        if (string.IsNullOrEmpty(userId))
-            return new ResponseWithStatus<LogInResponse>(404, "User not found");
-
-        if (!(await _queriesRepository.Service.IsPasswordValidForUser(userId!, password)))
-            return new ResponseWithStatus<LogInResponse>(403, "Invalid login or password");
-
-        if (!(await _queriesRepository.Service.UserHasEmailConfirmed(userId)))
+        var signInResult = await _signInManager.Service.CheckPasswordSignInAsync(user, password, false);
+        if (!signInResult.Succeeded)
         {
-            await SendAccountActivationEmail(userId);
-            return new ResponseWithStatus<LogInResponse>(302, "Email not confirmed");
+            if (!(await _queriesRepository.Service.UserHasEmailConfirmed(user.Id)))
+            {
+                await SendAccountActivationEmail(user.Id);
+                return new ResponseWithStatus<LogInResponse>(302, "Email not confirmed");
+            }
+            return new ResponseWithStatus<LogInResponse>(403, signInResult.ToString());
         }
 
-        var tokenData = await PrepareAccessToken(userId);
+        var tokenData = await PrepareAccessToken(user.Id);
         return new ResponseWithStatus<LogInResponse>(new LogInResponse()
         {
             access_token = tokenData.accessToken,
@@ -127,47 +117,35 @@ public class IdentityLogic : IIdentityLogic
         => _queriesRepository.Service.IsAuthCodeValid(userId, code);
     public async Task<StatusResponse> VerifyUserEmail(string userId, string code)
     {
-        var useAuthCode = await UseAuthCode(userId, code);
-        if (!useAuthCode.Status) return useAuthCode;
         var user = await _userManager.Service.FindByIdAsync(userId);
         if (user is null) return new StatusResponse(404);
-        user.EmailConfirmed = true;
-        await _userManager.Service.UpdateAsync(user);
-        return new StatusResponse(true);
+        var res = await _userManager.Service.ConfirmEmailAsync(user, code);
+        if (res.Succeeded) return new StatusResponse(true);
+        return new StatusResponse(400, res.ToString());
     }
     public async Task<StatusResponse> RemindPassword(string email)
     {
-        using var transaction = await _identityContext.Service.Database.BeginTransactionAsync();
         var user = await _userManager.Service.FindByEmailAsync(email);
-        if (user is null)
-            return new StatusResponse(404, message: "UnknownEmailAddress");
-        var authCode = await CreateAuthCodeForUser(user.Id);
-        if (!authCode.Status) return new StatusResponse(authCode.Message);
-        await _mailClient.Service.SendMail(new RemindPasswordMailMessage(user.Id, authCode.Response!));
-        await transaction.CommitAsync();
+        if (user is null) return new StatusResponse(404);
+        var token = await _userManager.Service.GeneratePasswordResetTokenAsync(user);
+        await _mailClient.Service.SendMail(new RemindPasswordMailMessage(user.Id, token));
         return new StatusResponse(true);
     }
     public async Task<StatusResponse> SetNewPassword(string userId, string authCode, string password, string confirmPassword)
     {
         if (password != confirmPassword) return new StatusResponse("PasswordsNotTheSame");
-        using var transaction = await _identityContext.Service.Database.BeginTransactionAsync();
-        var useAuthResp = await UseAuthCode(userId, authCode);
-        if (!useAuthResp.Status) return useAuthResp;
         var user = await _userManager.Service.FindByIdAsync(userId);
         if (user is null) return new StatusResponse(404);
-        await _userManager.Service.RemovePasswordAsync(user);
-        await _userManager.Service.AddPasswordAsync(user, password);
-        await transaction.CommitAsync();
-        return new StatusResponse(true);
+        var resp = await _userManager.Service.ResetPasswordAsync(user, authCode, password);
+        if (!resp.Succeeded) return new StatusResponse(400, resp.ToString());
+        return new StatusResponse(true, resp.ToString());
     }
     public async Task<StatusResponse> SetNewPasswordAuthorized(string password, string confirmPassword, string oldPassword)
     {
         if (password != confirmPassword) return new StatusResponse("PasswordsNotTheSame");
         var user = await _userManager.Service.FindByIdAsync(_context.UserId);
-        if (!(user != null && await _userManager.Service.CheckPasswordAsync(user, oldPassword)))
-            return new StatusResponse(403);
-        await _userManager.Service.RemovePasswordAsync(user);
-        await _userManager.Service.AddPasswordAsync(user, password);
+        var resp = await _userManager.Service.ChangePasswordAsync(user, oldPassword, password);
+        if (!resp.Succeeded) return new StatusResponse(400, resp.ToString());
         return new StatusResponse(200);
     }
     public async Task<ResponseWithStatus<RefreshTokenResponse>> RefreshToken(string? accessToken, string? refreshToken)
@@ -264,9 +242,9 @@ public class IdentityLogic : IIdentityLogic
     }
     private async Task SendAccountActivationEmail(string userId)
     {
-        var auth = await CreateAuthCodeForUser(userId);
-
-        await _mailClient.Service.SendMail(new ActivateAccountMailMessage(userId, auth.Response!));
+        var user = await _userManager.Service.FindByIdAsync(userId);
+        var token = await _userManager.Service.GenerateEmailConfirmationTokenAsync(user);
+        await _mailClient.Service.SendMail(new ActivateAccountMailMessage(userId, token));
     }
     private async Task SetUserDefaultSettings(string userId, string language)
     {

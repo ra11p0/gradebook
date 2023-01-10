@@ -21,6 +21,10 @@ using Gradebook.Foundation.Hangfire.Messages;
 using Gradebook.Foundation.Hangfire.Workers;
 using Gradebook.Foundation.Tests.Utils;
 using Gradebook.Foundation.Database;
+using Gradebook.Foundation.Identity.Repositories.Interfaces;
+using Gradebook.Foundation.Identity.Repositories;
+using Newtonsoft.Json;
+using Gradebook.Foundation.Mailservice.MailMessages;
 
 namespace Gradebook.Foundation.Tests.Identity;
 
@@ -52,9 +56,15 @@ public class IdentityLogic
                     o.UseInMemoryDatabase("fakeDb");
                     o.ConfigureWarnings(e => e.Ignore(InMemoryEventId.TransactionIgnoredWarning));
                 });
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationIdentityDatabaseContext>()
-                .AddDefaultTokenProviders();
+            services.AddIdentity<ApplicationUser, IdentityRole>(o =>
+                    {
+                        o.SignIn.RequireConfirmedEmail = true;
+                        o.User.RequireUniqueEmail = true;
+                    })
+                        .AddEntityFrameworkStores<ApplicationIdentityDatabaseContext>()
+                        .AddDefaultTokenProviders();
+            services.AddScoped<IQueriesRepository, QueriesRepository>();
+            services.AddScoped<ICommandsRepository, CommandsRepository>();
             services.AddScoped<Context>(e => _context);
             services.AddRazorTemplating();
             services.AddLogging();
@@ -108,11 +118,13 @@ public class IdentityLogic
     {
         _configuration.Setup(e => e["JWT:Secret"]).Returns("fakeSecretKey1234567890qwertyuiop");
         _configuration.Setup(e => e["JWT:TokenValidityInMinutes"]).Returns("1");
+        _configuration.Setup(e => e["JWT:RefreshTokenValidityInDays"]).Returns("1");
 
         var fakeEmail = "fake@email.com";
         var password = "P@55W0rD";
         var provider = _serviceProvider;
         var db = provider.GetResolver<ApplicationIdentityDatabaseContext>().Service;
+        var foundationDb = provider.GetResolver<FoundationDatabaseContext>().Service;
         var identityLogic = new FoundationIdentityLogic(provider);
         _identityLogicMocked.Setup(e => e.GetEmailForUser(It.IsAny<string>())).ReturnsAsync(fakeEmail);
 
@@ -120,18 +132,14 @@ public class IdentityLogic
         Assert.That(resp1.StatusCode, Is.EqualTo(200));
 
         var userId = db.Users!.First().Id;
-        var code = db.AuthorizationCodes!.First();
-        var resp2 = await identityLogic.VerifyUserEmail(userId, code.Code);
+        var code = JsonConvert.DeserializeObject<ActivateAccountMailMessage>(foundationDb.MailHistory!.First().PayloadJson).AuthCode;
+        var resp2 = await identityLogic.VerifyUserEmail(userId, code);
         Assert.That(resp2.StatusCode, Is.EqualTo(200));
         var user = db.Users.First();
-        var authCode = db.AuthorizationCodes!.First();
         db.Entry(user).Reload();
-        db.Entry(authCode).Reload();
         var resp3 = await identityLogic.LoginUser(fakeEmail, password);
         Assert.That(resp3.StatusCode, Is.EqualTo(200));
-
         Assert.That(user.EmailConfirmed);
-        Assert.That(authCode.IsUsed);
     }
     [Test]
     public async Task ShouldCreateTokenAndAssignItToUser()

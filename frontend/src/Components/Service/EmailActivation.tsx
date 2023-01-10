@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react';
+import { ReactElement, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
@@ -10,6 +10,8 @@ function EmailActivation(): ReactElement {
   const { t } = useTranslation('service');
   useEffect(() => {
     void (async () => {
+      // eslint-disable-next-line no-debugger
+      debugger;
       if (!accountGuid || !activationCode) return;
 
       await AccountsProxy.verifyEmailAddress(accountGuid, activationCode)

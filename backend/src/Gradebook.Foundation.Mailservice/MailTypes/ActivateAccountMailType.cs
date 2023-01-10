@@ -1,3 +1,4 @@
+using System.Web;
 using Gradebook.Foundation.Mailservice.MailMessages;
 using Gradebook.Foundation.Mailservice.MailTypesModels;
 using Microsoft.Extensions.Localization;
@@ -18,7 +19,7 @@ public class ActivateAccountMailType : MailTypeBase<ActivateAccountMailMessage, 
     {
         return new ActivateAccountMailTypeModel()
         {
-            AuthCode = message.AuthCode,
+            AuthCode = HttpUtility.UrlEncode(message.AuthCode),
             AccountGuid = message.TargetGuid
         };
     }

@@ -10,6 +10,8 @@ using Gradebook.Foundation.Hangfire;
 using Gradebook.Foundation.Hangfire.Messages;
 using Gradebook.Foundation.Hangfire.Workers;
 using Gradebook.Foundation.Identity.Models;
+using Gradebook.Foundation.Identity.Repositories;
+using Gradebook.Foundation.Identity.Repositories.Interfaces;
 using Gradebook.Foundation.Mailservice;
 using Gradebook.Foundation.Mailservice.MailMessages;
 using Gradebook.Foundation.Mailservice.MailTypes;
@@ -54,9 +56,15 @@ public class ChangePassword
                     o.UseInMemoryDatabase("fakeDb");
                     o.ConfigureWarnings(e => e.Ignore(InMemoryEventId.TransactionIgnoredWarning));
                 });
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationIdentityDatabaseContext>()
-                .AddDefaultTokenProviders();
+            services.AddIdentity<ApplicationUser, IdentityRole>(o =>
+                {
+                    o.SignIn.RequireConfirmedEmail = true;
+                    o.User.RequireUniqueEmail = true;
+                })
+                    .AddEntityFrameworkStores<ApplicationIdentityDatabaseContext>()
+                    .AddDefaultTokenProviders();
+            services.AddScoped<IQueriesRepository, QueriesRepository>();
+            services.AddScoped<ICommandsRepository, CommandsRepository>();
             services.AddScoped<Context>(e => _context);
             services.AddRazorTemplating();
             services.AddLogging();
@@ -183,7 +191,7 @@ public class ChangePassword
         var remindPasswordUserId = messagePayload.TargetGuid;
 
         var respSetPassword = await identityLogic.SetNewPassword(remindPasswordUserId, "fakeAuth", "!QAZ2wsxNEW", "!QAZ2wsxNEW");
-        Assert.That(respSetPassword.StatusCode, Is.EqualTo(404), "Failed setting new password.");
+        Assert.That(respSetPassword.StatusCode, Is.EqualTo(400), "Failed setting new password.");
         identityDb.Entry(identityDb.Users.First()).Reload();
         Assert.That(identityDb.Users.First().PasswordHash == firstPassword, "Password has been changed.");
     }
@@ -243,7 +251,7 @@ public class ChangePassword
         _smtpClient.Invocations.Clear();
         var timeStampBeforeSendRemindPassword = Time.UtcNow;
         var resp = await identityLogic.SetNewPasswordAuthorized("!QAZ2wsxNEW", "!QAZ2wsxNEW", "!QAZ2sswsx");
-        Assert.That(resp.StatusCode, Is.EqualTo(403));
+        Assert.That(resp.StatusCode, Is.EqualTo(400));
         identityDb.Entry(identityDb.Users.First()).Reload();
         Assert.That(identityDb.Users.First().PasswordHash == oldPassword, "Password has been changed.");
     }

@@ -1,16 +1,16 @@
 import axios, { AxiosResponse } from 'axios';
+import getApplicationLanguageRedux from '../../Redux/ReduxQueries/account/getApplicationLanguageRedux';
+import getCurrentUserIdRedux from '../../Redux/ReduxQueries/account/getCurrentUserIdRedux';
 import { axiosApiAuthorized } from '../AxiosInterceptor';
-import GetAccessibleSchoolsResponse from './Definitions/Responses/GetAccessibleSchoolsResponse';
 import LoginRequest from './Definitions/Requests/LoginRequest';
+import RegisterRequest from './Definitions/Requests/RegisterRequest';
+import SettingsRequest from './Definitions/Requests/SettingsRequest';
+import GetAccessibleSchoolsResponse from './Definitions/Responses/GetAccessibleSchoolsResponse';
 import LoginResponse from './Definitions/Responses/LoginResponse';
 import MeResponse from './Definitions/Responses/MeResponse';
 import RefreshTokenResponse from './Definitions/Responses/RefreshTokenResponse';
-import RegisterRequest from './Definitions/Requests/RegisterRequest';
 import RelatedPersonResponse from './Definitions/Responses/RelatedPersonResponse';
-import SettingsRequest from './Definitions/Requests/SettingsRequest';
 import UserSettings from './Definitions/Responses/UserSettings';
-import getApplicationLanguageRedux from '../../Redux/ReduxQueries/account/getApplicationLanguageRedux';
-import getCurrentUserIdRedux from '../../Redux/ReduxQueries/account/getCurrentUserIdRedux';
 
 const API_URL: string = import.meta.env.VITE_APP_API_URL ?? 'api';
 
@@ -34,12 +34,13 @@ async function setNewPassword(
   password: string,
   confirmPassword: string,
   userId: string,
-  authCode: string
+  token: string
 ): Promise<AxiosResponse<string>> {
-  return await axios.post(
-    `${API_URL}/Account/SetNewPassword/${userId}/${authCode}`,
-    { password, confirmPassword }
-  );
+  return await axios.post(`${API_URL}/Account/SetNewPassword/${userId}`, {
+    password,
+    confirmPassword,
+    token,
+  });
 }
 
 async function setNewPasswordAuthorized(
@@ -66,7 +67,11 @@ async function verifyEmailAddress(
   activationCode: string
 ): Promise<AxiosResponse<LoginResponse>> {
   return await axios.post(
-    `${API_URL}/Account/${userId}/emailActivation/${activationCode}`
+    `${API_URL}/Account/${userId}/emailActivation`,
+    activationCode,
+    {
+      headers: { 'Content-Type': 'application/json' },
+    }
   );
 }
 

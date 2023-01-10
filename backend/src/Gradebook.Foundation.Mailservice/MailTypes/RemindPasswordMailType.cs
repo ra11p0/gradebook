@@ -1,3 +1,4 @@
+using System.Web;
 using Gradebook.Foundation.Mailservice.MailMessages;
 using Gradebook.Foundation.Mailservice.MailTypesModels;
 using Microsoft.Extensions.Localization;
@@ -19,7 +20,7 @@ public class RemindPasswordMailType : MailTypeBase<RemindPasswordMailMessage, Re
     {
         return new RemindPasswordMailTypeModel()
         {
-            AuthCode = message.AuthCode,
+            AuthCode = HttpUtility.UrlEncode(message.AuthCode),
             AccountGuid = message.TargetGuid
         };
     }

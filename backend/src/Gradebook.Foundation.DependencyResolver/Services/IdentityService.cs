@@ -20,7 +20,11 @@ public class IdentityService
         services.AddDbContext<ApplicationIdentityDatabaseContext>
             (options => options.UseMySql(configuration.GetConnectionString("DefaultAppDatabase"), new MySqlServerVersion(new Version(8, 30, 0))));
 
-        services.AddIdentity<ApplicationUser, IdentityRole>()
+        services.AddIdentity<ApplicationUser, IdentityRole>(o =>
+        {
+            o.SignIn.RequireConfirmedEmail = true;
+            o.User.RequireUniqueEmail = true;
+        })
             .AddEntityFrameworkStores<ApplicationIdentityDatabaseContext>()
             .AddDefaultTokenProviders();
 

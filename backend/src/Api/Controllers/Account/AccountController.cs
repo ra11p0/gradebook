@@ -93,8 +93,8 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost]
-    [Route("{userGuid}/emailActivation/{code}")]
-    public async Task<IActionResult> Activate([FromRoute] string userGuid, [FromRoute] string code)
+    [Route("{userGuid}/emailActivation")]
+    public async Task<IActionResult> Activate([FromRoute] string userGuid, [FromBody] string code)
     {
         var res = await _identityLogic.Service.VerifyUserEmail(userGuid, code);
         return res.ObjectResult;
@@ -130,10 +130,10 @@ public class AccountController : ControllerBase
         return (await _identityLogic.Service.RemindPassword(email)).ObjectResult;
     }
 
-    [HttpPost("SetNewPassword/{userId}/{authCode}/")]
-    public async Task<ObjectResult> SetNewPassword([FromBody] SetNewPasswordModel model, [FromRoute] string authCode, [FromRoute] string userId)
+    [HttpPost("SetNewPassword/{userId}")]
+    public async Task<ObjectResult> SetNewPassword([FromBody] SetNewPasswordModel model, [FromRoute] string userId)
     {
-        return (await _identityLogic.Service.SetNewPassword(userId, authCode, model.Password!, model.ConfirmPassword!)).ObjectResult;
+        return (await _identityLogic.Service.SetNewPassword(userId, model.Token!, model.Password!, model.ConfirmPassword!)).ObjectResult;
     }
 
     [HttpPost("SetNewPassword")]

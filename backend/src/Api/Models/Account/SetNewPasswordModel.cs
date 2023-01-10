@@ -8,4 +8,5 @@ public class SetNewPasswordModel
     public string? Password { get; set; }
     [Required]
     public string? ConfirmPassword { get; set; }
+    public string? Token { get; set; }
 }
