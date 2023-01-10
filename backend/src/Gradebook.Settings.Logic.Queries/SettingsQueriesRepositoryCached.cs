@@ -1,5 +1,6 @@
 using Gradebook.Foundation.Common;
 using Gradebook.Foundation.Common.Settings.Enums;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Gradebook.Settings.Logic.Queries;
 
@@ -9,7 +10,7 @@ public class SettingsQueriesRepositoryCached : BaseRepositoryCached<SettingsQuer
     {
     }
 
-    public void BeginTransaction() => Base.BeginTransaction();
+    public IDbContextTransaction BeginTransaction() => Base.BeginTransaction();
 
     public void CommitTransaction() => Base.CommitTransaction();
 
@@ -28,4 +29,9 @@ public class SettingsQueriesRepositoryCached : BaseRepositoryCached<SettingsQuer
     public void SaveChanges() => Base.SaveChanges();
 
     public Task SaveChangesAsync() => Base.SaveChangesAsync();
+
+    IDbContextTransaction IBaseRepository.BeginTransaction()
+    {
+        throw new NotImplementedException();
+    }
 }

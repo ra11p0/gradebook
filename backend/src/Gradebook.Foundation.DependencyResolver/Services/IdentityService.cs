@@ -2,6 +2,8 @@ using System.Text;
 using Gradebook.Foundation.Common.Identity.Logic.Interfaces;
 using Gradebook.Foundation.Identity.Logic;
 using Gradebook.Foundation.Identity.Models;
+using Gradebook.Foundation.Identity.Repositories;
+using Gradebook.Foundation.Identity.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -74,5 +76,9 @@ public class IdentityService
                 .AllowAnyMethod();
             });
         });
+
+        services.AddScoped<IQueriesRepository, QueriesRepository>();
+        services.AddScoped<ICommandsRepository, CommandsRepository>();
+
     }
 }

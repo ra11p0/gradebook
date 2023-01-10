@@ -144,17 +144,6 @@ public class AccountController : ControllerBase
     }
     #endregion
 
-    #region roles
-    [HttpPost]
-    [Route("{userGuid}/roles")]
-    public IActionResult PostRoles([FromRoute] string userGuid, [FromBody] string[] roles)
-    {
-        return NotFound();
-        /*await _identityLogic.Service.EditUserRoles(roles, userGuid);
-        return Ok();*/
-    }
-    #endregion
-
     #region schools
     [HttpGet]
     [Route("{userGuid}/schools")]
